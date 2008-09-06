@@ -580,6 +580,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 	else
 	{
+	  /* XXX FIXME: make this one variable, wholesize and
+	     separatefetchbody query the same variable just with
+	     inverted logic */
 	    flag wholesize = !ctl->server.base_protocol->fetch_body;
 	    flag separatefetchbody = (ctl->server.base_protocol->fetch_body) ? TRUE : FALSE;
 
@@ -1089,10 +1092,12 @@ static int do_session(
 	set_timeout(mytimeout);
 
 	/* perform initial SSL handshake on open connection */
-	/* Note:  We pass the realhost name over for certificate
-		verification.  We may want to make this configurable */
-	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck,
-	    ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname,&ctl->remotename) == -1) 
+	if (ctl->use_ssl &&
+		SSLOpen(mailserver_socket, ctl->sslcert, ctl->sslkey,
+		    ctl->sslproto, ctl->sslcertck, ctl->sslcertpath,
+		    ctl->sslfingerprint, ctl->sslcommonname ?
+		    ctl->sslcommonname : realhost, ctl->server.pollname,
+		    &ctl->remotename) == -1)
 	{
 	    report(stderr, GT_("SSL connection failed.\n"));
 	    err = PS_SOCKET;

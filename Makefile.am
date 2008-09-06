@@ -3,9 +3,7 @@
 SUBDIRS=		m4 po
 AUTOMAKE_OPTIONS=	1.8 foreign no-dist-gzip dist-bzip2
 
-AM_CFLAGS=		@CEFLAGS@
-AM_CPPFLAGS=		@CPFLAGS@ -I$(srcdir)/libesmtp
-AM_LDFLAGS=		@LDEFLAGS@
+AM_CPPFLAGS=		-I$(srcdir)/libesmtp
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
 BUILT_SOURCES=		rcfile_y.h
@@ -134,6 +132,8 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-features.html README.SSL README.NTLM \
 		README.packaging \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
+		fetchmail-SA-2008-01.txt \
+		fetchmail-SA-2007-02.txt \
 		fetchmail-SA-2007-01.txt \
 		fetchmail-SA-2006-03.txt \
 		fetchmail-SA-2006-02.txt \

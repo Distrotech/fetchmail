@@ -81,7 +81,7 @@ extern char * yytext;
 %token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
-%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
+%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 /* MAPI tokens */
@@ -344,6 +344,7 @@ user_option	: TO localnames HERE
 		| SSLPROTO STRING	{current.sslproto = xstrdup($2);}
 		| SSLCERTCK             {current.sslcertck = FLAG_TRUE;}
 		| SSLCERTPATH STRING    {current.sslcertpath = prependdir($2, rcfiledir);}
+		| SSLCOMMONNAME STRING  {current.sslcommonname = xstrdup($2);}
 		| SSLFINGERPRINT STRING {current.sslfingerprint = xstrdup($2);}
 
 		| NO KEEP		{current.keep        = FLAG_FALSE;}
@@ -447,8 +448,9 @@ void yyerror (const char *s)
     prc_errflag++;
 }
 
-int prc_filecheck(const char *pathname, const flag securecheck)
-/* check that a configuration file is secure */
+/** check that a configuration file is secure, returns PS_* status codes */
+int prc_filecheck(const char *pathname,
+		  const flag securecheck /** shortcuts permission, filetype and uid tests if false */)
 {
 #ifndef __EMX__
     struct stat statbuf;
@@ -467,7 +469,7 @@ int prc_filecheck(const char *pathname, const flag securecheck)
        process, it must have permissions no greater than 600, and it must not 
        be a symbolic link.  We check these conditions here. */
 
-    if (lstat(pathname, &statbuf) < 0) {
+    if (stat(pathname, &statbuf) < 0) {
 	if (errno == ENOENT) 
 	    return(PS_SUCCESS);
 	else {
@@ -490,7 +492,7 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 #endif /* __CYGWIN__ */
     if (statbuf.st_mode & (S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH | S_IXOTH))
     {
-	fprintf(stderr, GT_("File %s must have no more than -rwx--x--- (0710) permissions.\n"), 
+	fprintf(stderr, GT_("File %s must have no more than -rwx------ (0700) permissions.\n"), 
 		pathname);
 	return(PS_IOERR);
     }

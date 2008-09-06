@@ -598,22 +598,19 @@ int readheaders(int sock,
 		refuse_mail = 1;
 	    }
 
+	    /* check for RFC822 continuations */
+	    set_timeout(mytimeout);
 	    if (ctl->server.protocol != P_MAPI)
 	    {
-	        /* check for RFC822 continuations */
-	        set_timeout(mytimeout);
 	        ch = SockPeek(sock);
-	        set_timeout(0);
 	    }
 	    else
 	    {
 #ifdef MAPI_ENABLE
-		/* check for RFC822 continuations */
-	        set_timeout(mytimeout);
 	        ch = MapiPeek(sock);
-	        set_timeout(0);
 #endif
 	    }
+	    set_timeout(0);
 	} while
 	    (ch == ' ' || ch == '\t');	/* continuation to next line? */
 
@@ -1370,7 +1367,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
     char buf[MSGBUFSIZE+4];
     char *inbufp = buf;
     flag issoftline = FALSE;
-    
+
     /*
      * Pass through the text lines in the body.
      *

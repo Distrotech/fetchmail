@@ -415,9 +415,6 @@ int SockRead(int sock, char *buf, int len)
 {
     char *newline, *bp = buf;
     int n;
-#ifdef	FORCE_STUFFING
-    int maxavailable = 0;
-#endif
 #ifdef	SSL_ENABLE
     SSL *ssl;
 #endif
@@ -457,9 +454,6 @@ int SockRead(int sock, char *buf, int len)
 			(void)SSL_get_error(ssl, n);
 			return(-1);
 		}
-#ifdef FORCE_STUFFING
-		maxavailable = n;
-#endif
 		if( 0 == n ) {
 			/* SSL_peek says no data...  Does he mean no data
 			or did the connection blow up?  If we got an error
@@ -503,9 +497,6 @@ int SockRead(int sock, char *buf, int len)
 	    if ((n = fm_peek(sock, bp, len)) <= 0)
 #endif
 		return (-1);
-#ifdef FORCE_STUFFING
-	    maxavailable = n;
-#endif
 	    if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
 		n = newline - bp + 1;
 #ifndef __BEOS__
@@ -519,46 +510,6 @@ int SockRead(int sock, char *buf, int len)
 	    (!newline && len);
     *bp = '\0';
 
-#ifdef FORCE_STUFFING		/* too ugly to live -- besides, there's IMAP */
-    /* OK, very weird hack coming up here:
-     * When POP3 servers send us a message, they're supposed to
-     * terminate the message with a line containing only a dot. To protect
-     * against lines in the real message that might contain only a dot,
-     * they're supposed to preface any line that starts with a dot with
-     * an additional dot, which will be removed on the client side. That
-     * process, called byte-stuffing (and unstuffing) is really not the
-     * concern of this low-level routine, ordinarily, but there are some
-     * POP servers (and maybe IMAP servers too, who knows) that fail to
-     * do the byte-stuffing, and this routine is the best place to try to
-     * identify and fix that fault.
-     *
-     * Since the DOT line is supposed to come only at the end of a
-     * message, the implication is that right after we see it, the server
-     * is supposed to go back to waiting for the next command. There
-     * isn't supposed to be any more data to read after we see the dot.
-     * THEREFORE, if we see more data to be read after something that
-     * looks like the dot line, then probably the server is failing to
-     * do byte-stuffing. In that case, we'll byte-pack it for them so
-     * that the higher-level routines see things as hunky-dorey.
-     * This is not a perfect test or fix by any means (it has an
-     * obvious race condition, for one thing), but it should at least
-     * reduce the nastiness that ensues when people don't know how
-     * to write POP servers.
-     */
-    if ((maxavailable > (bp-buf)) &&
-	    ((((bp-buf) == 3) &&
-	      (buf[0] == '.') &&
-	      (buf[1] == '\r') &&
-	      (buf[2] == '\n')) ||
-	     (((bp-buf) == 2) &&
-	      (buf[0] == '.') &&
-	      (buf[1] == '\n')))) {
-
-	memmove(buf+1, buf, (bp-buf)+1);
-	buf[0] = '.';
-	bp++;
-    }
-#endif /* FORCE_STUFFING */
     return bp - buf;
 }
 
@@ -850,7 +801,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
         int i;
 
 	SSL_load_error_strings();
-	SSLeay_add_ssl_algorithms();
+	SSLeay_add_ssl_algorithms(); /* synonym for SSL_library_init() */
 	
 #ifdef SSL_ENABLE
         if (stat("/dev/random", &randstat)  &&
@@ -899,6 +850,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 		ERR_print_errors_fp(stderr);
 		return(-1);
 	}
+
+	SSL_CTX_set_options(_ctx[sock], SSL_OP_ALL);
 
 	if (certck) {
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
@@ -950,9 +903,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
         	SSL_use_RSAPrivateKey_file(_ssl_context[sock], mykey, SSL_FILETYPE_PEM);
 	}
 
-	SSL_set_fd(_ssl_context[sock], sock);
-	
-	if(SSL_connect(_ssl_context[sock]) < 1) {
+	if (SSL_set_fd(_ssl_context[sock], sock) == 0 
+	    || SSL_connect(_ssl_context[sock]) < 1) {
 		ERR_print_errors_fp(stderr);
 		SSL_CTX_free(_ctx[sock]);
 		_ctx[sock] = NULL;

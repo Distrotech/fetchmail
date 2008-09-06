@@ -24,7 +24,7 @@ content="Frequently asked questions about fetchmail."/>
 <tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home
 Page</a></td>
-<td width="30%" align="right">$Date: 2007-04-07 02:01:39 +0800 (Sat, 07 Apr 2007) $</td>
+<td width="30%" align="right">$Date: 2008-04-24 16:34:48 +0800 (Thu, 24 Apr 2008) $</td>
 </tr>
 </table>
 
@@ -150,6 +150,7 @@ host?.</a><br/>
 <a href="#I7">I7. How can I use fetchmail with SpryNet?</a><br/>
 <a href="#I8">I8. How can I use fetchmail with comcast.net or other
     Maillennium servers?</a><br/>
+<a href="#I9">I9. How can I use fetchmail with GMail/Google Mail?</a><br/>
 
 <h2 id="C_K">How to set up well-known security and authentication
 methods</h2>
@@ -362,6 +363,8 @@ forwarding to.</li>
 
 <li>The output of fetchmail -V called with whatever other
 command-line options you used.</li>
+
+<li><strong>The output of <kbd>fetchmail --nodetach -vvv --nosyslog</kbd> with whatever other command-line options you use routinely.</strong></li>
 </ol>
 
 <p>If you have FTP access to your remote mail account, and you have
@@ -1967,6 +1970,16 @@ sites.)</p>
 
 <p>Workaround for older versions: use the <tt>fetchall</tt> option.</p>
 
+<h2><a id="I9" name="I9">I9. How can I use fetchmail with GMail/Google Mail?</a></h2>
+
+<p>Google's IMAP servers, as of April 2008, are broken and re-encode
+MIME-encoded headers improperly and are not feature-complete yet. The
+model how their servers organize mail also deviates in significant ways
+from what the POP3 or IMAP protocol 'fathers' conceived. This means all
+sorts of strange effects, for instance, your sent mail may show up in
+the mail that fetchmail fetches. It's best to avoid fetching mail from
+Google until they are using standards-compliant software.</p>
+
 <hr/>
 <h1>How to set up well-known security and authentication
 methods</h1>
@@ -2075,10 +2088,10 @@ SSL?</a></h2>
 href="http://www.openssl.org/">OpenSSL</a> libraries installed, and they
 should at least be version 0.9.6.
 Configure with --with-ssl. If you have the OpenSSL libraries
-installed in the default location (/usr/local/ssl) ths will
+installed in commonly-used default locations, this will
 suffice. If you have them installed in a non-default location,
-you'll need to specify it as an argument to --with-ssl after an
-equal sign.</p>
+you'll need to specify the OpenSSL installation directory as an argument
+to --with-ssl after an equal sign.</p>
 
 <p>Fetchmail binaries built this way support <code>ssl</code>,
 <code>sslkey</code>, and <code>sslcert</code> options that control
@@ -2674,7 +2687,8 @@ chop the host part off any local addresses in the list.</p>
 <h2><a id="M4" name="M4"><strike>M4. My multidrop fetchmail seems to be
 having DNS problems.</strike></a></h2>
 
-<p>The answer that used to be here no longer applies to fetchmail.</p>
+<p><em>The answer that used to be here no longer applies to
+    fetchmail.</em></p>
 
 <h2><a id="M5" name="M5">M5. I'm seeing long DNS delays before each
 message is processed.</a></h2>
@@ -2968,11 +2982,8 @@ on <a href="#G3">reporting bugs</a>.</p>
 <h2><a id="X5" name="X5"><strike>X5. Using POP3, retrievals seems to be
 	fetching too much!</strike></a></h2>
 
-<p>The information that used to be here pertained to fetchmail 4.4.7 or
-older, which should not be used. Use a recent fetchmail version.</p>
-
-<p>Workaround: set the <code>fetchall</code> option. Under POP3
-this has the side effect of forcing RETR use.</p>
+<p><em>The information that used to be here pertained to fetchmail 4.4.7 or
+    older, which should not be used. Use a recent fetchmail version.</em></p>
 
 <h2><a id="X6" name="X6">X6. My mail attachments are being dropped
 or mangled.</a></h2>
@@ -3361,9 +3372,9 @@ messages seen or delete them. The solution is to either (a) wait
 for the other client to finish, or (b) terminate it.</p>
 
 <h2><a id="O10" name="O10"><strike>O10. Why is the received date on all my
-	messages the same?i</strike></a></h2>
+	messages the same?</strike></a></h2>
 
-<p>The answer that used to be here made no sense.</p>
+<p><em>The answer that used to be here made no sense and was dropped.</em></p>
 
 <h2><a name="O11">O11. I keep getting messages that say "Repoll
 immediately" in my logs.</a></h2>
@@ -3493,7 +3504,7 @@ make fetchmail-FAQ.pdf
 <tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home
 Page</a></td>
-<td width="30%" align="right">$Date: 2007-04-07 02:01:39 +0800 (Sat, 07 Apr 2007) $</td>
+<td width="30%" align="right">$Date: 2008-04-24 16:34:48 +0800 (Thu, 24 Apr 2008) $</td>
 </tr>
 </table>
 

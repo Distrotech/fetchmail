@@ -42,6 +42,121 @@ be removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.9 (not yet released):
+
+# SECURITY AND CRITICAL BUG FIXES:
+* CVE-2007-4565: Denial of service: When fetchmail tries to inject a warning
+  message it created itself, and the message is refused by the SMTP listener,
+  fetchmail dereferences a NULL pointer and crashes. Report & fix by Earl Chew.
+  Note while this is theoretically a remote denial of service attack vector,
+  fetchmail by default talks SMTP to the localhost, so the overall risk is
+  rather low.
+  This bug was apparently introduced on 1998-11-27 when the bouncemail facility
+  was modularized. The bug then made its appearance in fetchmail release 4.6.8.
+  See also fetchmail-SA-2007-02.txt.
+* CVE-2008-2711: Denial of service: When fetchmail logs data blobs
+  (for instance, a To: header in -v -v verbose mode) in excess of 2048
+  bytes, it will crash, because it hands an uninitialized argument
+  pointer (not the format string though) to vsnprintf and reads a
+  random memory location (it calls va_arg() too often without
+  resetting it with va_start()). Based on a patch (BerliOS patch #2492)
+  by Petr Uzel, fixes Novell Bug #354291.
+  Note 6.3.9-rc1 did not completely fix this issue, so it was redrawn a few 
+  hours after its release.
+  See also fetchmail-SA-2008-01.txt.
+* When expunging, mark the right messages as seen to avoid message loss in "keep
+  flush" configurations.  Workaround for previous versions: "expunge 0".
+  Report and patch by Alexander Cherepanov - thanks a lot, Berlios Bug #11797,
+  "imap_mark_seen doesn't consider expunged messages".
+
+# BUG FIXES:
+* The configure script will additionally check for 'dn_skipname', to fix build
+  failures with µClibc. The new check still recognizes the resolver libraries on
+  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 4.0_BETA2 and FreeBSD 6.2.
+  Fixes Gentoo bug #134187.
+  NOTE: this is a bit of a hack, since we twist the HAVE_RES_SEARCH result, but
+  res_search() and dn_skipname() are only used together and scheduled for
+  removal in future versions, so this is probably fine.
+* No longer complain about invalid sslproto "" when POP3 CAPA probe fails.
+  Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+  Thanks to Matthias Strauß for a configuration to reproduce the issue.
+* Allow .fetchmailrc and .fetchids to be symlinks, as the manpage does not
+  document they aren't allowed - fixes Debian Bug #452907 (Roger Leigh).
+  TOCTOU race persists.
+* fetchmailconf quotes mailbox (folder) names when writing the configuration.
+  Fixes BerliOS Bug #13207 (reported + fix suggested by Terry Brown).
+* Only print "Deleting fetchids file" if there actually is one.
+  Fixes Debian Bug#374514, reported by Dan Jacobson.
+* SSL fix: check and report if SSL_set_fd fails.
+
+# CHANGES:
+* autoconf 2.60 is now required to build fetchmail; it uses
+  AC_USE_SYSTEM_EXTENSIONS to replace AC_AIX, AC_MINIX, and the like.
+* Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
+  default with no switches in configure to enable it. However, the macro would 
+  have been prone to a symlink attack. Found by Nico Golde.
+* Removed dead FORCE_STUFFING code from socket.c that was disabled by default
+  with no switches in configure to enable it.
+* Include the typedef for int16 in the #ifndef _AIX in smbencrypt.c (Peter
+  O'Gorman)
+* Correct check for u_int32_t in configure.ac (seems to be typedef'ed in
+  namser.h on some platforms.) (Peter O'Gorman)
+* In configure.ac change all CPFLAGS to CPPFLAGS, CEFLAGS to CFLAGS and LDEFLAGS
+  to LDFLAGS otherwise the results of some tests (additional -L and -I flags) do
+  not get used for later tests causing incorrect configure results. Makefile.am
+  was also changed to reflect this. (Peter O'Gorman)
+* m4/gethostbyname_r.m4 does AC_TRY_COMPILE, which unfortunately can pass even
+  if there is no gethostbyname_r. Changed to AC_TRY_LINK. (Peter O'Gorman)
+* Revise getnameinfo check to ensure NULL is defined and the result is properly
+  evaluated, to avoid bogus results on for instance FreeBSD and redefinitions of
+  NI_* at compile time. (Matthias Andree).
+* __attribute__ ((unused)) is a gccism, removed from libesmtp/gethostbyname.c.
+  (Peter O'Gorman)
+* In KAME/getnameinfo.c it's best to use the correct argument to inet_ntoa.
+  (Peter O'Gorman)
+* In verbose mode, log if --check mode is enabled.
+* Add sslcommonname option (rcfile and commandline) as a way to work around
+  misconfigured upstream SSL servers that use the wrong certificate name. It
+  specifies which CommonName fetchmail expects and logs. (Daniel Richard G.)
+* Changed CRLF to LF line endings in contrib/delete-later (reporter: Petr Uzel)
+* SSL change: enable all workarounds with SSL_CTX_set_options(ctx,SSL_OP_ALL)
+
+# DOCUMENTATION:
+* Add fetchmail-SA-2007-02.txt and fetchmail-SA-2008-01.txt.
+* Re-add two lines to the manual page that had accidentally become comments 
+  to nroff. One was part of the --sslproto documentation, and one in the 
+  "Awakening the background daemon" section.
+* The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+  since it is planned to use the file with IMAP4 later.
+* Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
+* The manual page now mentions that user descriptions need to come before user
+  options. Reported by Francensco Pontortì, to fix Debian Bug #467010.
+* The manual page no longer hints that multi-user declarations per server were
+  only useful in daemon mode running as root, to avoid hinting people to doing
+  that.
+* Several manual page rcfile examples now include "ssl".
+* The manual page hints that option arguments beginning with numbers can be
+  enclosed in quotes.
+* The manual page now mentions that the --logfile must already exist before
+  fetchmail is run.
+* The FAQ now recommends (#I9) not to use Google Mail for their disregard to the
+  protocols they claim to support.
+* Documentation and program output now /consistently/ claim that the rcfile must
+  not have more than 0700 (u=rwx,g=,o=) permissions, but fetchmail will still
+  silently accept additional g=x permissions for compatibility with previous
+  6.2.X and 6.3.X versions.
+  Inconsistency (program 0710, manpage 0600) reported by Petr Uzel.
+* The --logfile documentation is now clearer about requiring detached daemon 
+  mode.
+
+# TRANSLATION UPDATES:
+* Polish (Jakub Bogusz)
+* Japanese (Takeshi Hamasaki)
+* Spanish (Javier Fernández-Sanguino Peña, Matthias Andree)
+* Vietnamese (Clytie Siddall)
+
+
+
 fetchmail 6.3.8 (released 2007-04-06):
 
 # SECURITY STRENGTHENING:

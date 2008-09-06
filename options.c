@@ -46,6 +46,7 @@ enum {
     LA_SSLPROTO,
     LA_SSLCERTCK,
     LA_SSLCERTPATH,
+    LA_SSLCOMMONNAME,
     LA_SSLFINGERPRINT,
     LA_FETCHSIZELIMIT,
     LA_FASTUIDL,
@@ -131,6 +132,7 @@ static const struct option longoptions[] = {
   {"sslproto",	 required_argument, (int *) 0, LA_SSLPROTO },
   {"sslcertck", no_argument,	   (int *) 0, LA_SSLCERTCK },
   {"sslcertpath",   required_argument, (int *) 0, LA_SSLCERTPATH },
+  {"sslcommonname",    required_argument, (int *) 0, LA_SSLCOMMONNAME },
   {"sslfingerprint",   required_argument, (int *) 0, LA_SSLFINGERPRINT },
 #endif
 
@@ -558,6 +560,10 @@ int parsecmdline (int argc /** argument count */,
 	    ctl->sslcertpath = prependdir(optarg, currentwd);
 	    break;
 
+	case LA_SSLCOMMONNAME:
+	    ctl->sslcommonname = xstrdup(optarg);
+	    break;
+
 	case LA_SSLFINGERPRINT:
 	    ctl->sslfingerprint = xstrdup(optarg);
 	    break;
@@ -618,6 +624,8 @@ int parsecmdline (int argc /** argument count */,
 	  break;
 
 #endif
+
+
 	case '?':
 	default:
 	    helpflag++;
@@ -656,6 +664,7 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --sslcert     ssl client certificate\n"));
 	P(GT_("      --sslcertck   do strict server certificate check (recommended)\n"));
 	P(GT_("      --sslcertpath path to ssl certificates\n"));
+	P(GT_("      --sslcommonname  expect this CommonName from server (discouraged)\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
 	P(GT_("      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"));
 #endif

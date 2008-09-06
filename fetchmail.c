@@ -27,11 +27,11 @@
 #include <sys/stat.h>
 #ifdef HAVE_SETRLIMIT
 #include <sys/resource.h>
-#endif				/* HAVE_SETRLIMIT */
+#endif /* HAVE_SETRLIMIT */
 
 #ifdef HAVE_SOCKS
-#include <socks.h>		/* SOCKSinit() */
-#endif				/* HAVE_SOCKS */
+#include <socks.h> /* SOCKSinit() */
+#endif /* HAVE_SOCKS */
 
 #ifdef HAVE_LANGINFO_H
 #include <langinfo.h>
@@ -51,33 +51,32 @@
 #include <resolv.h>
 
 #ifndef ENETUNREACH
-#define ENETUNREACH   128	/* Interactive doesn't know this */
-#endif				/* ENETUNREACH */
+#define ENETUNREACH   128       /* Interactive doesn't know this */
+#endif /* ENETUNREACH */
 
 /* prototypes for internal functions */
 static int load_params(int, char **, int);
-static void dump_params(struct runctl *runp, struct query *,
-			flag implicit);
+static void dump_params (struct runctl *runp, struct query *, flag implicit);
 static int query_host(struct query *);
 
 /* controls the detail level of status/progress messages written to stderr */
-int outlevel;			/* see the O_.* constants above */
+int outlevel;    	    /* see the O_.* constants above */
 
 /* miscellaneous global controls */
-struct runctl run;		/* global controls for this run */
-flag nodetach;			/* if TRUE, don't detach daemon process */
-flag quitmode;			/* if --quit was set */
-int quitind;			/* optind after position of last --quit option */
-flag check_only;		/* if --probe was set */
-flag versioninfo;		/* emit only version info */
-char *user;			/* the name of the invoking user */
-char *home;			/* invoking user's home directory */
-char *fmhome;			/* fetchmail's home directory */
-char *program_name;		/* the name to prefix error messages with */
-flag configdump;		/* dump control blocks for configurator */
-char *fetchmailhost;		/* either `localhost' or the host's FQDN */
+struct runctl run;	    /* global controls for this run */
+flag nodetach;		    /* if TRUE, don't detach daemon process */
+flag quitmode;		    /* if --quit was set */
+int  quitind;		    /* optind after position of last --quit option */
+flag check_only;	    /* if --probe was set */
+flag versioninfo;	    /* emit only version info */
+char *user;		    /* the name of the invoking user */
+char *home;		    /* invoking user's home directory */
+char *fmhome;		    /* fetchmail's home directory */
+char *program_name;	    /* the name to prefix error messages with */
+flag configdump;	    /* dump control blocks for configurator */
+char *fetchmailhost;	    /* either `localhost' or the host's FQDN */
 
-static int quitonly;		/* if we should quit after killing the running daemon */
+static int quitonly;	    /* if we should quit after killing the running daemon */
 
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
@@ -93,17 +92,18 @@ static RETSIGTYPE terminate_poll(int);
 static void dropprivs(void)
 {
     struct group *gr;
-    gid_t egid;
-    gid_t rgid;
-
+    gid_t        egid;
+    gid_t        rgid;
+    
     egid = getegid();
     rgid = getgid();
     gr = getgrgid(egid);
-
-    if (gr && !strcmp(gr->gr_name, "kmem")) {
-	extern void interface_set_gids(gid_t egid, gid_t rgid);
-	interface_set_gids(egid, rgid);
-	setegid(rgid);
+    
+    if (gr && !strcmp(gr->gr_name, "kmem"))
+    {
+    	extern void interface_set_gids(gid_t egid, gid_t rgid);
+    	interface_set_gids(egid, rgid);
+    	setegid(rgid);
     }
 }
 #endif
@@ -112,38 +112,36 @@ static void dropprivs(void)
 #include <locale.h>
 /** returns timestamp in current locale,
  * and resets LC_TIME locale to POSIX. */
-static char *timestamp(void)
+static char *timestamp (void)
 {
-    time_t now;
-    static char buf[60];	/* RATS: ignore */
+    time_t      now;
+    static char buf[60]; /* RATS: ignore */
 
-    time(&now);
-    setlocale(LC_TIME, "");
-    strftime(buf, sizeof(buf), "%c", localtime(&now));
-    setlocale(LC_TIME, "C");
+    time (&now);
+    setlocale (LC_TIME, "");
+    strftime (buf, sizeof (buf), "%c", localtime(&now));
+    setlocale (LC_TIME, "C");
     return (buf);
 }
 #else
 #define timestamp rfc822timestamp
 #endif
 
-static RETSIGTYPE donothing(int sig)
+static RETSIGTYPE donothing(int sig) 
 {
     set_signal_handler(sig, donothing);
     lastsig = sig;
 }
 
-static void printcopyright(FILE * fp)
-{
-    fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
-		    "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
-		    "Copyright (C) 2005-2006 Sunil Shetye\n"
-		    "Copyright (C) 2005-2007 Matthias Andree\n"));
-    fprintf(fp,
-	    GT_
-	    ("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
-	     "are welcome to redistribute it under certain conditions. For details,\n"
-	     "please see the file COPYING in the source or documentation directory.\n"));
+static void printcopyright(FILE *fp) {
+	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
+		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
+		   "Copyright (C) 2005 - 2006 Sunil Shetye\n"
+		   "Copyright (C) 2005 - 2008 Matthias Andree\n"
+		   ));
+	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
+		   "are welcome to redistribute it under certain conditions. For details,\n"
+		   "please see the file COPYING in the source or documentation directory.\n"));
 }
 
 const char *iana_charset;
@@ -164,12 +162,12 @@ int main(int argc, char **argv)
 
     envquery(argc, argv);
 #ifdef ENABLE_NLS
-    setlocale(LC_ALL, "");
+    setlocale (LC_ALL, "");
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
-    iana_charset = norm_charmap(nl_langinfo(CODESET));	/* normalize local
-							   charset to
-							   IANA charset. */
+    iana_charset = norm_charmap(nl_langinfo(CODESET)); /* normalize local
+							  charset to
+							  IANA charset. */
 #else
     iana_charset = "US-ASCII";
 #endif
@@ -183,7 +181,8 @@ int main(int argc, char **argv)
      * syslog is supposed to be on, this message will go to stdout and
      * be lost when running in background.
      */
-    if (outlevel >= O_VERBOSE) {
+    if (outlevel >= O_VERBOSE)
+    {
 	int i;
 
 	report(stdout, GT_("fetchmail: invoked with"));
@@ -191,9 +190,10 @@ int main(int argc, char **argv)
 	    report(stdout, " %s", argv[i]);
 	report(stdout, "\n");
     }
-#define IDFILE_NAME	".fetchids"
-    run.idfile = prependdir(IDFILE_NAME, fmhome);
 
+#define IDFILE_NAME	".fetchids"
+    run.idfile = prependdir (IDFILE_NAME, fmhome);
+  
     outlevel = O_NORMAL;
 
     /*
@@ -208,7 +208,7 @@ int main(int argc, char **argv)
 
 #ifdef HAVE_GETCWD
     /* save the current directory */
-    if (getcwd(currentwd, sizeof(currentwd)) == NULL) {
+    if (getcwd (currentwd, sizeof (currentwd)) == NULL) {
 	report(stderr, GT_("could not get current working directory\n"));
 	currentwd[0] = 0;
     }
@@ -225,60 +225,61 @@ int main(int argc, char **argv)
 	    quitonly = 1;
     }
 
-    if (versioninfo) {
-	const char *features =
+    if (versioninfo)
+    {
+	const char *features = 
 #ifdef POP2_ENABLE
-	    "+POP2"
-#endif				/* POP2_ENABLE */
+	"+POP2"
+#endif /* POP2_ENABLE */
 #ifdef MAPI_ENABLE
 	    "+MAPI"
-#endif				/* MAPI_ENABLE */
+#endif /* MAPI_ENABLE */
 #ifndef POP3_ENABLE
-	    "-POP3"
-#endif				/* POP3_ENABLE */
+	"-POP3"
+#endif /* POP3_ENABLE */
 #ifndef IMAP_ENABLE
-	    "-IMAP"
-#endif				/* IMAP_ENABLE */
+	"-IMAP"
+#endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-	    "+GSS"
-#endif				/* GSSAPI */
+	"+GSS"
+#endif /* GSSAPI */
 #ifdef RPA_ENABLE
-	    "+RPA"
-#endif				/* RPA_ENABLE */
+	"+RPA"
+#endif /* RPA_ENABLE */
 #ifdef NTLM_ENABLE
-	    "+NTLM"
-#endif				/* NTLM_ENABLE */
+	"+NTLM"
+#endif /* NTLM_ENABLE */
 #ifdef SDPS_ENABLE
-	    "+SDPS"
-#endif				/* SDPS_ENABLE */
+	"+SDPS"
+#endif /* SDPS_ENABLE */
 #ifndef ETRN_ENABLE
-	    "-ETRN"
-#endif				/* ETRN_ENABLE */
+	"-ETRN"
+#endif /* ETRN_ENABLE */
 #ifndef ODMR_ENABLE
-	    "-ODMR"
-#endif				/* ODMR_ENABLE */
+	"-ODMR"
+#endif /* ODMR_ENABLE */
 #ifdef SSL_ENABLE
-	    "+SSL"
+	"+SSL"
 #endif
 #ifdef OPIE_ENABLE
-	    "+OPIE"
-#endif				/* OPIE_ENABLE */
+	"+OPIE"
+#endif /* OPIE_ENABLE */
 #ifdef HAVE_PKG_hesiod
-	    "+HESIOD"
+	"+HESIOD"
 #endif
 #ifdef HAVE_SOCKS
-	    "+SOCKS"
-#endif				/* HAVE_SOCKS */
+	"+SOCKS"
+#endif /* HAVE_SOCKS */
 #ifdef ENABLE_NLS
-	    "+NLS"
-#endif				/* ENABLE_NLS */
+	"+NLS"
+#endif /* ENABLE_NLS */
 #ifdef KERBEROS_V4
-	    "+KRB4"
-#endif				/* KERBEROS_V4 */
+	"+KRB4"
+#endif /* KERBEROS_V4 */
 #ifdef KERBEROS_V5
-	    "+KRB5"
-#endif				/* KERBEROS_V5 */
-	    ".\n";
+	"+KRB5"
+#endif /* KERBEROS_V5 */
+	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
 	puts("");
@@ -303,7 +304,8 @@ int main(int argc, char **argv)
 
 #if defined(HAVE_SYSLOG)
     /* logging should be set up early in case we were restarted from exec */
-    if (run.use_syslog) {
+    if (run.use_syslog)
+    {
 #if defined(LOG_MAIL)
 	openlog(program_name, LOG_PID, LOG_MAIL);
 #else
@@ -311,7 +313,8 @@ int main(int argc, char **argv)
 	openlog(program_name, LOG_PID);
 #endif
 	report_init(-1);
-    } else
+    }
+    else
 #endif
 	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
@@ -320,13 +323,12 @@ int main(int argc, char **argv)
     {
 	int st;
 
-	if (!versioninfo
-	    && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
+	if (!versioninfo && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
 	    exit(st);
 	else
 	    initialize_saved_lists(querylist, run.idfile);
     }
-#endif				/* POP3_ENABLE */
+#endif /* POP3_ENABLE */
 
     /* construct the lockfile */
     fm_lock_setup(&run);
@@ -337,30 +339,33 @@ int main(int argc, char **argv)
      * Core dumps could otherwise contain passwords to be scavenged by a
      * cracker.
      */
-    if (outlevel < O_VERBOSE || run.poll_interval > 0) {
+    if (outlevel < O_VERBOSE || run.poll_interval > 0)
+    {
 	struct rlimit corelimit;
 	corelimit.rlim_cur = 0;
 	corelimit.rlim_max = 0;
 	setrlimit(RLIMIT_CORE, &corelimit);
     }
-#endif				/* HAVE_SETRLIMIT */
+#endif /* HAVE_SETRLIMIT */
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    netrc_file = prependdir(NETRC_FILE, home);
+    netrc_file = prependdir (NETRC_FILE, home);
     netrc_list = parse_netrc(netrc_file);
     free(netrc_file);
 #undef NETRC_FILE
 
-    /* pick up passwords where we can */
-    for (ctl = querylist; ctl; ctl = ctl->next) {
-	if (ctl->active && !(implicitmode && ctl->server.skip)
-	    && !ctl->password) {
+    /* pick up passwords where we can */ 
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
+	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
+	{
 	    if (NO_PASSWORD(ctl))
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
-	    else {
+	    else
+	    {
 		netrc_entry *p;
 
 		/* look up the pollname and account in the .netrc file. */
@@ -371,11 +376,12 @@ int main(int argc, char **argv)
 		    ctl->password = xstrdup(p->password);
 
 		/* otherwise try with "via" name if there is one */
-		else if (ctl->server.via) {
-		    p = search_netrc(netrc_list,
+		else if (ctl->server.via)
+		{
+		    p = search_netrc(netrc_list, 
 				     ctl->server.via, ctl->remotename);
 		    if (p && p->password)
-			ctl->password = xstrdup(p->password);
+		        ctl->password = xstrdup(p->password);
 		}
 	    }
 	}
@@ -385,16 +391,17 @@ int main(int argc, char **argv)
     netrc_list = 0;
 
     /* perhaps we just want to check options? */
-    if (versioninfo) {
+    if (versioninfo)
+    {
 	int havercfile = access(rcfile, 0);
 
 	printf(GT_("Taking options from command line%s%s\n"),
-	       havercfile ? "" : GT_(" and "), havercfile ? "" : rcfile);
+				havercfile ? "" :  GT_(" and "),
+				havercfile ? "" : rcfile);
 
 	if (querylist == NULL)
 	    fprintf(stderr,
-		    GT_
-		    ("No mailservers set up -- perhaps %s is missing?\n"),
+		    GT_("No mailservers set up -- perhaps %s is missing?\n"),
 		    rcfile);
 	else
 	    dump_params(&run, querylist, implicitmode);
@@ -402,7 +409,8 @@ int main(int argc, char **argv)
     }
 
     /* dump options as a Python dictionary, for configurator use */
-    if (configdump) {
+    if (configdump)
+    {
 	dump_config(&run, querylist);
 	exit(0);
     }
@@ -414,35 +422,34 @@ int main(int argc, char **argv)
 
     /* if no mail servers listed and nothing in background, we're done */
     if (!quitonly && pid == 0 && querylist == NULL) {
-	(void)
-	    fputs(GT_("fetchmail: no mailservers have been specified.\n"),
-		  stderr);
+	(void)fputs(GT_("fetchmail: no mailservers have been specified.\n"),stderr);
 	exit(PS_SYNTAX);
     }
 
     /* perhaps user asked us to kill the other fetchmail */
-    if (quitmode) {
+    if (quitmode)
+    {
 	if (pid == 0 || pid == getpid())
 	    /* this test enables re-execing on a changed rcfile
 	     * for pid == getpid() */
 	{
 	    if (quitonly) {
-		fprintf(stderr,
-			GT_("fetchmail: no other fetchmail is running\n"));
+		fprintf(stderr,GT_("fetchmail: no other fetchmail is running\n"));
 		exit(PS_EXCLUDE);
 	    }
-	} else if (kill(pid, SIGTERM) < 0) {
-	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: error killing %s fetchmail at %d; bailing out.\n"),
+	}
+	else if (kill(pid, SIGTERM) < 0)
+	{
+	    fprintf(stderr,GT_("fetchmail: error killing %s fetchmail at %d; bailing out.\n"),
 		    bkgd ? GT_("background") : GT_("foreground"), pid);
 	    exit(PS_EXCLUDE);
-	} else {
+	}
+	else
+	{
 	    int maxwait;
 
 	    if (outlevel > O_SILENT)
-		fprintf(stderr,
-			GT_("fetchmail: %s fetchmail at %d killed.\n"),
+		fprintf(stderr,GT_("fetchmail: %s fetchmail at %d killed.\n"),
 			bkgd ? GT_("background") : GT_("foreground"), pid);
 	    /* We used to nuke the other process's lock here, with
 	     * fm_lock_release(), which is broken. The other process
@@ -451,7 +458,7 @@ int main(int argc, char **argv)
 		exit(0);
 
 	    /* wait for other process to exit */
-	    maxwait = 10;	/* seconds */
+	    maxwait = 10; /* seconds */
 	    while (kill(pid, 0) == 0 && --maxwait >= 0) {
 		sleep(1);
 	    }
@@ -460,73 +467,78 @@ int main(int argc, char **argv)
     }
 
     /* another fetchmail is running -- wake it up or die */
-    if (pid != 0) {
-	if (check_only) {
+    if (pid != 0)
+    {
+	if (check_only)
+	{
 	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: can't check mail while another fetchmail to same host is running.\n"));
-	    return (PS_EXCLUDE);
-	} else if (!implicitmode) {
+		 GT_("fetchmail: can't check mail while another fetchmail to same host is running.\n"));
+	    return(PS_EXCLUDE);
+        }
+	else if (!implicitmode)
+	{
 	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"),
-		    pid);
-	    return (PS_EXCLUDE);
-	} else if (!bkgd) {
+		 GT_("fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"),
+		 pid);
+		return(PS_EXCLUDE);
+	}
+	else if (!bkgd)
+	{
 	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: another foreground fetchmail is running at %d.\n"),
-		    pid);
-	    return (PS_EXCLUDE);
-	} else if (getpid() == pid)
+		 GT_("fetchmail: another foreground fetchmail is running at %d.\n"),
+		 pid);
+		return(PS_EXCLUDE);
+	}
+	else if (getpid() == pid)
 	    /* this test enables re-execing on a changed rcfile */
 	    fm_lock_assert();
-	else if (argc > 1) {
+	else if (argc > 1)
+	{
 	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: can't accept options while a background fetchmail is running.\n"));
-	    return (PS_EXCLUDE);
-	} else if (kill(pid, SIGUSR1) == 0) {
+		    GT_("fetchmail: can't accept options while a background fetchmail is running.\n"));
+	    return(PS_EXCLUDE);
+	}
+	else if (kill(pid, SIGUSR1) == 0)
+	{
 	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: background fetchmail at %d awakened.\n"),
+		    GT_("fetchmail: background fetchmail at %d awakened.\n"),
 		    pid);
-	    return (0);
-	} else {
+	    return(0);
+	}
+	else
+	{
 	    /*
 	     * Should never happen -- possible only if a background fetchmail
 	     * croaks after the first kill probe above but before the
 	     * SIGUSR1/SIGHUP transmission.
 	     */
 	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: elder sibling at %d died mysteriously.\n"),
+		    GT_("fetchmail: elder sibling at %d died mysteriously.\n"),
 		    pid);
-	    return (PS_UNDEFINED);
+	    return(PS_UNDEFINED);
 	}
     }
 
-    /* pick up interactively any passwords we need but don't have */
-    for (ctl = querylist; ctl; ctl = ctl->next) {
+    /* pick up interactively any passwords we need but don't have */ 
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-	    && !NO_PASSWORD(ctl) && !ctl->password) {
-	    if (!isatty(0)) {
+		&& !NO_PASSWORD(ctl) && !ctl->password)
+	{
+	    if (!isatty(0))
+	    {
 		fprintf(stderr,
-			GT_
-			("fetchmail: can't find a password for %s@%s.\n"),
+			GT_("fetchmail: can't find a password for %s@%s.\n"),
 			ctl->remotename, ctl->server.pollname);
-		return (PS_AUTHFAIL);
+		return(PS_AUTHFAIL);
 	    } else {
-		const char *password_prompt =
-		    GT_("Enter password for %s@%s: ");
-		size_t pplen =
-		    strlen(password_prompt) + strlen(ctl->remotename) +
-		    strlen(ctl->server.pollname) + 1;
+		const char* password_prompt = GT_("Enter password for %s@%s: ");
+		size_t pplen = strlen(password_prompt) + strlen(ctl->remotename) + strlen(ctl->server.pollname) + 1;
 
 		tmpbuf = xmalloc(pplen);
 		snprintf(tmpbuf, pplen, password_prompt,
-			 ctl->remotename, ctl->server.pollname);
-		ctl->password = xstrdup((char *) fm_getpassword(tmpbuf));
+			ctl->remotename, ctl->server.pollname);
+		ctl->password = xstrdup((char *)fm_getpassword(tmpbuf));
 		free(tmpbuf);
 	    }
 	}
@@ -539,28 +551,25 @@ int main(int argc, char **argv)
      */
 #ifdef HAVE_SOCKS
     SOCKSinit("fetchmail");
-#endif				/* HAVE_SOCKS */
+#endif /* HAVE_SOCKS */
 
     /* avoid zombies from plugins */
     deal_with_sigchld();
 
     if (run.logfile && run.use_syslog)
-	fprintf(stderr,
-		GT_
-		("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
+	fprintf(stderr, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
 
     /*
      * Maybe time to go to demon mode...
      */
-    if (run.poll_interval) {
+    if (run.poll_interval)
+    {
 	if (!nodetach) {
 	    int rc;
 
 	    rc = daemonize(run.logfile);
 	    if (rc) {
-		report(stderr,
-		       GT_
-		       ("fetchmail: Cannot detach into background. Aborting.\n"));
+		report(stderr, GT_("fetchmail: Cannot detach into background. Aborting.\n"));
 		exit(rc);
 	    }
 	}
@@ -573,22 +582,19 @@ int main(int argc, char **argv)
 	set_signal_handler(SIGUSR1, SIG_IGN);
 	if (run.poll_interval && getuid() == ROOT_UID)
 	    set_signal_handler(SIGHUP, SIG_IGN);
-    } else {
+    }
+    else
+    {
 	/* not in daemon mode */
-	if (run.logfile && !nodetach && access(run.logfile, F_OK) == 0) {
+	if (run.logfile && !nodetach && access(run.logfile, F_OK) == 0)
+    	{
 	    if (!freopen(run.logfile, "a", stdout))
-		report(stderr,
-		       GT_("could not open %s to append logs to \n"),
-		       run.logfile);
+		    report(stderr, GT_("could not open %s to append logs to \n"), run.logfile);
 	    if (!freopen(run.logfile, "a", stderr))
-		report(stdout,
-		       GT_("could not open %s to append logs to \n"),
-		       run.logfile);
+		    report(stdout, GT_("could not open %s to append logs to \n"), run.logfile);
 	    if (run.use_syslog)
-		report(stdout,
-		       GT_
-		       ("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
-	}
+		report(stdout, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
+    	}
     }
 
     interface_init();
@@ -605,6 +611,10 @@ int main(int argc, char **argv)
     /* here's the exclusion lock */
     fm_lock_or_die();
 
+    if (check_only && outlevel >= O_VERBOSE) {
+	report(stdout, GT_("--check mode enabled, not fetching mail\n"));
+    }
+
     /*
      * Query all hosts. If there's only one, the error return will
      * reflect the status of that transaction.
@@ -617,25 +627,24 @@ int main(int argc, char **argv)
 	 * in-core control structures -- and the potential memory
 	 * leaks...
 	 */
-	struct stat rcstat;
+	struct stat	rcstat;
 
 	if (strcmp(rcfile, "-") == 0) {
 	    /* do nothing */
 	} else if (stat(rcfile, &rcstat) == -1) {
 	    if (errno != ENOENT)
-		report(stderr,
+		report(stderr, 
 		       GT_("couldn't time-check %s (error %d)\n"),
 		       rcfile, errno);
-	} else if (rcstat.st_mtime > parsetime) {
-	    report(stdout, GT_("restarting fetchmail (%s changed)\n"),
-		   rcfile);
+	}
+	else if (rcstat.st_mtime > parsetime)
+	{
+	    report(stdout, GT_("restarting fetchmail (%s changed)\n"), rcfile);
 
 #ifdef HAVE_GETCWD
 	    /* restore the startup directory */
-	    if (!currentwd[0] || chdir(currentwd) == -1)
-		report(stderr,
-		       GT_
-		       ("attempt to re-exec may fail as directory has not been restored\n"));
+	    if (!currentwd[0] || chdir (currentwd) == -1)
+		report(stderr, GT_("attempt to re-exec may fail as directory has not been restored\n"));
 #endif
 
 	    /*
@@ -664,19 +673,6 @@ int main(int argc, char **argv)
 	    execvp(argv[0], argv);
 	    report(stderr, GT_("attempt to re-exec fetchmail failed\n"));
 	}
-#if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
-	/*
-	 * This was an efficiency hack that backfired.  The theory
-	 * was that using TCP/IP for DNS queries would get us better
-	 * reliability and shave off some per-UDP-packet costs.
-	 * Unfortunately it interacted badly with diald, which effectively 
-	 * filters out DNS queries over TCP/IP for reasons having to do
-	 * with some obscure Linux kernel problem involving bootstrapping of
-	 * dynamically-addressed links.  I don't understand this mess
-	 * and don't want to, so it's "See ya!" to this hack.
-	 */
-	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
-#endif				/* HAVE_RES_SEARCH */
 
 #ifdef HAVE_RES_SEARCH
 	/* Boldly assume that we also have res_init() if we have
@@ -697,29 +693,32 @@ int main(int argc, char **argv)
 	activecount = 0;
 	batchcount = 0;
 	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->active) {
+	    if (ctl->active)
+	    {
 		activecount++;
-		if (!(implicitmode && ctl->server.skip)) {
-		    if (ctl->wedged) {
-			report(stderr,
-			       GT_
-			       ("poll of %s skipped (failed authentication or too many timeouts)\n"),
+		if (!(implicitmode && ctl->server.skip))
+		{
+		    if (ctl->wedged)
+		    {
+			report(stderr, 
+			       GT_("poll of %s skipped (failed authentication or too many timeouts)\n"),
 			       ctl->server.pollname);
 			continue;
 		    }
 
 		    /* check skip interval first so that it counts all polls */
-		    if (run.poll_interval && ctl->server.interval) {
-			if (ctl->server.poll_count++ %
-			    ctl->server.interval) {
+		    if (run.poll_interval && ctl->server.interval) 
+		    {
+			if (ctl->server.poll_count++ % ctl->server.interval) 
+			{
 			    if (outlevel >= O_VERBOSE)
 				report(stdout,
-				       GT_
-				       ("interval not reached, not querying %s\n"),
+				       GT_("interval not reached, not querying %s\n"),
 				       ctl->server.pollname);
 			    continue;
 			}
 		    }
+
 #ifdef CAN_MONITOR
 		    /*
 		     * Don't do monitoring if we were woken by a signal.
@@ -727,93 +726,66 @@ int main(int argc, char **argv)
 		     */
 		    if (!interface_approve(&ctl->server, !lastsig))
 			continue;
-#endif				/* CAN_MONITOR */
+#endif /* CAN_MONITOR */
 
-		    dofastuidl = 0;	/* this is reset in the driver if required */
+		    dofastuidl = 0; /* this is reset in the driver if required */
 
 		    querystatus = query_host(ctl);
 
 		    if (NUM_NONZERO(ctl->fastuidl))
-			ctl->fastuidlcount =
-			    (ctl->fastuidlcount + 1) % ctl->fastuidl;
+			ctl->fastuidlcount = (ctl->fastuidlcount + 1) % ctl->fastuidl;
 #ifdef POP3_ENABLE
 		    /* leave the UIDL state alone if there have been any errors */
-		    if (!check_only && ((querystatus == PS_SUCCESS)
-					|| (querystatus == PS_NOMAIL)
-					|| (querystatus == PS_MAXFETCH)))
+		    if (!check_only &&
+				((querystatus==PS_SUCCESS) || (querystatus==PS_NOMAIL) || (querystatus==PS_MAXFETCH)))
 			uid_swap_lists(ctl);
 		    else
 			uid_discard_new_list(ctl);
 		    uid_reset_num(ctl);
-#endif				/* POP3_ENABLE */
+#endif  /* POP3_ENABLE */
 
 		    if (querystatus == PS_SUCCESS)
 			successes++;
-		    else if (!check_only && ((querystatus != PS_NOMAIL)
-					     || (outlevel == O_DEBUG)))
-			switch (querystatus) {
+		    else if (!check_only && 
+			     ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
+			switch(querystatus)
+			{
 			case PS_SUCCESS:
-			    report(stdout,
-				   GT_("Query status=0 (SUCCESS)\n"));
-			    break;
-			case PS_NOMAIL:
-			    report(stdout,
-				   GT_("Query status=1 (NOMAIL)\n"));
-			    break;
+			    report(stdout,GT_("Query status=0 (SUCCESS)\n"));break;
+			case PS_NOMAIL: 
+			    report(stdout,GT_("Query status=1 (NOMAIL)\n")); break;
 			case PS_SOCKET:
-			    report(stdout,
-				   GT_("Query status=2 (SOCKET)\n"));
-			    break;
+			    report(stdout,GT_("Query status=2 (SOCKET)\n")); break;
 			case PS_AUTHFAIL:
-			    report(stdout,
-				   GT_("Query status=3 (AUTHFAIL)\n"));
-			    break;
+			    report(stdout,GT_("Query status=3 (AUTHFAIL)\n"));break;
 			case PS_PROTOCOL:
-			    report(stdout,
-				   GT_("Query status=4 (PROTOCOL)\n"));
-			    break;
+			    report(stdout,GT_("Query status=4 (PROTOCOL)\n"));break;
 			case PS_SYNTAX:
-			    report(stdout,
-				   GT_("Query status=5 (SYNTAX)\n"));
-			    break;
+			    report(stdout,GT_("Query status=5 (SYNTAX)\n")); break;
 			case PS_IOERR:
-			    report(stdout,
-				   GT_("Query status=6 (IOERR)\n"));
-			    break;
+			    report(stdout,GT_("Query status=6 (IOERR)\n"));  break;
 			case PS_ERROR:
-			    report(stdout,
-				   GT_("Query status=7 (ERROR)\n"));
-			    break;
+			    report(stdout,GT_("Query status=7 (ERROR)\n"));  break;
 			case PS_EXCLUDE:
-			    report(stdout,
-				   GT_("Query status=8 (EXCLUDE)\n"));
-			    break;
+			    report(stdout,GT_("Query status=8 (EXCLUDE)\n")); break;
 			case PS_LOCKBUSY:
-			    report(stdout,
-				   GT_("Query status=9 (LOCKBUSY)\n"));
-			    break;
+			    report(stdout,GT_("Query status=9 (LOCKBUSY)\n"));break;
 			case PS_SMTP:
-			    report(stdout,
-				   GT_("Query status=10 (SMTP)\n"));
-			    break;
+			    report(stdout,GT_("Query status=10 (SMTP)\n")); break;
 			case PS_DNS:
-			    report(stdout, GT_("Query status=11 (DNS)\n"));
-			    break;
+			    report(stdout,GT_("Query status=11 (DNS)\n")); break;
 			case PS_BSMTP:
-			    report(stdout,
-				   GT_("Query status=12 (BSMTP)\n"));
-			    break;
+			    report(stdout,GT_("Query status=12 (BSMTP)\n")); break;
 			case PS_MAXFETCH:
-			    report(stdout,
-				   GT_("Query status=13 (MAXFETCH)\n"));
-			    break;
+			    report(stdout,GT_("Query status=13 (MAXFETCH)\n"));break;
 			default:
-			    report(stdout, GT_("Query status=%d\n"),
-				   querystatus);
+			    report(stdout,GT_("Query status=%d\n"),querystatus);
 			    break;
 			}
+
 #ifdef CAN_MONITOR
-		    if (ctl->server.monitor) {
+		    if (ctl->server.monitor)
+		    {
 			/*
 			 * Allow some time for the link to quiesce.  One
 			 * second is usually sufficient, three is safe.
@@ -822,12 +794,9 @@ int main(int argc, char **argv)
 			sleep(3);
 			interface_note_activity(&ctl->server);
 		    }
-#endif				/* CAN_MONITOR */
+#endif /* CAN_MONITOR */
 		}
 	    }
-#if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
-	endhostent();		/* release TCP/IP connection to nameserver */
-#endif				/* HAVE_RES_SEARCH */
 
 	/* close connections cleanly */
 	terminate_poll(0);
@@ -835,7 +804,8 @@ int main(int argc, char **argv)
 	/*
 	 * OK, we've polled.  Now sleep.
 	 */
-	if (run.poll_interval) {
+	if (run.poll_interval)
+	{
 	    /* 
 	     * Because passwords can expire, it may happen that *all*
 	     * hosts are now out of the loop due to authfail
@@ -849,17 +819,16 @@ int main(int argc, char **argv)
 		if (ctl->active && !(implicitmode && ctl->server.skip))
 		    if (!ctl->wedged)
 			unwedged++;
-	    if (!unwedged) {
-		report(stderr,
-		       GT_("All connections are wedged.  Exiting.\n"));
+	    if (!unwedged)
+	    {
+		report(stderr, GT_("All connections are wedged.  Exiting.\n"));
 		/* FIXME: someday, send notification mail */
 		exit(PS_AUTHFAIL);
 	    }
 
 	    if (outlevel > O_SILENT)
 		report(stdout,
-		       GT_("sleeping at %s for %d seconds\n"), timestamp(),
-		       run.poll_interval);
+		       GT_("sleeping at %s for %d seconds\n"), timestamp(), run.poll_interval);
 
 	    /*
 	     * With this simple hack, we make it possible for a foreground 
@@ -878,14 +847,15 @@ int main(int argc, char **argv)
 	     * unwedge all servers in case the problem has been
 	     * manually repaired.
 	     */
-	    if ((lastsig = interruptible_idle(run.poll_interval))) {
+	    if ((lastsig = interruptible_idle(run.poll_interval)))
+	    {
 		if (outlevel > O_SILENT)
 #ifdef SYS_SIGLIST_DECLARED
-		    report(stdout,
-			   GT_("awakened by %s\n"), sys_siglist[lastsig]);
+		    report(stdout, 
+		       GT_("awakened by %s\n"), sys_siglist[lastsig]);
 #else
-		    report(stdout, GT_("awakened by signal %d\n"),
-			   lastsig);
+	    	    report(stdout, 
+		       GT_("awakened by signal %d\n"), lastsig);
 #endif
 		for (ctl = querylist; ctl; ctl = ctl->next)
 		    ctl->wedged = FALSE;
@@ -894,12 +864,12 @@ int main(int argc, char **argv)
 	    if (outlevel > O_SILENT)
 		report(stdout, GT_("awakened at %s\n"), timestamp());
 	}
-    }
-    while (run.poll_interval);
+    } while
+	(run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
 	report(stdout, GT_("normal termination, status %d\n"),
-	       successes ? PS_SUCCESS : querystatus);
+		successes ? PS_SUCCESS : querystatus);
 
     terminate_run(0);
 
@@ -912,15 +882,15 @@ int main(int argc, char **argv)
 	exit(PS_NOMAIL);
 }
 
-static void
-list_merge(struct idlist **dstl, struct idlist **srcl, int force)
+static void list_merge(struct idlist **dstl, struct idlist **srcl, int force)
 {
     /*
      * If force is off, modify dstl fields only when they're empty (treat srcl
      * as defaults).  If force is on, modify each dstl field whenever scrcl
      * is nonempty (treat srcl as an override).  
      */
-    if (force ? !!*srcl : !*dstl) {
+    if (force ? !!*srcl : !*dstl)
+    {
 	struct idlist *cpl = copy_str_list(*srcl);
 
 	append_str_list(dstl, &cpl);
@@ -999,6 +969,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(sslproto);
     FLAG_MERGE(sslcertck);
     FLAG_MERGE(sslcertpath);
+    FLAG_MERGE(sslcommonname);
     FLAG_MERGE(sslfingerprint);
 #endif
     FLAG_MERGE(expunge);
@@ -1021,7 +992,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
  *         - false if servers found on the command line */
 static int load_params(int argc, char **argv, int optind)
 {
-    int implicitmode, st;
+    int	implicitmode, st;
     struct passwd *pw;
     struct query def_opts, *ctl;
     struct stat rcstat;
@@ -1032,8 +1003,8 @@ static int load_params(int argc, char **argv, int optind)
 
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
-    def_opts.smtpaddress = (char *) 0;
-    def_opts.smtpname = (char *) 0;
+    def_opts.smtpaddress = (char *)0;
+    def_opts.smtpname = (char *)0;
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.server.esmtp_name = user;
@@ -1048,17 +1019,17 @@ static int load_params(int argc, char **argv, int optind)
 
     /* get the location of rcfile */
     rcfiledir[0] = 0;
-    p = strrchr(rcfile, '/');
-    if (p && (size_t) (p - rcfile) < sizeof(rcfiledir)) {
+    p = strrchr (rcfile, '/');
+    if (p && (size_t)(p - rcfile) < sizeof (rcfiledir)) {
 	*p = 0;			/* replace '/' by '0' */
-	strlcpy(rcfiledir, rcfile, sizeof(rcfiledir));
+	strlcpy (rcfiledir, rcfile, sizeof(rcfiledir));
 	*p = '/';		/* restore '/' */
 	if (!rcfiledir[0])	/* "/.fetchmailrc" case */
-	    strcpy(rcfiledir, "/");
+	    strcpy (rcfiledir, "/");
     }
 
     /* note the parse time, so we can pick up on modifications */
-    parsetime = 0;		/* foil compiler warnings */
+    parsetime = 0;	/* foil compiler warnings */
     if (strcmp(rcfile, "-") == 0 || stat(rcfile, &rcstat) != -1)
 	parsetime = rcstat.st_mtime;
     else if (errno != ENOENT)
@@ -1074,12 +1045,15 @@ static int load_params(int argc, char **argv, int optind)
 	 */
 	exit(st);
 
-    if ((implicitmode = (optind >= argc))) {
+    if ((implicitmode = (optind >= argc)))
+    {
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    ctl->active = !ctl->server.skip;
-    } else
-	for (; optind < argc; optind++) {
-	    flag predeclared = FALSE;
+    }
+    else
+	for (; optind < argc; optind++) 
+	{
+	    flag	predeclared =  FALSE;
 
 	    /*
 	     * If hostname corresponds to a host known from the rc file,
@@ -1088,36 +1062,35 @@ static int load_params(int argc, char **argv, int optind)
 	     */
 	    for (ctl = querylist; ctl; ctl = ctl->next)
 		if (!strcmp(ctl->server.pollname, argv[optind])
-		    || str_in_list(&ctl->server.akalist, argv[optind],
-				   TRUE)) {
+			|| str_in_list(&ctl->server.akalist, argv[optind], TRUE))
+		{
 		    /* Is this correct? */
 		    if (predeclared && outlevel >= O_VERBOSE)
-			fprintf(stderr,
-				GT_
-				("Warning: multiple mentions of host %s in config file\n"),
-				argv[optind]);
+			fprintf(stderr,GT_("Warning: multiple mentions of host %s in config file\n"),argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;
 		}
 
-	    if (!predeclared) {
+	    if (!predeclared)
+	    {
 		/*
 		 * Allocate and link record without copying in
 		 * command-line args; we'll do that with the optmerge
 		 * call later on.
 		 */
-		ctl = hostalloc((struct query *) NULL);
-		ctl->server.via = ctl->server.pollname =
-		    xstrdup(argv[optind]);
+		ctl = hostalloc((struct query *)NULL);
+		ctl->server.via =
+		    ctl->server.pollname = xstrdup(argv[optind]);
 		ctl->active = TRUE;
-		ctl->server.lead_server = (struct hostdata *) NULL;
+		ctl->server.lead_server = (struct hostdata *)NULL;
 	    }
 	}
 
     /*
      * If there's a defaults record, merge it and lose it.
-     */
-    if (querylist && strcmp(querylist->server.pollname, "defaults") == 0) {
+     */ 
+    if (querylist && strcmp(querylist->server.pollname, "defaults") == 0)
+    {
 	for (ctl = querylist->next; ctl; ctl = ctl->next)
 	    optmerge(ctl, querylist, FALSE);
 	querylist = querylist->next;
@@ -1125,11 +1098,8 @@ static int load_params(int argc, char **argv, int optind)
 
     /* don't allow a defaults record after the first */
     for (ctl = querylist; ctl; ctl = ctl->next) {
-	if (ctl != querylist
-	    && strcmp(ctl->server.pollname, "defaults") == 0) {
-	    fprintf(stderr,
-		    GT_
-		    ("fetchmail: Error: multiple \"defaults\" records in config file.\n"));
+	if (ctl != querylist && strcmp(ctl->server.pollname, "defaults") == 0) {
+	    fprintf(stderr, GT_("fetchmail: Error: multiple \"defaults\" records in config file.\n"));
 	    exit(PS_SYNTAX);
 	}
     }
@@ -1176,16 +1146,16 @@ static int load_params(int argc, char **argv, int optind)
      * the FQDN in order to generate capability keys.
      */
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl->active &&
-	    (ctl->server.protocol == P_ETRN
-	     || ctl->server.protocol == P_ODMR
-	     || ctl->server.authenticate == A_KERBEROS_V4
-	     || ctl->server.authenticate == A_KERBEROS_V5)) {
+	if (ctl->active && 
+		(ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
+		 || ctl->server.authenticate == A_KERBEROS_V4
+		 || ctl->server.authenticate == A_KERBEROS_V5))
+	{
 	    fetchmailhost = host_fqdn(1);
 	    break;
 	}
 
-    if (!ctl)			/* list exhausted */
+    if (!ctl) /* list exhausted */
 	fetchmailhost = host_fqdn(0);
 
     /* this code enables flags to be turned off */
@@ -1196,10 +1166,11 @@ static int load_params(int argc, char **argv, int optind)
 				else\
 					flag = (dflt)
     /* one global gets treated specially */
-    DEFAULT(run.showdots, run.poll_interval == 0 || nodetach);
+    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
-    for (ctl = querylist; ctl; ctl = ctl->next) {
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
 	ctl->wedged = FALSE;
 
 	/* merge in defaults */
@@ -1212,7 +1183,7 @@ static int load_params(int argc, char **argv, int optind)
 	 * queryname has to be set up for inactive servers too.  
 	 * Otherwise the UIDL code core-dumps on startup.
 	 */
-	if (ctl->server.via)
+	if (ctl->server.via) 
 	    ctl->server.queryname = xstrdup(ctl->server.via);
 	else
 	    ctl->server.queryname = xstrdup(ctl->server.pollname);
@@ -1224,13 +1195,14 @@ static int load_params(int argc, char **argv, int optind)
 	 */
 	ctl->server.truename = xstrdup(ctl->server.queryname);
 
-	if (configdump || ctl->active) {
+	if (configdump || ctl->active )
+	{
 	    DEFAULT(ctl->keep, FALSE);
 	    DEFAULT(ctl->fetchall, FALSE);
 	    DEFAULT(ctl->flush, FALSE);
 	    DEFAULT(ctl->limitflush, FALSE);
 	    DEFAULT(ctl->rewrite, TRUE);
-	    DEFAULT(ctl->stripcr, (ctl->mda != (char *) NULL));
+	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
 	    DEFAULT(ctl->forcecr, FALSE);
 	    DEFAULT(ctl->pass8bits, FALSE);
 	    DEFAULT(ctl->dropstatus, FALSE);
@@ -1247,33 +1219,28 @@ static int load_params(int argc, char **argv, int optind)
 	     * XXX FIXME: do we need this check or can we rely on the .y
 	     * parser handling this?
 	     */
-	    if (ctl->use_ssl) {
+	    if (ctl->use_ssl) 
+	    {
 		report(stderr, GT_("SSL support is not compiled in.\n"));
 		exit(PS_SYNTAX);
 	    }
-#endif				/* SSL_ENABLE */
+#endif /* SSL_ENABLE */
 #undef DEFAULT
 #ifndef KERBEROS_V4
 	    if (ctl->server.authenticate == A_KERBEROS_V4) {
-		report(stderr,
-		       GT_
-		       ("KERBEROS v4 support is configured, but not compiled in.\n"));
+		report(stderr, GT_("KERBEROS v4 support is configured, but not compiled in.\n"));
 		exit(PS_SYNTAX);
 	    }
 #endif
 #ifndef KERBEROS_V5
 	    if (ctl->server.authenticate == A_KERBEROS_V5) {
-		report(stderr,
-		       GT_
-		       ("KERBEROS v5 support is configured, but not compiled in.\n"));
+		report(stderr, GT_("KERBEROS v5 support is configured, but not compiled in.\n"));
 		exit(PS_SYNTAX);
 	    }
 #endif
 #ifndef GSSAPI
 	    if (ctl->server.authenticate == A_GSSAPI) {
-		report(stderr,
-		       GT_
-		       ("GSSAPI support is configured, but not compiled in.\n"));
+		report(stderr, GT_("GSSAPI support is configured, but not compiled in.\n"));
 		exit(PS_SYNTAX);
 	    }
 #endif
@@ -1287,53 +1254,47 @@ static int load_params(int argc, char **argv, int optind)
 	    /*
 	     * Make sure we have a nonempty list of domains to fetch from.
 	     */
-	    if ((ctl->server.protocol == P_ETRN
-		 || ctl->server.protocol == P_ODMR) && !ctl->domainlist)
+	    if ((ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR) && !ctl->domainlist)
 		save_str(&ctl->domainlist, fetchmailhost, FALSE);
 
 	    /* if `user' doesn't name a real local user, try to run as root */
-	    if ((pw = getpwnam(user)) == (struct passwd *) NULL)
+	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
 		ctl->uid = 0;
-	    else
+            else
 		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
 	    if (!ctl->localnames)	/* for local delivery via SMTP */
 		save_str_pair(&ctl->localnames, user, NULL);
 
 #ifndef HAVE_RES_SEARCH
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (MULTIDROP(ctl) && ctl->server.dns) {
+	    if (MULTIDROP(ctl) && ctl->server.dns)
+	    {
 		ctl->server.dns = FALSE;
-		report(stderr,
-		       GT_
-		       ("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"),
-		       ctl->server.pollname);
+		report(stderr, GT_("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
 	    }
-#endif				/* !HAVE_RES_SEARCH */
+#endif /* !HAVE_RES_SEARCH */
 
 	    /*
 	     * can't handle multidrop mailboxes without "envelope"
 	     * option, this causes truckloads full of support complaints
 	     * "all mail forwarded to postmaster"
 	     */
-	    if (MULTIDROP(ctl) && !ctl->server.envelope) {
-		report(stderr,
-		       GT_
-		       ("warning: multidrop for %s requires envelope option!\n"),
-		       ctl->server.pollname);
-		report(stderr,
-		       GT_
-		       ("warning: Do not ask for support if all mail goes to postmaster!\n"));
+	    if (MULTIDROP(ctl) && !ctl->server.envelope)
+	    {
+		report(stderr, GT_("warning: multidrop for %s requires envelope option!\n"), ctl->server.pollname);
+		report(stderr, GT_("warning: Do not ask for support if all mail goes to postmaster!\n"));
 	    }
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)
-		save_str(&ctl->mailboxes, (char *) NULL, 0);
+		save_str(&ctl->mailboxes, (char *)NULL, 0);
 
 	    /* maybe user overrode timeout on command line? */
 	    if (ctl->server.timeout == -1)
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
 	    /* sanity checks */
+/* sanity checks */
 #ifdef	MAPI_ENABLE
 	    if(ctl->server.protocol == P_MAPI) {
 		if(ctl->use_ssl || ctl->sslkey || ctl->sslcert || ctl->sslproto || ctl->sslcertpath || ctl->sslcertck || ctl->sslfingerprint) {
@@ -1357,33 +1318,35 @@ fetchmail will run ignoring --service option\n"),
 #endif
 	    if (ctl->server.service) {
 		int port = servport(ctl->server.service);
-		if (port < 0) {
+		if (port < 0)
+		{
 		    (void) fprintf(stderr,
-				   GT_
-				   ("fetchmail: %s configuration invalid, specify positive port number for service or port\n"),
+				   GT_("fetchmail: %s configuration invalid, specify positive port number for service or port\n"),
 				   ctl->server.pollname);
 		    exit(PS_SYNTAX);
 		}
-		if (ctl->server.protocol == P_RPOP && port >= 1024) {
+		if (ctl->server.protocol == P_RPOP && port >= 1024)
+		{
 		    (void) fprintf(stderr,
-				   GT_
-				   ("fetchmail: %s configuration invalid, RPOP requires a privileged port\n"),
+				   GT_("fetchmail: %s configuration invalid, RPOP requires a privileged port\n"),
 				   ctl->server.pollname);
 		    exit(PS_SYNTAX);
 		}
 	    }
-	    if (ctl->listener == LMTP_MODE) {
-		struct idlist *idp;
+	    if (ctl->listener == LMTP_MODE)
+	    {
+		struct idlist	*idp;
 
-		for (idp = ctl->smtphunt; idp; idp = idp->next) {
-		    char *cp;
+		for (idp = ctl->smtphunt; idp; idp = idp->next)
+		{
+		    char	*cp;
 
 		    if (!(cp = strrchr(idp->id, '/'))
 			|| (0 == strcmp(cp + 1, SMTP_PORT))
-			|| servport(cp + 1) == SMTP_PORT_NUM) {
+			|| servport(cp + 1) == SMTP_PORT_NUM)
+		    {
 			(void) fprintf(stderr,
-				       GT_
-				       ("%s configuration invalid, LMTP can't use default SMTP port\n"),
+				       GT_("%s configuration invalid, LMTP can't use default SMTP port\n"),
 				       ctl->server.pollname);
 			exit(PS_SYNTAX);
 		    }
@@ -1394,12 +1357,10 @@ fetchmail will run ignoring --service option\n"),
 	     * "I beg to you, have mercy on the we[a]k minds like myself."
 	     * wrote Pehr Anderson.  Your petition is granted.
 	     */
-	    if (ctl->fetchall && ctl->keep
-		&& (run.poll_interval || ctl->idle)
-		&& !nodetach && !configdump) {
+	    if (ctl->fetchall && ctl->keep && (run.poll_interval || ctl->idle) && !nodetach && !configdump)
+	    {
 		(void) fprintf(stderr,
-			       GT_
-			       ("Both fetchall and keep on in daemon or idle mode is a mistake!\n"));
+			       GT_("Both fetchall and keep on in daemon or idle mode is a mistake!\n"));
 	    }
 	}
     }
@@ -1408,14 +1369,15 @@ fetchmail will run ignoring --service option\n"),
      * If the user didn't set a last-resort user to get misaddressed
      * multidrop mail, set an appropriate default here.
      */
-    if (!run.postmaster) {
-	if (getuid() != ROOT_UID)	/* ordinary user */
+    if (!run.postmaster)
+    {
+	if (getuid() != ROOT_UID)		/* ordinary user */
 	    run.postmaster = user;
-	else			/* root */
+	else					/* root */
 	    run.postmaster = "postmaster";
     }
 
-    return (implicitmode);
+    return(implicitmode);
 }
 
 static RETSIGTYPE terminate_poll(int sig)
@@ -1423,7 +1385,7 @@ static RETSIGTYPE terminate_poll(int sig)
 {
 
     if (sig != 0)
-	report(stdout, GT_("terminated with signal %d\n"), sig);
+        report(stdout, GT_("terminated with signal %d\n"), sig);
 
 #ifdef POP3_ENABLE
     /*
@@ -1433,13 +1395,13 @@ static RETSIGTYPE terminate_poll(int sig)
      */
     if (!check_only)
 	write_saved_lists(querylist, run.idfile);
-#endif				/* POP3_ENABLE */
+#endif /* POP3_ENABLE */
 }
 
 static RETSIGTYPE terminate_run(int sig)
 /* to be executed on normal or signal-induced termination */
 {
-    struct query *ctl;
+    struct query	*ctl;
 
     terminate_poll(sig);
 
@@ -1456,7 +1418,7 @@ static RETSIGTYPE terminate_run(int sig)
      */
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->password)
-	    memset(ctl->password, '\0', strlen(ctl->password));
+	  memset(ctl->password, '\0', strlen(ctl->password));
 
 #if !defined(HAVE_ATEXIT)
     fm_lock_release();
@@ -1471,16 +1433,17 @@ static RETSIGTYPE terminate_run(int sig)
 /*
  * Sequence of protocols to try when autoprobing, most capable to least.
  */
-static const int autoprobe[] = {
+static const int autoprobe[] = 
+{
 #ifdef IMAP_ENABLE
     P_IMAP,
-#endif				/* IMAP_ENABLE */
+#endif /* IMAP_ENABLE */
 #ifdef POP3_ENABLE
     P_POP3,
-#endif				/* POP3_ENABLE */
+#endif /* POP3_ENABLE */
 #ifdef POP2_ENABLE
     P_POP2
-#endif				/* POP2_ENABLE */
+#endif /* POP2_ENABLE */
 };
 
 static int query_host(struct query *ctl)
@@ -1493,24 +1456,25 @@ static int query_host(struct query *ctl)
      * If we're syslogging the progress messages are automatically timestamped.
      * Force timestamping if we're going to a logfile.
      */
-    if (outlevel >= O_VERBOSE) {
-	report(stdout,
-	       GT_("%s querying %s (protocol %s) at %s: poll started\n"),
-	       VERSION, ctl->server.pollname,
-	       showproto(ctl->server.protocol), timestamp());
+    if (outlevel >= O_VERBOSE)
+    {
+	report(stdout, GT_("%s querying %s (protocol %s) at %s: poll started\n"),
+	       VERSION,
+	       ctl->server.pollname,
+	       showproto(ctl->server.protocol),
+	       timestamp());
     }
 
     switch (ctl->server.protocol) {
     case P_AUTO:
-	for (i = 0; i < sizeof(autoprobe) / sizeof(autoprobe[0]); i++) {
+	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
+	{
 	    ctl->server.protocol = autoprobe[i];
 	    do {
 		st = query_host(ctl);
-	    }
-	    while (st == PS_REPOLL);
-	    if (st == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL
-		|| st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH
-		|| st == PS_DNS)
+	    } while 
+		(st == PS_REPOLL);
+	    if (st == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH || st == PS_DNS)
 		break;
 	}
 	ctl->server.protocol = P_AUTO;
@@ -1521,7 +1485,7 @@ static int query_host(struct query *ctl)
 #else
 	report(stderr, GT_("POP2 support is not configured.\n"));
 	st = PS_PROTOCOL;
-#endif				/* POP2_ENABLE */
+#endif /* POP2_ENABLE */
 	break;
     case P_POP3:
     case P_APOP:
@@ -1529,23 +1493,21 @@ static int query_host(struct query *ctl)
 #ifdef POP3_ENABLE
 	do {
 	    st = doPOP3(ctl);
-	}
-	while (st == PS_REPOLL);
+	} while (st == PS_REPOLL);
 #else
 	report(stderr, GT_("POP3 support is not configured.\n"));
 	st = PS_PROTOCOL;
-#endif				/* POP3_ENABLE */
+#endif /* POP3_ENABLE */
 	break;
     case P_IMAP:
 #ifdef IMAP_ENABLE
 	do {
 	    st = doIMAP(ctl);
-	}
-	while (st == PS_REPOLL);
+	} while (st == PS_REPOLL);
 #else
 	report(stderr, GT_("IMAP support is not configured.\n"));
 	st = PS_PROTOCOL;
-#endif				/* IMAP_ENABLE */
+#endif /* IMAP_ENABLE */
 	break;
     case P_ETRN:
 #ifndef ETRN_ENABLE
@@ -1554,14 +1516,14 @@ static int query_host(struct query *ctl)
 #else
 	st = doETRN(ctl);
 	break;
-#endif				/* ETRN_ENABLE */
+#endif /* ETRN_ENABLE */
     case P_ODMR:
 #ifndef ODMR_ENABLE
 	report(stderr, GT_("ODMR support is not configured.\n"));
 	st = PS_PROTOCOL;
 #else
 	st = doODMR(ctl);
-#endif				/* ODMR_ENABLE */
+#endif /* ODMR_ENABLE */
 	break;
     case P_MAPI:
 #ifdef MAPI_ENABLE
@@ -1569,7 +1531,7 @@ static int query_host(struct query *ctl)
 #else
 	report(stderr, GT_("MAPI support is not configured.\n"));
 	st = PS_PROTOCOL;
-#endif				/* MAPI_ENABLE */
+#endif /* MAPI_ENABLE */
 	break;
     default:
 	report(stderr, GT_("unsupported protocol selected.\n"));
@@ -1580,18 +1542,20 @@ static int query_host(struct query *ctl)
      * If we're syslogging the progress messages are automatically timestamped.
      * Force timestamping if we're going to a logfile.
      */
-    if (outlevel >= O_VERBOSE) {
-	report(stdout,
-	       GT_("%s querying %s (protocol %s) at %s: poll completed\n"),
-	       VERSION, ctl->server.pollname,
-	       showproto(ctl->server.protocol), timestamp());
+    if (outlevel >= O_VERBOSE)
+    {
+	report(stdout, GT_("%s querying %s (protocol %s) at %s: poll completed\n"),
+	       VERSION,
+	       ctl->server.pollname,
+	       showproto(ctl->server.protocol),
+	       timestamp());
     }
 
-    return (st);
+    return(st);
 }
 
-static void
-dump_params(struct runctl *runp, struct query *querylist, flag implicit)
+static void dump_params (struct runctl *runp,
+			 struct query *querylist, flag implicit)
 /* display query parameters in English */
 {
     struct query *ctl;
@@ -1607,23 +1571,20 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	printf(GT_("Progress messages will be logged via syslog\n"));
 #endif
     if (runp->invisible)
-	printf(GT_
-	       ("Fetchmail will masquerade and will not generate Received\n"));
+	printf(GT_("Fetchmail will masquerade and will not generate Received\n"));
     if (runp->showdots)
-	printf(GT_
-	       ("Fetchmail will show progress dots even in logfiles.\n"));
+	printf(GT_("Fetchmail will show progress dots even in logfiles.\n"));
     if (runp->postmaster)
-	printf(GT_
-	       ("Fetchmail will forward misaddressed multidrop messages to %s.\n"),
+	printf(GT_("Fetchmail will forward misaddressed multidrop messages to %s.\n"),
 	       runp->postmaster);
 
     if (!runp->bouncemail)
-	printf(GT_
-	       ("Fetchmail will direct error mail to the postmaster.\n"));
+	printf(GT_("Fetchmail will direct error mail to the postmaster.\n"));
     else if (outlevel >= O_VERBOSE)
 	printf(GT_("Fetchmail will direct error mail to the sender.\n"));
 
-    for (ctl = querylist; ctl; ctl = ctl->next) {
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
 	if (!ctl->active || (implicit && ctl->server.skip))
 	    continue;
 
@@ -1631,29 +1592,24 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	       ctl->remotename, visbuf(ctl->server.pollname));
 
 	if (ctl->server.via && MAILBOX_PROTOCOL(ctl))
-	    printf(GT_("  Mail will be retrieved via %s\n"),
-		   ctl->server.via);
+	    printf(GT_("  Mail will be retrieved via %s\n"), ctl->server.via);
 
 	if (ctl->server.interval)
-	    printf(ngettext
-		   ("  Poll of this server will occur every %d interval.\n",
-		    "  Poll of this server will occur every %d intervals.\n",
-		    ctl->server.interval), ctl->server.interval);
+	    printf(ngettext("  Poll of this server will occur every %d interval.\n",
+			    "  Poll of this server will occur every %d intervals.\n",
+			    ctl->server.interval), ctl->server.interval);
 	if (ctl->server.truename)
-	    printf(GT_("  True name of server is %s.\n"),
-		   ctl->server.truename);
+	    printf(GT_("  True name of server is %s.\n"), ctl->server.truename);
 	if (ctl->server.skip || outlevel >= O_VERBOSE)
 	    printf(ctl->server.skip
-		   ?
-		   GT_
-		   ("  This host will not be queried when no host is specified.\n")
-		   :
-		   GT_
-		   ("  This host will be queried when no host is specified.\n"));
-	if (!NO_PASSWORD(ctl)) {
+		   ? GT_("  This host will not be queried when no host is specified.\n")
+		   : GT_("  This host will be queried when no host is specified.\n"));
+	if (!NO_PASSWORD(ctl))
+	{
 	    if (!ctl->password)
 		printf(GT_("  Password will be prompted for.\n"));
-	    else if (outlevel >= O_VERBOSE) {
+	    else if (outlevel >= O_VERBOSE)
+	    {
 		if (ctl->server.protocol == P_APOP)
 		    printf(GT_("  APOP secret = \"%s\".\n"),
 			   visbuf(ctl->password));
@@ -1662,21 +1618,18 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 			   visbuf(ctl->password));
 		else
 		    printf(GT_("  Password = \"%s\".\n"),
-			   visbuf(ctl->password));
+							visbuf(ctl->password));
 	    }
 	}
 
-	if (ctl->server.protocol == P_POP3
-	    && ctl->server.service
-	    && !strcmp(ctl->server.service, KPOP_PORT)
-	    && (ctl->server.authenticate == A_KERBEROS_V4
-		|| ctl->server.authenticate == A_KERBEROS_V5))
-	    printf(GT_
-		   ("  Protocol is KPOP with Kerberos %s authentication"),
+	if (ctl->server.protocol == P_POP3 
+	    && ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT)
+	    && (ctl->server.authenticate == A_KERBEROS_V4 ||
+		ctl->server.authenticate == A_KERBEROS_V5))
+	    printf(GT_("  Protocol is KPOP with Kerberos %s authentication"),
 		   ctl->server.authenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
-	    printf(GT_("  Protocol is %s"),
-		   showproto(ctl->server.protocol));
+	    printf(GT_("  Protocol is %s"), showproto(ctl->server.protocol));
 	if (ctl->server.service)
 	    printf(GT_(" (using service %s)"), ctl->server.service);
 	else if (outlevel >= O_VERBOSE)
@@ -1685,10 +1638,10 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	    printf(GT_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
-	switch (ctl->server.authenticate) {
+	switch (ctl->server.authenticate)
+	{
 	case A_ANY:
-	    printf(GT_
-		   ("  All available authentication methods will be tried.\n"));
+	    printf(GT_("  All available authentication methods will be tried.\n"));
 	    break;
 	case A_PASSWORD:
 	    printf(GT_("  Password authentication will be forced.\n"));
@@ -1719,8 +1672,7 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	    break;
 	}
 	if (ctl->server.principal != (char *) NULL)
-	    printf(GT_("  Mail service principal is: %s\n"),
-		   ctl->server.principal);
+	    printf(GT_("  Mail service principal is: %s\n"), ctl->server.principal);
 #ifdef	SSL_ENABLE
 	if (ctl->use_ssl)
 	    printf(GT_("  SSL encrypted sessions enabled.\n"));
@@ -1729,26 +1681,26 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	if (ctl->sslcertck) {
 	    printf(GT_("  SSL server certificate checking enabled.\n"));
 	    if (ctl->sslcertpath != NULL)
-		printf(GT_("  SSL trusted certificate directory: %s\n"),
-		       ctl->sslcertpath);
+		printf(GT_("  SSL trusted certificate directory: %s\n"), ctl->sslcertpath);
 	}
+	if (ctl->sslcommonname != NULL)
+		printf(GT_("  SSL server CommonName: %s\n"), ctl->sslcommonname);
 	if (ctl->sslfingerprint != NULL)
-	    printf(GT_
-		   ("  SSL key fingerprint (checked against the server key): %s\n"),
-		   ctl->sslfingerprint);
+		printf(GT_("  SSL key fingerprint (checked against the server key): %s\n"), ctl->sslfingerprint);
 #endif
 	if (ctl->server.timeout > 0)
-	    printf(GT_("  Server nonresponse timeout is %d seconds"),
-		   ctl->server.timeout);
-	if (ctl->server.timeout == CLIENT_TIMEOUT)
+	    printf(GT_("  Server nonresponse timeout is %d seconds"), ctl->server.timeout);
+	if (ctl->server.timeout ==  CLIENT_TIMEOUT)
 	    printf(GT_(" (default).\n"));
 	else
 	    printf(".\n");
 
-	if (MAILBOX_PROTOCOL(ctl)) {
+	if (MAILBOX_PROTOCOL(ctl)) 
+	{
 	    if (!ctl->mailboxes->id)
 		printf(GT_("  Default mailbox selected.\n"));
-	    else {
+	    else
+	    {
 		struct idlist *idp;
 
 		printf(GT_("  Selected mailboxes are:"));
@@ -1758,140 +1710,91 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	    }
 	    printf(ctl->fetchall
 		   ? GT_("  All messages will be retrieved (--all on).\n")
-		   :
-		   GT_
-		   ("  Only new messages will be retrieved (--all off).\n"));
-	    printf(ctl->
-		   keep ?
-		   GT_
-		   ("  Fetched messages will be kept on the server (--keep on).\n")
-		   :
-		   GT_
-		   ("  Fetched messages will not be kept on the server (--keep off).\n"));
-	    printf(ctl->
-		   flush ?
-		   GT_
-		   ("  Old messages will be flushed before message retrieval (--flush on).\n")
-		   :
-		   GT_
-		   ("  Old messages will not be flushed before message retrieval (--flush off).\n"));
-	    printf(ctl->
-		   limitflush ?
-		   GT_
-		   ("  Oversized messages will be flushed before message retrieval (--limitflush on).\n")
-		   :
-		   GT_
-		   ("  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"));
-	    printf(ctl->
-		   rewrite ?
-		   GT_
-		   ("  Rewrite of server-local addresses is enabled (--norewrite off).\n")
-		   :
-		   GT_
-		   ("  Rewrite of server-local addresses is disabled (--norewrite on).\n"));
-	    printf(ctl->
-		   stripcr ?
-		   GT_
-		   ("  Carriage-return stripping is enabled (stripcr on).\n")
-		   :
-		   GT_
-		   ("  Carriage-return stripping is disabled (stripcr off).\n"));
-	    printf(ctl->
-		   forcecr ?
-		   GT_
-		   ("  Carriage-return forcing is enabled (forcecr on).\n")
-		   :
-		   GT_
-		   ("  Carriage-return forcing is disabled (forcecr off).\n"));
-	    printf(ctl->
-		   pass8bits ?
-		   GT_
-		   ("  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n")
-		   :
-		   GT_
-		   ("  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"));
-	    printf(ctl->
-		   mimedecode ?
-		   GT_("  MIME decoding is enabled (mimedecode on).\n") :
-		   GT_("  MIME decoding is disabled (mimedecode off).\n"));
-	    printf(ctl->
-		   idle ? GT_("  Idle after poll is enabled (idle on).\n")
+		   : GT_("  Only new messages will be retrieved (--all off).\n"));
+	    printf(ctl->keep
+		   ? GT_("  Fetched messages will be kept on the server (--keep on).\n")
+		   : GT_("  Fetched messages will not be kept on the server (--keep off).\n"));
+	    printf(ctl->flush
+		   ? GT_("  Old messages will be flushed before message retrieval (--flush on).\n")
+		   : GT_("  Old messages will not be flushed before message retrieval (--flush off).\n"));
+	    printf(ctl->limitflush
+		   ? GT_("  Oversized messages will be flushed before message retrieval (--limitflush on).\n")
+		   : GT_("  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"));
+	    printf(ctl->rewrite
+		   ? GT_("  Rewrite of server-local addresses is enabled (--norewrite off).\n")
+		   : GT_("  Rewrite of server-local addresses is disabled (--norewrite on).\n"));
+	    printf(ctl->stripcr
+		   ? GT_("  Carriage-return stripping is enabled (stripcr on).\n")
+		   : GT_("  Carriage-return stripping is disabled (stripcr off).\n"));
+	    printf(ctl->forcecr
+		   ? GT_("  Carriage-return forcing is enabled (forcecr on).\n")
+		   : GT_("  Carriage-return forcing is disabled (forcecr off).\n"));
+	    printf(ctl->pass8bits
+		   ? GT_("  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n")
+		   : GT_("  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"));
+	    printf(ctl->mimedecode
+		   ? GT_("  MIME decoding is enabled (mimedecode on).\n")
+		   : GT_("  MIME decoding is disabled (mimedecode off).\n"));
+	    printf(ctl->idle
+		   ? GT_("  Idle after poll is enabled (idle on).\n")
 		   : GT_("  Idle after poll is disabled (idle off).\n"));
-	    printf(ctl->
-		   dropstatus ?
-		   GT_
-		   ("  Nonempty Status lines will be discarded (dropstatus on)\n")
-		   :
-		   GT_
-		   ("  Nonempty Status lines will be kept (dropstatus off)\n"));
-	    printf(ctl->
-		   dropdelivered ?
-		   GT_
-		   ("  Delivered-To lines will be discarded (dropdelivered on)\n")
-		   :
-		   GT_
-		   ("  Delivered-To lines will be kept (dropdelivered off)\n"));
-	    if (NUM_NONZERO(ctl->limit)) {
+	    printf(ctl->dropstatus
+		   ? GT_("  Nonempty Status lines will be discarded (dropstatus on)\n")
+		   : GT_("  Nonempty Status lines will be kept (dropstatus off)\n"));
+	    printf(ctl->dropdelivered
+		   ? GT_("  Delivered-To lines will be discarded (dropdelivered on)\n")
+		   : GT_("  Delivered-To lines will be kept (dropdelivered off)\n"));
+	    if (NUM_NONZERO(ctl->limit))
+	    {
 		if (NUM_NONZERO(ctl->limit))
-		    printf(GT_
-			   ("  Message size limit is %d octets (--limit %d).\n"),
+		    printf(GT_("  Message size limit is %d octets (--limit %d).\n"), 
 			   ctl->limit, ctl->limit);
 		else if (outlevel >= O_VERBOSE)
 		    printf(GT_("  No message size limit (--limit 0).\n"));
 		if (run.poll_interval > 0)
-		    printf(GT_
-			   ("  Message size warning interval is %d seconds (--warnings %d).\n"),
+		    printf(GT_("  Message size warning interval is %d seconds (--warnings %d).\n"), 
 			   ctl->warnings, ctl->warnings);
 		else if (outlevel >= O_VERBOSE)
-		    printf(GT_
-			   ("  Size warnings on every poll (--warnings 0).\n"));
+		    printf(GT_("  Size warnings on every poll (--warnings 0).\n"));
 	    }
 	    if (NUM_NONZERO(ctl->fetchlimit))
-		printf(GT_
-		       ("  Received-message limit is %d (--fetchlimit %d).\n"),
+		printf(GT_("  Received-message limit is %d (--fetchlimit %d).\n"),
 		       ctl->fetchlimit, ctl->fetchlimit);
 	    else if (outlevel >= O_VERBOSE)
-		printf(GT_
-		       ("  No received-message limit (--fetchlimit 0).\n"));
+		printf(GT_("  No received-message limit (--fetchlimit 0).\n"));
 	    if (NUM_NONZERO(ctl->fetchsizelimit))
-		printf(GT_
-		       ("  Fetch message size limit is %d (--fetchsizelimit %d).\n"),
+		printf(GT_("  Fetch message size limit is %d (--fetchsizelimit %d).\n"),
 		       ctl->fetchsizelimit, ctl->fetchsizelimit);
 	    else if (outlevel >= O_VERBOSE)
-		printf(GT_
-		       ("  No fetch message size limit (--fetchsizelimit 0).\n"));
-	    if (NUM_NONZERO(ctl->fastuidl) && MAILBOX_PROTOCOL(ctl)) {
+		printf(GT_("  No fetch message size limit (--fetchsizelimit 0).\n"));
+	    if (NUM_NONZERO(ctl->fastuidl) && MAILBOX_PROTOCOL(ctl))
+	    {
 		if (ctl->fastuidl == 1)
-		    printf(GT_
-			   ("  Do binary search of UIDs during each poll (--fastuidl 1).\n"));
+		    printf(GT_("  Do binary search of UIDs during each poll (--fastuidl 1).\n"));
 		else
-		    printf(GT_
-			   ("  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"),
-			   ctl->fastuidl - 1, ctl->fastuidl,
-			   ctl->fastuidl);
-	    } else if (outlevel >= O_VERBOSE)
-		printf(GT_
-		       ("   Do linear search of UIDs during each poll (--fastuidl 0).\n"));
-	    if (NUM_NONZERO(ctl->batchlimit))
-		printf(GT_("  SMTP message batch limit is %d.\n"),
-		       ctl->batchlimit);
+		    printf(GT_("  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"), ctl->fastuidl - 1, ctl->fastuidl, ctl->fastuidl);
+	    }
 	    else if (outlevel >= O_VERBOSE)
-		printf(GT_
-		       ("  No SMTP message batch limit (--batchlimit 0).\n"));
-	    if (MAILBOX_PROTOCOL(ctl)) {
+		printf(GT_("   Do linear search of UIDs during each poll (--fastuidl 0).\n"));
+	    if (NUM_NONZERO(ctl->batchlimit))
+		printf(GT_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
+	    else if (outlevel >= O_VERBOSE)
+		printf(GT_("  No SMTP message batch limit (--batchlimit 0).\n"));
+	    if (MAILBOX_PROTOCOL(ctl))
+	    {
 		if (NUM_NONZERO(ctl->expunge))
-		    printf(GT_
-			   ("  Deletion interval between expunges forced to %d (--expunge %d).\n"),
-			   ctl->expunge, ctl->expunge);
+		    printf(GT_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
 		else if (outlevel >= O_VERBOSE)
 		    printf(GT_("  No forced expunges (--expunge 0).\n"));
 	    }
-	} else {		/* ODMR or ETRN */
-
+	}
+	else	/* ODMR or ETRN */
+	{
 	    struct idlist *idp;
 
 	    printf(GT_("  Domains for which mail will be fetched are:"));
-	    for (idp = ctl->domainlist; idp; idp = idp->next) {
+	    for (idp = ctl->domainlist; idp; idp = idp->next)
+	    {
 		printf(" %s", idp->id);
 		if (!idp->val.status.mark)
 		    printf(GT_(" (default)"));
@@ -1899,18 +1802,19 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	    printf("\n");
 	}
 	if (ctl->bsmtp)
-	    printf(GT_("  Messages will be appended to %s as BSMTP\n"),
-		   visbuf(ctl->bsmtp));
+	    printf(GT_("  Messages will be appended to %s as BSMTP\n"), visbuf(ctl->bsmtp));
 	else if (ctl->mda && MAILBOX_PROTOCOL(ctl))
-	    printf(GT_("  Messages will be delivered with \"%s\".\n"),
-		   visbuf(ctl->mda));
-	else {
+	    printf(GT_("  Messages will be delivered with \"%s\".\n"), visbuf(ctl->mda));
+	else
+	{
 	    struct idlist *idp;
 
-	    if (ctl->smtphunt) {
-		printf(GT_("  Messages will be %cMTP-forwarded to:"),
+	    if (ctl->smtphunt)
+	    {
+		printf(GT_("  Messages will be %cMTP-forwarded to:"), 
 		       ctl->listener);
-		for (idp = ctl->smtphunt; idp; idp = idp->next) {
+		for (idp = ctl->smtphunt; idp; idp = idp->next)
+		{
 		    printf(" %s", idp->id);
 		    if (!idp->val.status.mark)
 			printf(GT_(" (default)"));
@@ -1921,149 +1825,136 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 		printf(GT_("  Host part of MAIL FROM line will be %s\n"),
 		       ctl->smtpaddress);
 	    if (ctl->smtpname)
-		printf(GT_
-		       ("  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"),
+		printf(GT_("  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"),
 		       ctl->smtpname);
 	}
-	if (MAILBOX_PROTOCOL(ctl)) {
-	    if (ctl->antispam != (struct idlist *) NULL) {
-		struct idlist *idp;
+	if (MAILBOX_PROTOCOL(ctl))
+	{
+		if (ctl->antispam != (struct idlist *)NULL)
+		{
+		    struct idlist *idp;
 
-		printf(GT_
-		       ("  Recognized listener spam block responses are:"));
-		for (idp = ctl->antispam; idp; idp = idp->next)
-		    printf(" %d", idp->val.status.num);
-		printf("\n");
-	    } else if (outlevel >= O_VERBOSE)
-		printf(GT_("  Spam-blocking disabled\n"));
+		    printf(GT_("  Recognized listener spam block responses are:"));
+		    for (idp = ctl->antispam; idp; idp = idp->next)
+			printf(" %d", idp->val.status.num);
+		    printf("\n");
+		}
+		else if (outlevel >= O_VERBOSE)
+		    printf(GT_("  Spam-blocking disabled\n"));
 	}
 	if (ctl->preconnect)
-	    printf(GT_
-		   ("  Server connection will be brought up with \"%s\".\n"),
+	    printf(GT_("  Server connection will be brought up with \"%s\".\n"),
 		   visbuf(ctl->preconnect));
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No pre-connection command.\n"));
 	if (ctl->postconnect)
-	    printf(GT_
-		   ("  Server connection will be taken down with \"%s\".\n"),
+	    printf(GT_("  Server connection will be taken down with \"%s\".\n"),
 		   visbuf(ctl->postconnect));
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No post-connection command.\n"));
 	if (MAILBOX_PROTOCOL(ctl)) {
-	    if (!ctl->localnames)
-		printf(GT_("  No localnames declared for this host.\n"));
-	    else {
-		struct idlist *idp;
-		int count = 0;
-
-		for (idp = ctl->localnames; idp; idp = idp->next)
-		    ++count;
-
-		if (count > 1 || ctl->wildcard)
-		    printf(GT_("  Multi-drop mode: "));
+		if (!ctl->localnames)
+		    printf(GT_("  No localnames declared for this host.\n"));
 		else
-		    printf(GT_("  Single-drop mode: "));
+		{
+		    struct idlist *idp;
+		    int count = 0;
 
-		printf(ngettext
-		       ("%d local name recognized.\n",
-			"%d local names recognized.\n", count), count);
-		if (outlevel >= O_VERBOSE) {
 		    for (idp = ctl->localnames; idp; idp = idp->next)
-			if (idp->val.id2)
-			    printf("\t%s -> %s\n", idp->id, idp->val.id2);
+			++count;
+
+		    if (count > 1 || ctl->wildcard)
+			printf(GT_("  Multi-drop mode: "));
+		    else
+			printf(GT_("  Single-drop mode: "));
+
+		    printf(ngettext("%d local name recognized.\n", "%d local names recognized.\n", count), count);
+		    if (outlevel >= O_VERBOSE)
+		    {
+			for (idp = ctl->localnames; idp; idp = idp->next)
+			    if (idp->val.id2)
+				printf("\t%s -> %s\n", idp->id, idp->val.id2);
+			    else
+				printf("\t%s\n", idp->id);
+			if (ctl->wildcard)
+			    fputs("\t*\n", stdout);
+		    }
+
+		    if (count > 1 || ctl->wildcard)
+		    {
+			printf(ctl->server.dns
+			       ? GT_("  DNS lookup for multidrop addresses is enabled.\n")
+			       : GT_("  DNS lookup for multidrop addresses is disabled.\n"));
+			if (ctl->server.dns)
+			{
+	       		    if (ctl->server.checkalias)
+				printf(GT_("  Server aliases will be compared with multidrop addresses by IP address.\n"));
+			    else
+				printf(GT_("  Server aliases will be compared with multidrop addresses by name.\n"));
+			}
+			if (ctl->server.envelope == STRING_DISABLED)
+			    printf(GT_("  Envelope-address routing is disabled\n"));
 			else
-			    printf("\t%s\n", idp->id);
-		    if (ctl->wildcard)
-			fputs("\t*\n", stdout);
-		}
+			{
+			    printf(GT_("  Envelope header is assumed to be: %s\n"),
+				   ctl->server.envelope ? ctl->server.envelope : "Received");
+			    if (ctl->server.envskip || outlevel >= O_VERBOSE)
+				printf(GT_("  Number of envelope headers to be skipped over: %d\n"),
+				       ctl->server.envskip);
+			    if (ctl->server.qvirtual)
+				printf(GT_("  Prefix %s will be removed from user id\n"),
+				       ctl->server.qvirtual);
+			    else if (outlevel >= O_VERBOSE) 
+				printf(GT_("  No prefix stripping\n"));
+			}
 
-		if (count > 1 || ctl->wildcard) {
-		    printf(ctl->server.dns
-			   ?
-			   GT_
-			   ("  DNS lookup for multidrop addresses is enabled.\n")
-			   :
-			   GT_
-			   ("  DNS lookup for multidrop addresses is disabled.\n"));
-		    if (ctl->server.dns) {
-			if (ctl->server.checkalias)
-			    printf(GT_
-				   ("  Server aliases will be compared with multidrop addresses by IP address.\n"));
-			else
-			    printf(GT_
-				   ("  Server aliases will be compared with multidrop addresses by name.\n"));
-		    }
-		    if (ctl->server.envelope == STRING_DISABLED)
-			printf(GT_
-			       ("  Envelope-address routing is disabled\n"));
-		    else {
-			printf(GT_
-			       ("  Envelope header is assumed to be: %s\n"),
-			       ctl->server.envelope ? ctl->server.
-			       envelope : "Received");
-			if (ctl->server.envskip || outlevel >= O_VERBOSE)
-			    printf(GT_
-				   ("  Number of envelope headers to be skipped over: %d\n"),
-				   ctl->server.envskip);
-			if (ctl->server.qvirtual)
-			    printf(GT_
-				   ("  Prefix %s will be removed from user id\n"),
-				   ctl->server.qvirtual);
-			else if (outlevel >= O_VERBOSE)
-			    printf(GT_("  No prefix stripping\n"));
-		    }
+			if (ctl->server.akalist)
+			{
+			    struct idlist *idp;
 
-		    if (ctl->server.akalist) {
-			struct idlist *idp;
+			    printf(GT_("  Predeclared mailserver aliases:"));
+			    for (idp = ctl->server.akalist; idp; idp = idp->next)
+				printf(" %s", idp->id);
+			    putchar('\n');
+			}
+			if (ctl->server.localdomains)
+			{
+			    struct idlist *idp;
 
-			printf(GT_("  Predeclared mailserver aliases:"));
-			for (idp = ctl->server.akalist; idp;
-			     idp = idp->next)
-			    printf(" %s", idp->id);
-			putchar('\n');
-		    }
-		    if (ctl->server.localdomains) {
-			struct idlist *idp;
-
-			printf(GT_("  Local domains:"));
-			for (idp = ctl->server.localdomains; idp;
-			     idp = idp->next)
-			    printf(" %s", idp->id);
-			putchar('\n');
+			    printf(GT_("  Local domains:"));
+			    for (idp = ctl->server.localdomains; idp; idp = idp->next)
+				printf(" %s", idp->id);
+			    putchar('\n');
+			}
 		    }
 		}
-	    }
 	}
 #ifdef CAN_MONITOR
 	if (ctl->server.interface)
-	    printf(GT_("  Connection must be through interface %s.\n"),
-		   ctl->server.interface);
+	    printf(GT_("  Connection must be through interface %s.\n"), ctl->server.interface);
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No interface requirement specified.\n"));
 	if (ctl->server.monitor)
-	    printf(GT_("  Polling loop will monitor %s.\n"),
-		   ctl->server.monitor);
+	    printf(GT_("  Polling loop will monitor %s.\n"), ctl->server.monitor);
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No monitor interface specified.\n"));
 #endif
 
 	if (ctl->server.plugin)
-	    printf(GT_
-		   ("  Server connections will be made via plugin %s (--plugin %s).\n"),
-		   ctl->server.plugin, ctl->server.plugin);
+	    printf(GT_("  Server connections will be made via plugin %s (--plugin %s).\n"), ctl->server.plugin, ctl->server.plugin);
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No plugin command specified.\n"));
 	if (ctl->server.plugout)
-	    printf(GT_
-		   ("  Listener connections will be made via plugout %s (--plugout %s).\n"),
-		   ctl->server.plugout, ctl->server.plugout);
+	    printf(GT_("  Listener connections will be made via plugout %s (--plugout %s).\n"), ctl->server.plugout, ctl->server.plugout);
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No plugout command specified.\n"));
 
-	if (ctl->server.protocol > P_POP2 && MAILBOX_PROTOCOL(ctl)) {
+	if (ctl->server.protocol > P_POP2 && MAILBOX_PROTOCOL(ctl))
+	{
 	    if (!ctl->oldsaved)
 		printf(GT_("  No UIDs saved from this host.\n"));
-	    else {
+	    else
+	    {
 		struct idlist *idp;
 		int count = 0;
 
@@ -2077,12 +1968,10 @@ dump_params(struct runctl *runp, struct query *querylist, flag implicit)
 	    }
 	}
 
-	if (ctl->server.tracepolls)
-	    printf(GT_
-		   ("  Poll trace information will be added to the Received header.\n"));
-	else if (outlevel >= O_VERBOSE)
-	    printf(GT_
-		   ("  No poll trace information will be added to the Received header.\n.\n"));
+        if (ctl->server.tracepolls)
+            printf(GT_("  Poll trace information will be added to the Received header.\n"));
+        else if (outlevel >= O_VERBOSE)
+            printf(GT_("  No poll trace information will be added to the Received header.\n.\n"));
 
 	if (ctl->properties)
 	    printf(GT_("  Pass-through properties \"%s\".\n"),

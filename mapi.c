@@ -1,65 +1,52 @@
 /*
- * =====================================================================================
- *
- *       Filename:  mapi.c
- *
- *    Description:  implement fetchmail's interface for new protocols in MAPI
- *
- *        Version:  
- *        Created:  07/01/08 10:08:27
- *       Revision:  
- *       Compiler:  
- *
- *         Author:  Yangyan Li, yangyan.li1986@gmail.com
- *        Company:  Shenzhen Institute of Advanced Technology, CAS
- *
- * =====================================================================================
+ *   mapi.c -- implement fetchmail's interface for new protocols in MAPI
+ *   
+ *   Copyright (C) 2008 by Yangyan Li   
+ *   yangyan.li1986@gmail.com   
+ *                                                                         
+ *   This program is free software; you can redistribute it and/or modify  
+ *   it under the terms of the GNU General Public License as published by  
+ *   the Free Software Foundation; either version 3 of the License, or     
+ *   (at your option) any later version.                                   
+ *                                                                         
+ *   This program is distributed in the hope that it will be useful,       
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+ *   GNU General Public License for more details.                          
+ *                                                                         
+ *   You should have received a copy of the GNU General Public License    
+ *   along with this program; if not, write to the                        
+ *   Free Software Foundation, Inc.,                                       
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             
  */
-
-/***************************************************************************
- *   Copyright (C) 2008 by Yangyan Li   *
- *   yangyan.li1986@gmail.com   *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 3 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
 
 #include  "config.h"
 
 #ifdef MAPI_ENABLE
 #include <libmapi/libmapi.h>
-#include "openchange-tools.h"
-
-#include  <stdio.h>
-#include  <string.h>
 #include  <ctype.h>
+
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #endif
-#include  <errno.h>
 
+#include  <errno.h>
 #include <magic.h>
 
 #include  "fetchmail.h"
 #include  "i18n.h"
+#include  "openchange-tools.h"
 
 #define DEFAULT_MAPI_PROFILES "%s/.fetchmail_mapi_profiles.ldb"
 #define MAPI_BOUNDARY	"=_DocE+STaALJfprDB"
+
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
 
 static TALLOC_CTX *mapi_mem_ctx;
 static struct mapi_profile *mapi_profile;
@@ -69,10 +56,7 @@ static mapi_object_t mapi_obj_table;
 static mapi_id_array_t mapi_deleted_ids;
 static struct SRowSet mapi_rowset;
 static int      mapi_initialized = FALSE;
-/*
- * as said in fetchmail.h, these should be of size PATH_MAX 
- */
-static char     mapi_profdb[1024];	/* mapi profiles databse */
+static char     mapi_profdb[PATH_MAX];	/* mapi profiles databse */
 static char     password[128];
 
 
@@ -88,12 +72,10 @@ static int      mapi_buffer_count;
  * =====================================================================================
  */
 #if defined(HAVE_STDARG_H)
-void
-MapiWrite(int *lenp, const char *format, ...)
+void MapiWrite(int *lenp, const char *format, ...)
 {
 #else
-void
-MapiWrite(lenp, format, va_alist)
+void MapiWrite(lenp, format, va_alist)
     int            *lenp;
     char           *format;
     va_dcl
@@ -123,8 +105,7 @@ MapiWrite(lenp, format, va_alist)
  *                MAPI data.
  * =====================================================================================
  */
-int
-MapiRead(int sock, char *buf, int len)
+int MapiRead(int sock, char *buf, int len)
 {
     int             count = 0;
 
@@ -151,8 +132,7 @@ MapiRead(int sock, char *buf, int len)
  *  Description:  match the interface of SockPeek.
  * =====================================================================================
  */
-int
-MapiPeek(int sock)
+int MapiPeek(int sock)
 {
     if (mapi_buffer_count < mapi_buffer.length)
 	return *(mapi_buffer.data + mapi_buffer_count);
@@ -162,8 +142,7 @@ MapiPeek(int sock)
 
 
 
-static const char *
-get_filename(const char *filename)
+static const char *get_filename(const char *filename)
 {
     const char     *substr;
 
@@ -178,10 +157,11 @@ get_filename(const char *filename)
 }
 
 /*
- * encode as base64 Samba4 code caller frees 
+ * encode as base64
+ * Samba4 code
+ * caller frees 
  */
-static char    *
-ldb_base64_encode(void *mem_ctx, const char *buf, int len)
+static char *ldb_base64_encode(void *mem_ctx, const char *buf, int len)
 {
     const char     *b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     int             bit_offset;
@@ -219,8 +199,7 @@ ldb_base64_encode(void *mem_ctx, const char *buf, int len)
 }
 
 
-static char    *
-get_base64_attachment(TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char **magic)
+static char *get_base64_attachment(TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char **magic)
 {
     enum MAPISTATUS retval;
     const char     *tmp;
@@ -275,8 +254,7 @@ get_base64_attachment(TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint
  *  Description:  check if a character is safe to be represented as the ASCII character.
  * =====================================================================================
  */
-static int
-is_safe_char(char ch)
+static int is_safe_char(char ch)
 {
 	/*-----------------------------------------------------------------------------
 	 *  For total robustness, it is better to quote every character except for the
@@ -295,8 +273,7 @@ is_safe_char(char ch)
  *  Description:  encode the body and append it to mapi_buffer 
  * =====================================================================================
  */
-static void
-quoted_printable_encode(const DATA_BLOB * body, int *lenp)
+static void quoted_printable_encode(const DATA_BLOB * body, int *lenp)
 {
     int             line_count = 0;
     int             body_count = 0;
@@ -337,8 +314,7 @@ quoted_printable_encode(const DATA_BLOB * body, int *lenp)
 }
 
 
-static void
-mapi_clean()
+static void mapi_clean()
 {
     mapi_object_release(&mapi_obj_table);
     mapi_object_release(&mapi_obj_folder);
@@ -357,8 +333,7 @@ mapi_clean()
  *                Note: it only searches in the top level, i.e. it's not recursive 
  * =====================================================================================
  */
-static int
-mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
+static int mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
 {
     enum MAPISTATUS retval;
     struct SPropTagArray *SPropTagArray;
@@ -416,8 +391,7 @@ mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const
     return MAPI_E_NOT_FOUND;
 }
 
-static int
-mapi_init(const char *folder)
+static int mapi_init(const char *folder)
 {
     enum MAPISTATUS retval;
     struct mapi_session *session = NULL;
@@ -552,8 +526,7 @@ mapi_init(const char *folder)
  *  Description:  translate mapi error code into fetchmail error code
  * =====================================================================================
  */
-static int
-translate_mapi_error(enum MAPISTATUS mapi_error)
+static int translate_mapi_error(enum MAPISTATUS mapi_error)
 {
     switch (mapi_error) {
     case MAPI_E_SUCCESS:
@@ -642,8 +615,7 @@ translate_mapi_error(enum MAPISTATUS mapi_error)
  *  Description:  perform hard delete
  * =====================================================================================
  */
-static int
-expunge_deleted()
+static int expunge_deleted()
 {
     enum MAPISTATUS retval;
     mapi_id_t      *deleted_ids;
@@ -672,8 +644,7 @@ expunge_deleted()
  *  Description:  no need to parse response in MAPI, return PS_SUCCESS to fake the driver
  * =====================================================================================
  */
-static int
-mapi_ok(int sock, char *argbuf)
+static int mapi_ok(int sock, char *argbuf)
 {
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_ok()\n");
@@ -687,12 +658,11 @@ mapi_ok(int sock, char *argbuf)
  *         Name:  callback
  *  Description:  when not running in daemon mode, give a chance to choose an account
  *                while multiple accounts match the user name.
- *                when running in daemon mode, skip this and get_auth will return
+ *                when running in daemon mode, skip this and mapi_getauth will return
  *                PS_AUTHFAIL.
  * =====================================================================================
  */
-static          uint32_t
-callback(struct SRowSet *rowset, void *private)
+static uint32_t callback(struct SRowSet *rowset, void *private)
 {
     // TODO: check if running in daemon mode
     int             daemon_mode = FALSE;
@@ -738,8 +708,7 @@ callback(struct SRowSet *rowset, void *private)
  *                a successful anthentication. 
  * =====================================================================================
  */
-static int
-mapi_getauth(int sock, struct query *ctl, char *greeting)
+static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 {
     enum MAPISTATUS retval;
     struct mapi_session *session = NULL;
@@ -792,7 +761,6 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
 	talloc_free(mapi_mem_ctx);
 	return PS_AUTHFAIL;
     }
-
 
     if (access(mapi_profdb, F_OK) != 0) {
     /*-----------------------------------------------------------------------------
@@ -890,8 +858,7 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
  *  Description:  get range of messages to be fetched
  * =====================================================================================
  */
-static int
-mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int *newp, int *bytes)
+static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int *newp, int *bytes)
 {
     enum MAPISTATUS retval;
     int             flag = PS_SUCCESS;
@@ -973,8 +940,7 @@ mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int 
  *  Description:  capture the sizes of messages #first-#last
  * =====================================================================================
  */
-static int
-mapi_getpartialsizes(int sock, int first, int last, int *sizes)
+static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 {
     enum MAPISTATUS retval;
     int             flag = PS_SUCCESS;
@@ -1044,8 +1010,7 @@ mapi_getpartialsizes(int sock, int first, int last, int *sizes)
  *  Description:  capture the sizes of all messages
  * =====================================================================================
  */
-static int
-mapi_getsizes(int sock, int mail_count, int *sizes)
+static int mapi_getsizes(int sock, int mail_count, int *sizes)
 {
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_getsizes(mail_count %d)\n", mail_count);
@@ -1063,8 +1028,7 @@ mapi_getsizes(int sock, int mail_count, int *sizes)
  *  Description:  is the given message old?
  * =====================================================================================
  */
-static int
-mapi_is_old(int sock, struct query *ctl, int number)
+static int mapi_is_old(int sock, struct query *ctl, int number)
 {
     enum MAPISTATUS retval;
     int             flag = FALSE;
@@ -1130,8 +1094,7 @@ mapi_is_old(int sock, struct query *ctl, int number)
  *                into mapi_buffer
  * =====================================================================================
  */
-static void
-smtp_address(int *lenp, const char *name)
+static void smtp_address(int *lenp, const char *name)
 {
     struct SPropTagArray *SPropTagArray;
     struct SRowSet *SRowSet;
@@ -1181,8 +1144,7 @@ smtp_address(int *lenp, const char *name)
  *                mapi_buffer
  * =====================================================================================
  */
-static int
-mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
+static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
 {
     enum MAPISTATUS retval;
     struct SPropTagArray *SPropTagArray = NULL;
@@ -1347,8 +1309,7 @@ mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
  *  Description:  request body of nth message, write message body data into mapi_buffer
  * =====================================================================================
  */
-static int
-mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
+static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 {
     enum MAPISTATUS retval;
     struct SPropTagArray *SPropTagArray = NULL;
@@ -1539,8 +1500,7 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
  *                mapi_buffer.
  * =====================================================================================
  */
-static int
-mapi_trail(int sock, struct query *ctl, const char *tag)
+static int mapi_trail(int sock, struct query *ctl, const char *tag)
 {
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_trail(tag %s)\n", tag);
@@ -1562,8 +1522,7 @@ mapi_trail(int sock, struct query *ctl, const char *tag)
  *  Description:  set delete flag for given message
  * =====================================================================================
  */
-static int
-mapi_delete(int sock, struct query *ctl, int number)
+static int mapi_delete(int sock, struct query *ctl, int number)
 {
     mapi_container_list_t *element;
     enum MAPISTATUS retval;
@@ -1642,8 +1601,7 @@ mapi_delete(int sock, struct query *ctl, int number)
  *  Description:  make the given message as seen in both client and server sides
  * =====================================================================================
  */
-static int
-mapi_mark_seen(int sock, struct query *ctl, int number)
+static int mapi_mark_seen(int sock, struct query *ctl, int number)
 {
     enum MAPISTATUS retval;
     int             flag = FALSE;
@@ -1742,8 +1700,7 @@ mapi_mark_seen(int sock, struct query *ctl, int number)
  *  Description:  perform hard delete here
  * =====================================================================================
  */
-static int
-mapi_end_mailbox_poll(int sock, struct query *ctl)
+static int mapi_end_mailbox_poll(int sock, struct query *ctl)
 {
     int             flag = PS_SUCCESS;
     (void) ctl;
@@ -1764,8 +1721,7 @@ mapi_end_mailbox_poll(int sock, struct query *ctl)
  *  Description:  
  * =====================================================================================
  */
-static int
-mapi_logout(int sock, struct query *ctl)
+static int mapi_logout(int sock, struct query *ctl)
 {
     (void) ctl;
 
@@ -1807,8 +1763,7 @@ static const struct method mapi = {
  *  Description:  retrieve messages using MAPI
  * =====================================================================================
  */
-int
-doMAPI(struct query *ctl)
+int doMAPI(struct query *ctl)
 {
     return (do_protocol(ctl, &mapi));
 }

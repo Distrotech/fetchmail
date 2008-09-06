@@ -381,7 +381,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     int ok = 0;
 #ifdef SSL_ENABLE
     int got_tls = 0;
-    char *realhost;
 #endif
     (void)greeting;
 
@@ -407,9 +406,15 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
 #ifdef SSL_ENABLE
-    realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
-
     if (maybe_tls(ctl)) {
+	char *commonname;
+
+	commonname = ctl->server.pollname;
+	if (ctl->server.via)
+	    commonname = ctl->server.via;
+	if (ctl->sslcommonname)
+	    commonname = ctl->sslcommonname;
+
 	if (strstr(capabilities, "STARTTLS"))
 	{
 	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
@@ -418,7 +423,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	     * (see below). */
 	    if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
 		    && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
-			ctl->sslcertpath, ctl->sslfingerprint, realhost,
+			ctl->sslcertpath, ctl->sslfingerprint, commonname,
 			ctl->server.pollname, &ctl->remotename) != -1)
 	    {
 		/*
@@ -438,7 +443,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		capa_probe(sock, ctl);
 		if (outlevel >= O_VERBOSE)
 		{
-		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
+		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
 		}
 	    }
 	}
@@ -447,11 +452,11 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    if (must_tls(ctl)) {
 		/* Config required TLS but we couldn't guarantee it, so we must
 		 * stop. */
-		report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
+		report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
 		return PS_SOCKET;
 	    } else {
 		if (outlevel >= O_VERBOSE) {
-		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), realhost);
+		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), commonname);
 		}
 		/* We don't know whether the connection is in a working state, so
 		 * test by issuing a NOOP. */
@@ -1240,6 +1245,10 @@ static int imap_mark_seen(int sock, struct query *ctl, int number)
 /* mark the given message as seen */
 {
     (void)ctl;
+
+    /* expunges change the message numbers */
+    number -= expunged;
+
     return(gen_transact(sock,
 	imap_version == IMAP4
 	? "STORE %d +FLAGS.SILENT (\\Seen)"
