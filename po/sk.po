@@ -2262,7 +2262,7 @@ msgstr ""
 
 #: rcfile_y.y:428
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
 msgstr ""
 
 #: rcfile_y.y:440

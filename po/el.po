@@ -2291,8 +2291,8 @@ msgstr "Το αρχείο %s πρέπει να είναι κανονικό αρχείο.\n"
 
 #: rcfile_y.y:428
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "Το αρχείο %s δε πρέπει να έχει πάνω από -rwx--x--- (0710) άδειες.\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "Το αρχείο %s δε πρέπει να έχει πάνω από -rwx------ (0700) άδειες.\n"
 
 #: rcfile_y.y:440
 #, c-format
