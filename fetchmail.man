@@ -1193,7 +1193,7 @@ authentication or multiple timeouts.
 The option
 .B \-\-quit
 will kill a running daemon process instead of waking it up (if there
-is no such process, \fIfetchmail\fP will notify you.
+is no such process, \fIfetchmail\fP will notify you).
 If the \-\-quit option appears last on the command line, \fIfetchmail\fP
 will kill the running daemon process and then quit. Otherwise,
 \fIfetchmail\fP will first kill a running daemon process and then
