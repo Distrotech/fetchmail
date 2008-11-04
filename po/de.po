@@ -2137,7 +2137,8 @@ msgstr "      --sslcertpath Pfad zu den SSL-Zertifikaten\n"
 #: options.c:620
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
-msgstr "     --sslcommonname  diesen CommonName des Servers erwarten (abgeraten)\n"
+msgstr ""
+"     --sslcommonname  diesen CommonName des Servers erwarten (abgeraten)\n"
 
 #: options.c:621
 msgid ""
