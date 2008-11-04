@@ -120,6 +120,8 @@ fetchmail 6.3.9 (not yet released):
   specifies which CommonName fetchmail expects and logs. (Daniel Richard G.)
 * Changed CRLF to LF line endings in contrib/delete-later (reporter: Petr Uzel)
 * SSL change: enable all workarounds with SSL_CTX_set_options(ctx,SSL_OP_ALL)
+* All translations have been re-enabled, in an attempt to rekindle translator or
+  user interest.
 
 # DOCUMENTATION:
 * Add fetchmail-SA-2007-02.txt and fetchmail-SA-2008-01.txt.
@@ -149,11 +151,20 @@ fetchmail 6.3.9 (not yet released):
 * The --logfile documentation is now clearer about requiring detached daemon 
   mode.
 
-# TRANSLATION UPDATES:
-* Polish (Jakub Bogusz)
-* Japanese (Takeshi Hamasaki)
-* Spanish (Javier Fernández-Sanguino Peña, Matthias Andree)
-* Vietnamese (Clytie Siddall)
+# TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+* [sq]    Albanian (Besnik Bleta)
+* [zh_CN] Chinese, simplified (Ji Zheng-Yu)
+* [cs]    Czech (Petr Pisar)
+* [da]    Danish (Byrial Ole Jensen) - outdated, but newer than in 6.3.8
+* [nl]    Dutch (Tony Vroon, Benno Schulenberg)
+* [fi]    Finnish (Lauri Nurmi)
+* [id]    Indonesian (Andhika Padmawan)
+* [ja]    Japanese (Takeshi Hamasaki)
+* [pl]    Polish (Jakub Bogusz)
+* [ru]    Russian (Pavel Maryanov)
+* [es]    Spanish (Javier Fernández-Sanguino Peña, Matthias Andree)
+* [tr]    Turkish (Engin Gündüz) - outdated, but newer than in 6.3.8
+* [vi]    Vietnamese (Clytie Siddall)
 
 
 
