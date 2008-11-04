@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.5\n"
+"Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2008-06-30 15:43+0200\n"
-"PO-Revision-Date: 2006-11-02 06:58-0000\n"
-"Last-Translator: David Lodge <dave@cirt.net>\n"
+"PO-Revision-Date: 2008-11-04 15:20+0100\n"
+"Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -623,7 +623,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Option --check is not supported with ETRN\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -634,8 +633,8 @@ msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005-2006 Sunil Shetye\n"
-"Copyright (C) 2005-2007 Matthias Andree\n"
+"Copyright (C) 2005 - 2006 Sunil Shetye\n"
+"Copyright (C) 2005 - 2008 Matthias Andree\n"
 
 #: fetchmail.c:142
 msgid ""
@@ -770,7 +769,7 @@ msgstr "could not open %s to append logs to \n"
 
 #: fetchmail.c:612
 msgid "--check mode enabled, not fetching mail\n"
-msgstr ""
+msgstr "--check mode enabled, not fetching mail\n"
 
 #: fetchmail.c:634
 #, c-format
@@ -1173,9 +1172,9 @@ msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  SSL trusted certificate directory: %s\n"
 
 #: fetchmail.c:1642
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "Server CommonName: %s\n"
+msgstr "  SSL server CommonName: %s\n"
 
 #: fetchmail.c:1644
 #, c-format
@@ -2066,7 +2065,7 @@ msgstr "      --sslcertpath path to ssl certificates\n"
 #: options.c:620
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
-msgstr ""
+msgstr "      --sslcommonname  expect this CommonName from server (discouraged)\n"
 
 #: options.c:621
 msgid ""
@@ -2586,14 +2585,13 @@ msgid "%cMTP error: %s\n"
 msgstr "%cMTP error: %s\n"
 
 #: sink.c:712
-#, fuzzy, c-format
+#, c-format
 msgid "BSMTP file open failed: %s\n"
-msgstr "BSMTP file open or preamble write failed\n"
+msgstr "BSMTP file open filed: %s\n"
 
 #: sink.c:758
-#, fuzzy
 msgid "BSMTP preamble write failed.\n"
-msgstr "BSMTP file open or preamble write failed\n"
+msgstr "BSMTP preamble write failed.\n"
 
 #: sink.c:972
 #, c-format
@@ -3047,7 +3045,3 @@ msgstr "malloc failed\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc failed\n"
-
-#, fuzzy
-#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
-#~ msgstr "skipping message %s@%s:%d (%d octets)"

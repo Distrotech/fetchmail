@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2008-06-30 15:43+0200\n"
-"PO-Revision-Date: 2006-11-27 04:32+0100\n"
+"PO-Revision-Date: 2008-11-04 15:18+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -650,7 +650,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Option --check ist mit ETRN nicht unterstützt\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -661,8 +660,8 @@ msgstr ""
 "Copyright © 2002, 2003 Eric S. Raymond\n"
 "Copyright © 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
-"Copyright © 2005-2006 Sunil Shetye\n"
-"Copyright © 2005-2007 Matthias Andree\n"
+"Copyright © 2005 - 2006 Sunil Shetye\n"
+"Copyright © 2005 - 2008 Matthias Andree\n"
 
 #: fetchmail.c:142
 msgid ""
@@ -1220,9 +1219,9 @@ msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  SSL-Verzeichnis für vertrauenswürdige Zertifikate: %s\n"
 
 #: fetchmail.c:1642
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "Server-CommonName: %s\n"
+msgstr "  SSL-Server-CommonName: %s\n"
 
 #: fetchmail.c:1644
 #, c-format
@@ -2138,7 +2137,7 @@ msgstr "      --sslcertpath Pfad zu den SSL-Zertifikaten\n"
 #: options.c:620
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
-msgstr ""
+msgstr "     --sslcommonname  diesen CommonName des Servers erwarten (abgeraten)\n"
 
 #: options.c:621
 msgid ""
