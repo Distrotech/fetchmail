@@ -157,7 +157,9 @@ fetchmail 6.3.9 (not yet released):
 * [cs]    Czech (Petr Pisar)
 * [da]    Danish (Byrial Ole Jensen) - outdated, but newer than in 6.3.8
 * [nl]    Dutch (Tony Vroon, Benno Schulenberg)
+* [en_GB] English, British
 * [fi]    Finnish (Lauri Nurmi)
+* [de]    German
 * [id]    Indonesian (Andhika Padmawan)
 * [ja]    Japanese (Takeshi Hamasaki)
 * [pl]    Polish (Jakub Bogusz)
