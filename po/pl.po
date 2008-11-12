@@ -1,15 +1,16 @@
 # Polish translation for fetchmail.
-# Copyright (C) 1998, 2002, 2003, 2005 Eric S. Raymond
+# Copyright (C) 1998, 2002, 2003, 2005 Eric S. Raymond (msgids)
+# This file is distributed under the same license as the fetchmail package.
 # Pawe³ Krawczyk <kravietz@ceti.pl>, 1998-1999.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2008.
 # Thanks for few updates to Adam Go³êbiowski, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.8\n"
+"Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2008-06-30 15:43+0200\n"
-"PO-Revision-Date: 2007-04-27 17:28+0200\n"
+"PO-Revision-Date: 2008-11-05 16:48+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -639,7 +640,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Opcja --check nie dzia³a z ETRN\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -650,8 +650,8 @@ msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005-2006 Sunil Shetye\n"
-"Copyright (C) 2005-2007 Matthias Andree\n"
+"Copyright (C) 2005 - 2006 Sunil Shetye\n"
+"Copyright (C) 2005 - 2008 Matthias Andree\n"
 
 #: fetchmail.c:142
 msgid ""
@@ -792,7 +792,7 @@ msgstr "nie mo¿na otworzyæ %s w celu do³±czania logów \n"
 
 #: fetchmail.c:612
 msgid "--check mode enabled, not fetching mail\n"
-msgstr ""
+msgstr "tryb --check w³±czony, nie pobieranie poczty\n"
 
 #: fetchmail.c:634
 #, c-format
@@ -1210,9 +1210,9 @@ msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  Katalog zaufanego certyfikatu SSL: %s\n"
 
 #: fetchmail.c:1642
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "CommonName serwera: %s\n"
+msgstr "  CommonName serwera SSL: %s\n"
 
 #: fetchmail.c:1644
 #, c-format
@@ -2141,6 +2141,7 @@ msgstr "      --sslcertpath ¶cie¿ka do certyfikatów ssl\n"
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
 msgstr ""
+"      --sslcommonname  oczekiwanie od serwera tego CommonName (niezalecane)\n"
 
 #: options.c:621
 msgid ""

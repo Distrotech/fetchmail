@@ -1,16 +1,17 @@
 # Japanese messages for fetchmail.
 # Copyright (C) 2005-2006 Eric S. Raymond
 # Copyright (C) 2002 Free Software Foundation, Inc.
-# Takeshi Hamasaki <hma@syd.odn.ne.jp>, 2005-2007
+# This file is distributed under the same license as the fetchmail package.
+# Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>, 2005-2008
 #   based on the work by Jumpei Baba <jbaba@wb3.so-net.ne.jp>, 2002
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.8\n"
+"Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2008-06-30 15:43+0200\n"
-"PO-Revision-Date: 2007-04-28 20:54+0900\n"
-"Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
+"PO-Revision-Date: 2008-11-08 16:32+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -640,7 +641,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "オプション --check は ETRN とは同時に利用できません。\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -651,8 +651,8 @@ msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005-2006 Sunil Shetye\n"
-"Copyright (C) 2005-2007 Matthias Andree\n"
+"Copyright (C) 2005 - 2006 Sunil Shetye\n"
+"Copyright (C) 2005 - 2008 Matthias Andree\n"
 
 #: fetchmail.c:142
 msgid ""
@@ -666,7 +666,7 @@ msgstr ""
 
 #: fetchmail.c:176
 msgid "WARNING: Running as root is discouraged.\n"
-msgstr "警告: root アカウントでの実行はお薦めできません。\n"
+msgstr "警告: root アカウントでの実行はお勧めできません。\n"
 
 #: fetchmail.c:188
 msgid "fetchmail: invoked with"
@@ -793,7 +793,7 @@ msgstr "ログを追加するために %s を開くことが出来ませんで�
 
 #: fetchmail.c:612
 msgid "--check mode enabled, not fetching mail\n"
-msgstr ""
+msgstr "--check モードが有効なので、メールを取り込みません\n"
 
 #: fetchmail.c:634
 #, c-format
@@ -1214,9 +1214,9 @@ msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  SSL 信用可能証明書は %s に格納されています。\n"
 
 #: fetchmail.c:1642
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "サーバの CommonName: %s\n"
+msgstr " SSLサーバの CommonName: %s\n"
 
 #: fetchmail.c:1644
 #, c-format
@@ -2110,6 +2110,8 @@ msgstr "      --sslcertpath SSL の client certificate ファイルを指定し�
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
 msgstr ""
+"      --sslcommonname  サーバの CommonName がこれであると仮定します(お勧めで"
+"きません)\n"
 
 #: options.c:621
 msgid ""
@@ -2408,7 +2410,8 @@ msgstr ""
 #: rcfile_y.y:431
 #, c-format
 msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
-msgstr "%s は -rwx------ (0700) 以外のパーミッションであってはいけません。\n"
+msgstr ""
+"ファイル %s のパーミッションは -rwx------ (0700) でないといけません。\n"
 
 #: rcfile_y.y:443
 #, c-format

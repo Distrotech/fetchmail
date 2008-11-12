@@ -64,18 +64,12 @@ msgstr ""
 #: driver.c:339
 #, fuzzy, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
-msgstr ""
-"Predmet: Fetchmail-varovanie: nadrozmerná správa.\n"
-"\n"
-"Nasledujúca nadrozmerná správa zostáva na po¹tovom serveri %s:"
+msgstr "fetchlimit %d dosiahnutý; %d správ ponecháných na serveri %s úèet %s\n"
 
 #: driver.c:343
 #, fuzzy, c-format
 msgid "The following oversized messages remain on server %s account %s:"
-msgstr ""
-"Predmet: Fetchmail-varovanie: nadrozmerná správa.\n"
-"\n"
-"Nasledujúca nadrozmerná správa zostáva na po¹tovom serveri %s:"
+msgstr "fetchlimit %d dosiahnutý; %d správ ponecháných na serveri %s úèet %s\n"
 
 #: driver.c:362
 #, fuzzy, c-format
@@ -2700,9 +2694,9 @@ msgid "can't raise the listener; falling back to %s"
 msgstr ""
 
 #: sink.c:1346
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "Chyba pri uvoµòovaní osobných údajov\n"
+msgstr ""
 
 #: sink.c:1349
 #, c-format
@@ -2808,9 +2802,9 @@ msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr ""
 
 #: socket.c:296 socket.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "unknown (%s)"
-msgstr "hostiteµ je neznámy."
+msgstr ""
 
 #: socket.c:302
 #, c-format
@@ -3055,7 +3049,7 @@ msgstr "Doèasný zoznam UID-ov:"
 #: uid.c:517 uid.c:569
 #, fuzzy, c-format
 msgid "Merged UID list from %s:"
-msgstr "Starý zoznam UID z %s:"
+msgstr "Nový zoznam UID z %s:"
 
 #: uid.c:519
 #, c-format
@@ -3111,11 +3105,20 @@ msgstr "malloc zlyhal\n"
 msgid "realloc failed\n"
 msgstr "realloc zlyhal\n"
 
-#~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
-#~ msgstr "SIGPIPE obdr¾ané z MDA alebo chyba v prúde dát zo socketu\n"
+#~ msgid ""
+#~ "Subject: Fetchmail oversized-messages warning.\n"
+#~ "\n"
+#~ "The following oversized messages remain on the mail server %s:"
+#~ msgstr ""
+#~ "Predmet: Fetchmail-varovanie: nadrozmerná správa.\n"
+#~ "\n"
+#~ "Nasledujúca nadrozmerná správa zostáva na po¹tovom serveri %s:"
 
 #~ msgid "header "
 #~ msgstr "záhlavie "
+
+#~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
+#~ msgstr "SIGPIPE obdr¾ané z MDA alebo chyba v prúde dát zo socketu\n"
 
 #~ msgid "internal inconsistency\n"
 #~ msgstr "vnútorná nezrovnalos»\n"

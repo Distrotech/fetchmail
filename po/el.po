@@ -68,17 +68,13 @@ msgstr ""
 #, fuzzy, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
 msgstr ""
-"Subject: Προειδοποίηση fetchmail υπερμεγέθους-μηνυμάτων.\n"
-"\n"
-"Τα ακόλουθα υπερβολικού μεγέθους μηνύματα παραμένουν στο διαχειριστή %s:"
+"σε όριο λήψης %d; %d μηνύματα έμειναν στον διαχειριστή %s λογαριασμό%s\n"
 
 #: driver.c:343
 #, fuzzy, c-format
 msgid "The following oversized messages remain on server %s account %s:"
 msgstr ""
-"Subject: Προειδοποίηση fetchmail υπερμεγέθους-μηνυμάτων.\n"
-"\n"
-"Τα ακόλουθα υπερβολικού μεγέθους μηνύματα παραμένουν στο διαχειριστή %s:"
+"σε όριο λήψης %d; %d μηνύματα έμειναν στον διαχειριστή %s λογαριασμό%s\n"
 
 #: driver.c:362
 #, fuzzy, c-format
@@ -2438,9 +2434,9 @@ msgid "File %s must be a regular file.\n"
 msgstr "Το αρχείο %s πρέπει να είναι κανονικό αρχείο.\n"
 
 #: rcfile_y.y:431
-#, c-format
+#, fuzzy, c-format
 msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
-msgstr "Το αρχείο %s δε πρέπει να έχει πάνω από -rwx------ (0700) άδειες.\n"
+msgstr "Το αρχείο %s δε πρέπει να έχει πάνω από -rwx--x--- (0710) άδειες.\n"
 
 #: rcfile_y.y:443
 #, c-format
@@ -2736,7 +2732,7 @@ msgstr "αδυναμία ανύψωσης ακροατή· χρήση του %s"
 #: sink.c:1346
 #, fuzzy, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "Σφάλμα στην απελευθέρωση διαπιστευτηρίων\n"
+msgstr "προωθείται στο %s\n"
 
 #: sink.c:1349
 #, c-format
@@ -2845,9 +2841,9 @@ msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr ""
 
 #: socket.c:296 socket.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "unknown (%s)"
-msgstr "άγνωστος διακομιστής."
+msgstr ""
 
 #: socket.c:302
 #, c-format
@@ -3092,7 +3088,7 @@ msgstr "Πρόχειρη λίστα με UID:"
 #: uid.c:517 uid.c:569
 #, fuzzy, c-format
 msgid "Merged UID list from %s:"
-msgstr "Παλιά λίστα UID από %s:"
+msgstr "Νέα λίστα UID από %s:"
 
 #: uid.c:519
 #, c-format
@@ -3148,6 +3144,18 @@ msgstr "απέτυχε το malloc\n"
 msgid "realloc failed\n"
 msgstr "απέτυχε το realloc\n"
 
+#~ msgid ""
+#~ "Subject: Fetchmail oversized-messages warning.\n"
+#~ "\n"
+#~ "The following oversized messages remain on the mail server %s:"
+#~ msgstr ""
+#~ "Subject: Προειδοποίηση fetchmail υπερμεγέθους-μηνυμάτων.\n"
+#~ "\n"
+#~ "Τα ακόλουθα υπερβολικού μεγέθους μηνύματα παραμένουν στο διαχειριστή %s:"
+
+#~ msgid "header "
+#~ msgstr "επικεφαλίδας "
+
 #~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
 #~ msgstr "ένα SIGPIPE πετάχτηκε από ένα MDA ή από σφάλμα stream socket\n"
 
@@ -3166,6 +3174,12 @@ msgstr "απέτυχε το realloc\n"
 #~ msgid "unknown DNS error %d."
 #~ msgstr "άγνωστο σφάλμα DNS %d."
 
+#~ msgid "messages"
+#~ msgstr "μηνύματα"
+
+#~ msgid "message"
+#~ msgstr "μήνυμα"
+
 #~ msgid "Option --remote is not supported with ETRN\n"
 #~ msgstr "Η επιλογή --remote δεν υποστηρίζετε με το ETRN\n"
 
@@ -3175,50 +3189,17 @@ msgstr "απέτυχε το realloc\n"
 #~ msgid "Cannot support ODMR without gethostbyname(2).\n"
 #~ msgstr "Αδυναμία υποστήριξης ODMR χωρίς gethostbyname(2).\n"
 
-#~ msgid " (using network security options %s)"
-#~ msgstr " (χρήση επιλογών ασφάλειας δικτύου %s)"
-
-#~ msgid " (using port %d)"
-#~ msgstr " (χρησιμοποίηση θύρας %d)"
-
-#~ msgid "Received"
-#~ msgstr "Παραλήφθηκε"
-
-#~ msgid "alloca failed"
-#~ msgstr "alloca απέτυχε"
-
-#~ msgid "warning: found \"%s\" before any host names"
-#~ msgstr "προειδοποίηση: βρέθηκε το \"%s\" πριν κάθε όνομα διακομιστή"
-
-#~ msgid "Option --remote is not supported with ODMR\n"
-#~ msgstr "Η επιλογή --remote δεν υποστηρίζετε με το ODMR\n"
-
-#~ msgid "fetchmail: network security support is disabled\n"
-#~ msgstr "fetchmail: απενεργοποιήθηκε η υποστήριξη ασφάλειας δικτύου\n"
-
-#~ msgid "  -T, --netsec      set IP security request\n"
-#~ msgstr "  -T, --netsec      ορισμός αίτησης ασφαλείας IP\n"
-
-#~ msgid "invalid security request"
-#~ msgstr "μη έγκυρη αίτηση ασφάλειας"
-
-#~ msgid "network-security support disabled"
-#~ msgstr "απενεργοποιήθηκε η υποστήριξη ασφάλεια-δικτύου"
-
-#~ msgid "fetchmail: getaddrinfo(%s.%s)\n"
-#~ msgstr "fetchmail: getaddrinfo(%s.%s)\n"
-
-#~ msgid "fetchmail: illegal address length received for host %s\n"
-#~ msgstr "fetchmail: λήψη παράνομου μήκους διεύθυνσης για το διακομιστή %s\n"
-
-#~ msgid "header "
-#~ msgstr "επικεφαλίδας "
-
 #~ msgid "will not"
 #~ msgstr "'δεν θα"
 
 #~ msgid "will"
 #~ msgstr "θα"
+
+#~ msgid " (using network security options %s)"
+#~ msgstr " (χρήση επιλογών ασφάλειας δικτύου %s)"
+
+#~ msgid " (using port %d)"
+#~ msgstr " (χρησιμοποίηση θύρας %d)"
 
 #~ msgid "All"
 #~ msgstr "Όλα"
@@ -3244,18 +3225,38 @@ msgstr "απέτυχε το realloc\n"
 #~ msgid "name.\n"
 #~ msgstr "όνομα.\n"
 
-#~ msgid "lstat: %s: %s\n"
-#~ msgstr "lstat: %s: %s\n"
+#~ msgid "Received"
+#~ msgstr "Παραλήφθηκε"
+
+#~ msgid "alloca failed"
+#~ msgstr "alloca απέτυχε"
+
+#~ msgid "warning: found \"%s\" before any host names"
+#~ msgstr "προειδοποίηση: βρέθηκε το \"%s\" πριν κάθε όνομα διακομιστή"
+
+#~ msgid "Option --remote is not supported with ODMR\n"
+#~ msgstr "Η επιλογή --remote δεν υποστηρίζετε με το ODMR\n"
+
+#~ msgid "fetchmail: network security support is disabled\n"
+#~ msgstr "fetchmail: απενεργοποιήθηκε η υποστήριξη ασφάλειας δικτύου\n"
+
+#~ msgid "  -T, --netsec      set IP security request\n"
+#~ msgstr "  -T, --netsec      ορισμός αίτησης ασφαλείας IP\n"
+
+#~ msgid "invalid security request"
+#~ msgstr "μη έγκυρη αίτηση ασφάλειας"
+
+#~ msgid "network-security support disabled"
+#~ msgstr "απενεργοποιήθηκε η υποστήριξη ασφάλεια-δικτύου"
 
 #~ msgid "partial error message buffer overflow"
 #~ msgstr "μερικό σφάλμα κατάτμησης μηνύματος λάθους"
 
-#, fuzzy
-#~ msgid "alloca failed\n"
-#~ msgstr "alloca απέτυχε"
+#~ msgid "fetchmail: getaddrinfo(%s.%s)\n"
+#~ msgstr "fetchmail: getaddrinfo(%s.%s)\n"
 
-#~ msgid "messages"
-#~ msgstr "μηνύματα"
+#~ msgid "fetchmail: illegal address length received for host %s\n"
+#~ msgstr "fetchmail: λήψη παράνομου μήκους διεύθυνσης για το διακομιστή %s\n"
 
-#~ msgid "message"
-#~ msgstr "μήνυμα"
+#~ msgid "lstat: %s: %s\n"
+#~ msgstr "lstat: %s: %s\n"

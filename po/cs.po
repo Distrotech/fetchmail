@@ -7,10 +7,10 @@
 # Petr Pisar <petr.pisar@atlas.cz>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.8\n"
+"Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2008-06-30 15:43+0200\n"
-"PO-Revision-Date: 2008-09-23 16:56+0200\n"
+"PO-Revision-Date: 2008-11-05 11:32+0100\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -635,7 +635,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Přepínač --check není s ETRN podporován.\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -647,7 +646,7 @@ msgstr ""
 "Copyright © 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
 "Copyright © 2005–2006 Sunil Shetye\n"
-"Copyright © 2005–2007 Matthias Andree\n"
+"Copyright © 2005–2008 Matthias Andree\n"
 
 #: fetchmail.c:142
 msgid ""
@@ -785,7 +784,7 @@ msgstr "nemohu otevřít %s, kam připojovat záznamy \n"
 
 #: fetchmail.c:612
 msgid "--check mode enabled, not fetching mail\n"
-msgstr ""
+msgstr "režim --check zapnut, poštu nestahuji\n"
 
 #: fetchmail.c:634
 #, c-format
@@ -1200,9 +1199,9 @@ msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  Adresář důvěryhodných certifikátů SSL: %s\n"
 
 #: fetchmail.c:1642
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "Jméno serveru: %s\n"
+msgstr "  CommonName SSL serveru: %s\n"
 
 #: fetchmail.c:1644
 #, c-format
@@ -2108,6 +2107,7 @@ msgstr "      --sslcertpath cesta k certifikátům ssl\n"
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
 msgstr ""
+"      --sslcommonname  od serveru očekávat tento CommonName (nedoporučeno)\n"
 
 #: options.c:621
 msgid ""
@@ -2390,9 +2390,9 @@ msgid "File %s must be a regular file.\n"
 msgstr "Soubor %s musí být obyčejný soubor.\n"
 
 #: rcfile_y.y:431
-#, fuzzy, c-format
+#, c-format
 msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
-msgstr "Soubor %s nesmí mít oprávnění více než -rwx--x--- (0710).\n"
+msgstr "Soubor %s nesmí mít více oprávnění než -rwx------ (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format
