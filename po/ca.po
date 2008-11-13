@@ -643,7 +643,7 @@ msgid ""
 "Copyright (C) 2005 - 2008 Matthias Andree\n"
 msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
 "Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 
@@ -2431,9 +2431,9 @@ msgid "File %s must be a regular file.\n"
 msgstr "El fitxer %s ha de ser un fitxer ordinari.\n"
 
 #: rcfile_y.y:431
-#, fuzzy, c-format
+#, c-format
 msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
-msgstr "El fitxer %s no pot tenir permisos més que -rwx--x--- (0710).\n"
+msgstr "El fitxer %s no pot tenir permisos més que -rwx------ (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format
