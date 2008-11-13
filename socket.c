@@ -906,6 +906,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	if (SSL_set_fd(_ssl_context[sock], sock) == 0 
 	    || SSL_connect(_ssl_context[sock]) < 1) {
 		ERR_print_errors_fp(stderr);
+		SSL_free( _ssl_context[sock] );
+		_ssl_context[sock] = NULL;
 		SSL_CTX_free(_ctx[sock]);
 		_ctx[sock] = NULL;
 		return(-1);

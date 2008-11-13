@@ -88,6 +88,10 @@ fetchmail 6.3.9 (not yet released):
 * Only print "Deleting fetchids file" if there actually is one.
   Fixes Debian Bug#374514, reported by Dan Jacobson.
 * SSL fix: check and report if SSL_set_fd fails.
+* SSL fix: close memory leak when SSL connection fails; fetchmail used to forget
+  calling SSL_free() on the SSL context, leaking in excess of 1/2 MB RAM on a
+  x86_64 system per failed SSL connection attempt.
+  Bug reported and patch provided by Seiichi Ikarashi, Fujitsu.
 
 # CHANGES:
 * autoconf 2.60 is now required to build fetchmail; it uses
