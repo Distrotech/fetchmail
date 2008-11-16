@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-30 15:43+0200\n"
+"POT-Creation-Date: 2008-11-13 15:00+0100\n"
 "PO-Revision-Date: 2008-11-04 18:29-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -2874,15 +2874,15 @@ msgstr "File descriptor out of range for SSL"
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 
-#: socket.c:916
+#: socket.c:918
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Certificate/fingerprint verification was somehow skipped!\n"
 
-#: socket.c:994
+#: socket.c:996
 msgid "Cygwin socket read retry\n"
 msgstr "Cygwin socket read retry\n"
 
-#: socket.c:997
+#: socket.c:999
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Cygwin socket read retry failed!\n"
 

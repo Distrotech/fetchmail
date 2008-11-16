@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-5.4.4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-30 15:43+0200\n"
+"POT-Creation-Date: 2008-11-13 15:00+0100\n"
 "PO-Revision-Date: 2000-07-28 09:40-03:00\n"
 "Last-Translator: Marcia Norie Nakaza <norie@conectiva.com.br>\n"
 "Language-Team: pt_BR <ldp-br@bazar.conectiva.com.br>\n"
@@ -2993,15 +2993,15 @@ msgstr ""
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Protocolo `%s' inválido foi especificado.\n"
 
-#: socket.c:916
+#: socket.c:918
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr ""
 
-#: socket.c:994
+#: socket.c:996
 msgid "Cygwin socket read retry\n"
 msgstr ""
 
-#: socket.c:997
+#: socket.c:999
 msgid "Cygwin socket read retry failed!\n"
 msgstr ""
 

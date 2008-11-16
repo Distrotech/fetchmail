@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-30 15:43+0200\n"
+"POT-Creation-Date: 2008-11-13 15:00+0100\n"
 "PO-Revision-Date: 2008-11-05 16:48+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -2974,15 +2974,15 @@ msgstr "Deskryptor pliku poza zakresem dla SSL"
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Podano b³êdny protokó³ SSL `%s', u¿ywam domy¶lnego (SSLv23).\n"
 
-#: socket.c:916
+#: socket.c:918
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Weryfikacja certyfikatu/odcisku klucza z jakiego¶ powodu pominiêta!\n"
 
-#: socket.c:994
+#: socket.c:996
 msgid "Cygwin socket read retry\n"
 msgstr "Powtórzenie odczytu z gniazda cygwinowego\n"
 
-#: socket.c:997
+#: socket.c:999
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Powtórzenie odczytu z gniazda cygwinowego nie powiod³o siê!\n"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-30 15:43+0200\n"
+"POT-Creation-Date: 2008-11-13 15:00+0100\n"
 "PO-Revision-Date: 2003-05-06 01:03+0300\n"
 "Last-Translator: Dokianakis Theofanis <madf@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -2971,15 +2971,15 @@ msgstr "Ο περιγραφέας αρχείου εκτός κλίμακας για το SSL"
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Καθορίστηκε άκυρο προτόκολλο SSL '%s', χρήση εξ ορισμού (SSLv23).\n"
 
-#: socket.c:916
+#: socket.c:918
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Επαλήθευση πιστοποιητικού/αποτυπώματος κάπως παραλήφθηκε!\n"
 
-#: socket.c:994
+#: socket.c:996
 msgid "Cygwin socket read retry\n"
 msgstr "Επαναπροσπάθεια ανάγνωσης υποδοχής Cygwin\n"
 
-#: socket.c:997
+#: socket.c:999
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Επαναπροσπάθεια ανάγνωσης υποδοχής Cygwin απέτυχε!\n"
 

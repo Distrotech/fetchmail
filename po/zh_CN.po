@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-30 15:43+0200\n"
+"POT-Creation-Date: 2008-11-13 15:00+0100\n"
 "PO-Revision-Date: 2008-11-05 22:30+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
@@ -2826,15 +2826,15 @@ msgstr "文件描述符超出 SSL 的范围"
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "指定了无效的 SSL 协议 ‘%s’，将用默认的协议(SSLv23)代替。\n"
 
-#: socket.c:916
+#: socket.c:918
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "证书(指纹)验证被不明原因地跳过！\n"
 
-#: socket.c:994
+#: socket.c:996
 msgid "Cygwin socket read retry\n"
 msgstr "重试读取 Cygwin 接口\n"
 
-#: socket.c:997
+#: socket.c:999
 msgid "Cygwin socket read retry failed!\n"
 msgstr "重试读取 Cygwin 接口失败！\n"
 
