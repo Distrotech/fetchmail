@@ -3,12 +3,12 @@ dnl Autoconfigure input file for fetchmail
 # Fetchmail automatic configuration support
 #
 # Eric S. Raymond <esr@thyrsus.com>
-# 2004 - 2007 Matthias Andree <matthias.andree@gmx.de>
+# 2004 - 2008 Matthias Andree <matthias.andree@gmx.de>
 #
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.3.9-rc3],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.9],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
