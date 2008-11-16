@@ -1,0 +1,19 @@
+r5216 (post 6.3.9-rc3) built successfully on:
+=============================================
+
+Linuxish:
+---------
+SUSE LINUX 10.0 i386
+Ubuntu Linux 8.04.1 (Hardy Heron)
+openSUSE 11.0 i386
+
+BSD-ish:
+--------
+NetBSD 4.0 i386
+FreeBSD 7.0 i386
+Darwin 9.5 PPC
+
+SysV-ish:
+---------
+Solaris 8 SPARC
+Solaris 8 SPARC64
