@@ -42,6 +42,11 @@ be removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.10 (not yet released):
+
+# TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+* [it] Italian (Vincenzo Campanella)
+
 fetchmail 6.3.9 (2008-11-16):
 
 # SECURITY AND CRITICAL BUG FIXES:
