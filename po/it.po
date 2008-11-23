@@ -1,3 +1,4 @@
+# Italian TRANSLATION OF fetchmail-6.3.9-rc3'S.PO-DEBCONF FILE
 # ITALIAN TRANSLATION OF FETCHMAIL-6.3.9-rc3
 # This file is distributed under the same license as the fetchmail package.
 #
@@ -7,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fetchmail-6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2008-11-13 15:00+0100\n"
-"PO-Revision-Date: 2008-11-14 08:17+0100\n"
+"PO-Revision-Date: 2008-11-22 14:41+0100\n"
 "Last-Translator: Vincenzo Campanella <vinz65@gmail.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -1053,7 +1054,7 @@ msgstr "%s interrogazione di %s (protocollo %s) su %s: completata\n"
 #: fetchmail.c:1519
 #, c-format
 msgid "Poll interval is %d seconds\n"
-msgstr "L'intervallo di interrogazione è %d secondi\n"
+msgstr "L'intervallo d'interrogazione è %d secondi\n"
 
 #: fetchmail.c:1521
 #, c-format
@@ -1158,11 +1159,11 @@ msgstr "  Il protocollo è %s"
 #: fetchmail.c:1589
 #, c-format
 msgid " (using service %s)"
-msgstr " (con utilizzo del servizio %s)"
+msgstr " (con uso del servizio %s)"
 
 #: fetchmail.c:1591
 msgid " (using default port)"
-msgstr " (con utilizzo della porta predefinita)"
+msgstr " (con uso della porta predefinita)"
 
 #: fetchmail.c:1593
 msgid " (forcing UIDL use)"
@@ -1325,7 +1326,7 @@ msgstr "  La rimozione dei ritorni a capo è abilitata («stripcr» abilitato).\
 #: fetchmail.c:1683
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
 msgstr ""
-"  La rimozione dei ritorni a capo è disabilitata («stripcr disabilitato).\n"
+"  La rimozione dei ritorni a capo è disabilitata («stripcr» disabilitato).\n"
 
 #: fetchmail.c:1685
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
@@ -1361,12 +1362,12 @@ msgstr "  La decodifica MIME è disabilitata («mimedecode» disabilitato).\n"
 #: fetchmail.c:1694
 msgid "  Idle after poll is enabled (idle on).\n"
 msgstr ""
-"  Modalità inattiva dopo lo scaricamento abilitata («idle» abilitato).\n"
+"  La modalità inattiva dopo lo scaricamento è abilitata («idle» abilitato).\n"
 
 #: fetchmail.c:1695
 msgid "  Idle after poll is disabled (idle off).\n"
 msgstr ""
-"  Modalità inattiva dopo lo scaricamento disabilitata («idle» "
+"  La modalità inattiva dopo lo scaricamento è disabilitata («idle» "
 "disabilitato).\n"
 
 #: fetchmail.c:1697
@@ -1393,11 +1394,12 @@ msgstr ""
 #: fetchmail.c:1705
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
-msgstr "  Il limite di dimensione dei messaggi è %d ottetti («--limit %d»).\n"
+msgstr ""
+"  Il limite della dimensione dei messaggi è %d ottetti («--limit %d»).\n"
 
 #: fetchmail.c:1708
 msgid "  No message size limit (--limit 0).\n"
-msgstr "  Nessun limite di dimensione dei messaggi («--limit 0»).\n"
+msgstr "  Nessun limite della dimensione dei messaggi («--limit 0»).\n"
 
 #: fetchmail.c:1710
 #, c-format
@@ -1415,42 +1417,42 @@ msgstr ""
 #: fetchmail.c:1716
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
-msgstr "  Il limite di messaggi ricevuti è %d («--fetchlimit %d»).\n"
+msgstr "  Il limite dei messaggi ricevuti è %d («--fetchlimit %d»).\n"
 
 #: fetchmail.c:1719
 msgid "  No received-message limit (--fetchlimit 0).\n"
-msgstr "  Nessun limite di messaggi ricevuti («--fetchlimit 0»).\n"
+msgstr "  Nessun limite dei messaggi ricevuti («--fetchlimit 0»).\n"
 
 #: fetchmail.c:1721
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
 msgstr ""
-"  Il limite di dimensione dei messaggi da scaricare è %d («--fetchsizelimit %"
-"d»).\n"
+"  Il limite della dimensione dei messaggi da scaricare è %d («--"
+"fetchsizelimit %d»).\n"
 
 #: fetchmail.c:1724
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
 msgstr ""
-"  Nessun limite di dimensione dei messaggi da scaricare («--fetchsizelimit "
-"0»).\n"
+"  Nessun limite della dimensione dei messaggi da scaricare («--"
+"fetchsizelimit 0»).\n"
 
 #: fetchmail.c:1728
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
 msgstr ""
-"  Effettua una ricerca binaria degli UID durante ogni interrogazione («--"
+"  Effettuare una ricerca binaria degli UID durante ogni interrogazione («--"
 "fastuidl 1»).\n"
 
 #: fetchmail.c:1730
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr ""
-"  Effettua una ricerca binaria degli UID durante %d di %d interrogazioni («--"
-"fastuidl %d»).\n"
+"  Effettuare una ricerca binaria degli UID durante %d di %d interrogazioni "
+"(«--fastuidl %d»).\n"
 
 #: fetchmail.c:1733
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr ""
-"  Effettua una ricerca binaria degli UID durante ogni interrogazione («--"
+"  Effettuare una ricerca binaria degli UID durante ogni interrogazione («--"
 "fastuidl 0»).\n"
 
 #: fetchmail.c:1735
@@ -1737,7 +1739,7 @@ msgstr "Rilascio delle credenziali GSS in corso\n"
 
 #: gssapi.c:201
 msgid "Error releasing credentials\n"
-msgstr "Errore in fase di rilascio delle credenzali\n"
+msgstr "Errore in fase di rilascio delle credenziali\n"
 
 #: idle.c:61
 #, c-format
@@ -2762,7 +2764,8 @@ msgstr "L'ascoltatore %cMTP non gradisce l'indirizzo di destinatario «%s»\n"
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr ""
-"L'ascoltatore %cMTP non gradisce affatto l'indirizzo di destinatario «%s»\n"
+"L'ascoltatore %cMTP non gradisce assolutamente l'indirizzo di destinatario «%"
+"s»\n"
 
 #: sink.c:1025
 msgid "no address matches; no postmaster set.\n"
@@ -2909,7 +2912,7 @@ msgstr "getaddrinfo(\"%s\",\"%s\") errore: %s\n"
 #: socket.c:285
 msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr ""
-"Provare ad aggiungere l'opzione «--service» (vedere anche FAQ, paragrafo "
+"Provare ad aggiungere l'opzione «--service» (vedere anche le FAQ, paragrafo "
 "R12).\n"
 
 #: socket.c:296 socket.c:299
