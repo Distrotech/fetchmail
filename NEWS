@@ -44,6 +44,10 @@ be removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.10 (not yet released):
 
+# BUGFIXES
+* Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
+  Michelle Konzack, Debian Bug#508667.
+
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [it] Italian (Vincenzo Campanella)
 
