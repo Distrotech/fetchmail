@@ -13,7 +13,7 @@ AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
 
-AC_CANONICAL_TARGET
+AC_CANONICAL_HOST
 
 dnl automake options are in Makefile.am
 AC_PREREQ(2.60)
@@ -88,7 +88,7 @@ AC_PROG_MAKE_SET
 AC_PROG_YACC
 
 # Check for OS special cases
-case $target_os in
+case $host_os in
 darwin*)
     AC_MSG_NOTICE(found Darwin - Adding -DBIND_8_COMPAT to CFLAGS)
     CPPFLAGS="$CPPFLAGS -DBIND_8_COMPAT"
@@ -498,7 +498,7 @@ if test "$fm_cv_getaddrinfo" = yes ; then
     AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
     gai_ts=no
     dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
-    case $target_os in
+    case $host_os in
 	darwin9*)				gai_ts=yes ;;
 	linux*)					gai_ts=yes ;;
 	freebsd5.5|freebsd6*|freebsd7*)		gai_ts=yes ;;

@@ -45,11 +45,16 @@ be removed from a 6.4.0 or newer release.)
 fetchmail 6.3.10 (not yet released):
 
 # BUGFIXES
+* Fix misuse of canonical autoconf target as _TARGET when it should have been
+  _HOST. Report and patch courtesy of Diego E. "Flameeyes" Pettenò.
+  Details: http://blog.flameeyes.eu/2009/01/01/the-canonical-target
 * Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
   Michelle Konzack, Debian Bug#508667.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [it] Italian (Vincenzo Campanella)
+
+
 
 fetchmail 6.3.9 (2008-11-16):
 
