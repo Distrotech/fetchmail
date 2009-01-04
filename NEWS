@@ -9,15 +9,15 @@ Abbreviations in parentheses are the maintainers who committed the respective
 change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 # ADVANCE WARNING OF FEATURES TO BE REMOVED OR CHANGED IN FUTURE VERSIONS
-(There are no plans to remove these features from a 6.3.X release, but they may
-be removed from a 6.4.0 or newer release.)
+(There are no plans to remove features from a 6.3.X release, but they may be
+removed from a 6.4.0 or newer release.)
 * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
   are based on assumptions that are rarely met in practice, somewhat defective,
-  deprecated and may be removed from a future fetchmail version.  They have
-  never supported IPv6 (including IPv6-mapped IPv4).
+  deprecated and may be removed from a future fetchmail version.
+  They have never supported IPv6 (including IPv6-mapped IPv4).
   Non-DNS based alias keywords such as "aka" will remain in fetchmail.
 * The monitor and interface options may be removed from a future fetchmail
-  version as they are not reasonably portable.
+  version as they are not reasonably portable across operating systems.
 * POP2 is obsolete, support will be removed from a future fetchmail version.
 * RPOP is obsolete, support will be removed from a future fetchmail release.
 * --sslcertck will become a default setting in a future fetchmail version.
@@ -39,6 +39,10 @@ be removed from a 6.4.0 or newer release.)
   cause fetchmail to terminate - it was broken for many years.
 * Support for operating systems that are not sufficiently POSIX compliant may be
   removed or operation on such systems may be suboptimal for future releases.
+  This means that fetchmail may only continue to work on C99 and POSIX 2001
+  based systems.
+* The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
+  requirements (dependencies), such as Boost or other class libraries.
 
 --------------------------------------------------------------------------------
 
