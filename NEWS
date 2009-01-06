@@ -54,6 +54,8 @@ fetchmail 6.3.10 (not yet released):
   Details: http://blog.flameeyes.eu/2009/01/01/the-canonical-target
 * Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
   Michelle Konzack, Debian Bug#508667.
+* Do not overlap source and destination fields in snprintf() in interface.c.
+  Courtesy of Nico Golde, Debian.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [it] Italian (Vincenzo Campanella)

@@ -271,7 +271,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	{
 		kvm_read(kvmfd, ifnet_addr, &ifnet, sizeof(ifnet));
 		kvm_read(kvmfd, (unsigned long) ifnet.if_name, tname, sizeof tname);
-		snprintf(tname, sizeof tname, "%s%d", tname, ifnet.if_unit);
+		snprintf(tname + strlen(tname), sizeof(tname) - strlen(tname), "%d", ifnet.if_unit);
 
 		if (!strcmp(tname, iname))
 		{
