@@ -687,7 +687,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 	/* copy timestamp and password into digestion buffer */
-	msg = xmalloc((end-start+1) + strlen(ctl->password) + 1);
+	msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
 	strcpy(msg,start);
 	strcat(msg,ctl->password);
 	strcpy(ctl->digest, MD5Digest((unsigned char *)msg));

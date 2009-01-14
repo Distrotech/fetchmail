@@ -468,7 +468,7 @@ int SockRead(int sock, char *buf, int len)
 			 * We don't have a string to pass through
 			 * the strchr at this point yet */
 			newline = NULL;
-		} else if ((newline = memchr(bp, '\n', n)) != NULL)
+		} else if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
 			n = newline - bp + 1;
 		/* Matthias Andree: SSL_read can return 0, in that case
 		 * we must call SSL_get_error to figure if there was
@@ -638,7 +638,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				
 				/* RFC 2595 section 2.4: find a matching name
 				 * first find a match among alternative names */
-				gens = X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
+				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
 				if (gens) {
 					int i, r;
 					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {

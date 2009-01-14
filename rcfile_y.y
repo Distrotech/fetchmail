@@ -573,7 +573,7 @@ char *prependdir (const char *file, const char *dir)
 	strcmp(file, "-") == 0 ||	/* stdin/stdout */
 	!dir[0])			/* we don't HAVE_GETCWD */
 	return xstrdup (file);
-    newfile = xmalloc (strlen (dir) + 1 + strlen (file) + 1);
+    newfile = (char *)xmalloc (strlen (dir) + 1 + strlen (file) + 1);
     if (dir[strlen(dir) - 1] != '/')
 	sprintf (newfile, "%s/%s", dir, file);
     else

@@ -617,8 +617,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	size_t rnl, pwl;
 	rnl = 2 * strlen(ctl->remotename) + 1;
 	pwl = 2 * strlen(ctl->password) + 1;
-	remotename = xmalloc(rnl);
-	password = xmalloc(pwl);
+	remotename = (char *)xmalloc(rnl);
+	password = (char *)xmalloc(pwl);
 
 	imap_canonicalize(remotename, ctl->remotename, rnl);
 	imap_canonicalize(password, ctl->password, pwl);

@@ -446,7 +446,7 @@ int readheaders(int sock,
     {
 	char *line, *rline;
 
-	line = xmalloc(sizeof(buf));
+	line = (char *)xmalloc(sizeof(buf));
 	linelen = 0;
 	line[0] = '\0';
 	do {
@@ -807,7 +807,7 @@ int readheaders(int sock,
 	if (!msgblk.headers)
 	{
 	    oldlen = linelen;
-	    msgblk.headers = xmalloc(oldlen + 1);
+	    msgblk.headers = (char *)xmalloc(oldlen + 1);
 	    (void) memcpy(msgblk.headers, line, linelen);
 	    msgblk.headers[oldlen] = '\0';
 	    free(line);
@@ -1300,7 +1300,7 @@ int readheaders(int sock,
 		if (idp->val.status.mark == XMIT_RCPTBAD)
 		    errlen += strlen(idp->id) + 2;
 
-	    errmsg = xmalloc(errlen + 3);
+	    errmsg = (char *)xmalloc(errlen + 3);
 	    strcpy(errmsg, errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_RCPTBAD)

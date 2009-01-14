@@ -55,7 +55,7 @@ int prc_lineno = 1;
 
 			if ((size_t)yyleng + 1 > ins) {
 			    ins = yyleng + 1;
-			    in = xrealloc(in, ins);
+			    in = (char *)xrealloc(in, ins);
 			}
 			memcpy(in, yytext, yyleng);
 			in[yyleng] = '\0';

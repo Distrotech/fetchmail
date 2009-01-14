@@ -292,7 +292,7 @@ char *visbuf(const char *buf)
 
     if (needed > vbufs) {
 	vbufs = needed;
-	vbuf = xrealloc(vbuf, vbufs);
+	vbuf = (char *)xrealloc(vbuf, vbufs);
     }
 
     tp = vbuf;

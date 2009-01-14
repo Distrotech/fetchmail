@@ -1155,7 +1155,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	    sp += 2;
 	}
 
-	after = xmalloc(length + 1);
+	after = (char *)xmalloc(length + 1);
 
 	/* copy mda source string to after, while expanding %[sTF] */
 	for (dp = after, sp = before; (*dp = *sp); dp++, sp++) {

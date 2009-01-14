@@ -418,7 +418,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	    GT_("get_ifinfo: sysctl (iflist estimate) failed"));
 	exit(1);
     }
-    if ((buf = malloc(needed)) == NULL)
+    if ((buf = (char *)malloc(needed)) == NULL)
     {
  	report(stderr, 
 	    GT_("get_ifinfo: malloc failed"));
@@ -736,5 +736,5 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 #endif /* CAN_MONITOR */
 
 #ifndef have_interface_init
-void interface_init(void) {};
+void interface_init(void) {}
 #endif

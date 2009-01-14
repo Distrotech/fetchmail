@@ -211,13 +211,13 @@ static void rep_ensuresize(void) {
     {
 	partial_message_size_used = 0;
 	partial_message_size = 2048;
-	partial_message = MALLOC (partial_message_size);
+	partial_message = (char *)MALLOC (partial_message_size);
     }
     else
 	if (partial_message_size - partial_message_size_used < 1024)
 	{
 	    partial_message_size += 2048;
-	    partial_message = REALLOC (partial_message, partial_message_size);
+	    partial_message = (char *)REALLOC (partial_message, partial_message_size);
 	}
 }
 
@@ -258,7 +258,7 @@ report_build (FILE *errfp, message, va_alist)
 	}
 
 	partial_message_size += 2048;
-	partial_message = REALLOC (partial_message, partial_message_size);
+	partial_message = (char *)REALLOC (partial_message, partial_message_size);
     }
 #else
     for ( ; ; )
@@ -326,7 +326,7 @@ report_complete (FILE *errfp, message, va_alist)
 	}
 
 	partial_message_size += 2048;
-	partial_message = REALLOC (partial_message, partial_message_size);
+	partial_message = (char *)REALLOC (partial_message, partial_message_size);
     }
 #else
     for ( ; ; )

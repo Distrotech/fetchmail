@@ -79,7 +79,7 @@ char *reply_hack(
     for (cp = buf; *cp; cp++)
 	if (*cp == ',' || isspace((unsigned char)*cp))
 	    addresscount++;
-    buf = xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
+    buf = (char *)xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
 #endif /* MAIN */
 
     /*
