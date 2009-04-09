@@ -935,9 +935,13 @@ static int do_session(
 	/* execute pre-initialization command, if any */
 	if (ctl->preconnect && (err = system(ctl->preconnect)))
 	{
-	    report(stderr, 
-		   GT_("pre-connection command failed with status %d\n"), err);
-	    err = PS_SYNTAX;
+	    if (WIFSIGNALED(err))
+		report(stderr,
+			GT_("pre-connection command terminated with signal %d\n"), WTERMSIG(err));
+	    else
+		report(stderr,
+			GT_("pre-connection command failed with status %d\n"), WEXITSTATUS(err));
+	    err = PS_PROTOCOL;
 	    goto closeUp;
 	}
 
@@ -1566,9 +1570,12 @@ closeUp:
     /* execute wrapup command, if any */
     if (ctl->postconnect && (tmperr = system(ctl->postconnect)))
     {
-	report(stderr, GT_("post-connection command failed with status %d\n"), tmperr);
+	if (WIFSIGNALED(tmperr))
+	    report(stderr, GT_("post-connection command terminated with signal %d\n"), WTERMSIG(tmperr));
+	else
+	    report(stderr, GT_("post-connection command failed with status %d\n"), WEXITSTATUS(tmperr));
 	if (err == PS_SUCCESS)
-	    err = PS_SYNTAX;
+	    err = PS_PROTOCOL;
     }
 
     set_timeout(0); /* cancel any pending alarm */
