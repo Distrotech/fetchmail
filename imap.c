@@ -1153,6 +1153,13 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     if (num != number)
 	return(PS_ERROR);
 
+    /* Understand "NIL" as length => no body present
+     * (MS Exchange, BerliOS Bug #11980) */
+    if (strstr(buf+10, "NIL)")) {
+	    *lenp = 0;
+	    return PS_SUCCESS;
+    }
+
     /*
      * Try to extract a length from the FETCH response.  RFC2060 requires
      * it to be present, but at least one IMAP server (Novell GroupWise)

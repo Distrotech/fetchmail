@@ -62,6 +62,8 @@ fetchmail 6.3.10 (not yet released):
   Courtesy of Nico Golde, Debian.
 * When a pre- or post-connect command fails, now report the exit status or
   termination signal properly through sys/wait.h macros.
+* When acquiring a body, understand NIL ("no such data item"), as returned by
+  some MS Exchange versions. Fixes BerliOS Bug #11980 by KB Sriram.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to
