@@ -31,9 +31,9 @@ Page</a></td>
 <hr/>
 <h1 id="FAQ">Frequently Asked Questions About Fetchmail</h1>
 
-<p>Before reporting any bug, please read <a href="#G3">G3</a> for
-advice on how to include diagnostic information that will get your
-bug fixed as quickly as possible.</p>
+<p><strong>Support? Bug reports?</strong> Please read <a 
+href="#G3">G3</a> for what information is required to get your problem 
+solved as quickly as possible.</p>
 
 <p>Note that this FAQ is occasionally updated from the SVN repository
 and speaks in the past tense ("since") about a fetchmail release that is
@@ -354,17 +354,22 @@ When reporting bugs, please include the following:</p>
 name and origin of the RPM or other binary package you
 installed.</li>
 
-<li>A copy of your POP or IMAP server's greeting line.</li>
-
 <li>The name and version of the SMTP listener or MDA you are
 forwarding to.</li>
 
 <li>Any command-line options you used.</li>
 
-<li>The output of fetchmail -V called with whatever other
-command-line options you used.</li>
+<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with 
+whatever other command-line options you used.</li>
 
-<li><strong>The output of <kbd>fetchmail --nodetach -vvv --nosyslog</kbd> with whatever other command-line options you use routinely.</strong></li>
+<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv 
+--nosyslog</kbd> with whatever other command-line options you use 
+routinely.</strong>
+ <p>It is very important that the transcript include your
+POP/IMAP server's greeting line, so I can identify it in case of server
+problems. This transcript will not reveal your passwords, which are
+specially masked out precisely so transcripts can be passed around.</p>
+</li>
 </ol>
 
 <p>If you have FTP access to your remote mail account, and you have
@@ -382,22 +387,17 @@ introduced in the upper half of the sequence; if it doesn't, the
 failure was introduced in the lower half. Now bisect that half in
 the same way. In a very few tries, you should be able to identify
 the exact adjacent pair of versions between which your bug was
-introduced &ndash; and with information like that, I can usually come up
-with a fix very quickly.</p>
+introduced. <STRONG>Please</STRONG> include session transcripts (as 
+described in the last bullet point above) of <strong>both
+the working and failing versions.</strong> Often, the source of the problem
+can instantly identified by looking at the differences in protocol
+transactions.</p>
 
-<p>Another useful thing you can do, if you're using POP3, is to
-test for IMAP4 support on your mailserver using the autoprobe
-function of fetchmailconf. If you have IMAP4, and fetchmailconf
-doesn't tell you it's broken, switch immediately. POP3 is a weak,
-poorly-designed protocol with chronic problems, and the later
-versions after RFC1725 actually get worse rather than better.
-Changing over to IMAP4 may well make your problem go away &ndash; and if
-your ISP doesn't have IMAP4 support, bug them to supply it.</p>
-
-<p>It is helpful if you include your .fetchmailrc file, but not
+<p>It may helpful if you include your .fetchmailrc file, but not
 necessary unless your symptom seems to involve an error in
 configuration parsing. If you do send in your .fetchmailrc, mask
-the passwords first!</p>
+the passwords first! Otherwise, fetchmail -V &ndash; as directed above 
+&ndash; will usually suffice.</p>
 
 <p>If fetchmail seems to run and fetch mail, but the headers look
 mangled (that is, headers are missing or blank lines are inserted
@@ -407,19 +407,6 @@ attention to the item on <a href="#generic_mangling">diagnosing
 mail mangling</a>. There are lots of ways for other programs in the
 mail chain to screw up that look like fetchmail's fault, but you
 may be able to fix these by tweaking your configuration.</p>
-
-<p>A transcript of the failed session with "--nosyslog --nodetach -vvv"
-(yes, that's <em>three</em> -v options, enabling debug mode) will almost
-always be useful. It is very important that the transcript include your
-POP/IMAP server's greeting line, so I can identify it in case of server
-problems. This transcript will not reveal your passwords, which are
-specially masked out precisely so transcripts can be passed around.</p>
-
-<p>If you upgraded your fetchmail and something broke, you should
-include session transcripts with "--nosyslog --nodetach -vvv" of both
-the working and failing versions. Very often, the source of the problem
-can instantly identified by looking at the differences in protocol
-transactions.</p>
 
 <p>If the bug involves a core dump or hang, a gdb stack trace is
 good to have. (Bear in mind that you can attach gdb to a running
