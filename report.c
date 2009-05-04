@@ -46,9 +46,6 @@ static char *partial_message;
 static unsigned unbuffered;
 static unsigned int use_syslog;
 
-/* This variable is incremented each time `report' is called.  */
-static unsigned int report_message_count;
-
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
 
@@ -147,7 +144,6 @@ report (FILE *errfp, message, va_alist)
 #endif
 	fflush (errfp);
     }
-    ++report_message_count;
 }
 
 /*
@@ -338,8 +334,6 @@ report_complete (FILE *errfp, message, va_alist)
     {
 	fputs(partial_message, errfp);
 	fflush (errfp);
-
-	++report_message_count;
     }
     else
 	report(errfp, "%s", partial_message);
@@ -404,7 +398,6 @@ report_at_line (FILE *errfp, errnum, file_name, line_number, message, va_alist)
     fprintf (errfp, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
 
-    ++report_message_count;
     if (errnum)
 	fprintf (errfp, ": %s", strerror (errnum));
     putc ('\n', errfp);
