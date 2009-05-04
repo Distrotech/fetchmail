@@ -67,12 +67,13 @@ fetchmail 6.3.10 (not yet released):
 * Make progress tickers (-v/--showdots) consistent, and update documentation 
   accordingly ("." for each 1024 octets read, "#" for a header written, and "*" 
   for each body line written.)
-  The conditions under which these had been printed were inconsistent, 
+  The conditions under which these had been printed were inconsistent,
   illogical, and documentation hadn't matched real behaviour for long.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to
   ease its use. Suggested by Daniel Richard G.
+
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [it] Italian (Vincenzo Campanella)
 
