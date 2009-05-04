@@ -292,7 +292,7 @@ int main(int argc, char **argv)
 	fflush(stdout);
 
 	/* this is an attempt to help remote debugging */
-	system("uname -a");
+	if (system("uname -a")) { /* NOOP to quench GCC complaint */ }
     }
 
     /* avoid parsing the config file if all we're doing is killing a daemon */
