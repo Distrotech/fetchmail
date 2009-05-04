@@ -367,7 +367,7 @@ static void print_ticker(int *tickervar, int bytes)
     *tickervar += bytes;
     while (*tickervar >= SIZETICKER)
     {
-	if (outlevel > O_SILENT && run.showdots && !run.use_syslog)
+	if (want_progress())
 	{
 	    fputc('.', stdout);
 	    fflush(stdout);
@@ -1265,7 +1265,7 @@ int readheaders(int sock,
 	return(PS_IOERR);
     }
     
-    if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
+    if (want_progress())
 	fputc('#', stdout);
 
     /* write error notifications */
@@ -1446,7 +1446,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
-	    else if (outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
+	    else if (want_progress())
 	    {
 		fputc('*', stdout);
 		fflush(stdout);

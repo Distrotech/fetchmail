@@ -1315,9 +1315,9 @@ mailserver host.
 The
 .B \-\-showdots
 option (keyword: set showdots) forces fetchmail to show progress dots
-even if the current tty is not stdout (for example logfiles).
-Fetchmail shows the dots by default when run in nodetach mode or when
-daemon mode is not enabled.
+even if the output goes to a file or fetchmail is not in verbose mode.
+Fetchmail shows the dots by default when run in \-\-verbose mode 
+\fIand\fP output goes to console. This option is ignored in \-\-silent mode.
 .PP
 By specifying the
 .B \-\-tracepolls

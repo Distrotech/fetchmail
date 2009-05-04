@@ -64,6 +64,11 @@ fetchmail 6.3.10 (not yet released):
   termination signal properly through sys/wait.h macros.
 * When acquiring a body, understand NIL ("no such data item"), as returned by
   some MS Exchange versions. Fixes BerliOS Bug #11980 by KB Sriram.
+* Make progress tickers (-v/--showdots) consistent, and update documentation 
+  accordingly ("." for each 1024 octets read, "#" for a header written, and "*" 
+  for each body line written.)
+  The conditions under which these had been printed were inconsistent, 
+  illogical, and documentation hadn't matched real behaviour for long.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to

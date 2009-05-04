@@ -764,5 +764,11 @@ int must_tls(struct query *ctl);
 /* prototype from rfc822valid.c */
 int rfc822_valid_msgid(const unsigned char *);
 
+/* macro to determine if we want to spam progress to stdout */
+#define want_progress() \
+	((outlevel >= O_VERBOSE || (outlevel > O_SILENT && run.showdots)) \
+	&& !run.use_syslog \
+	&& (run.showdots || !is_a_file(1)))
+
 #endif
 /* fetchmail.h ends here */

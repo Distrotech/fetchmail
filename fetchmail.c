@@ -1150,8 +1150,6 @@ static int load_params(int argc, char **argv, int optind)
 					flag = FALSE;\
 				else\
 					flag = (dflt)
-    /* one global gets treated specially */
-    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
