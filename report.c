@@ -71,10 +71,8 @@ char *strerror (int errnum)
 #endif	/* _LIBC */
 
 /* Print the program name and error message MESSAGE, which is a printf-style
-   format string with optional args.
-   If ERRNUM is nonzero, print its corresponding system error message. */
+   format string with optional args. */
 /* VARARGS */
-
 void
 #ifdef HAVE_STDARG_H
 report (FILE *errfp, const char *message, ...)
@@ -125,7 +123,7 @@ report (FILE *errfp, message, va_alist)
 	va_end(args);
 #endif
     }
-    else
+    else /* i. e. not using syslog */
 #endif
     {
 	fflush (errfp);
@@ -351,6 +349,7 @@ report_complete (FILE *errfp, message, va_alist)
    variable controls whether this mode is selected or not.  */
 static int error_one_per_line;
 
+/* If errnum is nonzero, print its corresponding system error message. */
 void
 #ifdef HAVE_STDARG_H
 report_at_line (FILE *errfp, int errnum, const char *file_name,
