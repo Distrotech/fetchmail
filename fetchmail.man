@@ -2532,14 +2532,10 @@ tried to run fetchmail under circumstances where it did not have
 standard input attached to a terminal and could not prompt for a
 missing password.
 .IP 4
-Some sort of fatal protocol error was detected. Since 6.3.10, this
-includes non-zero exit status or signal-triggered termination of a pre-
-or post-connect command.
+Some sort of fatal protocol error was detected.
 .IP 5
 There was a syntax error in the arguments to
-.IR fetchmail .
-Up to and including 6.3.9, this was also used if the pre- or
-post-connect command failed.
+\fIfetchmail\fP, or a pre- or post-connect command failed.
 .IP 6
 The run control file had bad permissions.
 .IP 7

@@ -946,7 +946,7 @@ static int do_session(
 	    else
 		report(stderr,
 			GT_("pre-connection command failed with status %d\n"), WEXITSTATUS(err));
-	    err = PS_PROTOCOL;
+	    err = PS_SYNTAX;
 	    goto closeUp;
 	}
 
@@ -1580,7 +1580,7 @@ closeUp:
 	else
 	    report(stderr, GT_("post-connection command failed with status %d\n"), WEXITSTATUS(tmperr));
 	if (err == PS_SUCCESS)
-	    err = PS_PROTOCOL;
+	    err = PS_SYNTAX;
     }
 
     set_timeout(0); /* cancel any pending alarm */

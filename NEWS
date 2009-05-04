@@ -48,10 +48,6 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.10 (not yet released):
 
-# INCOMPATIBLE BUGFIXES
-* Use PS_PROTOCOL (4) rather than PS_SYNTAX (5) exit status when a pre- or
-  post-connect command fails.
-
 # BUGFIXES
 * Fix misuse of canonical autoconf target as _TARGET when it should have been
   _HOST. Report and patch courtesy of Diego E. "Flameeyes" Pettenò.

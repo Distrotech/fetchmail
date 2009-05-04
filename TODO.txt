@@ -55,6 +55,9 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- use PS_PROTOCOL for pre-/post-connect command failures - 6.3 uses 
+  PS_SYNTAX, and that's not necessarily the case. At least if the 
+  command terminates with a signal, we should report PS_PROTOCOL.
 - revisit maximum allowed rcfile permissions, fix inconsistency
   (silently allowing g+x).
 - make UID code more efficient, parsing is O(n^2), should be no worse
