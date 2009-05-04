@@ -3,8 +3,6 @@
  *
  * Copyright 2001 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
- *
- * 
  */
 
 #include  "config.h"
@@ -614,22 +612,23 @@ int readheaders(int sock,
 	{
 	    print_ticker(&sizeticker, linelen);
 	}
+
+	/*
+	 * Decode MIME encoded headers. We MUST do this before
+	 * looking at the Content-Type / Content-Transfer-Encoding
+	 * headers (RFC 2046).
+	 */
+	if ( ctl->mimedecode )
+	{
+	    char *tcp;
+	    UnMimeHeader(line);
+	    /* the line is now shorter. So we retrace back till we find
+	     * our terminating combination \n\0, we move backwards to
+	     * make sure that we don't catch some \n\0 stored in the
+	     * decoded part of the message */
+	    for (tcp = line + linelen - 1; tcp > line && (*tcp != 0 || tcp[-1] != '\n'); tcp--);
+	    if  (tcp > line) linelen = tcp - line;
 	}
-		/*
-		 * Decode MIME encoded headers. We MUST do this before
-		 * looking at the Content-Type / Content-Transfer-Encoding
-		 * headers (RFC 2046).
-		 */
-		if ( ctl->mimedecode )
-		{
-		    char *tcp;
-		    UnMimeHeader(line);
-		    /* the line is now shorter. So we retrace back till we find our terminating
-		     * combination \n\0, we move backwards to make sure that we don't catch som
-		     * \n\0 stored in the decoded part of the message */
-		    for(tcp = line + linelen - 1; tcp > line && (*tcp != 0 || tcp[-1] != '\n'); tcp--);
-		    if(tcp > line) linelen = tcp - line;
-		}
 
 
 	/* skip processing if we are going to retain or refuse this mail */
