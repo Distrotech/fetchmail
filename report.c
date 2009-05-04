@@ -43,7 +43,7 @@
 static unsigned int partial_message_size = 0;
 static unsigned int partial_message_size_used = 0;
 static char *partial_message;
-static unsigned use_stderr;
+static unsigned unbuffered;
 static unsigned int use_syslog;
 
 /* This variable is incremented each time `report' is called.  */
@@ -163,18 +163,18 @@ void report_init(int mode)
     {
     case 0:			/* errfp, buffered */
     default:
-	use_stderr = FALSE;
+	unbuffered = FALSE;
 	use_syslog = FALSE;
 	break;
 
     case 1:			/* errfp, unbuffered */
-	use_stderr = TRUE;
+	unbuffered = TRUE;
 	use_syslog = FALSE;
 	break;
 
 #ifdef HAVE_SYSLOG
     case -1:			/* syslogd */
-	use_stderr = FALSE;
+	unbuffered = FALSE;
 	use_syslog = TRUE;
 	break;
 #endif /* HAVE_SYSLOG */
@@ -265,7 +265,7 @@ report_build (FILE *errfp, message, va_alist)
     }
 #endif
 
-    if (use_stderr && partial_message_size_used != 0)
+    if (unbuffered && partial_message_size_used != 0)
     {
 	partial_message_size_used = 0;
 	fputs(partial_message, errfp);
@@ -336,7 +336,7 @@ report_complete (FILE *errfp, message, va_alist)
     /* Finally... print it.  */
     partial_message_size_used = 0;
 
-    if (use_stderr)
+    if (unbuffered)
     {
 	fputs(partial_message, errfp);
 	fflush (errfp);
