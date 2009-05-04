@@ -472,6 +472,8 @@ const char *norm_charmap(const char *name);
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
 void report_init(int foreground);
+ /** Flush partial message, suppress program name tag for next report printout. */
+void report_flush(FILE *fp);
 void report (FILE *fp, const char *format, ...)
     __attribute__ ((format (printf, 2, 3)))
     ;

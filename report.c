@@ -1,4 +1,4 @@
-/* report.c -- report function for noninteractive utilities
+/** \file report.c report function for noninteractive utilities
  *
  * For license terms, see the file COPYING in this directory.
  *
@@ -43,6 +43,8 @@
 static unsigned int partial_message_size = 0;
 static unsigned int partial_message_size_used = 0;
 static char *partial_message;
+static int partial_suppress_tag = 0;
+
 static unsigned unbuffered;
 static unsigned int use_syslog;
 
@@ -123,13 +125,14 @@ report (FILE *errfp, message, va_alist)
     else /* i. e. not using syslog */
 #endif
     {
-	fflush (errfp);
 	if ( *message == '\n' )
 	{
 	    fputc( '\n', errfp );
 	    ++message;
 	}
-	fprintf (errfp, "%s: ", program_name);
+	if (!partial_suppress_tag)
+		fprintf (errfp, "%s: ", program_name);
+	partial_suppress_tag = 0;
 
 #ifdef VA_START
 	VA_START (args, message);
@@ -263,6 +266,16 @@ report_build (FILE *errfp, message, va_alist)
     {
 	partial_message_size_used = 0;
 	fputs(partial_message, errfp);
+    }
+}
+
+void report_flush(FILE *errfp)
+{
+    if (partial_message_size_used != 0)
+    {
+	partial_message_size_used = 0;
+	report(errfp, partial_message);
+	partial_suppress_tag = 1;
     }
 }
 
