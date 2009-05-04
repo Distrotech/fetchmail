@@ -46,6 +46,8 @@ soon - after 6.3.9:
   Earl Chew, 2007-07-30T02:28)
   => requires reworking SMTP_ok to actually not only read the last line 
      of multiline replies, but buffer.
+- revise ticker, and add something like .........20%.... ... 100%
+  (suggested by Yue Wu)
 
 questionable:
 - Convert POP3 UIDs to X-UIDL?
