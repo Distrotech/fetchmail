@@ -114,6 +114,24 @@ questionable:
 - allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
 - use SASL?
 - make logfile more useful (redirect not only in daemon mode)
+- for virtual mapping, we don't currently support local user aliases or 
+  regexp matching with replacement. This would be useful for hosting 
+  several virtual domains in one multidrop mailbox, as in 
+  qmail/courier's:
+
+  @one.example:bob-one
+  @two.example:bob-two
+
+  Result:
+  some@one.example maps to bob-one-some@serverdomain
+  another@two.example maps to bob-two-example@serverdomain
+
+  we can strip the bob-*, but but we don't support domain catchalls 
+  here, and we cannot currently delegate or rewrite the remaining 
+  one-* or two-* users in a useful way. All local parts of the upstream 
+  domains must be known and mapped in the configuration file.
+  (See fetchmail-users, Michelle Konzack, 2009-05-03, "4 multidrop but one 
+   destination server" and followup)
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
