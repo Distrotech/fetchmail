@@ -1264,7 +1264,8 @@ int readheaders(int sock,
 	release_sink(ctl);
 	return(PS_IOERR);
     }
-    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
+    
+    if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
 	fputc('#', stdout);
 
     /* write error notifications */
