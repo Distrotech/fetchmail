@@ -133,6 +133,10 @@ questionable:
   (See fetchmail-users, Michelle Konzack, 2009-05-03, "4 multidrop but one 
    destination server" and followup)
 
+  This probably entails some form of extended user mapping inside 
+  fetchmail, for map_name() in transact.c, and possibly 
+  find_server_names() ibidem.
+
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
 - consolidate multidrop documentation
