@@ -145,7 +145,7 @@ report (FILE *errfp, message, va_alist)
 	fflush (errfp);
     }
 }
-
+
 /*
  * Calling report_init(1) causes report_build and report_complete to write
  * to errfp without buffering.  This is needed for the ticker dots to
@@ -174,7 +174,7 @@ void report_init(int mode)
 #endif /* HAVE_SYSLOG */
     }
 }
-
+
 /* Build an report message by appending MESSAGE, which is a printf-style
    format string with optional args, to the existing report message (which may
    be empty.)  The completed report message is finally printed (and reset to
@@ -265,13 +265,12 @@ report_build (FILE *errfp, message, va_alist)
 	fputs(partial_message, errfp);
     }
 }
-
+
 /* Complete a report message by appending MESSAGE, which is a printf-style
    format string with optional args, to the existing report message (which may
    be empty.)  The completed report message is then printed (and reset to
    empty.) */
 /* VARARGS */
-
 void
 #ifdef HAVE_STDARG_H
 report_complete (FILE *errfp, const char *message, ...)
@@ -338,7 +337,7 @@ report_complete (FILE *errfp, message, va_alist)
     else
 	report(errfp, "%s", partial_message);
 }
-
+
 /* Sometimes we want to have at most one error per line.  This
    variable controls whether this mode is selected or not.  */
 static int error_one_per_line;
