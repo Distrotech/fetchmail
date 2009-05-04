@@ -55,7 +55,7 @@ static void SMTP_auth_error(int sock, const char *msg)
 {
     SockPrintf(sock, "*\r\n");
     SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
-    if (outlevel >= O_MONITOR) report(stdout, msg);
+    if (outlevel >= O_MONITOR) report(stdout, "%s", msg);
 }
 
 static void SMTP_auth(int sock, char smtp_mode, char *username, char *password, char *buf)

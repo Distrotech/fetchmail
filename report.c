@@ -274,7 +274,7 @@ void report_flush(FILE *errfp)
     if (partial_message_size_used != 0)
     {
 	partial_message_size_used = 0;
-	report(errfp, partial_message);
+	report(errfp, "%s", partial_message);
 	partial_suppress_tag = 1;
     }
 }
