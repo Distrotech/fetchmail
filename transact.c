@@ -361,6 +361,23 @@ static char *parse_received(struct query *ctl, char *bufp)
 /* shared by readheaders and readbody */
 static int sizeticker;
 
+/** Print ticker based on a amount of data transferred of \a bytes.
+ * Increments \a *tickervar by \a bytes, and if it exceeds
+ * \a SIZETICKER, print a dot and reduce *tickervar by \a SIZETICKER. */
+static void print_ticker(int *tickervar, int bytes)
+{
+    *tickervar += bytes;
+    while (*tickervar >= SIZETICKER)
+    {
+	if (outlevel > O_SILENT && run.showdots && !run.use_syslog)
+	{
+	    fputc('.', stdout);
+	    fflush(stdout);
+	}
+	*tickervar -= SIZETICKER;
+    }
+}
+
 #define EMPTYLINE(s)   (((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0') \
                        || ((s)[0] == '\n' && (s)[1] == '\0'))
 
@@ -595,16 +612,8 @@ int readheaders(int sock,
 	/* write the message size dots */
 	if ((outlevel > O_SILENT && outlevel < O_VERBOSE) && linelen > 0)
 	{
-	    sizeticker += linelen;
-	    while (sizeticker >= SIZETICKER)
-	    {
-		if (outlevel > O_SILENT && run.showdots && !run.use_syslog)
-		{
-		    fputc('.', stdout);
-		    fflush(stdout);
-		}
-		sizeticker -= SIZETICKER;
-	    }
+	    print_ticker(&sizeticker, linelen);
+	}
 	}
 		/*
 		 * Decode MIME encoded headers. We MUST do this before
@@ -1373,16 +1382,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 	/* write the message size dots */
 	if (linelen > 0)
 	{
-	    sizeticker += linelen;
-	    while (sizeticker >= SIZETICKER)
-	    {
-		if (outlevel > O_SILENT && run.showdots && !run.use_syslog)
-		{
-		    fputc('.', stdout);
-		    fflush(stdout);
-		}
-		sizeticker -= SIZETICKER;
-	    }
+	    print_ticker(&sizeticker, linelen);
 	}
 
 	/* Mike Jones, Manchester University, 2006:
