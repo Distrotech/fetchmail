@@ -20,13 +20,6 @@ AC_PREREQ(2.60)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE
 
-dnl autobuild support, see <http://josefsson.org/autobuild/>
-(
-  TZ=GMT
-  export TZ
-  AB_INIT
-)
-
 dnl python is optional
 #
 # you can pass PYTHON=: in environment or on the command line

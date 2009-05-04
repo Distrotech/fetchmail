@@ -173,7 +173,6 @@ EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 		m4/xsize.m4 \
 		m4-local/ac-archive-license.txt \
 		m4-local/ac_ma_search_package.m4 \
-		m4-local/autobuild.m4 \
 		t.smoke t.rc \
 		dist-tools/html2txt \
 		dist-tools/manServer.pl \
