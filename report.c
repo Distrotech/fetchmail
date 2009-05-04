@@ -38,15 +38,6 @@
 #define MALLOC(n)	xmalloc(n)	
 #define REALLOC(n,s)	xrealloc(n,s)	
 
-/* If NULL, report will flush stderr, then print on stderr the program
-   name, a colon and a space.  Otherwise, report will call this
-   function without parameters instead.  */
-static void (*report_print_progname) (
-#if __STDC__ - 0
-			      void
-#endif
-			      );
-
 /* Used by report_build() and report_complete() to accumulate partial messages.
  */
 static unsigned int partial_message_size = 0;
@@ -137,18 +128,13 @@ report (FILE *errfp, message, va_alist)
     else
 #endif
     {
-	if (report_print_progname)
-	    (*report_print_progname) ();
-	else
+	fflush (errfp);
+	if ( *message == '\n' )
 	{
-	    fflush (errfp);
-	    if ( *message == '\n' )
-	    {
-		fputc( '\n', errfp );
-		++message;
-	    }
-	    fprintf (errfp, "%s: ", program_name);
+	    fputc( '\n', errfp );
+	    ++message;
 	}
+	fprintf (errfp, "%s: ", program_name);
 
 #ifdef VA_START
 	VA_START (args, message);
@@ -396,18 +382,13 @@ report_at_line (FILE *errfp, errnum, file_name, line_number, message, va_alist)
 	old_line_number = line_number;
     }
 
-    if (report_print_progname)
-	(*report_print_progname) ();
-    else
+    fflush (errfp);
+    if ( *message == '\n' )
     {
-	fflush (errfp);
-	if ( *message == '\n' )
-	{
-	    fputc( '\n', errfp );
-	    ++message;
-	}
-	fprintf (errfp, "%s:", program_name);
+	fputc( '\n', errfp );
+	++message;
     }
+    fprintf (errfp, "%s:", program_name);
 
     if (file_name != NULL)
 	fprintf (errfp, "%s:%u: ", file_name, line_number);
