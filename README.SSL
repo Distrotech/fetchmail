@@ -1,6 +1,18 @@
 Fetchmail SSL support
 =====================
 
+Note: there is a separate document describing the server-side
+requirements for proper SSL support. It has checklist-style and not
+specific to fetchmail.
+
+In case of troubles, mail it to your ISP and have them check it.
+
+	-- Matthias Andree, 2009-05-09
+
+
+Fetchmail's client-side SSL support
+-----------------------------------
+
 NOTE: This text is maybe not explanatory enough, so a little knowledge about
 public-key-cryptography and associated topics is required.
 

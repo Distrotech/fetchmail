@@ -70,6 +70,14 @@ fetchmail 6.3.10 (not yet released):
 * Make the comparison of the SSL fingerprints case insensitive, to
   ease its use. Suggested by Daniel Richard G.
 
+# DOCUMENTATION
+* Some parts of the the manual page were revised for clarity, accuracy, and
+  updated recommendations (particularly SSL/TLS) and formatting conventions from
+  man-pages(7).
+* A document, README.SSL-SERVER, was added to describe server-side requirements
+  for proper SSL and/or TLS service offerings. These are not specific to
+  fetchmail.
+
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [it] Italian (Vincenzo Campanella)
 

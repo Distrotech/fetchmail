@@ -125,7 +125,7 @@ fetchmail.spec: Makefile.in specgen.sh
 DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		design-notes.html esrs-design-notes.html todo.html \
 		fetchmail-features.html README.SSL README.NTLM \
-		README.packaging \
+		README.packaging README.SSL-SERVER \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
 		fetchmail-SA-2008-01.txt \
 		fetchmail-SA-2007-02.txt \
