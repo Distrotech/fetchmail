@@ -278,6 +278,8 @@ immediately" in my logs.</a><br/>
 <a href="#O16">O16. Why is the Fetchmail FAQ only available in
 	ISO-216 A4 format? How do I get the FAQ in Letter
 	format?</a><br/>
+<a href="#O17">O17. Linux logs "TCP(fetchmail:...): Application bug, race
+    in MSG_PEEK."</a><br/>
 
 <hr/>
 <h1 id="G">General problems</h1>
@@ -3489,6 +3491,11 @@ favorite text editor, replace <samp>--size A4</samp> by <samp>--size
 make fetchmail-FAQ.pdf
 </pre>
 
+<h2><a name="O17">O17. Linux logs "TCP(fetchmail:...): Application bug, race
+    in MSG_PEEK."</a></h2>
+<p>That's in fact a bug in Linux kernels around the late 2.6.2X versions,
+rather than fetchmail.  Fetchmail has no race bugs around MSG_PEEK,
+as of version 6.3.9. The message can safely be ignored.</p>
 <hr/>
 
 <table width="100%" cellpadding="0" summary="Canned page footer">
