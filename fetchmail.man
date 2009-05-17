@@ -2370,7 +2370,7 @@ information.
 A related problem is that when you blind-copy a mail message, the Bcc
 information is carried \fIonly\fP as envelope address (it's removed from
 the headers by the sending mail server, so fetchmail can see it only if
-there is an X-\Envelope\-To header).  Thus, blind-copying to someone who
+there is an X\-Envelope\-To header).  Thus, blind-copying to someone who
 gets mail over a fetchmail multidrop link will fail unless the the
 mailserver host routinely writes X\-Envelope\-To or an equivalent header
 into messages in your maildrop.
