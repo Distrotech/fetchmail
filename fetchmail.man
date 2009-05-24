@@ -2794,6 +2794,10 @@ Beinert, and H\['e]ctor Garc\['i]a.
 
 .SH SEE ALSO
 .PP
+.BR README ,
+.BR README.SSL ,
+.BR README.SSL-SERVER ,
+.URL "http://www.fetchmail.info/fetchmail-FAQ.html" "The Fetchmail FAQ" ,
 .BR mutt (1),
 .BR elm (1),
 .BR mail (1),
