@@ -163,6 +163,7 @@ to be printed.
 .TP
 .B \-a | \-\-all | (since v6.3.3) \-\-fetchall
 (Keyword: fetchall, since v3.0)
+.br
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Under POP3, this option also forces the use of RETR rather than TOP.
@@ -174,6 +175,7 @@ command-line option was added in v6.3.3.
 .TP
 .B \-k | \-\-keep
 (Keyword: keep)
+.br
 Keep retrieved messages on the remote mailserver.  Normally, messages
 are deleted from the folder on the mailserver after they have been retrieved.
 Specifying the \fBkeep\fP option causes retrieved messages to remain in
@@ -183,12 +185,15 @@ option or uidl keyword.
 .TP
 .B \-K | \-\-nokeep
 (Keyword: nokeep)
+.br
 Delete retrieved messages from the remote mailserver.  This
 option forces retrieved mail to be deleted.  It may be useful if
 you have specified a default of \fBkeep\fP in your
 \&\fI.fetchmailrc\fP.  This option is forced on with ETRN and ODMR.
 .TP
 .B \-F | \-\-flush
+(Keyword: flush)
+.br
 POP3/IMAP only.  This is a dangerous option and can cause mail loss when
 used improperly. It deletes old (seen) messages from the mailserver
 before retrieving new messages.  \fBWarning:\fP This can cause mail loss if
@@ -210,6 +215,7 @@ work with ETRN or ODMR.
 .TP
 .B \-p <proto> | \-\-proto <proto> | \-\-protocol <proto>
 (Keyword: proto[col])
+.br
 Specify the protocol to use when communicating with the remote
 mailserver.  If no protocol is specified, the default is AUTO.
 \fBproto\fP may be one of the following:
@@ -251,6 +257,7 @@ a static DNS.
 .TP
 .B \-U | \-\-uidl
 (Keyword: uidl)
+.br
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of 'newness' of messages (UIDL stands for "unique ID listing" and is
 described in RFC1939).  Use with 'keep' to use a mailbox as a baby
@@ -263,6 +270,7 @@ also: \-\-idfile.
 .TP
 .B \-\-idle (since 6.3.3)
 (Keyword: idle, since before 6.0.0)
+.br
 Enable IDLE use (effective only with IMAP). Note that this works with
 only one folder at a given time.  While the idle rcfile keyword had been
 supported for a long time, the \-\-idle command-line option was added in
@@ -272,6 +280,7 @@ be possible with regular polls.
 .TP
 .B \-P <portnumber> | \-\-service <servicename>
 (Keyword: service) Since version 6.3.0.
+.br
 The service option permits you to specify a service name to connect to.
 You can specify a decimal port number here, if your services database
 lacks the required service-port assignments. See the FAQ item R12 and
@@ -280,17 +289,20 @@ option.
 .TP
 .B \-\-port <portnumber>
 (Keyword: port)
+.br
 Obsolete version of \-\-service that does not take service names.
 \fBNote:\fP this option may be removed from a future version.
 .TP
 .B \-\-principal <principal>
 (Keyword: principal)
+.br
 The principal option permits you to specify a service principal for
 mutual authentication.  This is applicable to POP3 or IMAP with Kerberos
 authentication.
 .TP
 .B \-t <seconds> | \-\-timeout <seconds>
 (Keyword: timeout)
+.br
 The timeout option allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
 or respond to commands for the given number of seconds,
@@ -303,7 +315,9 @@ succession, fetchmail will consider it wedged and stop retrying.
 The calling user will be notified by email if this happens.
 .TP
 .B \-\-plugin <command>
-(Keyword: plugin) The plugin option allows you to use an external
+(Keyword: plugin)
+.br
+The plugin option allows you to use an external
 program to establish the TCP connection.  This is useful if you want
 to use ssh, or need some special firewalling setup.  The
 program will be looked up in $PATH and can optionally be passed the
@@ -315,11 +329,13 @@ stdout.
 .TP
 .B \-\-plugout <command>
 (Keyword: plugout)
+.br
 Identical to the plugin option above, but this one is used for the SMTP
 connections.
 .TP
 .B \-r <name> | \-\-folder <name>
 (Keyword: folder[s])
+.br
 Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
 folder name is server-dependent.  This option is not available under
@@ -327,6 +343,7 @@ POP3, ETRN, or ODMR.
 .TP
 .B \-\-tracepolls
 (Keyword: tracepolls)
+.br
 Tell fetchmail to poll trace information in the form 'polling 
 account %s' and 'folder %s' to the Received line it generates,
 where the %s parts are replaced by the user's remote name, the poll
@@ -336,7 +353,9 @@ facilitate mail filtering based on the account it is being received
 from. The folder information is written only since version 6.3.4.
 .TP
 .B \-\-ssl
-(Keyword: ssl) Causes the connection to the mail server to be encrypted
+(Keyword: ssl)
+.br
+Causes the connection to the mail server to be encrypted
 via SSL.  Connect to the server using the specified base protocol over a
 connection secured by SSL. This option defeats opportunistic starttls
 negotiation. It is highly recommended to use \-\-sslproto 'SSL3'
@@ -362,7 +381,7 @@ ports, which is uncommon however).
 .TP
 .B \-\-sslcert <name>
 (Keyword: sslcert)
-\&
+.br
 For certificate-based client authentication.  Some SSL encrypted servers
 require client side keys and certificates for authentication.  In most
 cases, this is optional.  This specifies the location of the public key
@@ -378,6 +397,7 @@ from the certificate's CommonName and overrides the name set with
 .TP
 .B \-\-sslkey <name>
 (Keyword: sslkey)
+.br
 Specifies the file name of the client side private SSL key.  Some SSL
 encrypted servers require client side keys and certificates for
 authentication.  In most cases, this is optional.  This specifies
@@ -395,6 +415,7 @@ Also see \-\-sslcert above.
 .TP
 .B \-\-sslproto <name>
 (Keyword: sslproto)
+.br
 Forces an SSL/TLS protocol. Possible values are \fB''\fP,
 \&'\fBSSL2\fP', '\fBSSL23\fP', (use of these two values is discouraged
 and should only be used as a last resort) \&'\fBSSL3\fP', and
@@ -416,6 +437,7 @@ to try appropriate protocols depending on context.
 .TP
 .B \-\-sslcertck
 (Keyword: sslcertck)
+.br
 Causes fetchmail to strictly check the server certificate against a set of
 local trusted certificates (see the \fBsslcertpath\fP option). If the server
 certificate cannot be obtained or is not signed by one of the trusted ones
@@ -431,6 +453,7 @@ fetchmail versions.
 .TP
 .B \-\-sslcertpath <directory>
 (Keyword: sslcertpath)
+.br
 Sets the directory fetchmail uses to look up local certificates. The default
 is your OpenSSL default one. The directory must be hashed as OpenSSL expects
 it - every time you add or modify a certificate in the directory, you need
@@ -439,6 +462,7 @@ subdirectory).
 .TP
 .B \-\-sslcommonname <common name>
 (Keyword: sslcommonname)
+.br
 Use of this option is discouraged. Before using it, contact the
 administrator of your upstream server and ask for a proper SSL
 certificate to be used. If that cannot be attained, this option can be
@@ -451,6 +475,7 @@ the upstream server can't be made to use proper certificates.
 .TP
 .B \-\-sslfingerprint <fingerprint>
 (Keyword: sslfingerprint)
+.br
 Specify the fingerprint of the server key (an MD5 hash of the key) in
 hexadecimal notation with colons separating groups of two digits. The letter
 hex digits must be in upper case. This is the default format OpenSSL uses,
@@ -480,6 +505,7 @@ For details, see
 .TP
 .B \-S <hosts> | \-\-smtphost <hosts>
 (Keyword: smtp[host])
+.br
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated). Hosts are tried in list order; the first
 one that is up becomes the forwarding target for the current run.  If
@@ -500,30 +526,37 @@ between the ODMR server and SMTP or LMTP receiver.
 .TP
 .B \-\-fetchdomains <hosts>
 (Keyword: fetchdomains)
+.br
 In ETRN or ODMR mode, this option specifies the list of domains the
 server should ship mail for once the connection is turned around.  The
 default is the FQDN of the machine running \fBfetchmail\fP.
 .TP
 .B \-D <domain> | \-\-smtpaddress <domain>
-(Keyword: smtpaddress) Specify the domain to be appended to addresses
+(Keyword: smtpaddress)
+.br
+Specify the domain to be appended to addresses
 in RCPT TO lines shipped to SMTP. When this is not specified, the name
 of the SMTP server (as specified by \-\-smtphost) is used for SMTP/LMTP
 and 'localhost' is used for UNIX socket/BSMTP.
 .TP
 .B \-\-smtpname <user@domain>
 (Keyword: smtpname)
+.br
 Specify the domain and user to be put in RCPT TO lines shipped to SMTP.
 The default user is the current local user.
 .TP
 .B \-Z <nnn> | \-\-antispam <nnn[, nnn]...>
 (Keyword: antispam)
+.br
 Specifies the list of numeric SMTP errors that are to be interpreted
 as a spam-block response from the listener.  A value of \-1 disables
 this option.  For the command-line option, the list values should
 be comma-separated.
 .TP
 .B \-m <command> | \-\-mda <command>
-(Keyword: mda) You can force mail to be passed to an MDA directly
+(Keyword: mda)
+.br
+You can force mail to be passed to an MDA directly
 (rather than forwarded to port 25) with the \-\-mda or \-m option.
 
 To
@@ -581,13 +614,15 @@ loops.
 .TP
 .B \-\-lmtp
 (Keyword: lmtp)
+.br
 Cause delivery via LMTP (Local Mail Transfer Protocol).  A service
 host and port \fBmust\fP be explicitly specified on each host in the
 smtphost hunt list (see above) if this option is selected; the default
 port 25 will (in accordance with RFC 2033) not be accepted.
 .TP
 .B \-\-bsmtp <filename>
-(keyword: bsmtp)
+(Keyword: bsmtp)
+.br
 Append fetched mail to a BSMTP file.  This simply contains the SMTP
 commands that would normally be generated by fetchmail when passing
 mail to an SMTP listener daemon.  An argument of '\-' causes the mail
@@ -598,7 +633,9 @@ MAILBOXES below apply.
 .SS Resource Limit Control Options
 .TP
 .B \-l <maxbytes> | \-\-limit <maxbytes>
-(Keyword: limit) Takes a maximum octet size argument, where 0 is the
+(Keyword: limit)
+.br
+Takes a maximum octet size argument, where 0 is the
 default and also the special value designating "no limit".
 If nonzero, messages larger than this size will not be fetched and will
 be left on the server (in foreground sessions, the progress messages
@@ -617,6 +654,7 @@ option does not work with ETRN or ODMR.
 .TP
 .B \-w <interval> | \-\-warnings <interval>
 (Keyword: warnings)
+.br
 Takes an interval in seconds.  When you call \fBfetchmail\fP
 with a 'limit' option in daemon mode, this controls the interval at
 which warnings about oversized messages are mailed to the calling user
@@ -628,6 +666,7 @@ place at the end of the first following poll).
 .TP
 .B \-b <count> | \-\-batchlimit <count>
 (Keyword: batchlimit)
+.br
 Specify the maximum number of messages that will be shipped to an SMTP
 listener before the connection is deliberately torn down and rebuilt
 (defaults to 0, meaning no limit).  An explicit \-\-batchlimit of 0
@@ -642,6 +681,7 @@ option does not work with ETRN or ODMR.
 .TP
 .B \-B <number> | \-\-fetchlimit <number>
 (Keyword: fetchlimit)
+.br
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit \-\-fetchlimit of 0
 overrides any limits set in your run control file.
@@ -649,6 +689,7 @@ This option does not work with ETRN or ODMR.
 .TP
 .B \-\-fetchsizelimit <number>
 (Keyword: fetchsizelimit)
+.br
 Limit the number of sizes of messages accepted from a given server in
 a single transaction.  This option is useful in reducing the delay in
 downloading the first mail when there are too many mails in the
@@ -659,6 +700,7 @@ non-zero value is 1.
 .TP
 .B \-\-fastuidl <number>
 (Keyword: fastuidl)
+.br
 Do a binary instead of linear search for the first unseen UID. Binary
 search avoids downloading the UIDs of all mails. This saves time
 (especially in daemon mode) where downloading the same set of UIDs in
@@ -671,7 +713,8 @@ used if 'n' is 0. In non-daemon mode, binary search is used if 'n' is
 This option works with POP3 only.
 .TP
 .B \-e <count> | \-\-expunge <count>
-(keyword: expunge)
+(Keyword: expunge)
+.br
 Arrange for deletions to be made final after a given number of
 messages.  Under POP2 or POP3, fetchmail cannot make deletions final
 without sending QUIT and ending the session -- with this option on,
@@ -697,6 +740,7 @@ or ODMR.
 .TP
 .B \-u <name> | \-\-user <name> | \-\-username <name>
 (Keyword: user[name])
+.br
 Specifies the user identification to be used when logging in to the mailserver.
 The appropriate user identification is both server and user-dependent.
 The default is your login name on the client machine that is running
@@ -705,6 +749,7 @@ See USER AUTHENTICATION below for a complete description.
 .TP
 .B \-I <specification> | \-\-interface <specification>
 (Keyword: interface)
+.br
 Require that a specific interface device be up and have a specific local
 or remote IPv4 (IPv6 is not supported by this option yet) address (or
 range) before polling.  Frequently \fBfetchmail\fP
@@ -734,6 +779,7 @@ Note that this option may be removed from a future fetchmail version.
 .TP
 .B \-M <interface> | \-\-monitor <interface>
 (Keyword: monitor)
+.br
 Daemon mode can cause transient links which are automatically taken down
 after a period of inactivity (e.g. PPP links) to remain up
 indefinitely.  This option identifies a system TCP/IP interface to be
@@ -752,6 +798,7 @@ Note that this option may be removed from a future fetchmail version.
 .TP
 .B \-\-auth <type>
 (Keyword: auth[enticate])
+.br
 This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are \fBany\fP,
 \&\fBpassword\fP, \fBkerberos_v5\fP, \fBkerberos\fP (or, for
@@ -787,6 +834,7 @@ else be /dev/null.
 .TP
 .B \-i <pathname> | \-\-idfile <pathname>
 (Keyword: idfile)
+.br
 Specify an alternate name for the .fetchids file used to save message
 UIDs. NOTE: since fetchmail 6.3.0, write access to the directory
 containing the idfile is required, as fetchmail writes a temporary file
@@ -796,21 +844,22 @@ idfiles when running out of disk space.
 .TP
 .B \--pidfile <pathname>
 (Keyword: pidfile; since fetchmail v6.3.4)
+.br
 Override the default location of the PID file. Default: see
 "ENVIRONMENT" below.
 .TP
 .B \-n | \-\-norewrite
 (Keyword: no rewrite)
-Normally,
-\fBfetchmail\fP edits RFC-822 address headers (To, From, Cc, Bcc, and
-Reply\-To) in fetched mail so that any mail IDs local to the server are
-expanded to full addresses (@ and the mailserver hostname are appended).
-This enables replies on the client to get addressed correctly (otherwise
-your mailer might think they should be addressed to local users on the
-client machine!).  This option disables the rewrite.  (This option is
-provided to pacify people who are paranoid about having an MTA edit
-mail headers and want to know they can prevent it, but it is generally
-not a good idea to actually turn off rewrite.)
+.br
+Normally, \fBfetchmail\fP edits RFC-822 address headers (To, From, Cc,
+Bcc, and Reply\-To) in fetched mail so that any mail IDs local to the
+server are expanded to full addresses (@ and the mailserver hostname are
+appended).  This enables replies on the client to get addressed
+correctly (otherwise your mailer might think they should be addressed to
+local users on the client machine!).  This option disables the rewrite.
+(This option is provided to pacify people who are paranoid about having
+an MTA edit mail headers and want to know they can prevent it, but it is
+generally not a good idea to actually turn off rewrite.)
 When using ETRN or ODMR, the rewrite option is ineffective.
 .TP
 .B \-E <line> | \-\-envelope <line>
@@ -841,6 +890,7 @@ first and second, take the third, and so on.
 .TP
 .B \-Q <prefix> | \-\-qvirtual <prefix>
 (Keyword: qvirtual; Multidrop only)
+.br
 The string prefix assigned to this option will be removed from the user
 name found in the header specified with the \fIenvelope\fP option
 (\fIbefore\fP doing multidrop name mapping or localdomain checking,
