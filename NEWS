@@ -70,6 +70,9 @@ fetchmail 6.3.10 (not yet released):
 * Make the comparison of the SSL fingerprints case insensitive, to
   ease its use. Suggested by Daniel Richard G.
 
+# CHANGES TO CONTRIB
+* Fix bashism in contrib/fetchsetup. Fixes Debian Bug#530081.
+
 # DOCUMENTATION
 * Some parts of the the manual page were revised for clarity, accuracy, and
   updated recommendations (particularly SSL/TLS) and formatting conventions from

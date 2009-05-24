@@ -12,12 +12,12 @@ cat << EOF
 EOF
 }
 
-if [ ! "$UID" = "0" ]; then
 echo "[$LOGNAME] You need to be [root] to run this script."
 echo "You could login: root"
 echo "You could also try one of these: # sudo fetchsetup"
 echo "                                 # su -c fetchsetup"
 exit 1
+if [ "$(id -ur)" != "0" ]; then
 fi
 
 MSG
