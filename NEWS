@@ -65,6 +65,8 @@ fetchmail 6.3.10 (not yet released):
   for each body line written.)
   The conditions under which these had been printed were inconsistent,
   illogical, and documentation hadn't matched real behaviour for long.
+* For NTLM authentication, use dynamically allocated buffers.
+  Fixes Debian Bug#449179, reported by Stepan Golosunov.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to

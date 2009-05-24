@@ -82,15 +82,30 @@ static void dumpRaw(FILE *fp, unsigned char *buf, size_t len)
     fprintf(fp,"\n");
   }
 
+/* helper function to destructively resize buffers; assumes that bufsiz
+ * is initialized to 0 if buf is unallocated! */
+static void allocbuf(char **buf, size_t *bufsiz, size_t need)
+  {
+  if (need > *bufsiz)
+    {
+    *bufsiz = (need < 1024) ? 1024 : need;
+    xfree(*buf);
+    *buf = xmalloc(*bufsiz);
+    }
+  }
+
+/* this is a brute-force conversion from UCS-2LE to US-ASCII, discarding
+ * the upper 9 bits */
 static char *unicodeToString(char *p, size_t len)
   {
   size_t i;
-  static char buf[1024];
+  static char *buf;
+  static size_t bufsiz;
 
-  assert(len+1 < sizeof buf);
-  
+  allocbuf(&buf, &bufsiz, len + 1);
+
   for (i=0; i<len; ++i)
-    {  
+    {
     buf[i] = *p & 0x7f;
     p += 2;
     }
@@ -99,29 +114,32 @@ static char *unicodeToString(char *p, size_t len)
   return buf;
   }
 
+/* This is a brute-force conversion from US-ASCII to UCS-2LE */
 static unsigned char *strToUnicode(char *p)
   {
-  static unsigned char buf[1024];
+  static unsigned char *buf;
+  static size_t bufsiz;
   size_t l = strlen(p);
   int i = 0;
-  
-  assert(l*2 < sizeof buf);
-  
+
+  allocbuf((char **)&buf, &bufsiz, l * 2);
+
   while (l--)
     {
     buf[i++] = *p++;
     buf[i++] = 0;
     }
-  
+
   return buf;
   }
 
 static unsigned char *toString(char *p, size_t len)
   {
-  static unsigned char buf[1024];
-  
-  assert(len+1 < sizeof buf);
-  
+  static unsigned char *buf;
+  static size_t bufsiz;
+
+  allocbuf((char **)&buf, &bufsiz, len + 1);
+
   memcpy(buf,p,len);
   buf[len] = 0;
   return buf;
