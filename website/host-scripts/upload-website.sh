@@ -22,7 +22,8 @@ fi
 echo "==>  Uploading website (rsync)"
 # upload
 rsync \
-    --chmod=ug=rwX,o=rX,Dg=s --copy-links --times --checksum --verbose \
+    --chmod=ug=rwX,o=rX,Dg=s --perms \
+    --copy-links --times --checksum --verbose \
     --exclude host-scripts \
     --exclude .svn --exclude '*~' --exclude '#*#' \
     * \
