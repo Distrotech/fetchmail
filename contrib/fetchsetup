@@ -68,13 +68,13 @@ PROCMAIL=`type -all procmail | sed -n "1 p" | cut -d' ' -f3`
 SENDMAIL=`type -all sendmail | sed -n "1 p" | cut -d' ' -f3`
 
 if [ ! "$PROCMAIL" = "" ]; then
-echo 'mda "'$PROCMAIL -d %s'"' >> $HOME/.fetchmailrc
-MDA="1"
+    echo 'mda "'$PROCMAIL -d %s'"' >> $HOME/.fetchmailrc
+    MDA="1"
 elif [ ! "$SENDMAIL" = "" ]; then
-echo 'mda "'$SENDMAIL %s'"' >> $HOME/.fetchmailrc
-MDA="2"
+    echo 'mda "'$SENDMAIL %s'"' >> $HOME/.fetchmailrc
+    MDA="2"
 else
-MDA="3"
+    MDA="3"
 fi
 
 echo >> $HOME/.fetchmailrc
