@@ -51,7 +51,9 @@ enum {
     LA_FETCHSIZELIMIT,
     LA_FASTUIDL,
     LA_LIMITFLUSH,
-    LA_IDLE
+    LA_IDLE,
+    LA_NOSOFTBOUNCE,
+    LA_SOFTBOUNCE
 };
 
 /* options still left: CgGhHjJoORTWxXYz */
@@ -78,6 +80,8 @@ static const struct option longoptions[] = {
   {"pidfile",	required_argument, (int *) 0, LA_PIDFILE },
   {"postmaster",required_argument, (int *) 0, LA_POSTMASTER },
   {"nobounce",	no_argument,	   (int *) 0, LA_NOBOUNCE },
+  {"nosoftbounce", no_argument,	   (int *) 0, LA_NOSOFTBOUNCE },
+  {"softbounce", no_argument,	   (int *) 0, LA_SOFTBOUNCE },
 
   {"protocol",	required_argument, (int *) 0, 'p' },
   {"proto",	required_argument, (int *) 0, 'p' },
@@ -299,6 +303,12 @@ int parsecmdline (int argc /** argument count */,
 	    break;
 	case LA_NOBOUNCE:
 	    run.bouncemail = FALSE;
+	    break;
+	case LA_NOSOFTBOUNCE:
+	    run.softbounce = FALSE;
+	    break;
+	case LA_SOFTBOUNCE:
+	    run.softbounce = TRUE;
 	    break;
 	case 'p':
 	    /* XXX -- should probably use a table lookup here */
@@ -607,6 +617,8 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --pidfile     specify alternate PID (lock) file\n"));
 	P(GT_("      --postmaster  specify recipient of last resort\n"));
 	P(GT_("      --nobounce    redirect bounces from user to postmaster.\n"));
+	P(GT_("      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"));
+	P(GT_("      --softbounce  keep permanently undeliverable messages on server (default).\n"));
 #ifdef CAN_MONITOR
 	P(GT_("  -I, --interface   interface required specification\n"));
 	P(GT_("  -M, --monitor     monitor interface for activity\n"));

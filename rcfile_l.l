@@ -18,6 +18,7 @@ int prc_lineno = 1;
 #else
 #define SETSTATE(n)	BEGIN(n)
 #endif /* LEXDEBUG */
+
 %}
 
 /* this doesn't work with Linux lex, see the INSTALL file */
@@ -77,6 +78,7 @@ showdots	{ return SHOWDOTS; }
 postmaster	{ return POSTMASTER; }
 bouncemail	{ return BOUNCEMAIL; }
 spambounce	{ return SPAMBOUNCE; }
+softbounce	{ return SOFTBOUNCE; }
 warnings	{ return WARNINGS; }
 tracepolls	{ return TRACEPOLLS; }
 

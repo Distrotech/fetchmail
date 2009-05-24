@@ -180,6 +180,7 @@ struct runctl
     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
     flag	spambounce;
+    flag	softbounce;
     flag	use_syslog;
     flag	invisible;
     flag	showdots;

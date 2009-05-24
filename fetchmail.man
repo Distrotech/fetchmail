@@ -159,6 +159,20 @@ Verbose mode.  All control messages passed between \fBfetchmail\fP
 and the mailserver are echoed to stdout.  Overrides \-\-silent.
 Doubling this option (\-v \-v) causes extra diagnostic information
 to be printed.
+.TP
+.B \-\-nosoftbounce
+(since v6.3.10, Keyword: set no softbounce, since v6.3.10)
+.br
+Hard bounce mode. All permanent delivery errors cause messages to be
+deleted from the upstream server, see "no softbounce" below.
+.TP
+.B \-\-softbounce
+(since v6.3.10, Keyword: set softbounce, since v6.3.10)
+.br
+Soft bounce mode. All permanent delivery errors cause messages to be
+left on the upstream server if the protocol supports that. Default to
+match historic fetchmail documentation, to be changed to hard bounce
+mode in the next fetchmail release.
 .SS Disposal Options
 .TP
 .B \-a | \-\-all | (since v6.3.3) \-\-fetchall
@@ -1572,6 +1586,14 @@ back to the destination as indicated by the 'bouncemail' global option.
 Warning: Do not use this to bounce spam back to the sender - most spam
 is sent with false sender address and thus this option hurts innocent
 bystanders.
+T}
+set no softbounce	\&	\&	T{
+Delete permanently undeliverable mail. It is recommended to use this
+option if the configuration has been thoroughly tested.
+T}
+set    spambounce	\&	\&	T{
+Keep permanently undeliverable mail as though a temporary error had
+occurred (default).
 T}
 set logfile  	\-L	\&	T{
 Name of a file to append error and status messages to.

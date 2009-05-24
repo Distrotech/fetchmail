@@ -987,6 +987,7 @@ static int load_params(int argc, char **argv, int optind)
     char *p;
 
     run.bouncemail = TRUE;
+    run.softbounce = TRUE;	/* treat permanent errors as temporary */
     run.spambounce = FALSE;	/* don't bounce back to innocent bystanders */
 
     memset(&def_opts, '\0', sizeof(struct query));
@@ -1112,6 +1113,8 @@ static int load_params(int argc, char **argv, int optind)
 	run.postmaster = cmd_run.postmaster;
     if (cmd_run.bouncemail)
 	run.bouncemail = cmd_run.bouncemail;
+    if (cmd_run.softbounce)
+	run.softbounce = cmd_run.softbounce;
 
     /* check and daemon options are not compatible */
     if (check_only && run.poll_interval)
@@ -1535,6 +1538,11 @@ static void dump_params (struct runctl *runp,
 	printf(GT_("Fetchmail will direct error mail to the postmaster.\n"));
     else if (outlevel >= O_VERBOSE)
 	printf(GT_("Fetchmail will direct error mail to the sender.\n"));
+
+    if (!runp->softbounce)
+	printf(GT_("Fetchmail will treat permanent errors as permanent (drop messsages).\n"));
+    else if (outlevel >= O_VERBOSE)
+	printf(GT_("Fetchmail will treat permanent errors as temporary (keep messages).\n"));
 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {

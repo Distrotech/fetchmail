@@ -765,15 +765,16 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 flagthemail:
 	/*
-	 * At this point in flow of control, either
-	 * we've bombed on a protocol error or had
-	 * delivery refused by the SMTP server
-	 * (unlikely -- I've never seen it) or we've
-	 * seen `accepted for delivery' and the
-	 * message is shipped.  It's safe to mark the
-	 * message seen and delete it on the server
-	 * now.
+	 * At this point in flow of control,
+	 * either we've bombed on a protocol error
+	 * or had delivery refused by the SMTP server
+	 * or we've seen `accepted for delivery' and the message is shipped.
+	 * It's safe to mark the message seen and delete it on the server now.
 	 */
+
+	/* in softbounce mode, suppress deletion and marking as seen */
+	if (suppress_forward)
+	    suppress_delete = suppress_delete || run.softbounce;
 
 	/* maybe we delete this message now? */
 	if (retained)

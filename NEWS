@@ -43,10 +43,21 @@ removed from a 6.4.0 or newer release.)
   based systems.
 * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
   requirements (dependencies), such as Boost or other class libraries.
+* The softbounce option default will change to "false" in the next release.
 
 --------------------------------------------------------------------------------
 
 fetchmail 6.3.10 (not yet released):
+
+# INCOMPATIBLE BUGFIXES AND CHANGES
+* Fetchmail no longer drops permanently undelivered messages by default, to
+  match historic documentation.  It does this by adding a new "softbounce"
+  option, see below.
+  Fixes Debian Bug#471283, demotes Debian Bug#494418 to wishlist.
+* There is a new "softbounce" global option that prevents the deletion of
+  messages that have not been forwarded. It defaults to "true" for fetchmail
+  6.3.X in order to match historic documentation. This may change its default
+  in the next major release.
 
 # BUGFIXES
 * Fix misuse of canonical autoconf target as _TARGET when it should have been
