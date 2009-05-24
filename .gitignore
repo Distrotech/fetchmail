@@ -1,6 +1,9 @@
+*~
+#*#
 ABOUT-NLS
 aclocal.m4
 autom4te.cache
+build*
 build*/
 compile
 config.guess
@@ -11,8 +14,8 @@ configure
 cscope.out
 depcomp
 install-sh
-Makefile.in
 m4/
+Makefile.in
 missing
 mkinstalldirs
 py-compile
