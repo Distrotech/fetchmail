@@ -74,6 +74,7 @@ fetchmail 6.3.10 (not yet released):
 * Some parts of the the manual page were revised for clarity, accuracy, and
   updated recommendations (particularly SSL/TLS) and formatting conventions from
   man-pages(7).
+* The README and README.SSL documents were updated.
 * A document, README.SSL-SERVER, was added to describe server-side requirements
   for proper SSL and/or TLS service offerings. These are not specific to
   fetchmail.
