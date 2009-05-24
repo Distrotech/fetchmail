@@ -827,14 +827,14 @@ class ConfigurationEdit(Frame, MyWidget):
 
 	    sb = Frame(gf)
 	    Checkbutton(sb,
-		{'text':'send spam bounces?',
+		{'text':'Send spam bounces?',
 		'variable':self.spambounce,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
 	    sb.pack(fill=X)
 
 	    sb = Frame(gf)
 	    Checkbutton(sb,
-		{'text':'treat permanent errors as temporary?',
+		{'text':'Treat permanent errors as temporary?',
 		'variable':self.softbounce,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
 	    sb.pack(fill=X)
