@@ -179,7 +179,7 @@ EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 		Doxyfile
 
 fetchmailconf:
-	( echo '#! /bin/sh' && echo 'exec @PYTHON@ @pythondir@/fetchmailconf.py "$$@"' ) >$@ || { rm -f $@ ; exit 1; }
+	( echo '#! /bin/sh' && echo 'exec @PYTHON@ @pythondir@/fetchmailconf.py "$$@"' ) >$@ && chmod +x $@ || { rm -f $@ ; exit 1; }
 
 FAQ: fetchmail-FAQ.html $(srcdir)/dist-tools/html2txt
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
