@@ -1,3 +1,5 @@
+Note that there is a separate todo.html with different content than this.
+
 soon - MUST:
 - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
   issue)
