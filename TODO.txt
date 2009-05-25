@@ -17,10 +17,7 @@ soon - SHOULD:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
   * write a table of combinations of TLS/SSL options
 - add To: header to warning mails (authfail for instance)
-- Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
-  buf' failed, from Stepan Golosunov <stepan@golosunov.pp.ru>
 - Fix TOCTOU race around prc_filecheck*
-- Get rid of peeking in socket.c? MSG_PEEK seems non-portable.
 
 soon - MAY:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
@@ -28,13 +25,14 @@ soon - MAY:
   Revisit http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=400719
   => syslog messages are localised
   http://lists.debian.org/debian-devel/2006/11/msg01068.html
+- Get rid of peeking in socket.c? MSG_PEEK seems non-portable.
 
 soon - after 6.3.9:
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
 - add Message-ID: header and other SHOULD headers to warning mails?
 - report multiline SMTP errors properly (sample in private mail from 
-  Earl Chew, 2007-07-30T02:28)
+  Earl Chew, 2007-07-30T02:28), Debian Bug #529899
   => requires reworking SMTP_ok to actually not only read the last line 
      of multiline replies, but buffer.
 - revise ticker, and add something like .........20%.... ... 100%
