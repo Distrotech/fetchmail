@@ -1320,7 +1320,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
     int smtp_err;
     if (ctl->mda)
     {
-	int rc,e,e2,err = 0;
+	int rc = 0, e = 0, e2 = 0, err = 0;
 
 	/* close the delivery pipe, we'll reopen before next message */
 	if (sinkfp)
