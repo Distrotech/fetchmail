@@ -126,7 +126,9 @@ struct mxentry *getmxrecords(const char *name)
 
 int main(int argc, char *argv[])
 {
+#ifdef HAVE_RES_SEARCH
     struct mxentry *responses;
+#endif
 
     if (argc != 2 || 0 == strcmp(argv[1], "-h")) {
 	fprintf(stderr, "Usage: %s domain\n", argv[0]);
