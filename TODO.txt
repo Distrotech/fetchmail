@@ -10,8 +10,6 @@ soon - MUST:
 - Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
   without res_search() since "dns" missing in "Server" typemap.
   https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/64152
-- Ubuntu Launchpad Bug #151333, cannot download mail with long Cc: field
-  https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/151333
 
 soon - SHOULD:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829 - recycle part of
