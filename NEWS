@@ -96,8 +96,10 @@ fetchmail 6.3.10 (not yet released):
   fetchmail.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
-* [it] Italian (Vincenzo Campanella)
-* [es] Spanish/Castilian (Francisco Molinero)
+* [en_GB] English/British
+* [de]    German
+* [it]    Italian (Vincenzo Campanella)
+* [es]    Spanish/Castilian (Francisco Molinero)
 
 
 fetchmail 6.3.9 (2008-11-16):
