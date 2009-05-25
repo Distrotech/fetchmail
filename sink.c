@@ -580,6 +580,8 @@ static int handle_smtp_report_without_bounce(struct query *ctl, struct msgblk *m
 {
     int smtperr = atoi(smtp_response);
 
+    (void)msg;
+
     if (str_find(&ctl->antispam, smtperr))
     {
 	if (run.spambounce)
