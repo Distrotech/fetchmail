@@ -107,6 +107,8 @@ rhapsody*)
     ;;
 esac
 
+AC_CACHE_SAVE
+
 dnl i18n
 AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION([0.14.6])
@@ -431,6 +433,8 @@ if test "$with_POP3" != yes && test "$with_POP2" != yes \
     && test "$with_IMAP"  != yes ; then
     AC_MSG_ERROR([You must enable at least one of POP2, POP3 and IMAP.])
 fi
+
+AC_CACHE_SAVE
 
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,
