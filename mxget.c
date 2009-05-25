@@ -9,8 +9,8 @@
 #include "config.h"
 #include "fetchmail.h"
 #include <stdio.h>
-#ifdef HAVE_RES_SEARCH
 #include <string.h>
+#ifdef HAVE_RES_SEARCH
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
