@@ -6,8 +6,6 @@ soon - MUST:
   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
 
 soon - SHOULD:
-- https://bugzilla.novell.com/show_bug.cgi?id=246829 - recycle part of
-  patch (STARTTLS required; 5XX error code in contradiction with manual?)
 - allow \Deleted without \Seen, rf. 
   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299
 - document IMAP4 ACL requirements

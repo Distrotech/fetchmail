@@ -539,6 +539,18 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	free(responses[0]);
 	return(PS_REFUSED);
 
+    case 530: /* must issue STARTTLS error */
+	/*
+	 * Some SMTP servers insist on encrypted communication
+	 * Let's set PS_TRANSIENT, otherwise all messages to be sent
+	 * over such server would be blackholed - see RFC 3207.
+	 */
+	if (outlevel > O_SILENT)
+		report_complete(stdout,
+				GT_("SMTP server requires STARTTLS, keeping message.\n"));
+	free(responses[0]);
+	return(PS_TRANSIENT);
+
     default:
 	/* bounce non-transient errors back to the sender */
 	if (smtperr >= 500 && smtperr <= 599)

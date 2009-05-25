@@ -93,6 +93,10 @@ fetchmail 6.3.10 (not yet released):
 * The ESMTP/LMTP client will now apply an application-specific timeout while
   waiting for the EHLO/LHLO response, rather than wait for the server or TCP
   connection timeout.
+* Treat 530 errors as temporary, so as not to delete messages on configuration
+  errors. Partially taken from Petr Cerny's patch in Novell Bugzilla #246829.
+  The 501 part of said patch was not added, as the maintainer is not convinced
+  501 is a temporary condition, and softbounce takes care of this anyways.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to
