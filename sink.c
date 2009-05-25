@@ -251,7 +251,7 @@ char *rcpt_address(struct query *ctl, const char *id,
 }
 
 static int send_bouncemail(struct query *ctl, struct msgblk *msg,
-			   int userclass, char *message,
+			   int userclass, char *message /* should have \r\n at the end */,
 			   int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
@@ -322,10 +322,14 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     SockPrintf(sock, "--%s\r\n", boundary); 
     SockPrintf(sock,"Content-Type: text/plain\r\n");
     SockPrintf(sock, "\r\n");
-    SockPrintf(sock, "This message was created automatically by mail delivery software.\r\n\r\n");
-    SockPrintf(sock, "A message that you sent could not be delivered to one or more of its\r\n");
-    SockPrintf(sock, "recipients. This is a permanent error. The following address(es) failed:\r\n");
+    SockPrintf(sock, "This message was created automatically by mail delivery software.\r\n");
     SockPrintf(sock, "\r\n");
+    SockPrintf(sock, "A message that you sent could not be delivered to one or more of its\r\n");
+    SockPrintf(sock, "recipients. This is a permanent error.\r\n");
+    SockPrintf(sock, "\r\n");
+    SockPrintf(sock, "Reason: %s", message);
+    SockPrintf(sock, "\r\n");
+    SockPrintf(sock, "The following address(es) failed:\r\n");
 
     if (nerrors)
     {
