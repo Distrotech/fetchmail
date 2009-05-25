@@ -80,6 +80,7 @@ fetchmail 6.3.10 (not yet released):
   Fixes Debian Bug#449179, reported by Stepan Golosunov.
 * Non-delivery notices ("bounce mail") now mentions the original reason again,
   before the address list. This fixes a regression introduced in 6.3.0.
+* Several compiler warnings were fixed.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to
