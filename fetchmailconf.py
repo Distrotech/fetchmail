@@ -2085,10 +2085,10 @@ Usage: fetchmailconf {[-d] [-f fetchmailrc]|-h|--help|-V|--version}
 	    print "fetchmailconf %s" % version
 	    print """
 Copyright (C) 1997 - 2003 Eric S. Raymond
-Copyright (C) 2005 - 2006 Matthias Andree
+Copyright (C) 2005, 2006, 2008, 2009 Matthias Andree
 fetchmailconf comes with ABSOLUTELY NO WARRANTY.  This is free software, you are
 welcome to redistribute it under certain conditions.  Please see the file
-COPYING in the source or documentation directory for details.  """
+COPYING in the source or documentation directory for details."""
 	    sys.exit(0)
 
     # Get client host's FQDN
