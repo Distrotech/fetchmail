@@ -276,6 +276,9 @@ int main(int argc, char **argv)
 #ifdef KERBEROS_V5
 	"+KRB5"
 #endif /* KERBEROS_V5 */
+#ifndef HAVE_RES_SEARCH
+	"-DNS"
+#endif
 	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
