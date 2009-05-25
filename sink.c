@@ -158,7 +158,7 @@ int smtp_open(struct query *ctl)
 	    }
 
 	    /* first, probe for ESMTP */
-	    if (SMTP_ok(ctl->smtp_socket, ctl->smtphostmode) == SM_OK &&
+	    if (SMTP_ok(ctl->smtp_socket, ctl->smtphostmode, TIMEOUT_STARTSMTP) == SM_OK &&
 		    SMTP_ehlo(ctl->smtp_socket, ctl->smtphostmode, id_me,
 			ctl->server.esmtp_name, ctl->server.esmtp_password,
 			&ctl->server.esmtp_options) == SM_OK)
@@ -186,7 +186,7 @@ int smtp_open(struct query *ctl)
 		}
 	    }
 
-	    if (SMTP_ok(ctl->smtp_socket, ctl->smtphostmode) == SM_OK &&
+	    if (SMTP_ok(ctl->smtp_socket, ctl->smtphostmode, TIMEOUT_STARTSMTP) == SM_OK &&
 		    SMTP_helo(ctl->smtp_socket, ctl->smtphostmode, id_me) == SM_OK)
 		break;  /* success */
 
@@ -282,7 +282,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     if ((sock = SockOpen("localhost", SMTP_PORT, NULL, &ai1)) == -1)
 	return(FALSE);
 
-    if (SMTP_ok(sock, SMTP_MODE) != SM_OK)
+    if (SMTP_ok(sock, SMTP_MODE, TIMEOUT_STARTSMTP) != SM_OK)
     {
 	SockClose(sock);
 	return FALSE;
@@ -1422,7 +1422,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	{
 	    if (lmtp_responses == 0)
 	    {
-		SMTP_ok(ctl->smtp_socket, ctl->smtphostmode);
+		SMTP_ok(ctl->smtp_socket, ctl->smtphostmode, TIMEOUT_EOM);
 
 		/*
 		 * According to RFC2033, 503 is the only legal response
@@ -1455,7 +1455,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		responses = (char **)xmalloc(sizeof(char *) * lmtp_responses);
 		for (errors = i = 0; i < lmtp_responses; i++)
 		{
-		    if ((smtp_err = SMTP_ok(ctl->smtp_socket, ctl->smtphostmode))
+		    if ((smtp_err = SMTP_ok(ctl->smtp_socket, ctl->smtphostmode, TIMEOUT_EOM))
 			    == SM_UNRECOVERABLE)
 		    {
 			smtp_close(ctl, 0);

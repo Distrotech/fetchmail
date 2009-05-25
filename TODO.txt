@@ -1,8 +1,6 @@
 Note that there is a separate todo.html with different content than this.
 
 soon - MUST:
-- BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
-  issue)
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453

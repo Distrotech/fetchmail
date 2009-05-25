@@ -81,6 +81,18 @@ fetchmail 6.3.10 (not yet released):
 * Non-delivery notice ("bounce mail") now mentions the original reason again,
   before the address list. This fixes a regression introduced in 6.3.0.
 * Several compiler warnings were fixed.
+* The minimum recommended SMTP (RFC-5321) timeouts are enforced to leave
+  sufficient time for the listener to respond. Some synchronous listeners,
+  particularly when used with spam filtering and other policy enforcement
+  services, take extended amounts of time to process messages after the sender,
+  recipient, or data block and EOM line. This can cause fetchmail to not wait
+  long enough for the "250 Ok" and make fetchmail believe the message wasn't
+  properly delivered when in fact it was; fetchmail would then retry the
+  download next time and never make progress.
+  Fixes Berlios Bug #10972, reported by Viktor Binzberger.
+* The ESMTP/LMTP client will now apply an application-specific timeout while
+  waiting for the EHLO/LHLO response, rather than wait for the server or TCP
+  connection timeout.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to
