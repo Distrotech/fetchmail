@@ -1337,7 +1337,7 @@ int readheaders(int sock,
     *cp++ = '\0';
     n = stuffline(ctl, buf);
 
-    if (n == strlen(buf))
+    if ((size_t)n == strlen(buf))
 	return PS_SUCCESS;
     else
 	return PS_SOCKET;
