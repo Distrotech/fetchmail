@@ -18,6 +18,7 @@ soon - SHOULD:
   * write a table of combinations of TLS/SSL options
 - add To: header to warning mails (authfail for instance)
 - Fix TOCTOU race around prc_filecheck*
+- Read CAPABILITY from greeting if present, saves one round trip.
 
 soon - MAY:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
