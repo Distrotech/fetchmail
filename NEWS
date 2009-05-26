@@ -115,9 +115,11 @@ fetchmail 6.3.10 (not yet released):
   fetchmail.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+* [cs]	  Czech (Petr Pisar)
 * [en_GB] English/British
 * [de]    German
 * [it]    Italian (Vincenzo Campanella)
+* [ja]	  Japanese (Takeshi Hamasaki)
 * [es]    Spanish/Castilian (Francisco Molinero)
 
 
