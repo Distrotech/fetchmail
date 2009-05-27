@@ -118,9 +118,11 @@ fetchmail 6.3.10 (not yet released):
 * [cs]	  Czech (Petr Pisar)
 * [en_GB] English/British
 * [de]    German
+* [id]    Indonesian (Andhika Padmawan)
 * [it]    Italian (Vincenzo Campanella)
 * [ja]	  Japanese (Takeshi Hamasaki)
 * [es]    Spanish/Castilian (Francisco Molinero)
+* [zh_CN] Chinese/Simplified (Ji ZhengYu)
 
 
 fetchmail 6.3.9 (2008-11-16):
