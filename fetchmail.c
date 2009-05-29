@@ -836,7 +836,8 @@ int main(int argc, char **argv)
 		exit(PS_AUTHFAIL);
 	    }
 
-	    if (outlevel > O_SILENT)
+	    if ((outlevel > O_SILENT && !run.use_syslog && isatty(1))
+		    || outlevel > O_NORMAL)
 		report(stdout,
 		       GT_("sleeping at %s for %d seconds\n"), timestamp(), run.poll_interval);
 
@@ -871,11 +872,11 @@ int main(int argc, char **argv)
 		    ctl->wedged = FALSE;
 	    }
 
-	    if (outlevel > O_SILENT)
+	    if ((outlevel > O_SILENT && !run.use_syslog && isatty(1))
+		    || outlevel > O_NORMAL)
 		report(stdout, GT_("awakened at %s\n"), timestamp());
 	}
-    } while
-	(run.poll_interval);
+    } while (run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
 	report(stdout, GT_("normal termination, status %d\n"),
