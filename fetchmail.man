@@ -320,23 +320,32 @@ authentication.
 The timeout option allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
 or respond to commands for the given number of seconds,
-\fBfetchmail\fP will hang up on it.  Without such a timeout
-\fBfetchmail\fP might hang indefinitely trying to fetch mail from a
-down host.  This would be particularly annoying for a \fBfetchmail\fP
-running in the background.  There is a default timeout which fetchmail\~\-V
-will report.  If a given connection receives too many timeouts in
-succession, fetchmail will consider it wedged and stop retrying.
-The calling user will be notified by email if this happens.
+\fBfetchmail\fP will drop the connection to it.  Without such a timeout
+\fBfetchmail\fP might hang until the TCP connection times out, trying to fetch
+mail from a down host, which may be very long.
+This would be particularly annoying for a \fBfetchmail\fP running in the
+background.  There is a default timeout which fetchmail\~\-V will report.  If a
+given connection receives too many timeouts in succession, fetchmail will
+consider it wedged and stop retrying.  The calling user will be notified by
+email if this happens.
+.IP
+Beginning with fetchmail 6.3.10, the SMTP client uses the recommended minimum
+timeouts from RFC-5321 while waiting for the SMTP/LMTP server it is talking to.
+You can raise the timeouts even more, but you cannot shorten it. This is to
+avoid a painful situation where fetchmail has been configured with a short
+timeout (a minute or less), ships a long message (many MBytes) to the local
+MTA, which then takes longer than timeout to respond "OK", which it eventually
+will; that would mean the mail gets delivered properly, but fetchmail cannot
+notice it and will thus refetch this big message over and over again.
 .TP
 .B \-\-plugin <command>
 (Keyword: plugin)
 .br
-The plugin option allows you to use an external
-program to establish the TCP connection.  This is useful if you want
-to use ssh, or need some special firewalling setup.  The
-program will be looked up in $PATH and can optionally be passed the
-hostname and port as arguments using "%h" and "%p" respectively (note
-that the interpolation logic is rather primitive, and these tokens must
+The plugin option allows you to use an external program to establish the TCP
+connection.  This is useful if you want to use ssh, or need some special
+firewalling setup.  The program will be looked up in $PATH and can optionally
+be passed the hostname and port as arguments using "%h" and "%p" respectively
+(note that the interpolation logic is rather primitive, and these tokens must
 be bounded by whitespace or beginning of string or end of string).
 Fetchmail will write to the plugin's stdin and read from the plugin's
 stdout.
