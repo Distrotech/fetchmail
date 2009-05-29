@@ -302,6 +302,11 @@ int main(int argc, char **argv)
     if (!quitonly)
 	implicitmode = load_params(argc, argv, optind);
 
+    /* precedence: logfile (if effective) overrides syslog. */
+    if (run.logfile && run.poll_interval && !nodetach) {
+	run.use_syslog = 0;
+    }
+
 #if defined(HAVE_SYSLOG)
     /* logging should be set up early in case we were restarted from exec */
     if (run.use_syslog)
@@ -556,8 +561,13 @@ int main(int argc, char **argv)
     /* avoid zombies from plugins */
     deal_with_sigchld();
 
+    /* Fix up log destination - if the if() is true, the precedence rule
+     * above hasn't killed off the syslog option, because the logfile
+     * option is ineffective (because we're not detached or not in
+     * deamon mode), so kill it for the benefit of other parts of the
+     * code. */
     if (run.logfile && run.use_syslog)
-	fprintf(stderr, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
+	run.logfile = 0;
 
     /*
      * Maybe time to go to demon mode...

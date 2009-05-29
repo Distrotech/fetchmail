@@ -1224,9 +1224,8 @@ The
 or
 .B \-\-logfile <filename>
 option (keyword: set logfile) is only effective when fetchmail is
-detached and in daemon mode. Note that the logfile must exist BEFORE 
-fetchmail is run, you
-can use the
+detached and in daemon mode. Note that \fBthe logfile must exist
+before\fP fetchmail is run, you can use the
 .BR touch (1)
 command with the filename as its sole argument to create it.
 .br
@@ -1255,11 +1254,7 @@ The
 .B \-\-nosyslog
 option turns off use of
 .BR syslog (3),
-assuming it's turned on in the \fI~/.fetchmailrc\fP file, or that the
-.B \-L
-or
-.B \-\-logfile <file>
-option was used.
+assuming it's turned on in the \fI~/.fetchmailrc\fP file.
 .PP
 The
 .B \-N
@@ -2112,7 +2107,8 @@ There are some global option statements: 'set logfile'
 followed by a string sets the same global specified by \-\-logfile.  A
 command-line \-\-logfile option will override this. Note that \-\-logfile is
 only effective if fetchmail detaches itself from the terminal and the
-logfile already exists before fetchmail is run.  Also,
+logfile already exists before fetchmail is run, and it overrides
+\-\-syslog in this case.  Also,
 \&'set daemon' sets the poll interval as \-\-daemon does.  This can be
 overridden by a command-line \-\-daemon option; in particular \-\-daemon\~0
 can be used to force foreground operation. The 'set postmaster'

@@ -149,12 +149,11 @@ report (FILE *errfp, message, va_alist)
     }
 }
 
-/*
- * Calling report_init(1) causes report_build and report_complete to write
- * to errfp without buffering.  This is needed for the ticker dots to
- * work correctly.
+/**
+ * Configure the report module. The output is set according to
+ * \a mode.
  */
-void report_init(int mode)
+void report_init(int mode /** 0: regular output, 1: unbuffered output, -1: syslog */)
 {
     switch(mode)
     {

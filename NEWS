@@ -97,6 +97,10 @@ fetchmail 6.3.10 (not yet released):
   errors. Partially taken from Petr Cerny's patch in Novell Bugzilla #246829.
   The 501 part of said patch was not added, as the maintainer is not convinced
   501 is a temporary condition, and softbounce takes care of this anyways.
+* Proper precedence ordering for the syslog and logfile options. If the logfile
+  option is effective (i. e. we're not in daemon mode and nodetach isn't used),
+  kill the syslog option. If logfile is ineffective (we're not in daemon mode,
+  or nodetach is set), syslog takes precedence.
 
 # CHANGES
 * Make the comparison of the SSL fingerprints case insensitive, to
