@@ -129,6 +129,7 @@ fetchmail 6.3.10 (not yet released):
 * [it]    Italian (Vincenzo Campanella)
 * [ja]    Japanese (Takeshi Hamasaki)
 * [pl]    Polish (Jakub Bogusz)
+* [ru]    Russian (Pavel Maryanov), fixing Debian Bug #531925
 * [es]    Spanish/Castilian (Francisco Molinero)
 * [zh_CN] Chinese/Simplified (Ji ZhengYu)
 
