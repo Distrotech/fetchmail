@@ -276,6 +276,9 @@ int SockOpen(const char *host, const char *service,
 
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;
+#ifdef AI_ADDRCONFIG
+    req.ai_flags = AI_ADDRCONFIG;
+#endif
 
     i = fm_getaddrinfo(host, service, &req, ai0);
     if (i) {

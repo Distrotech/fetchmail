@@ -1010,6 +1010,9 @@ static int do_session(
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_flags = AI_CANONNAME;
+#ifdef AI_ADDRCONFIG
+		hints.ai_flags |= AI_ADDRCONFIG;
+#endif
 
 		error = fm_getaddrinfo(ctl->server.queryname, NULL, &hints, &res);
 		if (error)

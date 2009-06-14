@@ -108,6 +108,9 @@ fetchmail 6.3.10 (not yet released):
 * The sleeping at/awakened at messages appear in logfiles and syslog only if
   verbose mode is enabled.  On the console, they will still appear without
   verbose mode.  Fixes Debian Bug#282259.
+* fetchmail only requests IPv6 addresses via name service if at least one is
+  configured on the local host, likewise for IPv4.  (AI_ADDRCONFIG flag to
+  getaddrinfo()) Extended version of Redhat's patch.
 
 # CHANGES TO CONTRIB
 * Fix bashism in contrib/fetchsetup. Fixes Debian Bug#530081.
