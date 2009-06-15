@@ -4,6 +4,8 @@ soon - MUST:
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
+- put bare IP addresses in brackets for SMTP (check if there are RFC
+  1123/5321/5322 differences)
 
 soon - SHOULD:
 - allow \Deleted without \Seen, rf. 
