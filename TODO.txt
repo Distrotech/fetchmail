@@ -8,6 +8,8 @@ soon - MUST:
   1123/5321/5322 differences)
 
 soon - SHOULD:
+- make sure the man page completely lists all options (f. i. sslcertpath) in
+  the tables.
 - allow \Deleted without \Seen, rf. 
   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299
 - document IMAP4 ACL requirements
