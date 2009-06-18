@@ -2,8 +2,6 @@ Note that there is a separate todo.html with different content than this.
 
 soon - MUST:
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
-- Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
-  See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
 - put bare IP addresses in brackets for SMTP (check if there are RFC
   1123/5321/5322 differences)
 
@@ -23,6 +21,7 @@ soon - SHOULD:
 - add To: header to warning mails (authfail for instance)
 - Fix TOCTOU race around prc_filecheck*
 - Read CAPABILITY from greeting if present, saves one round trip.
+- Check if LAST argument is properly validated against message count.
 
 soon - MAY:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
@@ -50,6 +49,9 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- Replace sscanf/fscanf by functions that do range checking
+  (strtol/strtoul), and make arguments unsigned long.
+- drop LAST support
 - use PS_PROTOCOL for pre-/post-connect command failures - 6.3 uses 
   PS_SYNTAX, and that's not necessarily the case. At least if the 
   command terminates with a signal, we should report PS_PROTOCOL.
