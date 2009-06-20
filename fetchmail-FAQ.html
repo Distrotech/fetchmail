@@ -115,8 +115,9 @@ often than others?</a><br/>
 <a href="#C6">C6. Fetchmail works OK started up manually, but not
 from an init script.</a><br/>
 <a href="#C7">C7. How can I forward mail to another
-host?.</a><br/>
-
+host?</a><br/>
+<a href="#C8">C8. Why is "NOMAIL" an error?/I frequently get messages
+from cron!</a><br/>
 
 <h2 id="C_T">How to make fetchmail play nice with various MTAs</h2>
 
@@ -1289,6 +1290,37 @@ host?</a></h2>
 <p>To forward mail to a host other than the one you are running
 fetchmail on, use the <code>smtphost</code> or
 <code>smtpname</code> option. See the manual page for details.</p>
+
+<h2><a id="C8" name="C8">C8. Why is "NOMAIL" an error?/I frequently get messages
+from cron!</a></h2>
+
+<p>Some users want to write scripts that take action only if mail
+could/could not be retrieved, thus fetchmail reports if it has retrieved
+messages or not.</p>
+
+<p>If you do not want "no mail" to be an error condition (for instance,
+for cron jobs), use a POSIX-compliant shell and add this to the end of
+the fetchmail command line, it will change an exit code of 1 to 0 and
+others to 1:</p>
+<pre>
+|| [ $? -eq 1 ]
+</pre>
+
+<p>If you want to map more than one code to 0, you cannot cascade multiple
+<strong>|| [ $? -eq N ]</strong>, but you must instead use the
+<strong>-o</strong> operator inside the brackets, (see the test(1)
+manpage for details), such as:</p>
+
+<pre>
+|| [ $? -eq 1 -o $? -eq 9 ]
+</pre>
+
+<p>A full cron line might then look like this:</p>
+
+<pre>
+*/15 * * * * fetchmail -s || [ $? -eq 1 ]
+</pre>
+
 
 <hr/>
 <h1>How to make fetchmail play nice with various MTAs</h1>

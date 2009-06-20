@@ -123,9 +123,13 @@ fetchmail 6.3.10 (not yet released):
 * A document, README.SSL-SERVER, was added to describe server-side requirements
   for proper SSL and/or TLS service offerings. These are not specific to
   fetchmail.
+* Documentation on how to make "NOMAIL" (exit code 1) not treated an error has
+  been added to the EXIT CODES section of the manpage and to the FAQ as item C8.
+  The suggested solution uses a tiny POSIX shell script fragment.
+  Fixes Debian Bug #530749, filed by Reuben Thomas.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
-* [cs]	  Czech (Petr Pisar)
+* [cs]    Czech (Petr Pisar)
 * [en_GB] English/British
 * [de]    German
 * [id]    Indonesian (Andhika Padmawan)

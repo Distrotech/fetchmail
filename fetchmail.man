@@ -2561,7 +2561,17 @@ One or more messages were successfully retrieved (or, if the \-c option
 was selected, were found waiting but not retrieved).
 .IP 1
 There was no mail awaiting retrieval.  (There may have been old mail still
-on the server but not selected for retrieval.)
+on the server but not selected for retrieval.) If you do not want "no
+mail" to be an error condition (for instance, for cron jobs), use a
+POSIX-compliant shell and add
+
+.nf
+|| [ $? -eq 1 ]
+.fi
+
+to the end of the fetchmail command line, note that this leaves 0
+untouched, maps 1 to 0, and maps all other codes to 1. See also item #C8
+in the FAQ.
 .IP 2
 An error was encountered when attempting to open a socket to retrieve
 mail.  If you don't know what a socket is, don't worry about it --
@@ -2582,9 +2592,7 @@ There was a syntax error in the arguments to
 The run control file had bad permissions.
 .IP 7
 There was an error condition reported by the server.  Can also
-fire if
-\fBfetchmail\fP
-timed out while waiting for the server.
+fire if \fBfetchmail\fP timed out while waiting for the server.
 .IP 8
 Client-side exclusion error.  This means
 \fBfetchmail\fP
