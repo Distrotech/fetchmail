@@ -4,6 +4,7 @@ soon - MUST:
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - put bare IP addresses in brackets for SMTP (check if there are RFC
   1123/5321/5322 differences)
+- Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
 
 soon - SHOULD:
 - make sure the man page completely lists all options (f. i. sslcertpath) in
