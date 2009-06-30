@@ -111,6 +111,11 @@ fetchmail 6.3.10 (not yet released):
 * fetchmail only requests IPv6 addresses via name service if at least one is
   configured on the local host, likewise for IPv4.  (AI_ADDRCONFIG flag to
   getaddrinfo()) Extended version of Redhat's patch.
+* If the server name contains "yahoo.com", offers the "ID" capability, and we're
+  polling via IMAP, send an ID ("guid" "1") transaction first, ignoring its
+  result. This appears needed to be able to log into Yahoo's Zimbra servers, but
+  there are open issues (such as being only able to download one message and
+  server certificate mismatches).
 
 # CHANGES TO CONTRIB
 * Fix bashism in contrib/fetchsetup. Fixes Debian Bug#530081.
