@@ -50,6 +50,10 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- Remove stupid options, such as spambounce, or deferred bounces for anything
+  but wrong addresses
+- Do not ever guess envelope from content headers such as To:/Cc:/Resent-To: or
+  similar.
 - Replace sscanf/fscanf by functions that do range checking
   (strtol/strtoul), and make arguments unsigned long.
 - drop LAST support
