@@ -47,7 +47,7 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.10 (not yet released):
+fetchmail 6.3.10 (released XXXX-XX-XX - not yet):
 
 # INCOMPATIBLE BUGFIXES AND CHANGES
 * Fetchmail no longer drops permanently undelivered messages by default, to
@@ -146,7 +146,7 @@ fetchmail 6.3.10 (not yet released):
 * [zh_CN] Chinese/Simplified (Ji ZhengYu)
 
 
-fetchmail 6.3.9 (2008-11-16):
+fetchmail 6.3.9 (released 2008-11-16):
 
 # SECURITY AND CRITICAL BUG FIXES:
 * CVE-2007-4565: Denial of service: When fetchmail tries to inject a warning
