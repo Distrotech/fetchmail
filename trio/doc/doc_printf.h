@@ -1,6 +1,6 @@
 /*************************************************************************
  *
- * $Id: doc_printf.h,v 1.3 2002/05/07 16:26:00 breese Exp $
+ * $Id: doc_printf.h,v 1.5 2008/10/12 12:09:51 breese Exp $
  *
  * Copyright (C) 2001 Bjorn Reese and Daniel Stenberg.
  *
@@ -57,8 +57,8 @@ sufficient space, is returned.
 
 @ref trio_snprintfcat appends the formatted text at the end of @p buffer.
 
-@ref trio_asprintf and @ref trio_vasprintf allocates and returns an
-allocated string in @p buffer containing the formatted text.
+@ref trio_asprintf, @ref trio_vasprintf, and @ref trio_asprintfv allocates
+and returns an allocated string in @p buffer containing the formatted text.
 
 @b FORMATTING
 
@@ -249,7 +249,7 @@ Corresponds to the size_t modifier ( @c z ).
 
 Prepend radix indicator for hexadecimal, octal, and binary integer numbers
 and for pointers.
-Always add a decimal-pointer for floating-point numbers.
+Always add a decimal-point for floating-point numbers.
 Escape non-printable characters for strings.
 
 @em Spacing ( )
