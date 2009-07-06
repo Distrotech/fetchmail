@@ -397,11 +397,14 @@ user_option	: TO localnames HERE
 #ifdef MAPI_ENABLE
 		current.mapi_lcid = xstrdup($2);
 		if (strncmp(current.mapi_lcid, "0x", 2) != 0) {
+			char tmp[8];
 			/* it doesn't look like a hex id, so try to convert it from
-	 		  a string name (like "English_Australian" to a language code
-	 		  ID string (like "0x0c09")
+	 		 * a string name (like "English_Australian" to a language code
+	 		 * ID string (like "0x0c09")
 			 */
-			current.mapi_lcid = sprintf("0x%04x", lcid_lang2lcid(current.mapi_lcid));
+			snprintf(tmp, sizeof(tmp), "0x%04x", lcid_lang2lcid(current.mapi_lcid));
+			xfree(current.mapi_lcid);
+			current.mapi_lcid = xstrdup(tmp);
  		}
 		if (!lcid_valid_locale(strtoul(current.mapi_lcid, 0, 16))) {
 		printf ("Language code not recognised, using default \"en-US\" instead\n");
