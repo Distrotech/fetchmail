@@ -181,6 +181,7 @@ struct runctl
     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
     flag	spambounce;
+    flag	softbounce;
     flag	use_syslog;
     flag	invisible;
     flag	showdots;
@@ -482,6 +483,8 @@ const char *norm_charmap(const char *name);
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
 void report_init(int foreground);
+ /** Flush partial message, suppress program name tag for next report printout. */
+void report_flush(FILE *fp);
 void report (FILE *fp, const char *format, ...)
     __attribute__ ((format (printf, 2, 3)))
     ;
@@ -779,6 +782,12 @@ int rfc822_valid_msgid(const unsigned char *);
 int MapiRead(int sock, char *buf, int len);
 int MapiPeek(int sock);
 #endif
+
+/* macro to determine if we want to spam progress to stdout */
+#define want_progress() \
+	((outlevel >= O_VERBOSE || (outlevel > O_SILENT && run.showdots)) \
+	&& !run.use_syslog \
+	&& (run.showdots || !is_a_file(1)))
 
 #endif
 /* fetchmail.h ends here */

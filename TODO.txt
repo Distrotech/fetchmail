@@ -1,36 +1,35 @@
+Note that there is a separate todo.html with different content than this.
+
 soon - MUST:
-- BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
-  issue)
-- publish SA-2007-02 after release
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
-- Debian Bug #480851, stuck mail from gandi.net (IMAP; Dovecot) http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480851
-- Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
-  See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
-- Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
-  without res_search() since "dns" missing in "Server" typemap.
-  https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/64152
-- Ubuntu Launchpad Bug #151333, cannot download mail with long Cc: field
-  https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/151333
+- put bare IP addresses in brackets for SMTP (check if there are RFC
+  1123/5321/5322 differences)
+- Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
 
 soon - SHOULD:
-- https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
-  (5XX error code in contradiction with manual?)
-  also http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471283
+- make sure the man page completely lists all options (f. i. sslcertpath) in
+  the tables.
 - allow \Deleted without \Seen, rf. 
   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299
 - document IMAP4 ACL requirements
-- log configured server name on certificate mismatch (perhaps pay
+- CRYPTO: log configured server name on certificate mismatch (perhaps pay
   attention to via entries and stuff like that)
-- BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
+- CRYPTO: BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
   Philip Susi, SSL negotiation does not use ERR_error_string(3ssl) to report
   errors in a readable way, we just report socket errors with no good reason.
-- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
+- CRYPTO: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
   * write a table of combinations of TLS/SSL options
 - add To: header to warning mails (authfail for instance)
-- Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
-  buf' failed, from Stepan Golosunov <stepan@golosunov.pp.ru>
 - Fix TOCTOU race around prc_filecheck*
-- Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
+- Read CAPABILITY from greeting if present, saves one round trip.
+- Check if LAST argument is properly validated against message count.
+- find a solution for the "invalid header" discards message problem
+  (escape headers and stuff reminder into body)
+- add Message-ID: header and other SHOULD headers to warning mails?
+- report multiline SMTP errors properly (sample in private mail from 
+  Earl Chew, 2007-07-30T02:28), Debian Bug #529899
+  => requires reworking SMTP_ok to actually not only read the last line 
+     of multiline replies, but buffer.
 
 soon - MAY:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
@@ -38,15 +37,11 @@ soon - MAY:
   Revisit http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=400719
   => syslog messages are localised
   http://lists.debian.org/debian-devel/2006/11/msg01068.html
+- when logging to syslog, disable locale?
+- Get rid of peeking in socket.c? MSG_PEEK seems non-portable.
+- revise ticker, and add something like .........20%.... ... 100%
+  (suggested by Yue Wu)
 
-soon - after 6.3.9:
-- find a solution for the "invalid header" discards message problem
-  (escape headers and stuff reminder into body)
-- add Message-ID: header and other SHOULD headers to warning mails?
-- report multiline SMTP errors properly (sample in private mail from 
-  Earl Chew, 2007-07-30T02:28)
-  => requires reworking SMTP_ok to actually not only read the last line 
-     of multiline replies, but buffer.
 
 questionable:
 - Convert POP3 UIDs to X-UIDL?
@@ -54,10 +49,20 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- Remove stupid options, such as spambounce, or deferred bounces for anything
+  but wrong addresses
+- Do not ever guess envelope from content headers such as To:/Cc:/Resent-To: or
+  similar.
+- Replace sscanf/fscanf by functions that do range checking
+  (strtol/strtoul), and make arguments unsigned long.
+- drop LAST support
+- use PS_PROTOCOL for pre-/post-connect command failures - 6.3 uses 
+  PS_SYNTAX, and that's not necessarily the case. At least if the 
+  command terminates with a signal, we should report PS_PROTOCOL.
 - revisit maximum allowed rcfile permissions, fix inconsistency
   (silently allowing g+x).
 - make UID code more efficient, parsing is O(n^2), should be no worse
-  than O(n log n).
+  than O(n log n), lookup is O(n), should be O(log n).
 - help systematic debugging
     - by making logging more strict (Postfix's msg_* as example??)
     - by adding a --loggingtest or something that emits 
@@ -67,7 +72,8 @@ questionable:
 - Debian Bug #454291 fetchmail --quit: should check, that pid file 
   really contains pid of fetchmail process (Dmitry Nezhevenko)
   => use fcntl() lock?
-- feature to skip first N or all messages upon first download
+- feature to skip first N or all messages upon first download, or fetch
+  last N.
 - download only messages whose headers match a filter (by Toby, Usenet
   Nov 2007 de.comm.software.mailserver
   Message-ID: <1195033726.123704.296060@k79g2000hse.googlegroups.com>)
@@ -77,13 +83,17 @@ questionable:
   "all before date this-and-that")
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=374514
   "Deleting fetchids file" vs. POP3 - probably unneeded if we use IMAP UIDs.
-- change SSL/TLS UI incompatibly, making it easier to use
-- allow selection of SSL/TLS Ciphers
-- perhaps switch to libgsasl and libgnutls (which doesn't talk SSLv2)
-- make the SSL default v3 (rather than v23).
+- CRYPTO: change SSL/TLS UI incompatibly, making it easier to use
+- CRYPTO: allow selection of SSL/TLS Ciphers
+- CRYPTO: perhaps switch to libgsasl and libgnutls (which doesn't talk SSLv2,
+  but we should abandon that anyways).
+- CRYPTO: perhaps port to NSS? Check license and features and required procedure
+  changes. - Redhat Bugs #333741 (crypto consolidation), #346891 (port fetchmail to NSS)
+- CRYPTO: make the SSL default v3 (rather than v23).
 - put more hints to the FAQ (should we call it FGA?) as first support place
 - make sure we print socket error messages such as connection reset by
   peer to hint users the problem is not in fetchmail
+- require envelope option for multidrop ; if not found in header, defer message?
 - > b) When the envelope header is specified, but it isn't found, a
   > warning is logged and the mail is forwarded to the postmaster
   > ("WARNING: Envelope header $HEADER found, cannot identify the
@@ -107,14 +117,35 @@ questionable:
 - fetchmail -s with running daemon complains rather than silently
   restarting daemon
 - send warning message when connection fails?
-- when logging to syslog, disable locale?
 - check FAQ O5 - do we really prefer From: over envelope?!?
 - add code to allow safe authentication schemes if TLS fails
 - make APOP an authenticator, integrate with regular auto authentication
   but stuff it at the end
 - allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
-- use SASL?
+- CRYPTO: use SASL?
 - make logfile more useful (redirect not only in daemon mode)
+- for virtual mapping, we don't currently support local user aliases or 
+  regexp matching with replacement. This would be useful for hosting 
+  several virtual domains in one multidrop mailbox, as in 
+  qmail/courier's:
+
+  @one.example:bob-one
+  @two.example:bob-two
+
+  Result:
+  some@one.example maps to bob-one-some@serverdomain
+  another@two.example maps to bob-two-example@serverdomain
+
+  we can strip the bob-*, but but we don't support domain catchalls 
+  here, and we cannot currently delegate or rewrite the remaining 
+  one-* or two-* users in a useful way. All local parts of the upstream 
+  domains must be known and mapped in the configuration file.
+  (See fetchmail-users, Michelle Konzack, 2009-05-03, "4 multidrop but one 
+   destination server" and followup)
+
+  This probably entails some form of extended user mapping inside 
+  fetchmail, for map_name() in transact.c, and possibly 
+  find_server_names() ibidem.
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords

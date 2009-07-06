@@ -6,9 +6,8 @@
 #include <limits.h>
 #include <math.h>
 #include <unistd.h>
+/*  #include <nan.h> */
 #include <wchar.h>
-#include "triodef.h"
-#include "trionan.h"
 #include "strio.h"
 #include "trio.h"
 #undef printf
@@ -33,15 +32,12 @@
 # define LONGEST LONGLONG
 #endif
 
-static TRIO_CONST char rcsid[] = "@(#)$Id: example.c,v 1.9 2001/11/25 13:47:38 breese Exp $";
+static const char rcsid[] = "@(#)$Id: example.c,v 1.9 2001/11/25 13:47:38 breese Exp $";
 
 /*************************************************************************
  *
  */
-void Dump
-TRIO_ARGS2((buffer, rc),
-	   char *buffer,
-	   int rc)
+void Dump(char *buffer, int rc)
 {
   if (rc < 0)
     {
@@ -57,7 +53,7 @@ TRIO_ARGS2((buffer, rc),
 /*************************************************************************
  *
  */
-int main(TRIO_NOARGS)
+int main(void)
 {
   char buffer[512];
   int rc;
@@ -66,9 +62,7 @@ int main(TRIO_NOARGS)
   int num;
   int num2;
   int count;
-  double dnum, dnum2;
-  float fnum, fnum2;
-  trio_long_double_t ldnum;
+  double dnum;
   char *end;
   char text[256];
   char ch;
@@ -342,25 +336,25 @@ int main(TRIO_NOARGS)
 /*      printf("number = %f  small_number = \"%f\"\n", number, small_number); */
 /*    } */
   
-/*    rc = trio_sprintf(buffer, "abcba"); */
-/*    Dump(buffer, rc); */
-/*    trio_sscanf(buffer, "%[ab]", text); */
-/*    printf("text = \"%s\"\n", text); */
-/*    trio_sscanf(buffer, "%*[ab]c%[^\n]", text); */
-/*    printf("text = \"%s\"\n", text); */
+  rc = trio_sprintf(buffer, "abcba");
+  Dump(buffer, rc);
+  trio_sscanf(buffer, "%[ab]", text);
+  printf("text = \"%s\"\n", text);
+  trio_sscanf(buffer, "%*[ab]c%[^\n]", text);
+  printf("text = \"%s\"\n", text);
 
-/*    trio_sprintf(buffer, "aabcdba aaa"); */
-/*    rc = trio_sscanf(buffer, "%s", text); */
-/*    Dump(buffer, rc); */
-/*    printf("text = \"%s\"\n", text); */
-/*    rc = trio_sscanf(buffer, "%*1[aA]%[a-c]", text); */
-/*    Dump(buffer, rc); */
-/*    printf("text = \"%s\"\n", text); */
+  trio_sprintf(buffer, "aabcdba aaa");
+  rc = trio_sscanf(buffer, "%s", text);
+  Dump(buffer, rc);
+  printf("text = \"%s\"\n", text);
+  rc = trio_sscanf(buffer, "%*1[aA]%[a-c]", text);
+  Dump(buffer, rc);
+  printf("text = \"%s\"\n", text);
 
-/*    rc = trio_sprintf(buffer, "10021"); */
-/*    rc = trio_sscanf(buffer, "%b%n%d", &num, &count, &num2); */
-/*    Dump(buffer, rc); */
-/*    printf("num = %d %d %d\n", num, num2, count); */
+  rc = trio_sprintf(buffer, "10021");
+  rc = trio_sscanf(buffer, "%b%n%d", &num, &count, &num2);
+  Dump(buffer, rc);
+  printf("num = %d %d %d\n", num, num2, count);
 
 /*    rc = trio_sprintf(buffer, "%'d", 10000); */
 /*    rc = trio_sscanf(buffer, "%'d", &num); */
@@ -453,142 +447,5 @@ int main(TRIO_NOARGS)
 /*    rc = trio_sscanf("123,456.78", "%'f", &dnum); */
 /*    printf("%d %f\n", rc, dnum); */
 
-/*    trio_printf("%.24f\n%.24f\n%.24f\n", 39413.80, 1.4, (2.0/3.0)); */
-/*    printf("%.24f\n%.24f\n%.24f\n", 39413.80, 1.4, (2.0/3.0)); */
-  
-/*    trio_printf("%f\n%f\n", (7.0/5.0), (2.0/3.0)); */
-/*    printf("%f\n%f\n", (7.0/5.0), (2.0/3.0)); */
-
-/*    trio_printf("%a\n", 42.0); */
-/*    trio_printf("%.2e\n", 0.9999); */
-/*    trio_printf("%e\n", 3.14e+123); */
-/*    trio_printf("%010.3e\n", 3141.5); */
-/*    trio_printf("%.32Rf\n", 1.4); */
-/*    trio_printf("%Rf\n", 1.234567890123456789e20); */
-/*    printf("%.2g\n", 0.9999); */
-/*    trio_printf("%.2g\n", 0.9999); */
-/*    printf("%.2g\n", 99.9999); */
-/*    trio_printf("%.2g\n", 99.9999); */
-/*    printf("%g\n", 0.0); */
-/*    trio_printf("%g\n", 0.0); */
-/*    printf("%f\n", 3141.0); */
-/*    trio_printf("%f\n", 3141.0); */
-/*    printf("%.0f\n", 3141.0); */
-/*    trio_printf("%.0f\n", 3141.0); */
-/*    trio_printf("%f\n", 2.0/3.0); */
-/*    trio_printf("%f\n", 16.25); */
-  
-/*    trio_printf("A: %f\nB: %.20f\nC: %Rf\n", 0.1, 0.1, 0.1); */
-/*    trio_printf("A: %f\nB: %.20f\nC: %Rf\n", 2.0/3.0, 2.0/3.0, 2.0/3.0); */
-  
-/*    trio_printf("R %.*Rhf\n", FLT_DIG + 4, (double)((float)1.4)); */
-/*    trio_printf("T %.*hf\n", FLT_DIG + 4, (double)((float)(2.0/3.0))); */
-/*    trio_printf("R %.*Rhf\n", FLT_DIG + 4, (double)((float)(2.0/3.0))); */
-  
-/*    trio_printf("T %.*f\n", DBL_DIG + 4, (2.0/3.0)); */
-/*    trio_printf("R %.*Rf\n", DBL_DIG + 4, (2.0/3.0)); */
-/*    printf("C %.*f\n", DBL_DIG + 4, (2.0/3.0)); */
-
-/*    trio_printf("T %.*f\n", DBL_DIG + 4, 1.4); */
-/*    trio_printf("R %.*Rf\n", DBL_DIG + 4, 1.4); */
-/*    printf("C %.*f\n", DBL_DIG + 4, 1.4); */
-    
-/*    trio_printf("T %.*f\n", DBL_DIG + 6, 0.1); */
-/*    trio_printf("R %.*Rf\n", DBL_DIG + 6, 0.1); */
-/*    printf("C %.*f\n", DBL_DIG + 6, 0.1); */
-
-/*    ldnum = 2.0L / 3.0L; */
-/*    trio_printf("R %.*Lf\n", LDBL_DIG + 4, ldnum); */
-/*    trio_printf("R %RLf\n", ldnum); */
-  
-/*    trio_printf("T %.*.2f\n", DBL_MANT_DIG, 1.4); */
-/*    trio_printf("R %.*.2Rf\n", DBL_MANT_DIG, 1.4); */
-  
-/*    trio_printf("R %Rf\n", 1.234567890123456789e20); */
-/*    trio_printf("T %10.3e\n", 3141.5); */
-/*    trio_printf("T %f\n", 1.0/3.0); */
-
-  /* 2^-1 + 2^-15 */
-/*    trio_printf("T %.*g\n", DBL_DIG + 200, 0.500030517578125); */
-/*    printf("C %.*g\n", DBL_DIG + 200, 0.500030517578125); */
-/*    trio_printf("T %.*g\n", DBL_DIG + 200, 2.0/3.0); */
-/*    printf("C %.*g\n", DBL_DIG + 200, 2.0/3.0); */
-  
-/*    trio_printf("T  %.*f\n", DBL_DIG + 2, 1.4); */
-/*    trio_printf("TR %.*Rf\n", DBL_DIG + 2, 1.4); */
-  
-/*    rc = trio_sscanf("0.141882295971771490", "%Lf", &ldnum); */
-/*    rc = trio_sprintf(buffer, "%.30Lf", ldnum); */
-/*    Dump(buffer, rc); */
-
-/*    ldnum = 1.0L; */
-/*    ldnum /= 3.0L; */
-/*    rc = trio_sprintf(buffer, "%.30Lf", ldnum); */
-/*    Dump(buffer, rc); */
-
-/*    { */
-/*      float a = 5.9, b = 10.0, c = a * b; */
-/*      double d = a * b; */
-/*      trio_printf("%.15a %.15a\n", c, d); */
-/*      trio_printf("%.15g %.15g\n", c, (float)(a * b)); */
-/*      trio_printf("%.15a %.15a\n", c, (float)(a * b)); */
-/*      trio_printf("%.30.2f %.30.2f\n", c, (float)(a * b)); */
-/*    } */
-  
-/*    trio_locale_set_decimal_point(","); */
-/*    trio_locale_set_thousand_separator("'"); */
-/*    trio_locale_set_grouping("\1\3\2\177"); */
-/*    trio_printf("%'d\n", 123456789); */
-/*    trio_printf("%'f\n", 123456789.0); */
-/*    trio_locale_set_grouping("\3\2\0"); */
-/*    trio_printf("%'d\n", 123456789); */
-/*    trio_printf("%'f\n", 123456789.0); */
-  
-/*    trio_printf("%.30Rf\n", 39413.80); */
-
-/*    printf("% 10.5f\n", 5163723399.00000); */
-/*    trio_printf("% 10.5f\n", 5163723399.00000); */
-  
-/*    printf("% 020.5f\n", 5163723399.00000); */
-/*    trio_printf("% 020.5f\n", 5163723399.00000); */
-
-/*    rc = trio_vsnprintf(buffer, 8, "printing\n", NULL); */
-/*    Dump(buffer, rc); */
-
-/*    rc = trio_sprintf(buffer, "%.o %#.o", 0, 0); */
-/*    Dump(buffer, rc); */
-/*    rc = trio_sprintf(buffer, "%8.o %08.4o", 0, 0); */
-/*    Dump(buffer, rc); */
-/*    rc = trio_sprintf(buffer, "%8o %08o", 0, 0); */
-/*    Dump(buffer, rc); */
-  
-/*    rc = trio_sprintf(buffer, "%a %a", 0.0, 1.0); */
-/*    Dump(buffer, rc); */
-
-/*    printf("%*s%*s%*s\n", */
-/*  	 -1, "one", */
-/*  	 -20, "two", */
-/*  	 -30,"three"); */
-/*    trio_printf("%*s%*s%*s\n", */
-/*  	      -1, "one", */
-/*  	      -20, "two", */
-/*  	      -30,"three"); */
-
-/*    dnum = pow (2.0, -1024.1); */
-/*    dnum = pow (2.0, -1024); */
-/*    dnum = pow(2.0, 16.0); */
-/*    rc = trio_snprintf(buffer, sizeof(buffer), "%.200g %a %.200.2g", */
-/*  		     dnum, dnum, dnum); */
-/*    Dump(buffer, rc); */
-  
-/*    dnum = 3.141e-44; */
-/*    rc = trio_snprintf(buffer, sizeof(buffer), "%.200g %a %.200.2g", */
-/*  		     dnum, dnum, dnum); */
-/*    Dump(buffer, rc); */
-
-  rc = trio_sscanf("0x2.ap+4", "%a", &dnum);
-  trio_snprintf(buffer, sizeof(buffer), "%f %a", dnum, dnum);
-  Dump(buffer, rc);
-  
   return 0;
 }

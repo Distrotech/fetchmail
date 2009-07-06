@@ -3,29 +3,22 @@ dnl Autoconfigure input file for fetchmail
 # Fetchmail automatic configuration support
 #
 # Eric S. Raymond <esr@thyrsus.com>
-# 2004 - 2007 Matthias Andree <matthias.andree@gmx.de>
+# 2004 - 2009 Matthias Andree <matthias.andree@gmx.de>
 #
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.3.9-rc2],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.10],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
 
-AC_CANONICAL_TARGET
+AC_CANONICAL_HOST
 
 dnl automake options are in Makefile.am
 AC_PREREQ(2.60)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE
-
-dnl autobuild support, see <http://josefsson.org/autobuild/>
-(
-  TZ=GMT
-  export TZ
-  AB_INIT
-)
 
 dnl python is optional
 #
@@ -88,7 +81,7 @@ AC_PROG_MAKE_SET
 AC_PROG_YACC
 
 # Check for OS special cases
-case $target_os in
+case $host_os in
 darwin*)
     AC_MSG_NOTICE(found Darwin - Adding -DBIND_8_COMPAT to CFLAGS)
     CPPFLAGS="$CPPFLAGS -DBIND_8_COMPAT"
@@ -113,6 +106,8 @@ rhapsody*)
     LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
     ;;
 esac
+
+AC_CACHE_SAVE
 
 dnl i18n
 AM_GNU_GETTEXT([external], [need-ngettext])
@@ -374,29 +369,26 @@ AC_ARG_ENABLE(POP2,
 test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE,1,Define if you want POP2 support compiled in)
 AM_CONDITIONAL(POP2_ENABLE, test "$with_POP2" = yes)
 
-###    Check for libmagic
-AC_CHECK_LIB([magic], [magic_open],
-	     [
-               AC_DEFINE(HAVE_LIBMAGIC, 1, [Define if you want to use libmagic])
- 	       CFLAGS="$CFLAGS -lmagic -lz"
-	       enable_libmagic="yes"
-             ],
-	       AC_SUBST(MAGIC_LIBS)
- 	     [
-               AC_MSG_WARN([libmagic is missing - can't enable MAPI support])
-	       enable_libmagic="no"
- 	     ])
 
 ###	use option --enable-MAPI to compile in the MAPI support
-if test x"$enable_libmagic" = x"yes"; then
 AC_ARG_ENABLE(MAPI,
-	[  --enable-MAPI           compile in MAPI protocol support],
-	[with_MAPI=$enableval],
-	[with_MAPI=no])
-test "$with_MAPI" = "yes" && AC_DEFINE(MAPI_ENABLE,1,Define if you want MAPI support compiled in)
-CFLAGS="$CFLAGS `pkg-config libmapi --cflags --libs`"
-AM_CONDITIONAL(MAPI_ENABLE, test "$with_MAPI" = yes)
+	      [  --enable-MAPI           compile in MAPI protocol support],
+	      [with_MAPI=$enableval],
+	      [with_MAPI=no])
+if test "$with_MAPI" != "no" ; then
+    AC_DEFINE(MAPI_ENABLE,1,Define if you want MAPI support compiled in)
+    ###    Check for libmagic
+    AC_CHECK_LIB([magic], [magic_open],
+		 [
+		  AC_DEFINE(HAVE_LIBMAGIC, 1, [Define if you want to use libmagic])
+		  CFLAGS="$CFLAGS $(pkg-config libmapi --cflags)"
+		  LIBS="-lmagic -lz `pkg-config libmapi --libs` $LIBS"
+		  ],
+		  [
+		   AC_MSG_ERROR([libmagic is missing - can't enable MAPI support])
+		  ])
 fi
+AM_CONDITIONAL(MAPI_ENABLE, test "$with_MAPI" != no)
 
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
@@ -463,6 +455,8 @@ if test "$with_POP3" != yes && test "$with_POP2" != yes \
     AC_MSG_ERROR([You must enable at least one of POP2, POP3 and IMAP.])
 fi
 
+AC_CACHE_SAVE
+
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,
 	[  --enable-opie           support OTP through the OPIE library],
@@ -522,7 +516,7 @@ if test "$fm_cv_getaddrinfo" = yes ; then
     AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
     gai_ts=no
     dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
-    case $target_os in
+    case $host_os in
 	darwin9*)				gai_ts=yes ;;
 	linux*)					gai_ts=yes ;;
 	freebsd5.5|freebsd6*|freebsd7*)		gai_ts=yes ;;
@@ -959,7 +953,7 @@ if test "$needtrio" = 1 ; then
 fi
 dnl ----------------------------------------------------------------'
 
-AC_CONFIG_FILES([Makefile m4/Makefile po/Makefile.in genlsm.sh])
+AC_CONFIG_FILES([Makefile po/Makefile.in genlsm.sh])
 AC_OUTPUT
 
 dnl Local Variables:

@@ -434,7 +434,7 @@ int MimeBodyType(char *hdrs, int WantDecode)
 	    if (p == NULL) p = NxtHdr + strlen(NxtHdr);
 
 	    xfree(CntType);
-	    CntType = xmalloc(p-NxtHdr+1);
+	    CntType = (char *)xmalloc(p-NxtHdr+1);
 	    strlcpy(CntType, NxtHdr, p-NxtHdr+1);
 	    HdrsFound++;
 	}
@@ -707,7 +707,7 @@ int main(int argc, char *argv[])
     buf_p++;
     if ((unsigned)(buf_p - buffer) == BufSize) {
        /* Buffer is full! Get more room. */
-       buffer = xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
+       buffer = (char *)xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
        buf_p = buffer + BufSize;
        BufSize += BUFSIZE_INCREMENT;
     }

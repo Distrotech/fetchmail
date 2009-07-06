@@ -203,6 +203,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
     stringdump("postmaster", runp->postmaster);
     booldump("bouncemail", runp->bouncemail);
     booldump("spambounce", runp->spambounce);
+    booldump("softbounce", runp->softbounce);
     stringdump("properties", runp->properties);
     booldump("invisible", runp->invisible);
     booldump("showdots", runp->showdots);

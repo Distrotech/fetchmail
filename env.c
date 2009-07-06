@@ -159,7 +159,7 @@ char *host_fqdn(int required)
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags=AI_CANONNAME;
+	hints.ai_flags = AI_CANONNAME;
 
 	e = fm_getaddrinfo(tmpbuf, NULL, &hints, &res);
 	if (e) {
@@ -295,7 +295,7 @@ char *visbuf(const char *buf)
 
     if (needed > vbufs) {
 	vbufs = needed;
-	vbuf = xrealloc(vbuf, vbufs);
+	vbuf = (char *)xrealloc(vbuf, vbufs);
     }
 
     tp = vbuf;

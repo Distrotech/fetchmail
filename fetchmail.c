@@ -137,7 +137,7 @@ static void printcopyright(FILE *fp) {
 	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
 		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
 		   "Copyright (C) 2005 - 2006 Sunil Shetye\n"
-		   "Copyright (C) 2005 - 2008 Matthias Andree\n"
+		   "Copyright (C) 2005 - 2009 Matthias Andree\n"
 		   ));
 	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 		   "are welcome to redistribute it under certain conditions. For details,\n"
@@ -279,6 +279,9 @@ int main(int argc, char **argv)
 #ifdef KERBEROS_V5
 	"+KRB5"
 #endif /* KERBEROS_V5 */
+#ifndef HAVE_RES_SEARCH
+	"-DNS"
+#endif
 	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
@@ -295,12 +298,17 @@ int main(int argc, char **argv)
 	fflush(stdout);
 
 	/* this is an attempt to help remote debugging */
-	system("uname -a");
+	if (system("uname -a")) { /* NOOP to quench GCC complaint */ }
     }
 
     /* avoid parsing the config file if all we're doing is killing a daemon */
     if (!quitonly)
 	implicitmode = load_params(argc, argv, optind);
+
+    /* precedence: logfile (if effective) overrides syslog. */
+    if (run.logfile && run.poll_interval && !nodetach) {
+	run.use_syslog = 0;
+    }
 
 #if defined(HAVE_SYSLOG)
     /* logging should be set up early in case we were restarted from exec */
@@ -535,7 +543,7 @@ int main(int argc, char **argv)
 		const char* password_prompt = GT_("Enter password for %s@%s: ");
 		size_t pplen = strlen(password_prompt) + strlen(ctl->remotename) + strlen(ctl->server.pollname) + 1;
 
-		tmpbuf = xmalloc(pplen);
+		tmpbuf = (char *)xmalloc(pplen);
 		snprintf(tmpbuf, pplen, password_prompt,
 			ctl->remotename, ctl->server.pollname);
 		ctl->password = xstrdup((char *)fm_getpassword(tmpbuf));
@@ -556,8 +564,13 @@ int main(int argc, char **argv)
     /* avoid zombies from plugins */
     deal_with_sigchld();
 
+    /* Fix up log destination - if the if() is true, the precedence rule
+     * above hasn't killed off the syslog option, because the logfile
+     * option is ineffective (because we're not detached or not in
+     * deamon mode), so kill it for the benefit of other parts of the
+     * code. */
     if (run.logfile && run.use_syslog)
-	fprintf(stderr, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
+	run.logfile = 0;
 
     /*
      * Maybe time to go to demon mode...
@@ -826,7 +839,8 @@ int main(int argc, char **argv)
 		exit(PS_AUTHFAIL);
 	    }
 
-	    if (outlevel > O_SILENT)
+	    if ((outlevel > O_SILENT && !run.use_syslog && isatty(1))
+		    || outlevel > O_NORMAL)
 		report(stdout,
 		       GT_("sleeping at %s for %d seconds\n"), timestamp(), run.poll_interval);
 
@@ -861,11 +875,11 @@ int main(int argc, char **argv)
 		    ctl->wedged = FALSE;
 	    }
 
-	    if (outlevel > O_SILENT)
+	    if ((outlevel > O_SILENT && !run.use_syslog && isatty(1))
+		    || outlevel > O_NORMAL)
 		report(stdout, GT_("awakened at %s\n"), timestamp());
 	}
-    } while
-	(run.poll_interval);
+    } while (run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
 	report(stdout, GT_("normal termination, status %d\n"),
@@ -999,6 +1013,7 @@ static int load_params(int argc, char **argv, int optind)
     char *p;
 
     run.bouncemail = TRUE;
+    run.softbounce = TRUE;	/* treat permanent errors as temporary */
     run.spambounce = FALSE;	/* don't bounce back to innocent bystanders */
 
     memset(&def_opts, '\0', sizeof(struct query));
@@ -1127,6 +1142,8 @@ static int load_params(int argc, char **argv, int optind)
 	run.postmaster = cmd_run.postmaster;
     if (cmd_run.bouncemail)
 	run.bouncemail = cmd_run.bouncemail;
+    if (cmd_run.softbounce)
+	run.softbounce = cmd_run.softbounce;
 
     /* check and daemon options are not compatible */
     if (check_only && run.poll_interval)
@@ -1165,8 +1182,6 @@ static int load_params(int argc, char **argv, int optind)
 					flag = FALSE;\
 				else\
 					flag = (dflt)
-    /* one global gets treated specially */
-    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
@@ -1582,6 +1597,11 @@ static void dump_params (struct runctl *runp,
 	printf(GT_("Fetchmail will direct error mail to the postmaster.\n"));
     else if (outlevel >= O_VERBOSE)
 	printf(GT_("Fetchmail will direct error mail to the sender.\n"));
+
+    if (!runp->softbounce)
+	printf(GT_("Fetchmail will treat permanent errors as permanent (drop messsages).\n"));
+    else if (outlevel >= O_VERBOSE)
+	printf(GT_("Fetchmail will treat permanent errors as temporary (keep messages).\n"));
 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {

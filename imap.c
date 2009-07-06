@@ -478,6 +478,15 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      */
     ok = PS_AUTHFAIL;
 
+    /* Yahoo hack - we'll just try ID if it was offered by the server,
+     * and IGNORE errors. */
+    {
+	char *tmp = strstr(capabilities, " ID");
+	if (tmp && !isalnum(tmp[3]) && strstr(ctl->server.via ? ctl->server.via : ctl->server.pollname, "yahoo.com")) {
+		(void)gen_transact(sock, "ID (\"guid\" \"1\")");
+	}
+    }
+
     if ((ctl->server.authenticate == A_ANY 
          || ctl->server.authenticate == A_EXTERNAL)
 	&& strstr(capabilities, "AUTH=EXTERNAL"))
@@ -617,8 +626,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	size_t rnl, pwl;
 	rnl = 2 * strlen(ctl->remotename) + 1;
 	pwl = 2 * strlen(ctl->password) + 1;
-	remotename = xmalloc(rnl);
-	password = xmalloc(pwl);
+	remotename = (char *)xmalloc(rnl);
+	password = (char *)xmalloc(pwl);
 
 	imap_canonicalize(remotename, ctl->remotename, rnl);
 	imap_canonicalize(password, ctl->password, pwl);
@@ -1152,6 +1161,13 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 
     if (num != number)
 	return(PS_ERROR);
+
+    /* Understand "NIL" as length => no body present
+     * (MS Exchange, BerliOS Bug #11980) */
+    if (strstr(buf+10, "NIL)")) {
+	    *lenp = 0;
+	    return PS_SUCCESS;
+    }
 
     /*
      * Try to extract a length from the FETCH response.  RFC2060 requires

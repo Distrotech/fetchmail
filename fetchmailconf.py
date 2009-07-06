@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.54 $Revision: 5165 $"
+version = "1.55 $Revision$"
 
 from Tkinter import *
 from Dialog import *
@@ -22,6 +22,7 @@ class Configuration:
 	self.postmaster = None		# No last-resort address, initially
 	self.bouncemail = TRUE		# Bounce errors to users
 	self.spambounce = FALSE		# Bounce spam errors
+	self.softbounce = TRUE		# Treat permanent error as temporary
 	self.properties = None		# No exiguous properties
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.syslog = FALSE		# Use syslogd for logging?
@@ -33,6 +34,7 @@ class Configuration:
 	    ('postmaster',	'String'),
 	    ('bouncemail',	'Boolean'),
 	    ('spambounce',	'Boolean'),
+	    ('softbounce',	'Boolean'),
 	    ('properties',	'String'),
 	    ('syslog',	  'Boolean'),
 	    ('invisible',	'Boolean'))
@@ -55,6 +57,10 @@ class Configuration:
 	    str = str + ("set spambounce\n")
 	else:
 	    str = str + ("set no spambounce\n")
+	if self.softbounce:
+	    str = str + ("set softbounce\n")
+	else:
+	    str = str + ("set no softbounce\n")
 	if self.properties != ConfigurationDefaults.properties:
 	    str = str + ("set properties \"%s\"\n" % (self.properties,));
 	if self.poll_interval > 0:
@@ -736,6 +742,14 @@ Send spam bounces?
 	postmaster (depending on the "Bounces to sender?" option.  Otherwise,
 	spam bounces are not sent (the default).
 
+Use soft bounces?
+	If this option is on, permanent delivery errors are treated as
+	temporary, i. e. mail is kept on the upstream server. Useful
+	during testing and after configuration changes, and on by
+	default.
+	  If this option is off, permanent delivery errors delete
+	undeliverable mail from the upstream.
+
 Invisible
 	If false (the default) fetchmail generates a Received line into
 	each message and generates a HELO from the machine it is running on.
@@ -826,8 +840,15 @@ class ConfigurationEdit(Frame, MyWidget):
 
 	    sb = Frame(gf)
 	    Checkbutton(sb,
-		{'text':'send spam bounces?',
+		{'text':'Send spam bounces?',
 		'variable':self.spambounce,
+		'relief':GROOVE}).pack(side=LEFT, anchor=W)
+	    sb.pack(fill=X)
+
+	    sb = Frame(gf)
+	    Checkbutton(sb,
+		{'text':'Treat permanent errors as temporary?',
+		'variable':self.softbounce,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
 	    sb.pack(fill=X)
 
@@ -2079,10 +2100,10 @@ Usage: fetchmailconf {[-d] [-f fetchmailrc]|-h|--help|-V|--version}
 	    print "fetchmailconf %s" % version
 	    print """
 Copyright (C) 1997 - 2003 Eric S. Raymond
-Copyright (C) 2005 - 2006 Matthias Andree
+Copyright (C) 2005, 2006, 2008, 2009 Matthias Andree
 fetchmailconf comes with ABSOLUTELY NO WARRANTY.  This is free software, you are
 welcome to redistribute it under certain conditions.  Please see the file
-COPYING in the source or documentation directory for details.  """
+COPYING in the source or documentation directory for details."""
 	    sys.exit(0)
 
     # Get client host's FQDN

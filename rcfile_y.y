@@ -74,7 +74,7 @@ extern char * yytext;
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT FETCHSIZELIMIT FASTUIDL EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
-%token SPAMBOUNCE SHOWDOTS
+%token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
@@ -108,6 +108,8 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = prependdir ($4, rcfiledir);
 		| SET NO BOUNCEMAIL		{run.bouncemail = FALSE;}
 		| SET SPAMBOUNCE		{run.spambounce = TRUE;}
 		| SET NO SPAMBOUNCE		{run.spambounce = FALSE;}
+		| SET SOFTBOUNCE		{run.softbounce = TRUE;}
+		| SET NO SOFTBOUNCE		{run.softbounce = FALSE;}
 		| SET PROPERTIES optmap STRING	{run.properties =xstrdup($4);}
 		| SET SYSLOG			{run.use_syslog = TRUE;}
 		| SET NO SYSLOG			{run.use_syslog = FALSE;}
@@ -637,7 +639,7 @@ char *prependdir (const char *file, const char *dir)
 	strcmp(file, "-") == 0 ||	/* stdin/stdout */
 	!dir[0])			/* we don't HAVE_GETCWD */
 	return xstrdup (file);
-    newfile = xmalloc (strlen (dir) + 1 + strlen (file) + 1);
+    newfile = (char *)xmalloc (strlen (dir) + 1 + strlen (file) + 1);
     if (dir[strlen(dir) - 1] != '/')
 	sprintf (newfile, "%s/%s", dir, file);
     else

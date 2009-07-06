@@ -1,6 +1,6 @@
 /*************************************************************************
  *
- * $Id: doc.h,v 1.12 2002/12/08 10:42:49 breese Exp $
+ * $Id: doc.h,v 1.20 2006/08/18 11:32:08 breese Exp $
  *
  * Copyright (C) 2001 Bjorn Reese and Daniel Stenberg.
  *
@@ -135,24 +135,35 @@ We have received contributions from the following persons (in alphabetic
 order sorted by surname)
 
 @li Craig Berry
+@li Karl Bochert
 @li Stan Boehm
+@li David Byron
+@li Brian Chapman
 @li Robert Collins
 @li Danny Dulai
+@li Bob Friesenhahn
+@li Jon Foster
 @li John Fotheringham
 @li Markus Henke
 @li Ken Gibson
 @li Paul Janzen
+@li Patrick Jessee
 @li Richard Jinks
 @li Tero Jänkä
 @li Howard Kapustein
 @li Rune Enggaard Lausen
 @li Mehdi Lavasani
 @li Alexander Lukyanov
+@li Andreas Maus
+@li Mikey Menezes
 @li Emmanuel Mogenet
 @li Jacob Navia
 @li Jose Ortiz
 @li Joe Orton
 @li Gisli Ottarsson
+@li Mark Pickelmann
+@li Olli Savia
+@li Shaun Tancheff
 @li Marc Werwerft
 @li Igor Zlatkovic
 
