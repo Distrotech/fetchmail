@@ -47,6 +47,14 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+# FEATURES
+* EXPERIMENTAL/UNSUPPORTED:
+  MAPI support through OpenChange. Yang-Yan Li, Google Summer of Code 2008.
+  With fixes from Mojmir Svoboda.
+  Note the code requires further cleanups and fixes and has not yet been audited
+  for security. Do not use as privileged user. Use at your own risk.
+
+
 fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
