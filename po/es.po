@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.10-pre1\n"
+"Project-Id-Version: fetchmail 6.3.10-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-07-02 21:34+0200\n"
-"PO-Revision-Date: 2009-05-26 11:12+0200\n"
+"POT-Creation-Date: 2009-07-06 20:14+0200\n"
+"PO-Revision-Date: 2009-07-03 20:09+0200\n"
 "Last-Translator: Francisco Molinero <paco@byasl.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -221,8 +221,8 @@ msgid ""
 "Fetchmail won't poll this mailbox again until you restart it.\n"
 msgstr ""
 "Esto puede significar que su servidor de correo se bloqueó, o que su\n"
-"servidor SMTP se colgó, o que su casilla de correo en el servidor ha\n"
-"sido corrompida por un error de servidor. Puede ejecutar «fetchmail -v -v»\n"
+"servidor SMTP se colgó, o que su casilla de correo en el servidor se ha\n"
+"corrompido por un error de servidor. Puede ejecutar «fetchmail -v -v»\n"
 "para diagnosticar el problema.\n"
 "Fetchmail no consultará esta casilla hasta que lo reinicie.\n"
 
@@ -248,7 +248,7 @@ msgstr "El servidor líder no tiene nombre.\n"
 #: driver.c:1021
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
-msgstr "no se encontró el nombre DNS canónico de%s (%s): %s\n"
+msgstr "no se encontró el nombre DNS canónico de %s (%s): %s\n"
 
 #: driver.c:1068
 #, c-format
@@ -332,7 +332,7 @@ msgid ""
 msgstr ""
 "\n"
 "Sin embargo, si HA cambiado los detalles de su cuenta desde el inicio del\n"
-"demonio fetchmail tiene que parar el demonio, cambiar su configuración\n"
+"demonio fetchmail, tiene que parar el demonio, cambiar su configuración\n"
 "de fetchmail, y reiniciar el demonio.\n"
 "\n"
 "El demonio fetchmail continuará corriendo e intentando conectar\n"
@@ -364,7 +364,7 @@ msgstr ""
 #: driver.c:1240
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
-msgstr "Reconsultar inmediatamente %s@%s\n"
+msgstr "Volver a consultar inmediatamente %s@%s\n"
 
 #: driver.c:1245
 #, c-format
@@ -388,16 +388,16 @@ msgstr "Fetchmail pudo registrarse en %s@%s.\n"
 
 #: driver.c:1283
 msgid "Service has been restored.\n"
-msgstr "El servicio ha sido reestablecido.\n"
+msgstr "El servicio se ha reestablecido.\n"
 
 #: driver.c:1315
 #, c-format
 msgid "selecting or re-polling folder %s\n"
-msgstr "seleccionando o reconsultando la carpeta %s\n"
+msgstr "seleccionando o volviendo a consultar la carpeta %s\n"
 
 #: driver.c:1317
 msgid "selecting or re-polling default folder\n"
-msgstr "seleccionando o reconsultando la carpeta predeterminada\n"
+msgstr "seleccionando o volviendo a consultar la carpeta predeterminada\n"
 
 #: driver.c:1329
 #, c-format
@@ -454,7 +454,7 @@ msgstr "zócalo"
 
 #: driver.c:1540
 msgid "missing or bad RFC822 header"
-msgstr "el encabezado RFC822 falta o es inocrrecto"
+msgstr "el encabezado RFC822 falta o es incorrecto"
 
 #: driver.c:1543
 msgid "MDA"
@@ -700,7 +700,7 @@ msgstr "no fue posible obtener el directorio de trabajo actual\n"
 #: fetchmail.c:283
 #, c-format
 msgid "This is fetchmail release %s"
-msgstr "Esta es la versión de fetchmail %s"
+msgstr "Esta es la versión %s de fetchmail"
 
 #: fetchmail.c:403
 #, c-format
@@ -722,7 +722,7 @@ msgstr "fetchmail: no se han especificado servidores de correo.\n"
 
 #: fetchmail.c:442
 msgid "fetchmail: no other fetchmail is running\n"
-msgstr "fetchmail: ningún otro fetchmail se está ejecutado\n"
+msgstr "fetchmail: ningún otro fetchmail se está ejecutando\n"
 
 #: fetchmail.c:448
 #, c-format
@@ -778,7 +778,7 @@ msgstr "fetchmail: fetchmail (%d) en segundo plano despertado.\n"
 #: fetchmail.c:521
 #, c-format
 msgid "fetchmail: elder sibling at %d died mysteriously.\n"
-msgstr "fetchmail: proceso hijo más antiguo (%d) murió misteriosamente.\n"
+msgstr "fetchmail: el proceso hijo más antiguo (%d) murió misteriosamente.\n"
 
 #: fetchmail.c:536
 #, c-format
@@ -838,7 +838,7 @@ msgstr "el intento de volver a ejecutar fetchmail falló\n"
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
 msgstr ""
-"no se consulta %s (fallo en la autenticación o demasiados excesos de "
+"la consulta %s se omitió (fallo en la autenticación o demasiados excesos de "
 "espera)\n"
 
 #: fetchmail.c:726
@@ -973,13 +973,13 @@ msgstr "El soporte de  GSSAPI está configurado pero no compilado\n"
 msgid ""
 "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
 msgstr ""
-"fetchmail: cuidado: no hay DNS disponible para verificar recepciones "
+"fetchmail: aviso: no hay DNS disponible para verificar recepciones "
 "«multidrop» de %s\n"
 
 #: fetchmail.c:1284
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
-msgstr "aviso: ¡«multidrop» para %s requiere la opción envelope!\n"
+msgstr "aviso: ¡«multidrop» para %s requiere la opción «envelope»!\n"
 
 #: fetchmail.c:1285
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
@@ -1133,13 +1133,12 @@ msgstr "  El nombre verdadero del servidor es %s.\n"
 #: fetchmail.c:1580
 msgid "  This host will not be queried when no host is specified.\n"
 msgstr ""
-"  Este anfitrión no será interrogado cuando no se especifica un anfitrión.\n"
+"  Este anfitrión no será consultado cuando no se especifica un anfitrión.\n"
 
 #: fetchmail.c:1581
 msgid "  This host will be queried when no host is specified.\n"
 msgstr ""
-"  Este anfitrión será interrogado cuando no se especifique ningún "
-"anfitrión.\n"
+"  Este anfitrión será consultado cuando no se especifique ningún anfitrión.\n"
 
 #: fetchmail.c:1585
 msgid "  Password will be prompted for.\n"
@@ -1158,7 +1157,7 @@ msgstr "  Identidad RPOP = «%s».\n"
 #: fetchmail.c:1595
 #, c-format
 msgid "  Password = \"%s\".\n"
-msgstr "  Contraseña = “%s”.\n"
+msgstr "  Contraseña = «%s».\n"
 
 #: fetchmail.c:1604
 #, c-format
@@ -1436,24 +1435,24 @@ msgstr "  El tamaño de los mensajes no está limitado (--fetchsizelimit 0).\n"
 #: fetchmail.c:1748
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
 msgstr ""
-"  Utilizar búsqueda binaria de UIDs durante cada consulta (--fastuidl 1).\n"
+"  Utilizar búsqueda binaria de UID durante cada consulta (--fastuidl 1).\n"
 
 #: fetchmail.c:1750
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr ""
-"  Utilizar búsqueda binaria de UIDs durante %d de cada %d consultas (--"
+"  Utilizar búsqueda binaria de UID durante %d de cada %d consultas (--"
 "fastuidl %d).\n"
 
 #: fetchmail.c:1753
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr ""
-"  Utilizar búsqueda lineal de UIDs durante cada consulta (--fastuidl 0).\n"
+"  Utilizar búsqueda lineal de UID durante cada consulta (--fastuidl 0).\n"
 
 #: fetchmail.c:1755
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
-msgstr "  El límite de mensaje por lote SMTP es %d.\n"
+msgstr "  El límite de mensajes por lote SMTP es %d.\n"
 
 #: fetchmail.c:1757
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
@@ -1525,7 +1524,7 @@ msgstr "  No hay orden de preconexión.\n"
 #: fetchmail.c:1826
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
-msgstr "  La conexión al servidor se terminará con “%s”.\n"
+msgstr "  La conexión al servidor se terminará con «%s».\n"
 
 #: fetchmail.c:1829
 msgid "  No post-connection command.\n"
@@ -1644,12 +1643,12 @@ msgstr "  No se especificó una orden para el «plugout».\n"
 
 #: fetchmail.c:1930
 msgid "  No UIDs saved from this host.\n"
-msgstr "  No hay UIDs guardadas de este anfitrión.\n"
+msgstr "  No hay UID guardadas de este anfitrión.\n"
 
 #: fetchmail.c:1939
 #, c-format
 msgid "  %d UIDs saved.\n"
-msgstr "  %d UIDs guardadas.\n"
+msgstr "  %d UID guardadas.\n"
 
 #: fetchmail.c:1947
 msgid "  Poll trace information will be added to the Received header.\n"
@@ -1724,7 +1723,7 @@ msgstr "El máximo tamaño del componente GSS es %ld\n"
 
 #: gssapi.c:187
 msgid "Error creating security level request\n"
-msgstr "Error creando pedido de nivel de seguridad\n"
+msgstr "Error creando petición de nivel de seguridad\n"
 
 #: gssapi.c:198
 msgid "Releasing GSS credentials\n"
@@ -1737,7 +1736,7 @@ msgstr "Error liberando las credenciales\n"
 #: idle.c:61
 #, c-format
 msgid "fetchmail: thread sleeping for %d sec.\n"
-msgstr "fetchmail: la tarea dormirá por %d segundos\n"
+msgstr "fetchmail: la tarea dormirá durante %d segundos\n"
 
 #: imap.c:326
 msgid "Protocol identified as IMAP4 rev 1\n"
@@ -1933,7 +1932,7 @@ msgstr "%s principal en el «ticket» no coincide con -u %s\n"
 #: kerberos.c:147
 #, c-format
 msgid "non-null instance (%s) might cause strange behavior\n"
-msgstr "La instancia no-nula (%s) puede causar comportamiento extraño\n"
+msgstr "La instancia no nula (%s) puede causar un comportamiento extraño\n"
 
 #: kerberos.c:213
 msgid "could not decode BASE64 ready response\n"
@@ -2133,7 +2132,7 @@ msgstr ""
 
 #: options.c:616
 msgid "  -i, --idfile      specify alternate UIDs file\n"
-msgstr "  -i, --idfile      especificar archivo de UIDs alterno\n"
+msgstr "  -i, --idfile      especificar archivo de UID alterno\n"
 
 #: options.c:617
 msgid "      --pidfile     specify alternate PID (lock) file\n"
@@ -2229,7 +2228,7 @@ msgstr ""
 
 #: options.c:640
 msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
-msgstr "  -U, --uidl        forzar el uso de UIDLs (sólo pop3)\n"
+msgstr "  -U, --uidl        forzar el uso de UIDL (sólo pop3)\n"
 
 #: options.c:641
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
@@ -2302,7 +2301,7 @@ msgstr "  -n, --norewrite   no reescribir las direcciones del encabezado\n"
 #: options.c:657
 msgid "  -l, --limit       don't fetch messages over given size\n"
 msgstr ""
-"  -l, --limit       no recibir los mensajes más grandes que lo especificado\n"
+"  -l, --limit       no recibir mensajes más grandes de lo especificado\n"
 
 #: options.c:658
 msgid "  -w, --warnings    interval between warning mail notification\n"
@@ -2348,7 +2347,7 @@ msgstr "      --fetchsizelimit configurar el límite de tamaño de mensaje\n"
 
 #: options.c:668
 msgid "      --fastuidl    do a binary search for UIDLs\n"
-msgstr "      --fastuidl    utilizar búsqueda binaria para los UIDLs\n"
+msgstr "      --fastuidl    utilizar búsqueda binaria para los UIDL\n"
 
 #: options.c:669
 msgid "  -e, --expunge     set max deletions between expunges\n"
@@ -2453,7 +2452,7 @@ msgstr "error de protocolo\n"
 
 #: pop3.c:1073
 msgid "protocol error while fetching UIDLs\n"
-msgstr "error de protocolo durante la recepción de UIDLs\n"
+msgstr "error de protocolo durante la recepción de UIDL\n"
 
 #: pop3.c:1443
 msgid "Option --folder is not supported with POP3\n"
@@ -2489,7 +2488,7 @@ msgstr "SSL no está activado"
 
 #: rcfile_y.y:385
 msgid "end of input"
-msgstr "fin de entradas"
+msgstr "fin de entrada"
 
 #: rcfile_y.y:423
 #, c-format
@@ -2755,13 +2754,13 @@ msgstr "Fallo en la escritura del preámbulo\n"
 #: sink.c:990
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
-msgstr "Al servidor %cMTP no le gusta la dirección de recipiente ‘%s’\n"
+msgstr "Al servidor %cMTP no le gusta la dirección de recipiente «%s»\n"
 
 #: sink.c:997
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr ""
-"Al servidor %cMTP realmente no le gusta la dirección de recipiente ‘%s’\n"
+"Al servidor %cMTP realmente no le gusta la dirección de recipiente «%s»\n"
 
 #: sink.c:1043
 msgid "no address matches; no postmaster set.\n"
@@ -2809,7 +2808,7 @@ msgstr "MDA murió por la señal %d\n"
 #: sink.c:1370
 #, c-format
 msgid "MDA returned nonzero status %d\n"
-msgstr "MDA devolvió un estado distinto a cero %d\n"
+msgstr "MDA devolvió un estado %d distinto de cero\n"
 
 #: sink.c:1373
 #, c-format
@@ -2972,7 +2971,7 @@ msgstr "«CommonName» del servidor: %s\n"
 
 #: socket.c:632
 msgid "Bad certificate: Subject CommonName too long!\n"
-msgstr "Certificado malo: el «CommonName» del asunto es muy largo.\n"
+msgstr "Certificado incorrecto: el «CommonName» del asunto es muy largo.\n"
 
 #: socket.c:678
 #, c-format
@@ -3090,7 +3089,7 @@ msgstr "línea rechazada, %s no es un alias del servidor de correo\n"
 
 #: transact.c:343
 msgid "no Received address found\n"
-msgstr "no se encontró dirección de «Received»\n"
+msgstr "no se encontró la dirección de «Received»\n"
 
 #: transact.c:352
 #, c-format
@@ -3099,11 +3098,13 @@ msgstr "se encontró la dirección de «Received» «%s»\n"
 
 #: transact.c:566
 msgid "message delimiter found while scanning headers\n"
-msgstr "delimitador de mensajes encontrado durante el barrido de encabezados\n"
+msgstr ""
+"delimitador de mensajes encontrado durante la exploración de encabezados\n"
 
 #: transact.c:597
 msgid "incorrect header line found while scanning headers\n"
-msgstr "encabezado incorrecto encontrado durante la revisión de encabezados\n"
+msgstr ""
+"encabezado incorrecto encontrado durante la exploración de encabezados\n"
 
 #: transact.c:599
 #, c-format
@@ -3131,7 +3132,7 @@ msgstr ""
 #: transact.c:1289
 #, c-format
 msgid "recipient address %s didn't match any local name"
-msgstr "la dirección de destino %s no coincide con algún nombre local"
+msgstr "la dirección de destino %s no coincide con ningún nombre local"
 
 #: transact.c:1298
 msgid "message has embedded NULs"
@@ -3156,7 +3157,7 @@ msgstr " <vacía>"
 
 #: uid.c:262
 msgid "Scratch list of UIDs:"
-msgstr "Lista borrador de UIDs:"
+msgstr "Lista borrador de UID:"
 
 #: uid.c:517 uid.c:569
 #, c-format
@@ -3175,7 +3176,7 @@ msgstr "se intercambian listas de UID\n"
 #: uid.c:556
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr ""
-"no se intercambian las listas de UID, no se encontraron UIDs en esta "
+"no se intercambian las listas de UID, no se encontraron UID en esta "
 "consulta\n"
 
 #: uid.c:581

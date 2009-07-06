@@ -47,6 +47,13 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
+
+# TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+* [zh_CN] Chinese/Simplified (Ji ZhengYu)
+* [es]    Spanish/Castilian (Francisco Molinero)
+
+
 fetchmail 6.3.10 (released 2009-07-02):
 
 # INCOMPATIBLE BUGFIXES AND CHANGES

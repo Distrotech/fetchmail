@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.10-pre1\n"
+"Project-Id-Version: fetchmail 6.3.10-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-07-02 21:34+0200\n"
-"PO-Revision-Date: 2009-05-27 22:41中国标准时间\n"
+"POT-Creation-Date: 2009-07-06 20:14+0200\n"
+"PO-Revision-Date: 2009-07-05 10:01+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
 "sourceforge.net>\n"
@@ -206,14 +206,14 @@ msgstr ""
 "Fetchmail 不会再查寻此邮箱中的邮件，除非您重启\n"
 
 #: driver.c:946
-#, fuzzy, c-format
+#, c-format
 msgid "pre-connection command terminated with signal %d\n"
-msgstr "预连接命令失败，返回状态 %d\n"
+msgstr "预连接命令终止，返回信号 %d\n"
 
 #: driver.c:949
 #, c-format
 msgid "pre-connection command failed with status %d\n"
-msgstr "预连接命令失败，返回状态 %d\n"
+msgstr "预连接命令失败，状态码 %d\n"
 
 #: driver.c:973
 #, c-format
@@ -460,14 +460,14 @@ msgid "%s error while fetching from %s@%s\n"
 msgstr "从 %2$s@%3$s 收件时产生错误 %1$s\n"
 
 #: driver.c:1583
-#, fuzzy, c-format
+#, c-format
 msgid "post-connection command terminated with signal %d\n"
-msgstr "连接后执行程序失败，错误代码 %d\n"
+msgstr "执行后续程序失败，返回信号 %d\n"
 
 #: driver.c:1585
-#, fuzzy, c-format
+#, c-format
 msgid "post-connection command failed with status %d\n"
-msgstr "连接后执行程序失败，错误代码 %d\n"
+msgstr "执行后续程序失败，状态码 %d\n"
 
 #: driver.c:1604
 msgid "Kerberos V4 support not linked.\n"
