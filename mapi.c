@@ -58,6 +58,7 @@ static struct SRowSet mapi_rowset;
 static int      mapi_initialized = FALSE;
 static char     mapi_profdb[PATH_MAX];	/* mapi profiles databse */
 static char     password[128];
+static struct mapi_session * s_mapi_session = NULL;
 
 
 static DATA_BLOB mapi_buffer;
@@ -199,52 +200,47 @@ static char *ldb_base64_encode(void *mem_ctx, const char *buf, int len)
 }
 
 
-static char *get_base64_attachment(TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char **magic)
+static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char ** magic)
 {
     enum MAPISTATUS retval;
-    const char     *tmp;
     mapi_object_t   obj_stream;
-    uint32_t        stream_size;
-    uint32_t        read_size;
-    unsigned char   buf[MSGBUFSIZE];
-    uint32_t        max_read_size = MSGBUFSIZE;
-    DATA_BLOB       data;
-    magic_t         cookie = NULL;
+    DATA_BLOB	    data;
+    size_t	    data_pos = 0;
+    uint16_t	    read_bytes = 0;
+    magic_t	    cookie = NULL;
 
-    retval = OpenStream(&obj_attach, PR_ATTACH_DATA_BIN, 0, &obj_stream);
-    if (retval != MAPI_E_SUCCESS)
-	return false;
+    if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> mapi_get_base64_attachment(): size=%u\n"), size);
 
-    retval = GetStreamSize(&obj_stream, &data.length);
-    if (retval != MAPI_E_SUCCESS)
-	return false;
+    if (OpenStream(&obj_attach, PR_ATTACH_DATA_BIN, 0, &obj_stream) != MAPI_E_SUCCESS)
+	return NULL;
+    if (GetStreamSize(&obj_stream, &data.length) != MAPI_E_SUCCESS)
+	return NULL;
+
     data.data = talloc_size(mem_ctx, data.length);
+    if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> allocated size=%u\n"), data.length);
 
-    read_size = size;
-    for (stream_size = 0; stream_size < data.length && read_size != 0; stream_size += MSGBUFSIZE) {
-	retval = ReadStream(&obj_stream, buf, max_read_size, &read_size);
-	if (retval != MAPI_E_SUCCESS)
+    do {
+	if (ReadStream(&obj_stream, data.data + data_pos, MSGBUFSIZE, &read_bytes) != MAPI_E_SUCCESS)
 	    return NULL;
-	memcpy(data.data, buf, read_size);
-    }
+	data_pos += read_bytes;
+    } while (data_pos < data.length);
+
+    if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> All data received: data_pos=%u\n"), data_pos);
 
     cookie = magic_open(MAGIC_MIME);
     if (cookie == NULL) {
-	printf("%s\n", magic_error(cookie));
+	report(stderr, GT_("MAPI> mime error: %s\n"), magic_error(cookie));
 	return NULL;
     }
     if (magic_load(cookie, NULL) == -1) {
-	printf("%s\n", magic_error(cookie));
+	report(stderr, GT_("MAPI> mime error: %s\n"), magic_error(cookie));
+	magic_close(cookie);
 	return NULL;
     }
-    tmp = magic_buffer(cookie, (void *) data.data, data.length);
-    *magic = talloc_strdup(mem_ctx, tmp);
+    *magic = talloc_strdup(mem_ctx, magic_buffer(cookie, data.data, data.length));
     magic_close(cookie);
 
-    /*
-     * convert attachment to base64 
-     */
-    return (ldb_base64_encode(mem_ctx, (const char *) data.data, data.length));
+    return ldb_base64_encode(mem_ctx, data.data, data.length);
 }
 
 
@@ -394,7 +390,6 @@ static int mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_c
 static int mapi_init(const char *folder)
 {
     enum MAPISTATUS retval;
-    struct mapi_session *session = NULL;
     mapi_object_t   obj_tis;
     mapi_id_t       id_folder;
     struct SPropTagArray *SPropTagArray = NULL;
@@ -426,20 +421,19 @@ static int mapi_init(const char *folder)
 	return GetLastError();
     }
 
-    retval = MapiLogonEx(&session, profname, password);
+    retval = MapiLogonEx(&s_mapi_session, profname, password);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, GT_("MAPI: MapiLogonEx failed\n"));
 	mapi_clean();
 	return GetLastError();
     }
-    mapi_profile = session->profile;
-
+    mapi_profile = s_mapi_session->profile;
 
     /*-----------------------------------------------------------------------------
      *  Open the default message store
      *-----------------------------------------------------------------------------*/
     mapi_object_init(&mapi_obj_store);
-    retval = OpenMsgStore(&mapi_obj_store);
+    retval = OpenMsgStore(s_mapi_session, &mapi_obj_store);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, GT_("MAPI: OpenMsgStore failed\n"));
 	mapi_clean();
@@ -664,7 +658,7 @@ static int mapi_ok(int sock, char *argbuf)
  */
 static uint32_t callback(struct SRowSet *rowset, void *private)
 {
-    // TODO: check if running in daemon mode
+    /* TODO: check if running in daemon mode*/
     int             daemon_mode = FALSE;
 
     if (!daemon_mode) {
@@ -1109,7 +1103,7 @@ static void smtp_address(int *lenp, const char *name)
     ulFlags = TABLE_START;
     do {
 	count += 0x2;
-	retval = GetGALTable(SPropTagArray, &SRowSet, count, ulFlags);
+	retval = GetGALTable(s_mapi_session, SPropTagArray, &SRowSet, count, ulFlags);
 	if (retval != MAPI_E_SUCCESS) {
 	    MapiWrite(lenp, "\n");
 	    report(stderr, "MAPI: Error when translate display name into smtp address\n");
