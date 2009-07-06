@@ -58,18 +58,17 @@ static enum MAPISTATUS octool_get_stream(TALLOC_CTX *mem_ctx,
 					 DATA_BLOB *body)
 {
 	enum MAPISTATUS	retval;
-	uint32_t	read_size;
-	uint8_t		buf[0x1000];
+	uint16_t	read_size;
+	unsigned char	buf[0x1000];
 
 	body->length = 0;
-	body->data = talloc_zero(mem_ctx, uint8_t);
+	body->data = talloc_zero(mem_ctx, unsigned char);
 
 	do {
 		retval = ReadStream(obj_stream, buf, 0x1000, &read_size);
 		MAPI_RETVAL_IF(retval, GetLastError(), body->data);
 		if (read_size) {
-			body->data = talloc_realloc(mem_ctx, body->data, uint8_t,
-						    body->length + read_size);
+			body->data = talloc_realloc(mem_ctx, body->data, unsigned char, body->length + read_size);
 			memcpy(&(body->data[body->length]), buf, read_size);
 			body->length += read_size;
 		}
