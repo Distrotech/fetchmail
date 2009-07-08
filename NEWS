@@ -109,7 +109,7 @@ fetchmail 6.3.10 (released 2009-07-02):
 * Make the comparison of the SSL fingerprints case insensitive, to
   ease its use. Suggested by Daniel Richard G.
 * Proper precedence ordering for the syslog and logfile options. If the logfile
-  option is effective (i. e. we're not in daemon mode and nodetach isn't used),
+  option is effective (i. e. we're in daemon mode and nodetach isn't used),
   reset the syslog option. If logfile is ineffective (we're not in daemon mode,
   or nodetach is set), syslog takes precedence.
 * The sleeping at/awakened at messages appear in logfiles and syslog only if
