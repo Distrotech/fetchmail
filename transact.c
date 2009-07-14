@@ -548,6 +548,7 @@ int readheaders(int sock,
 	    /* check for end of headers */
 	    if (end_of_header(line))
 	    {
+eoh:
 		if (linelen != strlen (line))
 		    has_nuls = TRUE;
 		free(line);
@@ -561,15 +562,9 @@ int readheaders(int sock,
 	     */
 	    if (protocol->delimited && line[0] == '.' && EMPTYLINE(line+1))
 	    {
-		if (outlevel > O_SILENT)
-		    report(stdout,
-			   GT_("message delimiter found while scanning headers\n"));
 		if (suppress_readbody)
 		    *suppress_readbody = TRUE;
-		if (linelen != strlen (line))
-		    has_nuls = TRUE;
-		free(line);
-		goto process_headers;
+		goto eoh; /* above */
 	    }
 
 	    /*
@@ -938,12 +933,12 @@ int readheaders(int sock,
 	}
     }
 
- process_headers:    
+process_headers:
 
-    if (retain_mail)
-    {
+    if (retain_mail) {
 	return(PS_RETAINED);
     }
+
     if (refuse_mail)
 	return(PS_REFUSED);
     /*

@@ -49,6 +49,11 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
 
+# BUGFIXES
+* Remove the spurious message "message delimiter found while scanning headers".
+  RFC-5322 syntax states that the delimiter is part of the body, and the body is
+  optional.
+
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [zh_CN] Chinese/Simplified (Ji ZhengYu)
 * [es]    Spanish/Castilian (Francisco Molinero)
