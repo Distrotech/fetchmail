@@ -90,6 +90,10 @@ questionable:
 - CRYPTO: perhaps port to NSS? Check license and features and required procedure
   changes. - Redhat Bugs #333741 (crypto consolidation), #346891 (port fetchmail to NSS)
 - CRYPTO: make the SSL default v3 (rather than v23).
+- CRYPTO: remove sslfingerprint? too easily abused (see NEWS)
+- CRYPTO: force sslcertck
+- CRYPTO: by default forbid cleartext or other compromising password
+  schemes over insecure connections?
 - put more hints to the FAQ (should we call it FGA?) as first support place
 - make sure we print socket error messages such as connection reset by
   peer to hint users the problem is not in fetchmail

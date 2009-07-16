@@ -21,6 +21,8 @@ removed from a 6.4.0 or newer release.)
 * POP2 is obsolete, support will be removed from a future fetchmail version.
 * RPOP is obsolete, support will be removed from a future fetchmail release.
 * --sslcertck will become a default setting in a future fetchmail version.
+* --sslfingerprint may be removed from a future fetchmail version, because it's
+  just too easily abused to create a false sense of security.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
   is deprecated and may be removed from a future release.
 * The "envelope Received" option may be removed from a future release, because
