@@ -51,6 +51,11 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
 
+# SECURITY BUGFIXES
+* Fetchmail checks the Subject CommonName and Subject AltName X.509 certificate
+  fields for embedded NUL characters and aborts certificate verification to
+  counter recent SSL certificate verification attacks. Untested.
+
 # BUGFIXES
 * Remove the spurious message "message delimiter found while scanning headers".
   RFC-5322 syntax states that the delimiter is part of the body, and the body is

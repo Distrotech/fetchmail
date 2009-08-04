@@ -608,7 +608,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 
 	if (depth == 0 && !_depth0ck) {
 		_depth0ck = 1;
-		
+
 		if (outlevel >= O_VERBOSE) {
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
 				report(stdout, GT_("Issuer Organization: %s\n"), buf);
@@ -632,6 +632,12 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				report(stderr, GT_("Bad certificate: Subject CommonName too long!\n"));
 				return (0);
 			}
+			if ((size_t)i > strlen(buf)) {
+				/* Name contains embedded NUL characters, so we complain. This is likely
+				 * a certificate spoofing attack. */
+				report(stderr, GT_("Bad certificate: Subject CommonName contains NUL, aborting!\n"));
+				return 0;
+			}
 			if (_ssl_server_cname != NULL) {
 				char *p1 = buf;
 				char *p2 = _ssl_server_cname;
@@ -643,14 +649,21 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				 * first find a match among alternative names */
 				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
 				if (gens) {
-					int i, r;
-					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {
-						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
+					int j, r;
+					for (j = 0, r = sk_GENERAL_NAME_num(gens); j < r; ++j) {
+						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, j);
 						if (gn->type == GEN_DNS) {
 							char *p1 = (char *)gn->d.ia5->data;
 							char *p2 = _ssl_server_cname;
+							/* Name contains embedded NUL characters, so we complain. This
+							 * is likely a certificate spoofing attack. */
+							if ((size_t)gn->d.ia5->length != strlen(p1)) {
+								report(stderr, GT_("Bad certificate: Subject Alternative Name contains NUL, aborting!\n"));
+								sk_GENERAL_NAME_free(gens);
+								return 0;
+							}
 							if (outlevel >= O_VERBOSE)
-								report(stderr, "Subject Alternative Name: %s\n", p1);
+								report(stdout, GT_("Subject Alternative Name: %s\n"), p1);
 							if (*p1 == '*') {
 								++p1;
 								n = strlen(p2) - strlen(p1);
@@ -669,9 +682,9 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					n = strlen(p2) - strlen(p1);
 					if (n >= 0)
 						p2 += n;
-				}	
+				}
 				if (0 == strcasecmp(p1, p2)) {
-				  matched = 1;
+					matched = 1;
 				}
 				if (!matched) {
 					report(stderr,
