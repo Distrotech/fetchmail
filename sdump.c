@@ -1,7 +1,12 @@
-/* sdump.c -- library to allocate a printable version of a string */
+/* sdump.c -- library to allocate and format a printable version of a
+ * string with embedded NUL */
+
 /** \file sdump.c
  * \author Matthias Andree
  * \date 2009
+ *
+ * This file is available under the GNU Lesser General Public License
+ * v2.1 or any later version of the GNU LGPL.
  */
 
 #include <ctype.h>  /* for isprint() */
@@ -14,7 +19,9 @@
 /** sdump converts a byte string \a in of size \a len into a printable
  * string and returns a pointer to the memory region.
  * \returns a pointer to a xmalloc()ed string that the caller must
- * free() after use. This function causes program abort on failure. */
+ * free() after use. This function causes program abort on failure
+ * through xmalloc. xmalloc is a function that calls malloc() and aborts
+ * the program if malloc() returned NULL i. e. failure. */
 char *sdump(const char *in, size_t len)
 {
     size_t outlen = 0, i;
