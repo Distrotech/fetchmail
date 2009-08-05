@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.10-beta1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-07-02 21:34+0200\n"
+"POT-Creation-Date: 2009-08-06 01:21+0200\n"
 "PO-Revision-Date: 2009-05-26 18:57+0200\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -2751,176 +2751,191 @@ msgstr "ESMTP LOGIN Authentication...\n"
 msgid "smtp listener protocol error\n"
 msgstr "smtp listener protocol error\n"
 
-#: socket.c:114 socket.c:140
+#: socket.c:115 socket.c:141
 msgid "fetchmail: malloc failed\n"
 msgstr "fetchmail: malloc failed\n"
 
-#: socket.c:172
+#: socket.c:173
 msgid "fetchmail: socketpair failed\n"
 msgstr "fetchmail: socketpair failed\n"
 
-#: socket.c:178
+#: socket.c:179
 msgid "fetchmail: fork failed\n"
 msgstr "fetchmail: fork failed\n"
 
-#: socket.c:185
+#: socket.c:186
 msgid "dup2 failed\n"
 msgstr "dup2 failed\n"
 
-#: socket.c:191
+#: socket.c:192
 #, c-format
 msgid "running %s (host %s service %s)\n"
 msgstr "running %s (host %s service %s)\n"
 
-#: socket.c:194
+#: socket.c:195
 #, c-format
 msgid "execvp(%s) failed\n"
 msgstr "execvp(%s) failed\n"
 
-#: socket.c:285
+#: socket.c:286
 #, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
 msgstr "getaddrinfo(\"%s\",\"%s\") error: %s\n"
 
-#: socket.c:288
+#: socket.c:289
 msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr "Try adding the --service option (see also FAQ item R12).\n"
 
-#: socket.c:299 socket.c:302
+#: socket.c:300 socket.c:303
 #, c-format
 msgid "unknown (%s)"
 msgstr "unknown (%s)"
 
-#: socket.c:305
+#: socket.c:306
 #, c-format
 msgid "Trying to connect to %s/%s..."
 msgstr "Trying to connect to %s/%s..."
 
-#: socket.c:313
+#: socket.c:314
 #, c-format
 msgid "cannot create socket: %s\n"
 msgstr "cannot create socket: %s\n"
 
-#: socket.c:329
+#: socket.c:330
 msgid "connection failed.\n"
 msgstr "connection failed.\n"
 
-#: socket.c:331
+#: socket.c:332
 #, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
 msgstr "connection to %s:%s [%s/%s] failed: %s.\n"
 
-#: socket.c:337
+#: socket.c:338
 msgid "connected.\n"
 msgstr "connected.\n"
 
-#: socket.c:614
+#: socket.c:616
 #, c-format
 msgid "Issuer Organization: %s\n"
 msgstr "Issuer Organisation: %s\n"
 
-#: socket.c:616
+#: socket.c:619
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
 msgstr "Warning: Issuer Organisation Name too long (possibly truncated).\n"
 
-#: socket.c:618
+#: socket.c:621
 msgid "Unknown Organization\n"
 msgstr "Unknown Organisation\n"
 
-#: socket.c:620
+#: socket.c:623
 #, c-format
 msgid "Issuer CommonName: %s\n"
 msgstr "Issuer CommonName: %s\n"
 
-#: socket.c:622
+#: socket.c:626
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
 msgstr "Warning: Issuer CommonName too long (possibly truncated).\n"
 
-#: socket.c:624
+#: socket.c:628
 msgid "Unknown Issuer CommonName\n"
 msgstr "Unknown Issuer CommonName\n"
 
-#: socket.c:628
+#: socket.c:632
 #, c-format
 msgid "Server CommonName: %s\n"
 msgstr "Server CommonName: %s\n"
 
-#: socket.c:632
+#: socket.c:637
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Bad certificate: Subject CommonName too long!\n"
 
-#: socket.c:678
+#: socket.c:643
+#, fuzzy
+msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+msgstr "Bad certificate: Subject CommonName too long!\n"
+
+#: socket.c:664
+#, c-format
+msgid "Subject Alternative Name: %s\n"
+msgstr ""
+
+#: socket.c:670
+#, fuzzy
+msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+msgstr "Bad certificate: Subject CommonName too long!\n"
+
+#: socket.c:698
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Server CommonName mismatch: %s != %s\n"
 
-#: socket.c:684
+#: socket.c:705
 msgid "Server name not set, could not verify certificate!\n"
 msgstr "Server name not set, could not verify certificate!\n"
 
-#: socket.c:689
+#: socket.c:710
 msgid "Unknown Server CommonName\n"
 msgstr "Unknown Server CommonName\n"
 
-#: socket.c:691
+#: socket.c:712
 msgid "Server name not specified in certificate!\n"
 msgstr "Server name not specified in certificate!\n"
 
-#: socket.c:703
+#: socket.c:724
 msgid "EVP_md5() failed!\n"
 msgstr "EVP_md5() failed!\n"
 
-#: socket.c:707
+#: socket.c:728
 msgid "Out of memory!\n"
 msgstr "Out of memory!\n"
 
-#: socket.c:715
+#: socket.c:736
 msgid "Digest text buffer too small!\n"
 msgstr "Digest text buffer too small!\n"
 
-#: socket.c:721
+#: socket.c:742
 #, c-format
 msgid "%s key fingerprint: %s\n"
 msgstr "%s key fingerprint: %s\n"
 
-#: socket.c:725
+#: socket.c:746
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "%s fingerprints match.\n"
 
-#: socket.c:727
+#: socket.c:748
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "%s fingerprints do not match!\n"
 
-#: socket.c:736
+#: socket.c:757
 #, c-format
 msgid "Server certificate verification error: %s\n"
 msgstr "Server certificate verification error: %s\n"
 
-#: socket.c:742
+#: socket.c:763
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "unknown issuer (first %d characters): %s\n"
 
-#: socket.c:829
+#: socket.c:850
 msgid "File descriptor out of range for SSL"
 msgstr "File descriptor out of range for SSL"
 
-#: socket.c:845
-#, c-format
+#: socket.c:866
+#, fuzzy, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 
-#: socket.c:921
+#: socket.c:942
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Certificate/fingerprint verification was somehow skipped!\n"
 
-#: socket.c:999
+#: socket.c:1020
 msgid "Cygwin socket read retry\n"
 msgstr "Cygwin socket read retry\n"
 
-#: socket.c:1002
+#: socket.c:1023
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Cygwin socket read retry failed!\n"
 
@@ -2967,50 +2982,46 @@ msgstr "no Received address found\n"
 msgid "found Received address `%s'\n"
 msgstr "found Received address `%s'\n"
 
-#: transact.c:566
-msgid "message delimiter found while scanning headers\n"
-msgstr "message delimiter found while scanning headers\n"
-
-#: transact.c:597
+#: transact.c:592
 msgid "incorrect header line found while scanning headers\n"
 msgstr "incorrect header line found while scanning headers\n"
 
-#: transact.c:599
+#: transact.c:594
 #, c-format
 msgid "line: %s"
 msgstr "line: %s"
 
-#: transact.c:1138
+#: transact.c:1133
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "no local matches, forwarding to %s\n"
 
-#: transact.c:1153
+#: transact.c:1148
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "forwarding and deletion suppressed due to DNS errors\n"
 
-#: transact.c:1263
+#: transact.c:1258
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "writing RFC822 msgblk.headers\n"
 
-#: transact.c:1282
+#: transact.c:1277
 msgid "no recipient addresses matched declared local names"
 msgstr "no recipient addresses matched declared local names"
 
-#: transact.c:1289
+#: transact.c:1284
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "recipient address %s didn't match any local name"
 
-#: transact.c:1298
+#: transact.c:1293
 msgid "message has embedded NULs"
 msgstr "message has embedded NULs"
 
-#: transact.c:1306
+#: transact.c:1301
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP listener rejected local recipient addresses: "
 
-#: transact.c:1445
+#: transact.c:1440
 msgid "error writing message text\n"
 msgstr "error writing message text\n"
 
@@ -3084,3 +3095,6 @@ msgstr "malloc failed\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc failed\n"
+
+#~ msgid "message delimiter found while scanning headers\n"
+#~ msgstr "message delimiter found while scanning headers\n"

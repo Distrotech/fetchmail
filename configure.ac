@@ -8,7 +8,7 @@ dnl Autoconfigure input file for fetchmail
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.3.10],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.11],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
