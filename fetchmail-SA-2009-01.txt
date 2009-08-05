@@ -4,18 +4,17 @@ Topics:		Improper SSL certificate subject verification
 
 Author:		Matthias Andree
 Version:	1.0
-Announced:	2009-08-XX
+Announced:	2009-08-06
 Type:		Allows undetected Man-in-the-middle attacks against SSL/TLS.
 Impact:		Credential disclose to eavesdroppers.
-Danger:		low
-CVSS V2 vector: (AV:N/AC:M/Au:N/C:P/I:N/A:N/E:H/RL:OF/RC:C)
+Danger:		medium
+CVSSv2 vectors:	(AV:N/AC:M/Au:N/C:P/I:N/A:N) (E:H/RL:OF/RC:C)
 
-Credits:	
-CVE Name:	CVE-2009-xxxx
+CVE Name:	CVE-2009-2666
 URL:		http://www.fetchmail.info/fetchmail-SA-2009-01.txt
 Project URL:	http://www.fetchmail.info/
 
-Affects:	fetchmail release before and excluding 6.3.11
+Affects:	fetchmail releases up to and including 6.3.10
 
 Not affected:	fetchmail release 6.3.11 and newer
 
@@ -33,6 +32,7 @@ References:	"Null Prefix Attacks Against SSL/TLS Certificates",
 ==================
 
 2009-08-05 0.1	first draft (visible in SVN)
+2009-08-06 1.0	first release
 
 
 1. Background
@@ -131,7 +131,7 @@ Index: socket.c
  			if (_ssl_server_cname != NULL) {
  				char *p1 = buf;
  				char *p2 = _ssl_server_cname;
-@@ -643,14 +649,21 @@
+@@ -643,11 +649,18 @@
  				 * first find a match among alternative names */
  				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
  				if (gens) {
@@ -152,10 +152,6 @@ Index: socket.c
 +								return 0;
 +							}
  							if (outlevel >= O_VERBOSE)
--								report(stderr, "Subject Alternative Name: %s\n", p1);
-+								report(stdout, GT_("Subject Alternative Name: %s\n"), p1);
- 							if (*p1 == '*') {
- 								++p1;
- 								n = strlen(p2) - strlen(p1);
+ 								report(stderr, "Subject Alternative Name: %s\n", p1);
 
 END OF fetchmail-SA-2009-01.txt

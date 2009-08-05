@@ -49,12 +49,21 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
+fetchmail 6.3.11 (released 2009-08-06):
 
 # SECURITY BUGFIXES
-* Fetchmail checks the Subject CommonName and Subject AltName X.509 certificate
-  fields for embedded NUL characters and aborts certificate verification to
-  counter recent SSL certificate verification attacks. Untested.
+* CVE-2009-2666: SSL NUL prefix impersonation attack through NULs in a
+  part of a X.509 certificate's CommonName and subjectAltName fields. These
+  fields use opaque strings with a separate length field, so that the NUL
+  character isn't a special character inside the certificate. Fetchmail, being
+  written in the C language, used to treat these strings as C strings
+  nonetheless, so that the domain comparison would end at the first embedded NUL
+  character, rather than at the real end of the string.
+    Fetchmail will now abort certificate verification as failed if NULs are
+  encountered inside either of these fields regardless of their position, and
+  drop the connection even if --sslcertck is not used, because NUL is not a
+  valid character in legitimate DNS names.
+  See fetchmail-SA-2009-01.txt for details, including a minimal patch.
 
 # BUGFIXES
 * Remove the spurious message "message delimiter found while scanning headers".
