@@ -623,16 +623,7 @@ void interface_parse(char *, struct hostdata *);
 void interface_note_activity(struct hostdata *);
 int interface_approve(struct hostdata *, flag domonitor);
 
-/* xmalloc.c */
-#if defined(HAVE_VOIDPOINTER)
-#define XMALLOCTYPE void
-#else
-#define XMALLOCTYPE char
-#endif
-XMALLOCTYPE *xmalloc(size_t);
-XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t);
-#define xfree(p) { if (p) { free(p); } (p) = 0; }
-char *xstrdup(const char *);
+#include "xmalloc.h"
 
 /* protocol driver and methods */
 int doPOP2 (struct query *); 
