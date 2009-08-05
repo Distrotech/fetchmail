@@ -50,13 +50,26 @@ run time.
 
 Moxie Marlinspike demonstrated in July 2009 that some CAs would sign
 certificates that contain embedded NUL characters in the Common Name or
-subjectAltName fields of ITU-T X.509 certificates. Applications what
-would treat such strings in X.509 as NUL-terminated C strings (rather
-than strings that contain an explicit length field) would only
-check the part up to and excluding the NUL character, so that
+subjectAltName fields of ITU-T X.509 certificates.
+
+Applications that would treat such X.509 strings as NUL-terminated C
+strings (rather than strings that contain an explicit length field)
+would only check the part up to and excluding the NUL character, so that
 certificate names such as www.good.example\0www.bad.example.com would be
-mistaken as a certificate name for www.good.example. The CA however
-would usually sign example.com and not care about the subdomain.
+mistaken as a certificate name for www.good.example.  fetchmail also had
+this design and implementation flaw.
+
+Note that fetchmail should always be forced to use strict certificate
+validation through either of these option combinations:
+
+    --sslcertck --ssl --sslproto ssl3    (for service on SSL-wrapped ports)
+or
+    --sslcertck --sslproto tls1          (for STARTTLS-based services)
+
+(These are for the command line, in the rcfile, you will need to omit
+the respective leading --).
+
+The default is relaxed checking for compatibility with historic versions.
 
 
 3. Solution
