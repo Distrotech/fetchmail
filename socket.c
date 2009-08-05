@@ -52,6 +52,7 @@
 #include "fetchmail.h"
 #include "getaddrinfo.h"
 #include "i18n.h"
+#include "sdump.h"
 
 /* Defines to allow BeOS and Cygwin to play nice... */
 #ifdef __BEOS__
@@ -598,6 +599,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	const EVP_MD *digest_tp;
 	unsigned int dsz, esz;
 	X509_NAME *subj, *issuer;
+	char *tt;
 
 	x509_cert = X509_STORE_CTX_get_current_cert(ctx);
 	err = X509_STORE_CTX_get_error(ctx);
@@ -611,13 +613,15 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 
 		if (outlevel >= O_VERBOSE) {
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
-				report(stdout, GT_("Issuer Organization: %s\n"), buf);
+				report(stdout, GT_("Issuer Organization: %s\n"), (tt = sdump(buf, i)));
+				xfree(tt);
 				if ((size_t)i >= sizeof(buf) - 1)
 					report(stdout, GT_("Warning: Issuer Organization Name too long (possibly truncated).\n"));
 			} else
 				report(stdout, GT_("Unknown Organization\n"));
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_commonName, buf, sizeof(buf))) != -1) {
-				report(stdout, GT_("Issuer CommonName: %s\n"), buf);
+				report(stdout, GT_("Issuer CommonName: %s\n"), (tt = sdump(buf, i)));
+				xfree(tt);
 				if ((size_t)i >= sizeof(buf) - 1)
 					report(stdout, GT_("Warning: Issuer CommonName too long (possibly truncated).\n"));
 			} else
@@ -625,7 +629,8 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		}
 		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
 			if (outlevel >= O_VERBOSE)
-				report(stdout, GT_("Server CommonName: %s\n"), buf);
+				report(stdout, GT_("Server CommonName: %s\n"), (tt = sdump(buf, i)));
+			xfree(tt);
 			if ((size_t)i >= sizeof(buf) - 1) {
 				/* Possible truncation. In this case, this is a DNS name, so this
 				 * is really bad. We do not tolerate this even in the non-strict case. */
@@ -662,8 +667,10 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 								sk_GENERAL_NAME_free(gens);
 								return 0;
 							}
-							if (outlevel >= O_VERBOSE)
-								report(stdout, GT_("Subject Alternative Name: %s\n"), p1);
+							if (outlevel >= O_VERBOSE) {
+								report(stdout, GT_("Subject Alternative Name: %s\n"), (tt = sdump(p1, (size_t)gn->d.ia5->length)));
+								xfree(tt);
+							}
 							if (*p1 == '*') {
 								++p1;
 								n = strlen(p2) - strlen(p1);
@@ -689,7 +696,8 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				if (!matched) {
 					report(stderr,
 					    GT_("Server CommonName mismatch: %s != %s\n"),
-					    buf, _ssl_server_cname );
+					    (tt = sdump(buf, i)), _ssl_server_cname );
+					xfree(tt);
 					if (ok_return && strict)
 						return (0);
 				}

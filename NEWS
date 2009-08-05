@@ -60,6 +60,9 @@ fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
 * Remove the spurious message "message delimiter found while scanning headers".
   RFC-5322 syntax states that the delimiter is part of the body, and the body is
   optional.
+* Convert all non-printable characters in certificate Subject/Issuer
+  Common Name or Subject Alternative Name fields to ANSI-C hex escapes (\xnn,
+  where nn are hex digits).
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [zh_CN] Chinese/Simplified (Ji ZhengYu)
