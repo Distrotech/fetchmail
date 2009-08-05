@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 fetchmail-SA-2009-01: Improper SSL certificate subject verification
 
 Topics:		Improper SSL certificate subject verification
@@ -129,7 +132,7 @@ so try this if the patch does not apply.
 
 Index: socket.c
 ===================================================================
---- ./socket.c~
+- --- ./socket.c~
 +++ ./socket.c
 @@ -632,6 +632,12 @@
  				report(stderr, GT_("Bad certificate: Subject CommonName too long!\n"));
@@ -148,9 +151,9 @@ Index: socket.c
  				 * first find a match among alternative names */
  				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
  				if (gens) {
--					int i, r;
--					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {
--						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
+- -					int i, r;
+- -					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {
+- -						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
 +					int j, r;
 +					for (j = 0, r = sk_GENERAL_NAME_num(gens); j < r; ++j) {
 +						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, j);
@@ -168,3 +171,10 @@ Index: socket.c
  								report(stderr, "Subject Alternative Name: %s\n", p1);
 
 END OF fetchmail-SA-2009-01.txt
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.9 (GNU/Linux)
+
+iEYEARECAAYFAkp6GP8ACgkQvmGDOQUufZVuQwCgsD/kO/+KHC0/gopx/uiQr9V7
+mXAAnjH6G5DfcxAjCzjmt9DKZHGsqoNv
+=6zGh
+-----END PGP SIGNATURE-----
