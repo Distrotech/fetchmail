@@ -660,16 +660,16 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 						if (gn->type == GEN_DNS) {
 							char *p1 = (char *)gn->d.ia5->data;
 							char *p2 = _ssl_server_cname;
+							if (outlevel >= O_VERBOSE) {
+								report(stdout, GT_("Subject Alternative Name: %s\n"), (tt = sdump(p1, (size_t)gn->d.ia5->length)));
+								xfree(tt);
+							}
 							/* Name contains embedded NUL characters, so we complain. This
 							 * is likely a certificate spoofing attack. */
 							if ((size_t)gn->d.ia5->length != strlen(p1)) {
 								report(stderr, GT_("Bad certificate: Subject Alternative Name contains NUL, aborting!\n"));
 								sk_GENERAL_NAME_free(gens);
 								return 0;
-							}
-							if (outlevel >= O_VERBOSE) {
-								report(stdout, GT_("Subject Alternative Name: %s\n"), (tt = sdump(p1, (size_t)gn->d.ia5->length)));
-								xfree(tt);
 							}
 							if (*p1 == '*') {
 								++p1;
