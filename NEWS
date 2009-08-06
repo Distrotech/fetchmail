@@ -52,8 +52,11 @@ removed from a 6.4.0 or newer release.)
 fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+* [ca]    Catalan (Ernest Adrogué Calveras)
 * [cs]    Czech (Petr Pisar)
 * [ja]    Japanese (Takeshi Hamasaki)
+* [pl]    Polish (Jakub Bogusz)
+* [es]    Spanish/Castilian (Francisco Molinero)
 
 
 fetchmail 6.3.11 (released 2009-08-06):
