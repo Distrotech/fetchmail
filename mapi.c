@@ -1236,7 +1236,7 @@ static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 	MapiWrite(lenp, "Date: %s\n", date);
 
 	MapiWrite(lenp, "From: %s", from);
-	smtp_address(lenp, from);
+	smtp_address(lenp, from ? from : "<empty>");
 
 	if (strlen(to)) {
 	    MapiWrite(lenp, "To: %s", to);
@@ -1245,7 +1245,7 @@ static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 
 	if (strlen(cc)) {
 	    MapiWrite(lenp, "Cc: %s", cc);
-	    smtp_address(lenp, cc);
+	    smtp_address(lenp, cc ? cc : "<empty>");
 	}
 
 	if (strlen(bcc)) {
