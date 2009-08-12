@@ -23,15 +23,17 @@
 #include  "config.h"
 
 #ifdef MAPI_ENABLE
+
+#define USE_UINT_ENUMS 1
 #include <libmapi/libmapi.h>
 #include <ctype.h>
 
 #if defined(HAVE_UNISTD_H)
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #if defined(STDC_HEADERS)
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 
 #include <errno.h>
@@ -113,6 +115,7 @@ void MapiWrite(lenp, format, va_alist)
 int MapiRead (int sock, char *buf, int len)
 {
 	int count = 0;
+	(void)sock;
 
 	while (g_mapi_buffer_count < g_mapi_buffer.length) {
 		*(buf + count) = *(g_mapi_buffer.data + g_mapi_buffer_count);
@@ -139,6 +142,7 @@ int MapiRead (int sock, char *buf, int len)
  */
 int MapiPeek (int sock)
 {
+	(void)sock;
 	if (g_mapi_buffer_count < g_mapi_buffer.length)
 		return *(g_mapi_buffer.data + g_mapi_buffer_count);
 	else
@@ -165,7 +169,6 @@ static const char * get_filename (const char * filename)
  */
 static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char ** magic)
 {
-	enum MAPISTATUS retval;
 	mapi_object_t	obj_stream;
 	DATA_BLOB		data;
 	size_t		data_pos = 0;
@@ -200,7 +203,7 @@ static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_att
 	*magic = talloc_strdup(mem_ctx, magic_buffer(cookie, data.data, data.length));
 	magic_close(cookie);
 
-	return ldb_base64_encode(mem_ctx, data.data, data.length);
+	return ldb_base64_encode(mem_ctx, (char const *)data.data, data.length);
 }
 
 
@@ -219,7 +222,7 @@ static int is_safe_char(char ch)
 	 *	' ( ) + , - . / : = ?
 	 *-----------------------------------------------------------------------------*/
 	return isalnum(ch) || ch == '\'' || ch == '(' || ch == ')' || ch == '+' || ch == ','
-	|| ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == '=' || ch == '?';
+		|| ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == '=' || ch == '?';
 }
 
 
@@ -232,7 +235,7 @@ static int is_safe_char(char ch)
 static void quoted_printable_encode(const DATA_BLOB * body, int *lenp)
 {
 	int				line_count = 0;
-	int				body_count = 0;
+	size_t			body_count = 0;
 	char			hex[16] = "0123456789ABCDEF";
 	char			ch;
 	char			line[78];
@@ -290,17 +293,17 @@ static void mapi_clean()
  *				  Note: it only searches in the top level, i.e. it's not recursive 
  * =====================================================================================
  */
-static int mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
+static enum MAPISTATUS mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
 {
 	enum MAPISTATUS retval;
-	struct SPropTagArray *SPropTagArray;
-	struct SPropValue		*lpProps;
-	struct SRowSet	rowset;
-	mapi_object_t	obj_htable;
-	const char	   *name;
-	const uint64_t *fid;
-	uint32_t		index;
-	int				count;
+	struct SPropTagArray * SPropTagArray;
+	struct SPropValue * lpProps;
+	struct SRowSet rowset;
+	mapi_object_t obj_htable;
+	char const * name = NULL;
+	uint64_t const * fid = NULL;
+	uint32_t index = 0;
+	uint32_t count = 0;
 
 	mapi_object_init(&obj_htable);
 	retval = GetHierarchyTable(obj_container, &obj_htable, 0, &count);
@@ -314,7 +317,8 @@ static int mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_c
 	retval = QueryRows(&obj_htable, count, TBL_ADVANCE, &rowset);
 	if (retval != MAPI_E_SUCCESS) return GetLastError();
 
-	if (!rowset.cRows) return MAPI_E_NOT_FOUND;
+	if (!rowset.cRows)
+		return MAPI_E_NOT_FOUND;
 
 	for (index = 0; index < rowset.cRows; index++)
 	{
@@ -597,6 +601,8 @@ static int expunge_deleted()
  */
 static int mapi_ok(int sock, char *argbuf)
 {
+	(void)sock;
+	(void)argbuf;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_ok()\n");
 	return PS_SUCCESS;
 }
@@ -663,7 +669,7 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	enum MAPISTATUS retval;
 	struct mapi_session *session = NULL;
 	struct SRowSet	proftable;
-	int				profcount;
+	size_t profcount;
 	char			localhost_name[256];
 	const char	   *workstation = NULL;
 	const char	   *ldif = NULL;
@@ -671,6 +677,8 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	const char	   *name_in_proftable = NULL;
 	uint32_t		flags;
 	char		   *realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+	(void)sock;
+	(void)greeting;
 
 	if (outlevel > O_MONITOR) report(stdout, "MAPI> mapi_getauth()\n");
 
@@ -800,12 +808,13 @@ static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *c
 	struct SPropValue *lpProps;
 	struct SRow		aRow;
 	const char	   *msgid;
-	int				props_count;
+	size_t props_count;
 	mapi_object_t	obj_message;
 	mapi_id_t	   *fid;
 	mapi_id_t	   *mid;
-	int				i;
+	size_t i;
 
+	(void)sock;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_getrange()\n");
 
 	*countp = 0;
@@ -885,6 +894,7 @@ static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 	mapi_id_t	   *fid;
 	mapi_id_t	   *mid;
 	int				i;
+	(void)sock;
 
 	if (first != -1)
 	{
@@ -972,6 +982,7 @@ static int mapi_is_old(int sock, struct query *ctl, int number)
 	mapi_id_t	   *fid;
 	mapi_id_t	   *mid;
 	int				props_count;
+	(void)sock;
 
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_is_old(number %d)\n", number);
 
@@ -1099,6 +1110,7 @@ static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 	int				props_count;
 
 	(void) ctl;
+	(void)sock;
 	*lenp = 0;
 
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_fetch_headers(number %d)\n", number);
@@ -1269,6 +1281,7 @@ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	uint8_t			format;
 
 	(void) ctl;
+	(void)sock;
 	*lenp = 0;
 
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_fetch_body(number %d)\n", number);
@@ -1435,6 +1448,8 @@ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
  */
 static int mapi_trail(int sock, struct query *ctl, const char *tag)
 {
+	(void)ctl;
+	(void)sock;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_trail(tag %s)\n", tag);
 
 	/*-----------------------------------------------------------------------------
@@ -1467,6 +1482,8 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 	mapi_id_t	   *fid;
 	mapi_id_t	   *mid;
 	int				props_count;
+
+	(void)sock;
 
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_delete(number %d)\n", number);
 
@@ -1541,6 +1558,7 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 	mapi_id_t	   *mid;
 	int				props_count;
 	long			message_flags;
+	(void)sock;
 
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_mark_seen(number %d)\n", number);
 
@@ -1624,7 +1642,8 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 static int mapi_end_mailbox_poll(int sock, struct query *ctl)
 {
 	int				flag = PS_SUCCESS;
-	(void) ctl;
+	(void)ctl;
+	(void)sock;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_end_mailbox_poll()\n");
 
 	flag = expunge_deleted();
@@ -1642,7 +1661,8 @@ static int mapi_end_mailbox_poll(int sock, struct query *ctl)
  */
 static int mapi_logout(int sock, struct query *ctl)
 {
-	(void) ctl;
+	(void)ctl;
+	(void)sock;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_logout()\n");
 
 	if (g_mapi_initialized) mapi_clean();
