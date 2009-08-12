@@ -2005,7 +2005,7 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  Windows domain name \"%s\".\n"),
 		   visbuf(ctl->mapi_domain));
 
-//TODO: to dump language as name, not as code.
+/*TODO: to dump language as name, not as code.*/
 	if (ctl->mapi_lcid)
 	    printf(GT_("  Language to use \"%s\".\n"),
 		   visbuf(ctl->mapi_lcid));
