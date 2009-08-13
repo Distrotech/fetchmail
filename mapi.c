@@ -302,7 +302,7 @@ static enum MAPISTATUS mapi_open_folder(mapi_object_t * obj_container, mapi_obje
 	mapi_object_t obj_htable;
 	char const * name = NULL;
 	uint64_t const * fid = NULL;
-	uint32_t index = 0;
+	uint32_t idx = 0;
 	uint32_t count = 0;
 
 	mapi_object_init(&obj_htable);
@@ -320,10 +320,10 @@ static enum MAPISTATUS mapi_open_folder(mapi_object_t * obj_container, mapi_obje
 	if (!rowset.cRows)
 		return MAPI_E_NOT_FOUND;
 
-	for (index = 0; index < rowset.cRows; index++)
+	for (idx = 0; idx < rowset.cRows; idx++)
 	{
-		fid = (const uint64_t *) find_SPropValue_data(&rowset.aRow[index], PR_FID);
-		name = (const char *) find_SPropValue_data(&rowset.aRow[index], PR_DISPLAY_NAME);
+		fid = (const uint64_t *) find_SPropValue_data(&rowset.aRow[idx], PR_FID);
+		name = (const char *) find_SPropValue_data(&rowset.aRow[idx], PR_DISPLAY_NAME);
 
 		if (fid && !strcmp(name, folder))
 		{
@@ -627,7 +627,7 @@ static uint32_t callback(struct SRowSet *rowset, void *private)
 		uint32_t		i;
 		struct SPropValue *lpProp;
 		FILE		   *fd;
-		uint32_t		index;
+		uint32_t		idx;
 		char			entry[10];
 		const char	   *label = (const char *) private;
 
@@ -642,14 +642,14 @@ static uint32_t callback(struct SRowSet *rowset, void *private)
 		  getentry:
 		printf("Enter username id [0]: ");
 		fgets(entry, 10, fd);
-		index = atoi(entry);
-		if (index > i) {
+		idx = atoi(entry);
+		if (idx > i) {
 			printf("Invalid id - Must be contained between 0 and %d\n", i);
 			goto getentry;
 		}
 
 		fclose(fd);
-		return index;
+		return idx;
 	}
 	else
 		return rowset->cRows;
@@ -803,18 +803,19 @@ clean:
 static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int *newp, int *bytes)
 {
 	enum MAPISTATUS retval;
-	int				flag = PS_SUCCESS;
+	int				status = PS_SUCCESS;
 	struct SPropTagArray *SPropTagArray = NULL;
 	struct SPropValue *lpProps;
 	struct SRow		aRow;
 	const char	   *msgid;
 	size_t props_count;
 	mapi_object_t	obj_message;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
+	mapi_id_t const	* fid = 0;
+	mapi_id_t const	* mid = 0;
 	size_t i;
 
 	(void)sock;
+	(void)ctl;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_getrange()\n");
 
 	*countp = 0;
@@ -825,8 +826,8 @@ static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *c
 	/*-----------------------------------------------------------------------------
 	 * initialize mapi here
 	 *-----------------------------------------------------------------------------*/
-	flag = mapi_init(folder);
-	if (flag) {
+	status = mapi_init(folder);
+	if (status) {
 		report(stderr, GT_("MAPI: MAPI is not initialized\n"));
 		return PS_UNDEFINED;
 	}
@@ -834,23 +835,25 @@ static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *c
 	*countp = g_mapi_rowset.cRows;
 
 	for (i = 0; i < g_mapi_rowset.cRows; i++) {
-		fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[i]), PR_FID);
-		mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[i]), PR_MID);
+		fid = find_SPropValue_data(&(g_mapi_rowset.aRow[i]), PR_FID);
+		mid = find_SPropValue_data(&(g_mapi_rowset.aRow[i]), PR_MID);
 		mapi_object_init(&obj_message);
 
 		retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
 
 		if (retval == MAPI_E_SUCCESS)
 		{
+			long message_flags = 0;
+
 			SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x3, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_FLAGS, PR_MESSAGE_SIZE);
 			retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
 			MAPIFreeBuffer(SPropTagArray);
 			if (retval != MAPI_E_SUCCESS) {
-				flag = translate_mapi_error(GetLastError());
+				status = translate_mapi_error(GetLastError());
 				talloc_free(lpProps);
 				mapi_object_release(&obj_message);
 				mapi_clean();
-				return flag;
+				return status;
 			}
 
 			/*-----------------------------------------------------------------------------
@@ -861,7 +864,7 @@ static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *c
 			aRow.lpProps = lpProps;
 
 			msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
-			long	message_flags = *(const long *) find_SPropValue_data(&aRow, PR_MESSAGE_FLAGS);
+			message_flags = *(const long *) find_SPropValue_data(&aRow, PR_MESSAGE_FLAGS);
 			if (msgid && !(message_flags & MSGFLAG_READ))
 			{
 				(*newp)++;
@@ -884,16 +887,16 @@ static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *c
 static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 {
 	enum MAPISTATUS retval;
-	int				flag = PS_SUCCESS;
+	int				status = PS_SUCCESS;
 	struct SPropTagArray *SPropTagArray = NULL;
-	struct SPropValue *lpProps;
+	struct SPropValue *lpProps = NULL;
 	struct SRow		aRow;
-	int				props_count;
+	uint32_t props_count = 0;
 	mapi_object_t	obj_message;
-	const char	   *msgid;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
-	int				i;
+	const char	   * msgid = NULL;
+	mapi_id_t const	* fid = 0;
+	mapi_id_t const	* mid = 0;
+	int				i = 0;
 	(void)sock;
 
 	if (first != -1)
@@ -908,10 +911,10 @@ static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 		return PS_UNDEFINED;
 	}
 
-	for (i = first; i <= g_mapi_rowset.cRows && i <= last; i++)
+	for (i = first; i <= (int)g_mapi_rowset.cRows && i <= last; i++)
 	{
-		fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[i - 1]), PR_FID);
-		mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[i - 1]), PR_MID);
+		fid = find_SPropValue_data(&(g_mapi_rowset.aRow[i - 1]), PR_FID);
+		mid = find_SPropValue_data(&(g_mapi_rowset.aRow[i - 1]), PR_MID);
 		mapi_object_init(&obj_message);
 
 		retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
@@ -923,11 +926,11 @@ static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 			MAPIFreeBuffer(SPropTagArray);
 			if (retval != MAPI_E_SUCCESS)
 			{
-				flag = translate_mapi_error(GetLastError());
+				status = translate_mapi_error(GetLastError());
 				talloc_free(lpProps);
 				mapi_object_release(&obj_message);
 				mapi_clean();
-				return flag;
+				return status;
 			}
 
 			/*
@@ -954,7 +957,7 @@ static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
  *	Description:  capture the sizes of all messages
  * =====================================================================================
  */
-static int mapi_getsizes(int sock, int mail_count, int *sizes)
+static int mapi_getsizes(int sock, int mail_count, int * sizes)
 {
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_getsizes(mail_count %d)\n", mail_count);
 
@@ -973,16 +976,17 @@ static int mapi_getsizes(int sock, int mail_count, int *sizes)
 static int mapi_is_old(int sock, struct query *ctl, int number)
 {
 	enum MAPISTATUS retval;
-	int				flag = FALSE;
+	int				status = FALSE;
 	struct SPropTagArray *SPropTagArray = NULL;
 	struct SPropValue *lpProps;
 	struct SRow		aRow;
 	mapi_object_t	obj_message;
 	const char	   *msgid;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
-	int				props_count;
+	mapi_id_t const	* fid = 0;
+	mapi_id_t const * mid = 0;
+	uint32_t props_count;
 	(void)sock;
+	(void)ctl;
 
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_is_old(number %d)\n", number);
 
@@ -991,10 +995,10 @@ static int mapi_is_old(int sock, struct query *ctl, int number)
 		return PS_UNDEFINED;
 	}
 
-	if (g_mapi_rowset.cRows < number) return FALSE;
+	if ((int)g_mapi_rowset.cRows < number) return FALSE;
 
-	fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
-	mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
+	fid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
+	mid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
 	mapi_object_init(&obj_message);
 
 	retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
@@ -1014,7 +1018,7 @@ static int mapi_is_old(int sock, struct query *ctl, int number)
 				retval = FindProfileAttr(mapi_profile, "Message-ID", msgid);
 				if (retval == MAPI_E_SUCCESS) {
 					if (outlevel == O_DEBUG) report(stdout, "MAPI> message %d with Message-ID=%s is old\n", number, msgid);
-					flag = TRUE;
+					status = TRUE;
 				}
 			}
 		}
@@ -1024,7 +1028,7 @@ static int mapi_is_old(int sock, struct query *ctl, int number)
 	}
 
 	mapi_object_release(&obj_message);
-	return flag;
+	return status;
 }
 
 /*
@@ -1092,22 +1096,22 @@ static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 {
 	enum MAPISTATUS retval;
 	struct SPropTagArray *SPropTagArray = NULL;
-	struct SPropValue *lpProps;
+	struct SPropValue *lpProps = NULL;
 	struct SRow		aRow;
 	mapi_object_t	obj_message;
-	const char	   *msgid;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
-	const uint64_t *delivery_date;
-	const char	   *date = NULL;
-	const char	   *from = NULL;
-	const char	   *to = NULL;
-	const char	   *cc = NULL;
-	const char	   *bcc = NULL;
-	const char	   *subject = NULL;
-	const uint8_t  *has_attach = NULL;
-	uint8_t			format;
-	int				props_count;
+	const char	   * msgid = NULL;
+	mapi_id_t const	   * fid = NULL;
+	mapi_id_t const	   * mid = NULL;
+	const uint64_t * delivery_date;
+	const char	   * date = NULL;
+	const char	   * from = NULL;
+	const char	   * to = NULL;
+	const char	   * cc = NULL;
+	const char	   * bcc = NULL;
+	const char	   * subject = NULL;
+	const uint8_t  * has_attach = NULL;
+	uint8_t	format = 0;
+	uint32_t props_count = 0;
 
 	(void) ctl;
 	(void)sock;
@@ -1120,10 +1124,10 @@ static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 		return (PS_UNDEFINED);
 	}
 
-	if (g_mapi_rowset.cRows < number) return PS_UNDEFINED;
+	if ((int)g_mapi_rowset.cRows < number) return PS_UNDEFINED;
 
-	fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
-	mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
+	fid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
+	mid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
 	mapi_object_init(&obj_message);
 
 	retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
@@ -1267,8 +1271,8 @@ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	mapi_object_t	obj_tb_attach;
 	mapi_object_t	obj_attach;
 	const char	   *msgid;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
+	mapi_id_t const	   *fid = NULL;
+	mapi_id_t const	   *mid = NULL;
 	const uint8_t  *has_attach = NULL;
 	const uint32_t *attach_num = NULL;
 	DATA_BLOB		body;
@@ -1276,9 +1280,9 @@ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	const uint32_t *attach_size;
 	char		   *attachment_data;
 	char		   *magic;
-	int				props_count;
-	int				attach_count;
-	uint8_t			format;
+	uint32_t props_count = 0;
+	uint32_t attach_count = 0;
+	uint8_t format = 0;
 
 	(void) ctl;
 	(void)sock;
@@ -1291,10 +1295,10 @@ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 		return (PS_UNDEFINED);
 	}
 
-	if (g_mapi_rowset.cRows < number) return (PS_UNDEFINED);
+	if ((int)g_mapi_rowset.cRows < number) return (PS_UNDEFINED);
 
-	fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
-	mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
+	fid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
+	mid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
 	mapi_object_init(&obj_message);
 
 	retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
@@ -1446,7 +1450,7 @@ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
  *				  g_mapi_buffer.
  * =====================================================================================
  */
-static int mapi_trail(int sock, struct query *ctl, const char *tag)
+static int mapi_trail(int sock, struct query *ctl, const char * tag)
 {
 	(void)ctl;
 	(void)sock;
@@ -1473,15 +1477,15 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 	mapi_container_list_t *element;
 	enum MAPISTATUS retval;
 	const char	   *profname = NULL;
-	int				flag = PS_UNDEFINED;
+	int				status = PS_UNDEFINED;
 	struct SPropTagArray *SPropTagArray = NULL;
 	struct SPropValue *lpProps;
 	struct SRow		aRow;
 	mapi_object_t	obj_message;
 	const char	   *msgid;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
-	int				props_count;
+	mapi_id_t const	   *fid = 0;
+	mapi_id_t const	   *mid = 0;
+	uint32_t props_count = 0;
 
 	(void)sock;
 
@@ -1503,8 +1507,8 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 	else
 		profname = ctl->mapi_profname;
 
-	fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
-	mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
+	fid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
+	mid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
 	mapi_object_init(&obj_message);
 
 	retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
@@ -1525,7 +1529,7 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 				retval = mapi_profile_delete_string_attr(profname, "Message-ID", msgid);
 				if (retval == MAPI_E_SUCCESS) {
 					if (outlevel == O_DEBUG) report(stdout, "MAPI> message %d with Message-ID=%s will be deleted\n", number, msgid);
-					flag = PS_SUCCESS;
+					status = PS_SUCCESS;
 				}
 			}
 		}
@@ -1534,7 +1538,7 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 	}
 
 	mapi_object_release(&obj_message);
-	return flag;
+	return status;
 }
 
 
@@ -1547,16 +1551,16 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 static int mapi_mark_seen(int sock, struct query *ctl, int number)
 {
 	enum MAPISTATUS retval;
-	int				flag = FALSE;
+	int				status = FALSE; /* TODO: weird mixing of PS_* and TRUE/FALSE */
 	struct SPropTagArray *SPropTagArray = NULL;
 	struct SPropValue *lpProps;
 	struct SRow		aRow;
 	mapi_object_t	obj_message;
 	const char	   *msgid = NULL;
 	const char	   *profname = NULL;
-	mapi_id_t	   *fid;
-	mapi_id_t	   *mid;
-	int				props_count;
+	mapi_id_t const	* fid = 0;
+	mapi_id_t const	* mid = 0;
+	uint32_t props_count = 0;
 	long			message_flags;
 	(void)sock;
 
@@ -1567,10 +1571,10 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 		return PS_UNDEFINED;
 	}
 
-	if (g_mapi_rowset.cRows < number) return FALSE;
+	if ((int)g_mapi_rowset.cRows < number) return FALSE;
 
-	fid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
-	mid = (mapi_id_t *) find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
+	fid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_FID);
+	mid = find_SPropValue_data(&(g_mapi_rowset.aRow[number - 1]), PR_MID);
 	mapi_object_init(&obj_message);
 
 	retval = OpenMessage(&g_mapi_obj_store, *fid, *mid, &obj_message, 0x0);
@@ -1593,10 +1597,10 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 				if (retval == MAPI_E_SUCCESS)
 				{
 					if (outlevel == O_DEBUG) report(stdout, "MAPI> message %d with Message-ID=%s is already marked as seen\n", number, msgid);
-					flag = TRUE;
+					status = TRUE; 
 					talloc_free(lpProps);
 					mapi_object_release(&obj_message);
-					return flag;
+					return status;
 				}
 
 				/*-----------------------------------------------------------------------------
@@ -1607,7 +1611,7 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 				mapi_profile_add_string_attr(profname, "Message-ID", msgid);
 				if (retval == MAPI_E_SUCCESS) {
 					if (outlevel == O_DEBUG) report(stdout, "MAPI> marked message %d with Message-ID=%s seen\n", number, msgid);
-					flag = TRUE;
+					status = TRUE;
 				}
 
 				/*-----------------------------------------------------------------------------
@@ -1619,7 +1623,7 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 					if (retval != MAPI_E_SUCCESS) {
 						talloc_free(lpProps);
 						mapi_object_release(&obj_message);
-						return flag;
+						return status;
 					}
 				}
 			}
@@ -1629,7 +1633,7 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 	}
 	mapi_object_release(&obj_message);
 
-	return flag;
+	return status;
 }
 
 
@@ -1641,15 +1645,15 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
  */
 static int mapi_end_mailbox_poll(int sock, struct query *ctl)
 {
-	int				flag = PS_SUCCESS;
+	int				status = PS_SUCCESS;
 	(void)ctl;
 	(void)sock;
 	if (outlevel >= O_MONITOR) report(stdout, "MAPI> mapi_end_mailbox_poll()\n");
 
-	flag = expunge_deleted();
+	status = expunge_deleted();
 	mapi_id_array_release(&g_mapi_deleted_ids);
 	mapi_clean();
-	return flag;
+	return status;
 }
 
 
@@ -1688,7 +1692,7 @@ static const struct method mapi = {
 	mapi_mark_seen,		/* how to mark a message as seen */
 	mapi_end_mailbox_poll,	/* end_of_mailbox processing */
 	mapi_logout,		/* log out, we're done */
-	TRUE,			/* yes, we can re-poll */
+	TRUE			/* yes, we can re-poll */
 };
 
 
