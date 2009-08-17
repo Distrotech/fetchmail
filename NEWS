@@ -51,6 +51,15 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
 
+# REGRESSION FIXES
+* The CVS-2009-2666 fix in fetchmail release 6.3.11 caused a free() of
+  unallocated memory on SSL connections, which caused crashes or program aborts
+  on some systems (depending on how initialization and free() of unallocated
+  memory is handled in compiler and libc).
+  Patch courtesy of Thomas Heinz, fixes Gentoo Bug #280760.
+  This regression affected only the 6.3.11 release, but not the patch that was
+  part of the security announcement fetchmail-SA-2009-01.
+
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [ca]    Catalan (Ernest Adrogué Calveras)
 * [cs]    Czech (Petr Pisar)
