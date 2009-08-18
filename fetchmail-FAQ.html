@@ -3231,12 +3231,12 @@ truncated, and fetchmail will later attempt to redownload the
 message (providing the server is standards conformant).</p>
 
 <p>The reason for the truncation is that fetchmail streams the body
-directly from the POP3/IMAP server into the SMTP/LMTP server or MDA, so
-fetchmail has already written a part of the message before it notices it
-will be incomplete, and fetchmail cannot abort a transaction it has
-started, and it's unclear if it ever will be able to, because this is
-not standardized and the outcome will depend on the receiving software
-(be it SMTP/LMTP or MDA).</p>
+directly from the POP3/IMAP server into the SMTP/LMTP server or MDA (in
+order to save memory), so fetchmail has already written a part of the
+message before it notices it will be incomplete, and fetchmail cannot
+abort a transaction it has started, and it's unclear if it ever will be
+able to, because this is not standardized and the outcome will depend on
+the receiving software (be it SMTP/LMTP or MDA).</p>
 
 <hr/>
 <h1>Other problems</h1>
