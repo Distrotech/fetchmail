@@ -246,6 +246,9 @@ fetchmail.</a><br/>
 messages.</a><br/>
 <a href="#X9">X9. Missing "Content-Transfer-Encoding" header
 with Domino IMAP</a><br/>
+<a href="#X10">X10. Fetchmail delivers partial messages</a><br/>
+
+
 <h2 id="C_O">Other problems</h2>
 
 <a href="#O1">O1. The --logfile option doesn't work if the logfile
@@ -3216,6 +3219,24 @@ MIME". Solution: switch Domino to "Keep in Sender's format".</p>
     href="http://lists.ccil.org/pipermail/fetchmail-friends/2006-March/010015.html">Anthony
     Kim's list post</a>
 </p>
+
+<h2><a id="X10" name="X10">X10. Fetchmail delivers partial
+	messages</a></h2>
+
+<p>Fetchmail is sometimes reported to deliver partial messages. This
+is usually related to network outages that occur while fetchmail is
+downloading a message body. In such cases, fetchmail has downloaded a
+complete header, so your header will be intact. The message body will be
+truncated, and fetchmail will later attempt to redownload the
+message (providing the server is standards conformant).</p>
+
+<p>The reason for the truncation is that fetchmail streams the body
+directly from the POP3/IMAP server into the SMTP/LMTP server or MDA, so
+fetchmail has already written a part of the message before it notices it
+will be incomplete, and fetchmail cannot abort a transaction it has
+started, and it's unclear if it ever will be able to, because this is
+not standardized and the outcome will depend on the receiving software
+(be it SMTP/LMTP or MDA).</p>
 
 <hr/>
 <h1>Other problems</h1>
