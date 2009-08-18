@@ -46,8 +46,8 @@ DEPENDENCIES=		libfm.a $(LIBOBJS)
 
 check_PROGRAMS=
 
-TESTS=			t.smoke
-TESTS_ENVIRONMENT=	srcdir="@srcdir@" LC_ALL=C TZ=UTC
+TESTS=			t.smoke t.validate-xhtml
+TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)"
 
 if NEED_TRIO
 noinst_LIBRARIES+=	libtrio.a
@@ -175,7 +175,7 @@ EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 		m4/xsize.m4 \
 		m4-local/ac-archive-license.txt \
 		m4-local/ac_ma_search_package.m4 \
-		t.smoke t.rc \
+		$(TESTS) t.rc \
 		dist-tools/html2txt \
 		dist-tools/manServer.pl \
 		Doxyfile
