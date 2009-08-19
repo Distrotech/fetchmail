@@ -573,7 +573,7 @@ else
            AC_CHECK_LIB(db2, db_open, ac_krblibs="$ac_krblibs -ldb2", [],
                 ${LDFLAGS})
            AC_CHECK_LIB(des, des_string_to_key, libk5crypto=-ldes,
-              AC_CHECK_LIB(ssl, MD5_Init, [],
+              AC_CHECK_LIB(crypto, MD5_Init, [],
                 AC_MSG_ERROR([DES libraries not found. Try adding --with-ssl to enable OpenSSL support]),
                 ${LDFLAGS} ${ac_krblibs}),
            ${LDFLAGS} ${ac_krblibs})

@@ -62,6 +62,9 @@ fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
 
 # BUG FIXES
 * Fix error reporting for GSSAPI on Heimdal (h5l) Kerberos.
+* Look for MD5_Init in libcrypto rather than libssl, fixes Gentoo Kerberos
+  builds; fixes upstream parts of Gentoo Bugs #231400 and #185652, and fixes
+  BerliOS Bug #16134.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [ca]    Catalan (Ernest Adrogué Calveras)
