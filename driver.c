@@ -246,7 +246,7 @@ const char *canonical;  /* server name */
     if (retval) {
 #ifdef HEIMDAL
       if (err_ret && err_ret->e_text) {
-          report(stderr, GT_("krb5_sendauth: %s [server says '%*s'] \n"),
+          report(stderr, GT_("krb5_sendauth: %s [server says '%s'] \n"),
                  error_message(retval),
                  err_ret->e_text);
 #else

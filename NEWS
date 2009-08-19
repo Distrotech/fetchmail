@@ -60,6 +60,9 @@ fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
   This regression affected only the 6.3.11 release, but not the patch that was
   part of the security announcement fetchmail-SA-2009-01.
 
+# BUG FIXES
+* Fix error reporting for GSSAPI on Heimdal (h5l) Kerberos.
+
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [ca]    Catalan (Ernest Adrogué Calveras)
 * [cs]    Czech (Petr Pisar)
