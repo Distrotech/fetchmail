@@ -7,6 +7,8 @@ soon - MUST:
 - Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
 
 soon - SHOULD:
+- replace " \n" by "\n" (and similar) - but make sure translators have
+  time to catch up.
 - make sure the man page completely lists all options (f. i. sslcertpath) in
   the tables.
 - allow \Deleted without \Seen, rf. 
