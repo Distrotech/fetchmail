@@ -65,6 +65,9 @@ fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
 * Look for MD5_Init in libcrypto rather than libssl, fixes Gentoo Kerberos
   builds; fixes upstream parts of Gentoo Bugs #231400 and #185652, and fixes
   BerliOS Bug #16134.
+* Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
+  #569899, reported by Akihiro Terasaki.
+* Replace control characters in SMTP replies by '?'.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [ca]    Catalan (Ernest Adrogué Calveras)

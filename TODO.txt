@@ -5,6 +5,9 @@ soon - MUST:
 - put bare IP addresses in brackets for SMTP (check if there are RFC
   1123/5321/5322 differences)
 - Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
+- Fix further occurrences of SMTP reply code handling:
+   - for proper smtp_reponse caching of multiline codes (there are some)
+   - for stomping over control characters.
 
 soon - SHOULD:
 - replace " \n" by "\n" (and similar) - but make sure translators have
@@ -28,10 +31,6 @@ soon - SHOULD:
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
 - add Message-ID: header and other SHOULD headers to warning mails?
-- report multiline SMTP errors properly (sample in private mail from 
-  Earl Chew, 2007-07-30T02:28), Debian Bug #529899
-  => requires reworking SMTP_ok to actually not only read the last line 
-     of multiline replies, but buffer.
 
 soon - MAY:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
@@ -43,7 +42,6 @@ soon - MAY:
 - Get rid of peeking in socket.c? MSG_PEEK seems non-portable.
 - revise ticker, and add something like .........20%.... ... 100%
   (suggested by Yue Wu)
-
 
 questionable:
 - Convert POP3 UIDs to X-UIDL?
