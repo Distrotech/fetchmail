@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.11\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-06 01:21+0200\n"
+"POT-Creation-Date: 2009-08-18 13:45+0200\n"
 "PO-Revision-Date: 2009-08-06 11:09+0200\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -140,8 +140,11 @@ msgstr " (%d oktetů v těle)"
 
 #: driver.c:751
 #, c-format
-msgid "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
-msgstr "zpráva %s@%s:%d nemá očekávanou velikost (%d ve skutečnosti != %d očekáváno)\n"
+msgid ""
+"message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+msgstr ""
+"zpráva %s@%s:%d nemá očekávanou velikost (%d ve skutečnosti != %d "
+"očekáváno)\n"
 
 #: driver.c:783
 msgid " retained\n"
@@ -158,10 +161,14 @@ msgstr " nesmazána\n"
 #: driver.c:828
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
-msgid_plural "fetchlimit %d reached; %d messages left on server %s account %s\n"
-msgstr[0] "limit stahování %d dosažen; %d zpráva ponechána na serveru %s účet %s\n"
-msgstr[1] "limit stahování %d dosažen; %d zprávy ponechány na serveru %s účet %s\n"
-msgstr[2] "limit stahování %d dosažen; %d zpráv ponecháno na serveru %s účet %s\n"
+msgid_plural ""
+"fetchlimit %d reached; %d messages left on server %s account %s\n"
+msgstr[0] ""
+"limit stahování %d dosažen; %d zpráva ponechána na serveru %s účet %s\n"
+msgstr[1] ""
+"limit stahování %d dosažen; %d zprávy ponechány na serveru %s účet %s\n"
+msgstr[2] ""
+"limit stahování %d dosažen; %d zpráv ponecháno na serveru %s účet %s\n"
 
 #: driver.c:885
 #, c-format
@@ -194,8 +201,11 @@ msgstr "Subject: fetchmailu opakovaně vypršel čas"
 
 #: driver.c:916
 #, c-format
-msgid "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"
-msgstr "Fetchmailu vypršel čas více než %d-krát při pokusu stáhnout poštu z %s@%s.\n"
+msgid ""
+"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
+"s.\n"
+msgstr ""
+"Fetchmailu vypršel čas více než %d-krát při pokusu stáhnout poštu z %s@%s.\n"
 
 #: driver.c:920
 msgid ""
@@ -532,7 +542,8 @@ msgstr ""
 msgid ""
 "%s: The NULLMAILER_FLAGS environment variable is set.\n"
 "This is dangerous as it can make nullmailer-inject or nullmailer's\n"
-"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
+"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: "
+"headers.\n"
 "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
@@ -560,12 +571,15 @@ msgstr "gethostbyname pro %s selhalo\n"
 
 #: env.c:170
 msgid "Cannot find my own host in hosts database to qualify it!\n"
-msgstr "Nemohu nalézt své vlastní jméno v databázi jmen strojů, abych jej mohl doplnit na celé jméno!\n"
+msgstr ""
+"Nemohu nalézt své vlastní jméno v databázi jmen strojů, abych jej mohl "
+"doplnit na celé jméno!\n"
 
 #: env.c:174
 msgid ""
 "Trying to continue with unqualified hostname.\n"
-"DO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\n"
+"DO NOT report broken Received: headers, HELO/EHLO lines or similar "
+"problems!\n"
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
 "Zkusím pokračovat s nekvalifikovaným jménem stroje.\n"
@@ -639,12 +653,14 @@ msgstr "Přepínač --check není s ETRN podporován.\n"
 #: fetchmail.c:137
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
+"Wilson\n"
 "Copyright (C) 2005 - 2006 Sunil Shetye\n"
 "Copyright (C) 2005 - 2009 Matthias Andree\n"
 msgstr ""
 "Copyright © 2002, 2003 Eric S. Raymond\n"
-"Copyright © 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
+"Copyright © 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
+"Wilson\n"
 "Copyright © 2005–2006 Sunil Shetye\n"
 "Copyright © 2005–2009 Matthias Andree\n"
 
@@ -654,7 +670,8 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
-"Fetchmail nedává ABSOLUTNĚ ŽÁDNÉ ZÁRUKY. Toto je svobodné programové vybavení\n"
+"Fetchmail nedává ABSOLUTNĚ ŽÁDNÉ ZÁRUKY. Toto je svobodné programové "
+"vybavení\n"
 "a budeme rádi, když jej budete za jistých podmínek dále šířit. Podrobnosti\n"
 "naleznete v souboru COPYING v adresáři se zdrojovými kódy nebo dokumentací.\n"
 
@@ -716,13 +733,20 @@ msgid "fetchmail: %s fetchmail at %d killed.\n"
 msgstr "fetchmail: fetchmail %s v %d byl zabit.\n"
 
 #: fetchmail.c:480
-msgid "fetchmail: can't check mail while another fetchmail to same host is running.\n"
-msgstr "fetchmail: nemohu kontrolovat poštu, když běží jiný fetchmail ke stejnému počítači.\n"
+msgid ""
+"fetchmail: can't check mail while another fetchmail to same host is "
+"running.\n"
+msgstr ""
+"fetchmail: nemohu kontrolovat poštu, když běží jiný fetchmail ke stejnému "
+"počítači.\n"
 
 #: fetchmail.c:486
 #, c-format
-msgid "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
-msgstr "fetchmail: nemohu stahovat ze zadaných serverů, když běží jiný fetchmail v %d.\n"
+msgid ""
+"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+msgstr ""
+"fetchmail: nemohu stahovat ze zadaných serverů, když běží jiný fetchmail v %"
+"d.\n"
 
 #: fetchmail.c:493
 #, c-format
@@ -730,7 +754,8 @@ msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr "fetchmail: v popředí běží jiný fetchmail v %d.\n"
 
 #: fetchmail.c:503
-msgid "fetchmail: can't accept options while a background fetchmail is running.\n"
+msgid ""
+"fetchmail: can't accept options while a background fetchmail is running.\n"
 msgstr "fetchmail: neakceptuji přepínače, když na fetchmail běží na pozadí.\n"
 
 #: fetchmail.c:509
@@ -769,7 +794,9 @@ msgstr "nemohu otevřít %s, kam připojovat záznamy \n"
 
 #: fetchmail.c:606
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
-msgstr "fetchmail: Varování: syslog i soubor s protokolem jsou nastaveny. Záznamy hledejte v obou!\n"
+msgstr ""
+"fetchmail: Varování: syslog i soubor s protokolem jsou nastaveny. Záznamy "
+"hledejte v obou!\n"
 
 #: fetchmail.c:625
 msgid "--check mode enabled, not fetching mail\n"
@@ -796,7 +823,8 @@ msgstr "pokus znovu spustit fetchmail selhal\n"
 #: fetchmail.c:714
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
-msgstr "stahování z %s přeskočeno (chyba autentizace nebo mnohokrát vypršel čas)\n"
+msgstr ""
+"stahování z %s přeskočeno (chyba autentizace nebo mnohokrát vypršel čas)\n"
 
 #: fetchmail.c:726
 #, c-format
@@ -904,7 +932,9 @@ msgstr "Varování: počítač %s je v konfiguračním souboru zmíněn vícekr�
 
 #: fetchmail.c:1102
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
-msgstr "fetchmail: Chyba: záznam „defaults“ je v konfiguračním souboru zmíněn vícekrát.\n"
+msgstr ""
+"fetchmail: Chyba: záznam „defaults“ je v konfiguračním souboru zmíněn "
+"vícekrát.\n"
 
 #: fetchmail.c:1224
 msgid "SSL support is not compiled in.\n"
@@ -924,8 +954,11 @@ msgstr "Podpora pro GSSAPI je nastavena, ale není zakompilována.\n"
 
 #: fetchmail.c:1273
 #, c-format
-msgid "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
-msgstr "fetchmail: varování: není dostupné DNS pro kontrolu výběru společných schránek z %s\n"
+msgid ""
+"fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+msgstr ""
+"fetchmail: varování: není dostupné DNS pro kontrolu výběru společných "
+"schránek z %s\n"
 
 #: fetchmail.c:1284
 #, c-format
@@ -934,17 +967,23 @@ msgstr "varování: společné schránky pro %s vyžadují přepínač envelope!
 
 #: fetchmail.c:1285
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
-msgstr "varování: Nežádejte podporu, pokud všechna pošta půjde k postmasterovi!\n"
+msgstr ""
+"varování: Nežádejte podporu, pokud všechna pošta půjde k postmasterovi!\n"
 
 #: fetchmail.c:1302
 #, c-format
-msgid "fetchmail: %s configuration invalid, specify positive port number for service or port\n"
-msgstr "fetchmail: chybná konfigurace %s, zadejte kladné číslo portu pro službu nebo port\n"
+msgid ""
+"fetchmail: %s configuration invalid, specify positive port number for "
+"service or port\n"
+msgstr ""
+"fetchmail: chybná konfigurace %s, zadejte kladné číslo portu pro službu nebo "
+"port\n"
 
 #: fetchmail.c:1309
 #, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
-msgstr "fetchmail: Nastavení %s není platné, PROP vyžaduje privilegovaný port\n"
+msgstr ""
+"fetchmail: Nastavení %s není platné, PROP vyžaduje privilegovaný port\n"
 
 #: fetchmail.c:1327
 #, c-format
@@ -953,7 +992,8 @@ msgstr "Nastavení %s není platné, LMTP nesmí používat implicitní port SMT
 
 #: fetchmail.c:1341
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
-msgstr "Jak fetchall, tak i keep jsou v démonu zapnuty nebo režim idle je chyba!\n"
+msgstr ""
+"Jak fetchall, tak i keep jsou v démonu zapnuty nebo režim idle je chyba!\n"
 
 #: fetchmail.c:1366
 #, c-format
@@ -1024,7 +1064,9 @@ msgstr "Fetchmail bude zobrazovat tečky průběhu i v souborech záznamů.\n"
 #: fetchmail.c:1548
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
-msgstr "Fetchmail bude přeposílat špatně adresované zprávy ze společných schránek na %s.\n"
+msgstr ""
+"Fetchmail bude přeposílat špatně adresované zprávy ze společných schránek na "
+"%s.\n"
 
 #: fetchmail.c:1552
 msgid "Fetchmail will direct error mail to the postmaster.\n"
@@ -1036,11 +1078,13 @@ msgstr "Fetchmail bude chybové zprávy posílat odesílateli.\n"
 
 #: fetchmail.c:1557
 msgid "Fetchmail will treat permanent errors as permanent (drop messsages).\n"
-msgstr "Fetchmail bude považovat trvalé chyby za trvalé (zprávy bude zahazovat).\n"
+msgstr ""
+"Fetchmail bude považovat trvalé chyby za trvalé (zprávy bude zahazovat).\n"
 
 #: fetchmail.c:1559
 msgid "Fetchmail will treat permanent errors as temporary (keep messages).\n"
-msgstr "Fetchmail bude považovat trvalé chyby za dočasné (zprávy bude uchovávat).\n"
+msgstr ""
+"Fetchmail bude považovat trvalé chyby za dočasné (zprávy bude uchovávat).\n"
 
 #: fetchmail.c:1566
 #, c-format
@@ -1067,11 +1111,13 @@ msgstr "  Skutečné jméno serveru je %s.\n"
 
 #: fetchmail.c:1580
 msgid "  This host will not be queried when no host is specified.\n"
-msgstr "  Pokud není zadán žádný počítač, nebude se stahovat z tohoto počítače.\n"
+msgstr ""
+"  Pokud není zadán žádný počítač, nebude se stahovat z tohoto počítače.\n"
 
 #: fetchmail.c:1581
 msgid "  This host will be queried when no host is specified.\n"
-msgstr "  Pokud není zadán žádný počítač, bude se stahovat z tohoto počítače.\n"
+msgstr ""
+"  Pokud není zadán žádný počítač, bude se stahovat z tohoto počítače.\n"
 
 #: fetchmail.c:1585
 msgid "  Password will be prompted for.\n"
@@ -1223,27 +1269,40 @@ msgstr "  Stažené zprávy nebudou ponechány na serveru (--keep vypnuto).\n"
 
 #: fetchmail.c:1693
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
-msgstr "  Před začátkem stahování budou staré zprávy smazány (--flush zapnuto).\n"
+msgstr ""
+"  Před začátkem stahování budou staré zprávy smazány (--flush zapnuto).\n"
 
 #: fetchmail.c:1694
-msgid "  Old messages will not be flushed before message retrieval (--flush off).\n"
-msgstr "  Před začátkem stahování nebudou staré zprávy smazány (--flush vypnuto).\n"
+msgid ""
+"  Old messages will not be flushed before message retrieval (--flush off).\n"
+msgstr ""
+"  Před začátkem stahování nebudou staré zprávy smazány (--flush vypnuto).\n"
 
 #: fetchmail.c:1696
-msgid "  Oversized messages will be flushed before message retrieval (--limitflush on).\n"
-msgstr "  Před začátkem stahování budou příliš velké zprávy smazány (--limitflush zapnuto).\n"
+msgid ""
+"  Oversized messages will be flushed before message retrieval (--limitflush "
+"on).\n"
+msgstr ""
+"  Před začátkem stahování budou příliš velké zprávy smazány (--limitflush "
+"zapnuto).\n"
 
 #: fetchmail.c:1697
-msgid "  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"
-msgstr "  Před začátkem stahování nebudou příliš velké zprávy smazány (--limitflush vypnuto).\n"
+msgid ""
+"  Oversized messages will not be flushed before message retrieval (--"
+"limitflush off).\n"
+msgstr ""
+"  Před začátkem stahování nebudou příliš velké zprávy smazány (--limitflush "
+"vypnuto).\n"
 
 #: fetchmail.c:1699
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
-msgstr "  Přepisování adres místních na serveru je povoleno (--norewrite vypnuto).\n"
+msgstr ""
+"  Přepisování adres místních na serveru je povoleno (--norewrite vypnuto).\n"
 
 #: fetchmail.c:1700
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
-msgstr "  Přepisování adres místních na serveru je zakázáno (--norewrite zapnuto).\n"
+msgstr ""
+"  Přepisování adres místních na serveru je zakázáno (--norewrite zapnuto).\n"
 
 #: fetchmail.c:1702
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
@@ -1262,12 +1321,16 @@ msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr "  Vynucení CR je zakázáno (forcecr vypnuto).\n"
 
 #: fetchmail.c:1708
-msgid "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
-msgstr "  Interpretace Content-Transfer-Encoding je zakázána (pass8bits zapnuto).\n"
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
+msgstr ""
+"  Interpretace Content-Transfer-Encoding je zakázána (pass8bits zapnuto).\n"
 
 #: fetchmail.c:1709
-msgid "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
-msgstr "  Interpretace Content-Transfer-Encoding je povolena (pass8bits vypnuto).\n"
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
+msgstr ""
+"  Interpretace Content-Transfer-Encoding je povolena (pass8bits vypnuto).\n"
 
 #: fetchmail.c:1711
 msgid "  MIME decoding is enabled (mimedecode on).\n"
@@ -1399,7 +1462,8 @@ msgstr "  Název počítače v řádku MAIL FROM bude %s\n"
 #: fetchmail.c:1803
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
-msgstr "  Adresa, kterou vkládat v řádcích RCPT TO posílaných v SMTP, bude %s\n"
+msgstr ""
+"  Adresa, kterou vkládat v řádcích RCPT TO posílaných v SMTP, bude %s\n"
 
 #: fetchmail.c:1812
 msgid "  Recognized listener spam block responses are:"
@@ -1456,12 +1520,17 @@ msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr "  Vyhledávání DNS jmen pro adresy společných schránek je zakázáno.\n"
 
 #: fetchmail.c:1866
-msgid "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr "  Přezdívky serveru budou porovnávány s adresami společných schránek podle IP adres.\n"
+msgid ""
+"  Server aliases will be compared with multidrop addresses by IP address.\n"
+msgstr ""
+"  Přezdívky serveru budou porovnávány s adresami společných schránek podle "
+"IP adres.\n"
 
 #: fetchmail.c:1868
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
-msgstr "  Přezdívky serveru budou porovnávány s adresami společných schránek podle názvu.\n"
+msgstr ""
+"  Přezdívky serveru budou porovnávány s adresami společných schránek podle "
+"názvu.\n"
 
 #: fetchmail.c:1871
 msgid "  Envelope-address routing is disabled\n"
@@ -1515,7 +1584,8 @@ msgstr "  Nezadáno žádné sledované rozhraní.\n"
 #: fetchmail.c:1919
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
-msgstr "  Připojení k serveru budou navazovány zásuvným modulem %s (--plugin %s).\n"
+msgstr ""
+"  Připojení k serveru budou navazovány zásuvným modulem %s (--plugin %s).\n"
 
 #: fetchmail.c:1921
 msgid "  No plugin command specified.\n"
@@ -1524,7 +1594,9 @@ msgstr "  Nezadán žádný příkaz zásuvného modulu.\n"
 #: fetchmail.c:1923
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
-msgstr "  Připojení k posluchači budou navazovány zásuvným modulem %s (--plugout %s).\n"
+msgstr ""
+"  Připojení k posluchači budou navazovány zásuvným modulem %s (--plugout %"
+"s).\n"
 
 #: fetchmail.c:1925
 msgid "  No plugout command specified.\n"
@@ -1541,13 +1613,15 @@ msgstr "  Ukládáno %d UID.\n"
 
 #: fetchmail.c:1947
 msgid "  Poll trace information will be added to the Received header.\n"
-msgstr "  Informace pro sledování stahování budou přidány do hlavičky Received.\n"
+msgstr ""
+"  Informace pro sledování stahování budou přidány do hlavičky Received.\n"
 
 #: fetchmail.c:1949
 msgid ""
 "  No poll trace information will be added to the Received header.\n"
 ".\n"
-msgstr "  Informace pro sledování stahování nebudou přidány do hlavičky Received.\n"
+msgstr ""
+"  Informace pro sledování stahování nebudou přidány do hlavičky Received.\n"
 
 #: fetchmail.c:1952
 #, c-format
@@ -1722,8 +1796,10 @@ msgid "%u is first unseen\n"
 msgstr "%u je první nepřečtená\n"
 
 #: imap.c:1002
-msgid "Warning: ignoring bogus data for message sizes returned by the server.\n"
-msgstr "Varování: ignoruji chybné informace o velikostech zpráv vrácené serverem.\n"
+msgid ""
+"Warning: ignoring bogus data for message sizes returned by the server.\n"
+msgstr ""
+"Varování: ignoruji chybné informace o velikostech zpráv vrácené serverem.\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
@@ -1992,12 +2068,17 @@ msgid "  -L, --logfile     specify logfile name\n"
 msgstr "  -L, --logfile     název souboru se záznamem\n"
 
 #: options.c:613
-msgid "      --syslog      use syslog(3) for most messages when running as a daemon\n"
-msgstr "      --syslog      používat syslog(3) pro většinu zpráv při běhu jako démon\n"
+msgid ""
+"      --syslog      use syslog(3) for most messages when running as a "
+"daemon\n"
+msgstr ""
+"      --syslog      používat syslog(3) pro většinu zpráv při běhu jako "
+"démon\n"
 
 #: options.c:614
 msgid "      --invisible   don't write Received & enable host spoofing\n"
-msgstr "      --invisible   nezapisovat Received a povolit podvržení počítače\n"
+msgstr ""
+"      --invisible   nezapisovat Received a povolit podvržení počítače\n"
 
 #: options.c:615
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
@@ -2017,15 +2098,22 @@ msgstr "      --postmaster  nouzový příjemce pošty\n"
 
 #: options.c:619
 msgid "      --nobounce    redirect bounces from user to postmaster.\n"
-msgstr "      --nobounce    přesměrovat vracené zprávy od uživatele postmasterovi.\n"
+msgstr ""
+"      --nobounce    přesměrovat vracené zprávy od uživatele postmasterovi.\n"
 
 #: options.c:620
-msgid "      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
-msgstr "      --nosoftbounce fetchmail bude mazat trvale nedoručitelné zprávy.\n"
+msgid ""
+"      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
+msgstr ""
+"      --nosoftbounce fetchmail bude mazat trvale nedoručitelné zprávy.\n"
 
 #: options.c:621
-msgid "      --softbounce  keep permanently undeliverable messages on server (default).\n"
-msgstr "      --softbounce  ponechat trvale nedoručitelné zprávy na serveru (implicitní).\n"
+msgid ""
+"      --softbounce  keep permanently undeliverable messages on server "
+"(default).\n"
+msgstr ""
+"      --softbounce  ponechat trvale nedoručitelné zprávy na serveru "
+"(implicitní).\n"
 
 #: options.c:623
 msgid "  -I, --interface   interface required specification\n"
@@ -2056,12 +2144,18 @@ msgid "      --sslcertpath path to ssl certificates\n"
 msgstr "      --sslcertpath cesta k certifikátům ssl\n"
 
 #: options.c:632
-msgid "      --sslcommonname  expect this CommonName from server (discouraged)\n"
-msgstr "      --sslcommonname  od serveru očekávat teto obecné jméno (CN) (nedoporučeno)\n"
+msgid ""
+"      --sslcommonname  expect this CommonName from server (discouraged)\n"
+msgstr ""
+"      --sslcommonname  od serveru očekávat teto obecné jméno (CN) "
+"(nedoporučeno)\n"
 
 #: options.c:633
-msgid "      --sslfingerprint fingerprint that must match that of the server's cert.\n"
-msgstr "      --sslfingerprint otisk, který musí odpovídat certifikátu serveru.\n"
+msgid ""
+"      --sslfingerprint fingerprint that must match that of the server's "
+"cert.\n"
+msgstr ""
+"      --sslfingerprint otisk, který musí odpovídat certifikátu serveru.\n"
 
 #: options.c:634
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
@@ -2085,11 +2179,15 @@ msgstr "  -U, --uidl        vnutit používání UIDL (jen pop3)\n"
 
 #: options.c:641
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "      --port        TCP port, kam se připojovat (zastaralé, použijte --service)\n"
+msgstr ""
+"      --port        TCP port, kam se připojovat (zastaralé, použijte --"
+"service)\n"
 
 #: options.c:642
-msgid "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
-msgstr "  -P, --service     TCP služba, kam se připojit (smí být číselný TCP port)\n"
+msgid ""
+"  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
+msgstr ""
+"  -P, --service     TCP služba, kam se připojit (smí být číselný TCP port)\n"
 
 #: options.c:643
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
@@ -2105,7 +2203,8 @@ msgstr "  -E, --envelope    hlavička adresy z obálky\n"
 
 #: options.c:646
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
-msgstr "  -Q, --qvirtual    předpona, kterou odstranit z místního id uživatelů\n"
+msgstr ""
+"  -Q, --qvirtual    předpona, kterou odstranit z místního id uživatelů\n"
 
 #: options.c:647
 msgid "      --principal   mail service principal\n"
@@ -2113,7 +2212,9 @@ msgstr "      --principal   principal poštovní služby\n"
 
 #: options.c:648
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
-msgstr "      --tracepolls  přidat informace pro sledování stahování do hlavičky Received\n"
+msgstr ""
+"      --tracepolls  přidat informace pro sledování stahování do hlavičky "
+"Received\n"
 
 #: options.c:650
 msgid "  -u, --username    specify users's login on server\n"
@@ -2189,7 +2290,8 @@ msgstr "      --fastuidl    hledat UIDL binárně\n"
 
 #: options.c:669
 msgid "  -e, --expunge     set max deletions between expunges\n"
-msgstr "  -e, --expunge     nastavit maximální počet odstraňování mezi čištěními\n"
+msgstr ""
+"  -e, --expunge     nastavit maximální počet odstraňování mezi čištěními\n"
 
 #: options.c:670
 msgid "  -m, --mda         set MDA to use for forwarding\n"
@@ -2209,11 +2311,16 @@ msgstr "  -r, --folder      název vzdálené složky\n"
 
 #: options.c:674
 msgid "      --showdots    show progress dots even in logfiles\n"
-msgstr "      --showdots    zobrazovat tečky průběhu i v souborech se záznamy\n"
+msgstr ""
+"      --showdots    zobrazovat tečky průběhu i v souborech se záznamy\n"
 
 #: pop3.c:355
-msgid "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead of TOP.\n"
-msgstr "VAROVÁNÍ: Nalezen „Maillennium POP3/PROXY server“, použiji příkaz RETR namísto TOP.\n"
+msgid ""
+"Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+"of TOP.\n"
+msgstr ""
+"VAROVÁNÍ: Nalezen „Maillennium POP3/PROXY server“, použiji příkaz RETR "
+"namísto TOP.\n"
 
 #: pop3.c:454
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
@@ -2230,7 +2337,8 @@ msgstr "%s: dobrovolný přechod do TLS se nezdařil, zkouším pokračovat.\n"
 
 #: pop3.c:646
 msgid "We've run out of allowed authenticators and cannot continue.\n"
-msgstr "Vyčerpali jsme všechny povolené autentikátory, a tak nemůžeme pokračovat.\n"
+msgstr ""
+"Vyčerpali jsme všechny povolené autentikátory, a tak nemůžeme pokračovat.\n"
 
 #: pop3.c:660
 msgid "Required APOP timestamp not found in greeting\n"
@@ -2295,12 +2403,19 @@ msgid "SDPS not enabled."
 msgstr "SDPS není povoleno."
 
 #: rcfile_y.y:215
-msgid "fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"
-msgstr "fetchmail: přepínač interface je podporován jen v Linuxu (bez IPv6) a FreeBSD\n"
+msgid ""
+"fetchmail: interface option is only supported under Linux (without IPv6) and "
+"FreeBSD\n"
+msgstr ""
+"fetchmail: přepínač interface je podporován jen v Linuxu (bez IPv6) a "
+"FreeBSD\n"
 
 #: rcfile_y.y:222
-msgid "fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"
-msgstr "fetchmail: přepínač monitor je podporován jen v Linuxu (bez IPv6) a FreeBSD\n"
+msgid ""
+"fetchmail: monitor option is only supported under Linux (without IPv6) and "
+"FreeBSD\n"
+msgstr ""
+"fetchmail: přepínač monitor je podporován jen v Linuxu (bez IPv6) a FreeBSD\n"
 
 #: rcfile_y.y:335
 msgid "SSL is not enabled"
@@ -2631,7 +2746,8 @@ msgstr "MDA vrátil nenulový stav %d\n"
 
 #: sink.c:1373
 #, c-format
-msgid "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
+msgid ""
+"Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr "Záhada: MDA pclose vrátil %d a errno %d/%s, nezle zpracovat v %s:%d\n"
 
 #: sink.c:1395
@@ -2771,7 +2887,8 @@ msgstr "Obecné jméno (CN) vydavatele: %s\n"
 
 #: socket.c:626
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
-msgstr "Varování: Obecné jméno (CN) vydavatele je příliš dlouhé (možná zkráceno).\n"
+msgstr ""
+"Varování: Obecné jméno (CN) vydavatele je příliš dlouhé (možná zkráceno).\n"
 
 #: socket.c:628
 msgid "Unknown Issuer CommonName\n"
@@ -2782,95 +2899,96 @@ msgstr "Neznámé obecné jméno (CN) vydavatele\n"
 msgid "Server CommonName: %s\n"
 msgstr "Obecné jméno (CN) serveru: %s\n"
 
-#: socket.c:637
+#: socket.c:638
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Špatný certifikát: Obecné jméno (CN) subjektu je příliš dlouhé!\n"
 
-#: socket.c:643
+#: socket.c:644
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
 msgstr "Špatný certifikát: Obecné jméno subjektu obsahuje NUL, zrušuje se!\n"
 
-#: socket.c:664
+#: socket.c:665
 #, c-format
 msgid "Subject Alternative Name: %s\n"
 msgstr "Alternativní jméno subjektu: %s\n"
 
-#: socket.c:670
+#: socket.c:671
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
-msgstr "Špatný certifikát: Alternativní jméno subjektu obsahuje NUL, zrušuje se!\n"
+msgstr ""
+"Špatný certifikát: Alternativní jméno subjektu obsahuje NUL, zrušuje se!\n"
 
-#: socket.c:698
+#: socket.c:699
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Obecné jméno (CN) serveru neodpovídá: %s != %s\n"
 
-#: socket.c:705
+#: socket.c:706
 msgid "Server name not set, could not verify certificate!\n"
 msgstr "Jméno serveru nenastaveno, nemohu ověřit certifikát!\n"
 
-#: socket.c:710
+#: socket.c:711
 msgid "Unknown Server CommonName\n"
 msgstr "Neznámé obecné jméno (CN) serveru\n"
 
-#: socket.c:712
+#: socket.c:713
 msgid "Server name not specified in certificate!\n"
 msgstr "Jméno serveru není v certifikátu zadáno!\n"
 
-#: socket.c:724
+#: socket.c:725
 msgid "EVP_md5() failed!\n"
 msgstr "EVP_md5() selhalo!\n"
 
-#: socket.c:728
+#: socket.c:729
 msgid "Out of memory!\n"
 msgstr "Nedostatek paměti!\n"
 
-#: socket.c:736
+#: socket.c:737
 msgid "Digest text buffer too small!\n"
 msgstr "Vyrovnávací paměť pro otisk je příliš malá!\n"
 
-#: socket.c:742
+#: socket.c:743
 #, c-format
 msgid "%s key fingerprint: %s\n"
 msgstr "otisk klíče %s: %s\n"
 
-#: socket.c:746
+#: socket.c:747
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "otisky %s odpovídají.\n"
 
-#: socket.c:748
+#: socket.c:749
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "otisky %s neodpovídají.\n"
 
-#: socket.c:757
+#: socket.c:758
 #, c-format
 msgid "Server certificate verification error: %s\n"
 msgstr "Chyba ověřování certifikátu serveru: %s\n"
 
-#: socket.c:763
+#: socket.c:764
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "neznámý vydavatel (prvních %d znaků): %s\n"
 
-#: socket.c:850
+#: socket.c:851
 msgid "File descriptor out of range for SSL"
 msgstr "Deskriptor souboru mimo rozsah pro SSL"
 
-#: socket.c:866
+#: socket.c:867
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Zadán neplatný protokol SSL `%s', používám implicitní (SSLv23).\n"
 
-#: socket.c:942
+#: socket.c:943
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Ověření certifikátu/otisku bylo nějak přeskočeno!\n"
 
-#: socket.c:1020
+#: socket.c:1021
 msgid "Cygwin socket read retry\n"
 msgstr "Další pokus čtení ze socketu Cygwin\n"
 
-#: socket.c:1023
+#: socket.c:1024
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Další pokus čtení ze socketu Cygwin selhal!\n"
 
@@ -3011,7 +3129,8 @@ msgstr "Zapisuji soubor fetchids.\n"
 #: uid.c:645
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
-msgstr "Chyba při zápisu do souboru fetchids %s, starý soubor ponechán na místě.\n"
+msgstr ""
+"Chyba při zápisu do souboru fetchids %s, starý soubor ponechán na místě.\n"
 
 #: uid.c:649
 #, c-format
