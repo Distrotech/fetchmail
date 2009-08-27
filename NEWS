@@ -56,6 +56,7 @@ fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
   unallocated memory on SSL connections, which caused crashes or program aborts
   on some systems (depending on how initialization and free() of unallocated
   memory is handled in compiler and libc).
+  Workaround for older versions: run in verbose mode.
   Patch courtesy of Thomas Heinz, fixes Gentoo Bug #280760.
   This regression affected only the 6.3.11 release, but not the patch that was
   part of the security announcement fetchmail-SA-2009-01.
@@ -100,6 +101,8 @@ fetchmail 6.3.11 (released 2009-08-06):
 * Convert all non-printable characters in certificate Subject/Issuer
   Common Name or Subject Alternative Name fields to ANSI-C hex escapes (\xnn,
   where nn are hex digits).
+  Note that this change introduces a regression, fixed in 6.3.12.
+  See the 6.3.12 documentation above for details and a workaround.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [zh_CN] Chinese/Simplified (Ji ZhengYu)
