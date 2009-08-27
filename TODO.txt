@@ -150,7 +150,11 @@ questionable:
   This probably entails some form of extended user mapping inside 
   fetchmail, for map_name() in transact.c, and possibly 
   find_server_names() ibidem.
+- more verbose diagnostics, what, why, how, ... (what does fetchmail do, what
+  does it expect, what does it get instead, what does that mean, how can the
+  user fix it; references to the manual)
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
 - consolidate multidrop documentation
+- HOWTO (on configuration, and on SSL in particular)
