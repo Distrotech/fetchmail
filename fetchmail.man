@@ -484,7 +484,7 @@ to use the \fBc_rehash\fP tool (which comes with OpenSSL in the tools/
 subdirectory).
 .TP
 .B \-\-sslcommonname <common name>
-(Keyword: sslcommonname)
+(Keyword: sslcommonname; since v6.3.9)
 .br
 Use of this option is discouraged. Before using it, contact the
 administrator of your upstream server and ask for a proper SSL
