@@ -11,6 +11,9 @@ soon - MUST:
 - check if smtpname and smtpaddress in particular work as advertised,
   thread "Fetchmail with Postfix virtual users" around 2009-09-23 on
   fetchmail-users@, by Joost Roeleveld and Gerard Seibert.
+- virtual domain DOCUMENTATION (rewriting @example.com to
+  @virtual.example.com possible? Joost Roeleveld, thread "Fetchmail with
+  Postfix virtual users" around 2009-09-23 on fetchmail-users@).
 
 soon - SHOULD:
 - replace " \n" by "\n" (and similar) - but make sure translators have
