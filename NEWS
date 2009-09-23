@@ -69,6 +69,8 @@ fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
 * Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
   #569899, reported by Akihiro Terasaki.
 * Replace control characters in SMTP replies by '?'.
+* Fetchmailconf: Fix descriptions for smtpaddress and smtpname options;
+  smtpaddress is for RCPT TO, not MAIL FROM. Found by Gerard Seibert.
 
 # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
 * [ca]    Catalan (Ernest Adrogué Calveras)

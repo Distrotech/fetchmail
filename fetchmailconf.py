@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.55 $Revision$"
+version = "1.56 $Revision$"
 
 from Tkinter import *
 from Dialog import *
@@ -1689,9 +1689,9 @@ class UserEdit(Frame, MyWidget):
 	    Label(targwin, text="Domains to fetch from (ODMR/ETRN only)").pack(side=TOP)
 	    ListEdit("Domains:",
 		     self.user.fetchdomains, None, None, targwin, None)
-	    LabeledEntry(targwin, 'Append to MAIL FROM line:',
+	    LabeledEntry(targwin, 'Use domain on RCPT TO line:',
 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
-	    LabeledEntry(targwin, 'Set RCPT To address:',
+	    LabeledEntry(targwin, 'Set fixed RCPT TO address:',
 		     self.smtpname, '26').pack(side=TOP, fill=X)
 	    LabeledEntry(targwin, 'Connection setup command:',
 		     self.preconnect, '26').pack(side=TOP, fill=X)
