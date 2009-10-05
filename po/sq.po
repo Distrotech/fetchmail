@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.3.8\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2008-02-29 00:24+0200\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -53,7 +53,12 @@ msgstr "çkoduar si  %s\n"
 msgid "kerberos error %s\n"
 msgstr "gabim kerberos %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, fuzzy, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [shërbyesi thotë '%*s'] \n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [shërbyesi thotë '%*s'] \n"
@@ -2808,15 +2813,15 @@ msgstr ""
 "-- \n"
 "Demoni Fetchmail"
 
-#: smtp.c:80
+#: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "Mirëfilltësim ESMTP CRAM-MD5...\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr "Shërbyesi hodhi poshtë urdhrin AUTH.\n"
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr "Përgjigje base64 e gabuar prej shërbyesit.\n"
 
@@ -2833,7 +2838,7 @@ msgstr "Mirëfilltësim ESMTP PLAIN...\n"
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr "Mirëfilltësim ESMTP LOGIN...\n"
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
 msgstr "gabim protokolli dëgjuesi smtp\n"
 

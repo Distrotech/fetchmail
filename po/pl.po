@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.11\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2009-08-06 19:09+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -56,7 +56,12 @@ msgstr "rozkodowany jako %s\n"
 msgid "kerberos error %s\n"
 msgstr "b³±d Kerberosa: %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, fuzzy, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%*s'] \n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%*s'] \n"
@@ -2822,15 +2827,15 @@ msgstr ""
 "-- \n"
 "Demon Fetchmaila"
 
-#: smtp.c:80
+#: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "Uwierzytelnienie ESMTP CRAM-MD5...\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr "Serwer odrzuci³ polecenie AUTH.\n"
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr "B³êdna odpowied¼ base64 z serwera.\n"
 
@@ -2847,7 +2852,7 @@ msgstr "Uwierzytelnienie ESMTP PLAIN...\n"
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr "Uwierzytelnienie ESMTP LOGIN...\n"
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
 msgstr "b³±d protoko³u serwera smtp\n"
 

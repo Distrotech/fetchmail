@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2003-10-17 17:27+0200\n"
 "Last-Translator: Engin Gündüz <engin@ripe.net>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -53,7 +53,12 @@ msgstr "%s olarak kodu çözüldü\n"
 msgid "kerberos error %s\n"
 msgstr "kerberos hatasý %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, fuzzy, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [sunucu '%*s' diyor] \n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [sunucu '%*s' diyor] \n"
@@ -2869,15 +2874,15 @@ msgstr ""
 "--\n"
 "\t\t\t\tFetchmail Daemon'u\n"
 
-#: smtp.c:80
+#: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "ESMTP CRAM-Md5 Kimlik kanýtlamasý...\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr "Sunucu AUTH komutunu reddetti.\n"
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr "Sunucudan geçersiz base64 yanýtý.\n"
 
@@ -2894,7 +2899,7 @@ msgstr "ESMTP PLAIN Kimlik kanýtlamasý...\n"
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr "ESMTP LOGIN Kimlik kanýtlamasý...\n"
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
 msgstr "smtp dinleyicisi protokol hatasý\n"
 

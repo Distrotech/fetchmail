@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.10-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2009-05-27 21:15+0700\n"
 "Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -53,7 +53,12 @@ msgstr "diawasandi sebagai %s\n"
 msgid "kerberos error %s\n"
 msgstr "galat kerberos %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, fuzzy, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [server berkata '%*s'] \n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [server berkata '%*s'] \n"
@@ -2747,15 +2752,15 @@ msgstr ""
 "-- \n"
 "Jurik Fetchmail"
 
-#: smtp.c:80
+#: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "Otentikasi ESMTP CRAM-MD5...\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr "Server menolak perintah AUTH.\n"
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr "Balasan base64 buruk dari server.\n"
 
@@ -2772,7 +2777,7 @@ msgstr "Otentikasi ESMTP PLAIN...\n"
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr "Otentikasi ESMTP LOGIN...\n"
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
 msgstr "galat protokol pendengar smtp\n"
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.10-beta1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2009-05-26 18:57+0200\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -55,7 +55,12 @@ msgstr "decoded as %s\n"
 msgid "kerberos error %s\n"
 msgstr "kerberos error %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [server says '%s'] \n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [server says '%*s'] \n"
@@ -2722,15 +2727,15 @@ msgstr ""
 "-- \n"
 "The Fetchmail Daemon"
 
-#: smtp.c:80
+#: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "ESMTP CRAM-MD5 Authentication...\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr "Server rejected the AUTH command.\n"
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr "Bad base64 reply from server.\n"
 
@@ -2747,7 +2752,7 @@ msgstr "ESMTP PLAIN Authentication...\n"
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr "ESMTP LOGIN Authentication...\n"
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
 msgstr "smtp listener protocol error\n"
 
@@ -2850,9 +2855,8 @@ msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Bad certificate: Subject CommonName too long!\n"
 
 #: socket.c:644
-#, fuzzy
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
-msgstr "Bad certificate: Subject CommonName too long!\n"
+msgstr "Bad certificate: Subject CommonName contains NUL, aborting!\n"
 
 #: socket.c:665
 #, c-format
@@ -2860,9 +2864,8 @@ msgid "Subject Alternative Name: %s\n"
 msgstr ""
 
 #: socket.c:671
-#, fuzzy
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
-msgstr "Bad certificate: Subject CommonName too long!\n"
+msgstr "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
 
 #: socket.c:699
 #, c-format
@@ -2923,7 +2926,7 @@ msgid "File descriptor out of range for SSL"
 msgstr "File descriptor out of range for SSL"
 
 #: socket.c:867
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 

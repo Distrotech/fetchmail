@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.3.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2008-11-22 14:41+0100\n"
 "Last-Translator: Vincenzo Campanella <vinz65@gmail.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -57,7 +57,12 @@ msgstr "decodificato come %s\n"
 msgid "kerberos error %s\n"
 msgstr "errore di kerberos %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [il server ha risposto «%s»]\n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [il server ha risposto «%*s»]\n"
@@ -2883,15 +2888,15 @@ msgstr ""
 "--\n"
 "Il demone di Fetchmail"
 
-#: smtp.c:80
+#: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "Autenticazione ESMPT CRAM-MD5 in corso\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr "Il server ha rifiutato il comando AUTH.\n"
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr "Risposta base64 dal server non valida.\n"
 
@@ -2908,7 +2913,7 @@ msgstr "Autenticazione ESMPT PLAIN in corso\n"
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr "Autenticazione ESMTP LOGIN in corso\n"
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
 msgstr "errore di protocollo dell'ascoltatore SMTP\n"
 

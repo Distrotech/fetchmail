@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-5.4.4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
+"POT-Creation-Date: 2009-08-24 21:16+0200\n"
 "PO-Revision-Date: 2000-07-28 09:40-03:00\n"
 "Last-Translator: Marcia Norie Nakaza <norie@conectiva.com.br>\n"
 "Language-Team: pt_BR <ldp-br@bazar.conectiva.com.br>\n"
@@ -55,7 +55,12 @@ msgstr "acordado em %s\n"
 msgid "kerberos error %s\n"
 msgstr "erro kerberos %s\n"
 
-#: driver.c:249 driver.c:254
+#: driver.c:249
+#, c-format
+msgid "krb5_sendauth: %s [server says '%s'] \n"
+msgstr "krb5_sendauth: %s [servidor informa '%s'] \n"
+
+#: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
 msgstr "krb5_sendauth: %s [servidor informa '%*s'] \n"
@@ -2833,16 +2838,16 @@ msgid ""
 "The Fetchmail Daemon"
 msgstr ""
 
-#: smtp.c:80
+#: smtp.c:81
 #, fuzzy
 msgid "ESMTP CRAM-MD5 Authentication...\n"
 msgstr "Autenticação CRAM-MD5 é suportada\n"
 
-#: smtp.c:87 smtp.c:138
+#: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
 msgstr ""
 
-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
+#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
 msgstr ""
 
@@ -2859,7 +2864,7 @@ msgstr ""
 msgid "ESMTP LOGIN Authentication...\n"
 msgstr ""
 
-#: smtp.c:339 smtp.c:362
+#: smtp.c:349 smtp.c:377
 #, fuzzy
 msgid "smtp listener protocol error\n"
 msgstr "erro de protocolo\n"
