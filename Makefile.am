@@ -47,7 +47,7 @@ DEPENDENCIES=		libfm.a $(LIBOBJS)
 check_PROGRAMS=
 
 TESTS=			t.smoke t.validate-xhtml
-TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)"
+TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 if NEED_TRIO
 noinst_LIBRARIES+=	libtrio.a
@@ -116,8 +116,6 @@ netrc_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 mxget_SOURCES=	mxget.c
 mxget_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
-# For some losing Unix makes.
-SHELL = /bin/sh
 @SET_MAKE@
 
 fetchmail.spec: Makefile.in specgen.sh
