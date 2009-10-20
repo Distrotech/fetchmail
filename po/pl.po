@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.11\n"
+"Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2009-08-24 21:16+0200\n"
-"PO-Revision-Date: 2009-08-06 19:09+0200\n"
+"PO-Revision-Date: 2009-10-06 17:39+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -57,9 +57,9 @@ msgid "kerberos error %s\n"
 msgstr "b³±d Kerberosa: %s\n"
 
 #: driver.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s'] \n"
-msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%*s'] \n"
+msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%s'] \n"
 
 #: driver.c:254
 #, c-format

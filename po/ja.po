@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.11\n"
+"Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2009-08-24 21:16+0200\n"
-"PO-Revision-Date: 2009-08-06 16:55+0700\n"
+"PO-Revision-Date: 2009-10-06 13:54+0700\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -56,14 +56,14 @@ msgid "kerberos error %s\n"
 msgstr "kerberos エラー : %s\n"
 
 #: driver.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s'] \n"
-msgstr "krb5_sendauth: %s [サーバの応答  '%*s']\n"
+msgstr "krb5_sendauth: %s [サーバの応答  '%s'] \n"
 
 #: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
-msgstr "krb5_sendauth: %s [サーバの応答  '%*s']\n"
+msgstr "krb5_sendauth: %s [サーバの応答  '%*s'] \n"
 
 #: driver.c:335
 msgid "Subject: Fetchmail oversized-messages warning"

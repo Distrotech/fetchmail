@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.11\n"
+"Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2009-08-24 21:16+0200\n"
-"PO-Revision-Date: 2009-09-18 23:16+0930\n"
+"PO-Revision-Date: 2009-10-06 18:13+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -57,9 +57,9 @@ msgid "kerberos error %s\n"
 msgstr "lỗi kerberos %s\n"
 
 #: driver.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s'] \n"
-msgstr "krb5_sendauth: %s [trình phục vụ nói « %*s »]\n"
+msgstr "krb5_sendauth: %s [trình phục vụ nói « %s »]\n"
 
 #: driver.c:254
 #, c-format

@@ -11,10 +11,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.11\n"
+"Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2009-08-24 21:16+0200\n"
-"PO-Revision-Date: 2009-08-06 11:09+0200\n"
+"PO-Revision-Date: 2009-10-06 09:18+0200\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -60,14 +60,14 @@ msgid "kerberos error %s\n"
 msgstr "chyba kerbera %s\n"
 
 #: driver.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s'] \n"
-msgstr "krb5_sendauth: %s [server říká '%*s'] \n"
+msgstr "krb5_sendauth: %s [server říká „%s“] \n"
 
 #: driver.c:254
 #, c-format
 msgid "krb5_sendauth: %s [server says '%*s'] \n"
-msgstr "krb5_sendauth: %s [server říká '%*s'] \n"
+msgstr "krb5_sendauth: %s [server říká „%*s“] \n"
 
 # XXX: This is e-mail header as literal. Dont't touch "Subject: " header name.
 #: driver.c:335

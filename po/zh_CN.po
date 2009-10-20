@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.11\n"
+"Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2009-08-24 21:16+0200\n"
-"PO-Revision-Date: 2009-09-23 15:42中国标准时间\n"
+"PO-Revision-Date: 2009-10-12 11:45中国标准时间\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
 "sourceforge.net>\n"
@@ -3045,6 +3045,3 @@ msgstr "malloc 失败\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc 失败\n"
-
-#~ msgid "message delimiter found while scanning headers\n"
-#~ msgstr "查找邮件头时发现邮件分隔符\n"

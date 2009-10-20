@@ -2978,9 +2978,9 @@ msgid "File descriptor out of range for SSL"
 msgstr ""
 
 #: socket.c:867
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
-msgstr "©pecifikovaný neplatný protokol `%s'.\n"
+msgstr ""
 
 #: socket.c:943
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
@@ -3098,7 +3098,7 @@ msgstr "Doèasný zoznam UID-ov:"
 #: uid.c:517 uid.c:569
 #, fuzzy, c-format
 msgid "Merged UID list from %s:"
-msgstr "Nový zoznam UID z %s:"
+msgstr "Starý zoznam UID z %s:"
 
 #: uid.c:519
 #, c-format
@@ -3153,9 +3153,6 @@ msgstr "malloc zlyhal\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc zlyhal\n"
-
-#~ msgid "message delimiter found while scanning headers\n"
-#~ msgstr "oddeµovaè správy nájdený pri prezeraní záhlaví\n"
 
 #~ msgid ""
 #~ "Subject: Fetchmail oversized-messages warning.\n"
@@ -3252,6 +3249,9 @@ msgstr "realloc zlyhal\n"
 
 #~ msgid "fetchmail: network security support is disabled\n"
 #~ msgstr "fetchmail: podpora sie»ovej bezpeènosti je zakázaná\n"
+
+#~ msgid "message delimiter found while scanning headers\n"
+#~ msgstr "oddeµovaè správy nájdený pri prezeraní záhlaví\n"
 
 #~ msgid "lstat: %s: %s\n"
 #~ msgstr "lstat: %s: %s\n"
