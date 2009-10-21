@@ -47,6 +47,19 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.13 (not yet released):
+
+# TRANSLATION UPDATES
+* [cs]    Czech, by Petr Pisar
+* [zh_CN] Chinese (simplified), by Ji ZhengYu
+* [nl]    Dutch, by Erwin Poeze
+* [id]    Indonesian, by Andhika Padmawan
+* [ja]    Japanese, by Takeshi Hamasaki
+* [pl]    Polish, by Jakub Bogusz
+* [es]    Spanish (Castilian), by Franciso Molinero
+* [vi]    Vietnamese, by Clytie Siddall
+
+
 fetchmail 6.3.12 (released 2009-10-05):
 
 # REGRESSION FIXES
