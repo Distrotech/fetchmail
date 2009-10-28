@@ -49,6 +49,12 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.13 (not yet released):
 
+# REGRESSION FIXES
+* The multiline SMTP error fix in release 6.3.12 caused fetchmail to lose
+  message codes 400..599 and treat all of these as temporary error. This would
+  cause messages to be left on the server even if softbounce was turned off.
+  Reported by Thomas Jarosch.
+
 # TRANSLATION UPDATES
 * [cs]    Czech, by Petr Pisar
 * [zh_CN] Chinese (simplified), by Ji ZhengYu

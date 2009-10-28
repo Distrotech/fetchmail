@@ -352,16 +352,16 @@ int SMTP_ok(int sock, char smtp_mode, int mintimeout)
 
 	last_smtp_ok = time((time_t *) NULL);
 
+	strlcat(smtp_response, reply,  sizeof(smtp_response));
+
 	if (strchr("123", reply[0])
 		&& isdigit((unsigned char)reply[1])
 		&& isdigit((unsigned char)reply[2])
 		&& strchr(" ", reply[3])) /* matches space and \0 */ {
-	    strlcat(smtp_response, reply, sizeof(smtp_response));
 	    return SM_OK;
 	} else if (reply[3] != '-')
 	    return SM_ERROR;
 
-	strlcat(smtp_response, reply,  sizeof(smtp_response));
 	strlcat(smtp_response, "\r\n", sizeof(smtp_response));
 
 	/* set an alarm for smtp ok */
