@@ -889,7 +889,7 @@ then
   fi
   AC_DEFINE(GSSAPI,1,Define if you want GSSAPI authentication)
   if test "$with_gssapi" != yes ; then
-    CPPFLAGS="$CPPFLAGS-I$with_gssapi/include"
+    CPPFLAGS="$CPPFLAGS -I$with_gssapi/include"
   fi
   AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
   if test "$ac_cv_header_gssapi_h" = "yes"; then
