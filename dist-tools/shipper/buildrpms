@@ -24,6 +24,8 @@ sed "s|~/.rpmmacros|$MACROFILE|" /usr/lib/rpm/rpmrc >"$RCFILE"
 echo "%_topdir $TMPDIR" >"$MACROFILE"
 echo "%_topdir $TMPDIR" >"$MACROFILE"
 
+ARCH=--target=$(uname -m)
+
 #  build RPMs
 rpmbuild --rcfile "$RCFILE" $ARCH -ta $TARBALL \
 || rpm --rcfile "$RCFILE" $ARCH -ta $TARBALL
@@ -31,9 +33,9 @@ status=$?
 
 if [ $status = '0' ]
 then
-    # copy RPMs to this directory
-    cp "$TMPDIR"/RPMS/*/*.rpm .
-    cp "$TMPDIR"/SRPMS/*.rpm .
+    # move RPMs to this directory
+    mv "$TMPDIR"/RPMS/*/*.rpm .
+    mv "$TMPDIR"/SRPMS/*.rpm .
 fi
 
 #  clean up build directory

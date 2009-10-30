@@ -5,11 +5,10 @@
 # in RELEASE_NOTES
 #
 use POSIX qw(strftime);
-$timezone = strftime('%z', localtime) || "-0500";
 $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
 
 $project = "fetchmail";
-$svnrepos = "https://decoy.wox.org/svn/$project";
+$svnrepos = "http://mknod.org/svn/$project";
 $website = "http://developer.berlios.de/projects/$project";
 $mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
 
@@ -38,7 +37,7 @@ while ($i = shift @ARGV)
 
 # extract version from source
 $version=`grep 'AC_INIT' configure.ac`;
-$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\)/;
+$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\,.*\)/;
 $version = $1;
 die "cannot determine version" unless defined $1;
 $tag = "RELEASE_$version";
@@ -61,11 +60,13 @@ if ($versions[0] eq $tag) {
     $oldtag = $versions[0];
 }
 
-$ENV{PATH} .= ":./dist-tools:./dist-tools/shipper:.";
+$pwd = `pwd`; chomp $pwd;
+
+$ENV{PATH} .= ":$pwd/dist-tools:$pwd/dist-tools/shipper";
 
 print "Building $version release, tag $tag, previous tag $oldtag\n";
 
-if (-d autom4te.cache) {
+if (-d "autom4te.cache") {
     system("rm -rf autom4te.cache")
 	and die "Failure in removing autom4te.cache";
 }
@@ -74,22 +75,13 @@ if (system("autoreconf -isv")) {
 	die("Failure in regenerating autoconf files\n");
 }
 
-if (system("./configure && make clean && make -C po update-po && make clean")) {
-	die("Failure in translation-file rebuild\n");
-}
-
 print "### Test-building the software...\n";
-if (system("./configure && make clean && make distcheck")) {
+if (system("mkdir -p autobuild && cd autobuild && ../configure -C --silent && make -s clean && make distcheck")) {
 	die("Compilation failure\n");
 }
 
-print "### Building the distribution...\n";
-if (system("make dist $null")) {
-	die("Distribution-build failure\n");
-}
-
 print "### Building the RPMs...\n";
-if (system("buildrpms $project-${version}.tar.gz $null")) {
+if (system("cd autobuild && cp ../fetchmail.xpm . && buildrpms $project-${version}.tar.bz2 $null")) {
 	die("RPM-build failure\n");
 }
 
@@ -100,10 +92,10 @@ From: $mailfrom
 Subject: The $version release of $project is available
 
 The $version release of $project is now available at the usual locations,
-including <URL:$website>.
+including <$website>.
 
 The source archive is available at:
-<URL:$website/$project-${version}.tar.gz>
+<$website/$project-${version}.tar.gz>
 
 Here are the release notes:
 
@@ -152,24 +144,11 @@ if ($diffs) {
 	    ." -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$"
 	    ." -o ANNOUNCE.EMAIL";
 } else {
-	rename("$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
+	system(mv, "$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
 }
-#system("chown esr ANNOUNCE.EMAIL");
-#chmod(0700, "ANNOUNCE.EMAIL");
 
 #unlink("$tmp/$project.PREAMBLE.$$");
 unlink("$tmp/$project.DIFFS.$$");
-
-print "Building index page...\n";
-system("rm -f index.html; indexgen.sh");
-
-if (-r "testsites") {
-	print "Building test server list...\n";
-	system("rm -f testservers.html; testservers-gen.sh >testservers.html");
-}
-
-print "Making activity graph...";
-system "growthplot";
 
 print "Done\n";
 
