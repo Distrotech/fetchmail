@@ -1,10 +1,21 @@
 To do a release:
 
-1. Torture-test the code against the list of test sites usuing the
-   torturetest script.
+- Update NEWS, configure.ac, and fetchmail.man, with release number & date.
 
-2. Check in all files to RCS with an appropriate release label.
+- Run "perl dist-tools/makerelease" - this entails "make distcheck" and
+  RPM building.
 
-3. Run "makerelease" is root.  Read the script to see what it generates.
+- Commit all files to the VCS.
 
-4. Run "upload" as yourself.
+- Tag the new release and record the revision in RELEASE-VERSIONS
+
+- Upload sig and tarball to ~/public_html/fetchmail/ and edit index.html
+  for the new files, NEWS, and the new release and last update.
+
+- Upload sig and tarball to ftp.berlios.de:/incoming/ and release
+
+- Upload lsm and tarball to Ibiblio
+
+- Update the fetchmail website for version and last update, commit, and upload.
+
+- Announce on freshmeat.

@@ -47,7 +47,7 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.13 (not yet released):
+fetchmail 6.3.13 (released 2009-10-30, 25333 LoC):
 
 # REGRESSION FIXES
 * The multiline SMTP error fix in release 6.3.12 caused fetchmail to lose
@@ -85,6 +85,7 @@ fetchmail 6.3.12 (released 2009-10-05):
   BerliOS Bug #16134.
 * Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
   #569899, reported by Akihiro Terasaki.
+  Note: This fix introduced a regression, fixed in 6.3.13.
 * Replace control characters in SMTP replies by '?'.
 * Fetchmailconf: Fix descriptions for smtpaddress and smtpname options;
   smtpaddress is for RCPT TO, not MAIL FROM. Found by Gerard Seibert.
