@@ -14,8 +14,9 @@ To do a release:
 
 - Upload sig and tarball to ftp.berlios.de:/incoming/ and release
 
-- Upload lsm and tarball to Ibiblio
+- Upload lsm and tarball to ibiblio.org:/incoming/linux/
 
-- Update the fetchmail website for version and last update, commit, and upload.
+- Update the fetchmail website for version, link to release nodes
+  (update release_id) and last update, commit, and upload.
 
 - Announce on freshmeat.
