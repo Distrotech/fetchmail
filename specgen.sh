@@ -192,7 +192,7 @@ configuration de fetchmail écrite en python.
 %setup -q $setupargs
 
 %build
-%configure --without-included-gettext --without-kerberos --with-ssl
+%configure --without-kerberos --with-ssl
 make
 
 %install
