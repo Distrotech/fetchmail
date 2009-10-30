@@ -140,7 +140,9 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 # extra directories to ship
 distdirs = rh-config contrib beos
 
-EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
+EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
+		ucs/README.svn \
+		fetchmail.spec fetchmail.xpm \
 		trio/CHANGES trio/README \
 		strlcpy.3 bighand.png \
 		m4/codeset.m4 \
