@@ -32,15 +32,19 @@ rsync \
     "$BERLIOS_LOGIN@shell.berlios.de:/home/groups/fetchmail/htdocs/" &
 pids="$pids $!"
 
-echo "==>  Uploading website (rsync) to TU Dortmund"
+echo "==>  Uploading website (rsync) to local"
 rsync \
     --chmod=ug=rwX,o=rX,Dg=s --perms \
     --copy-links --times --checksum --verbose \
     --exclude host-scripts \
     --exclude .svn --exclude '*~' --exclude '#*#' \
     * \
-    ma@fat-tony.dt.e-technik.uni-dortmund.de:public_html/fetchmail/info/ &
+    $HOME/public_html/fetchmail/info/ &
 pids="$pids $!"
 
 wait $pids
+
+echo "==>  Synchronizing web dir."
+synchome.sh
+
 echo "==>  Done; check rsync output above for success."
