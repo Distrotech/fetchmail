@@ -47,6 +47,13 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.14 (not yet released):
+
+# TRANSLATION UPDATES
+* [it]    Italian, by Vincenzo Campanella
+
+
+
 fetchmail 6.3.13 (released 2009-10-30, 25333 LoC):
 
 # REGRESSION FIXES
