@@ -134,6 +134,8 @@ questionable:
 - allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
 - CRYPTO: use SASL?
 - make logfile more useful (redirect not only in daemon mode)
+- close/reopen logfile on certain signals (for newsyslog/logrotate
+  support)
 - for virtual mapping, we don't currently support local user aliases or 
   regexp matching with replacement. This would be useful for hosting 
   several virtual domains in one multidrop mailbox, as in 
@@ -159,6 +161,7 @@ questionable:
 - more verbose diagnostics, what, why, how, ... (what does fetchmail do, what
   does it expect, what does it get instead, what does that mean, how can the
   user fix it; references to the manual)
+
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
