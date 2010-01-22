@@ -49,6 +49,16 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.14 (not yet released):
 
+# BUG FIXES
+* The IMAP client no longer skips messages from several IMAP servers including
+  Dovecot if fetchmail's "idle" is in use.  Causes were that fetchmail (a)
+  ignored some untagged responses when it should not (b) relied on EXISTS
+  messages in response to EXPUNGE, which aren't mandated by RFC-3501 (the IMAP
+  standard) and aren't sent by Dovecot either.
+    Fix by Sunil Shetye (the fix also consolidates IMAP response handling,
+  improving overall robustness of the IMAP client), bug report and testing by
+  Matt Doran, with further hints from Timo Sirainen.
+
 # TRANSLATION UPDATES
 * [it]    Italian, by Vincenzo Campanella
 

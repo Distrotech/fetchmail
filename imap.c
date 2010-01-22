@@ -49,7 +49,122 @@ static int actual_deletions = 0;
 static int saved_timeout = 0, idle_timeout = 0;
 static time_t idle_start_time = 0;
 
-static int imap_ok(int sock, char *argbuf)
+static int imap_untagged_response(int sock, const char *buf)
+/* interpret untagged status responses */
+{
+    /* For each individual check, use a BLANK before the word to avoid
+     * confusion with the \Recent flag or similar */
+    if (stage == STAGE_GETAUTH
+	    && !strncmp(buf, "* CAPABILITY", 12))
+    {
+	strlcpy(capabilities, buf + 12, sizeof(capabilities));
+    }
+    else if (stage == STAGE_GETAUTH
+	    && !strncmp(buf, "* PREAUTH", 9))
+    {
+	preauth = TRUE;
+    }
+    else if (stage != STAGE_LOGOUT
+	    && !strncmp(buf, "* BYE", 5))
+    {
+	/* log the unexpected bye from server as we expect the
+	 * connection to be cut-off after this */
+	if (outlevel > O_SILENT)
+	    report(stderr, GT_("bye from imap server: %s"), buf + 5);
+    }
+    else if (strstr(buf, " EXISTS"))
+    {
+	count = atoi(buf+2);
+	/*
+	 * Don't trust the message count passed by the server.
+	 * Without this check, it might be possible to do a
+	 * DNS-spoofing attack that would pass back a ridiculous 
+	 * count, and allocate a malloc area that would overlap
+	 * a portion of the stack.
+	 */
+	if ((unsigned)count > INT_MAX/sizeof(int))
+	{
+	    report(stderr, GT_("bogus message count!"));
+	    return(PS_PROTOCOL);
+	}
+	if ((recentcount = count - oldcount) < 0)
+	    recentcount = 0;
+
+	/*
+	 * Nasty kluge to handle RFC2177 IDLE.  If we know we're idling
+	 * we can't wait for the tag matching the IDLE; we have to tell the
+	 * server the IDLE is finished by shipping back a DONE when we
+	 * see an EXISTS.  Only after that will a tagged response be
+	 * shipped.  The idling flag also gets cleared on a timeout.
+	 */
+	if (stage == STAGE_IDLE)
+	{
+	    /* If IDLE isn't supported, we were only sending NOOPs anyway. */
+	    if (has_idle)
+	    {
+		/* we do our own write and report here to disable tagging */
+		SockWrite(sock, "DONE\r\n", 6);
+		if (outlevel >= O_MONITOR)
+		    report(stdout, "IMAP> DONE\n");
+	    }
+
+	    mytimeout = saved_timeout;
+	    stage = STAGE_GETRANGE;
+	}
+    }
+    /* we now compute recentcount as a difference between
+     * new and old EXISTS, hence disable RECENT check */
+# if 0
+    else if (strstr(buf, " RECENT"))
+    {
+	recentcount = atoi(buf+2);
+    }
+# endif
+    else if (strstr(buf, " EXPUNGE"))
+    {
+	/* the response "* 10 EXPUNGE" means that the currently
+	 * tenth (i.e. only one) message has been deleted */
+	if (atoi(buf+2) > 0)
+	{
+	    if (count > 0)
+		count--;
+	    if (oldcount > 0)
+		oldcount--;
+	    /* We do expect an EXISTS response immediately
+	     * after this, so this updation of recentcount is
+	     * just a precaution! */
+	    if ((recentcount = count - oldcount) < 0)
+		recentcount = 0;
+	    actual_deletions++;
+	}
+    }
+    /*
+     * The server may decide to make the mailbox read-only, 
+     * which causes fetchmail to go into a endless loop
+     * fetching the same message over and over again. 
+     * 
+     * However, for check_only, we use EXAMINE which will
+     * mark the mailbox read-only as per the RFC.
+     * 
+     * This checks for the condition and aborts if 
+     * the mailbox is read-only. 
+     *
+     * See RFC 2060 section 6.3.1 (SELECT).
+     * See RFC 2060 section 6.3.2 (EXAMINE).
+     */ 
+    else if (stage == STAGE_GETRANGE
+	    && !check_only && strstr(buf, "[READ-ONLY]"))
+    {
+	return(PS_LOCKBUSY);
+    }
+    else
+    {
+	return(PS_UNTAGGED);
+    }
+    return(PS_SUCCESS);
+}
+
+static int imap_response(int sock, char *argbuf)
 /* parse command response */
 {
     char buf[MSGBUFSIZE+1];
@@ -66,103 +181,23 @@ static int imap_ok(int sock, char *argbuf)
 	    if (islower((unsigned char)*cp))
 		*cp = toupper((unsigned char)*cp);
 
-	/* interpret untagged status responses
-	 * First check if we really have an untagged response, starting
-	 * with "*" SPACE. Then, for each individual check, use a BLANK
-	 * before the word to avoid confusion with the \Recent flag or
-	 * similar */
+	/* untagged responses start with "* " */
 	if (buf[0] == '*' && buf[1] == ' ') {
-	    if (strstr(buf, " CAPABILITY")) {
-		strlcpy(capabilities, buf + 12, sizeof(capabilities));
-	    }
-	    else if (strstr(buf, " EXISTS"))
+	    ok = imap_untagged_response(sock, buf);
+	    if (ok == PS_UNTAGGED)
 	    {
-		count = atoi(buf+2);
-		/*
-		 * Don't trust the message count passed by the server.
-		 * Without this check, it might be possible to do a
-		 * DNS-spoofing attack that would pass back a ridiculous 
-		 * count, and allocate a malloc area that would overlap
-		 * a portion of the stack.
-		 */
-		if ((unsigned)count > INT_MAX/sizeof(int))
+		if (argbuf && stage != STAGE_IDLE && tag[0] != '\0')
 		{
-		    report(stderr, GT_("bogus message count!"));
-		    return(PS_PROTOCOL);
-		}
-		if ((recentcount = count - oldcount) < 0)
-		    recentcount = 0;
-
-		/*
-		 * Nasty kluge to handle RFC2177 IDLE.  If we know we're idling
-		 * we can't wait for the tag matching the IDLE; we have to tell the
-		 * server the IDLE is finished by shipping back a DONE when we
-		 * see an EXISTS.  Only after that will a tagged response be
-		 * shipped.  The idling flag also gets cleared on a timeout.
-		 */
-		if (stage == STAGE_IDLE)
-		{
-		    /* If IDLE isn't supported, we were only sending NOOPs anyway. */
-		    if (has_idle)
-		    {
-			/* we do our own write and report here to disable tagging */
-			SockWrite(sock, "DONE\r\n", 6);
-			if (outlevel >= O_MONITOR)
-			    report(stdout, "IMAP> DONE\n");
-		    }
-
-		    mytimeout = saved_timeout;
-		    stage = STAGE_FETCH;
+		    /* if there is an unmatched response, pass it back to
+		     * the calling function for further analysis. The
+		     * calling function should call imap_response() again
+		     * to read the remaining response */
+		    strcpy(argbuf, buf);
+		    return(ok);
 		}
 	    }
-	    /* we now compute recentcount as a difference between
-	     * new and old EXISTS, hence disable RECENT check */
-# if 0
-	    else if (strstr(buf, " RECENT"))
-	    {
-		recentcount = atoi(buf+2);
-	    }
-# endif
-	    else if (strstr(buf, " EXPUNGE"))
-	    {
-		/* the response "* 10 EXPUNGE" means that the currently
-		 * tenth (i.e. only one) message has been deleted */
-		if (atoi(buf+2) > 0)
-		{
-		    if (count > 0)
-			count--;
-		    if (oldcount > 0)
-			oldcount--;
-		    /* We do expect an EXISTS response immediately
-		     * after this, so this updation of recentcount is
-		     * just a precaution! */
-		    if (recentcount > 0)
-			recentcount--;
-		    actual_deletions++;
-		}
-	    }
-	    else if (strstr(buf, " PREAUTH"))
-	    {
-		preauth = TRUE;
-	    }
-		/*
-		 * The server may decide to make the mailbox read-only, 
-		 * which causes fetchmail to go into a endless loop
-		 * fetching the same message over and over again. 
-		 * 
-		 * However, for check_only, we use EXAMINE which will
-		 * mark the mailbox read-only as per the RFC.
-		 * 
-		 * This checks for the condition and aborts if 
-		 * the mailbox is read-only. 
-		 *
-		 * See RFC 2060 section 6.3.1 (SELECT).
-		 * See RFC 2060 section 6.3.2 (EXAMINE).
-		 */ 
-	    else if (!check_only && strstr(buf, "[READ-ONLY]"))
-	    {
-		return(PS_LOCKBUSY);
-	    }
+	    else if (ok != PS_SUCCESS)
+		return(ok);
 	}
 
 	if (stage == STAGE_IDLE)
@@ -204,12 +239,24 @@ static int imap_ok(int sock, char *argbuf)
 	{
 	    if (stage == STAGE_GETAUTH) 
 		return(PS_AUTHFAIL);	/* RFC2060, 6.2.2 */
+	    else if (stage == STAGE_GETSIZES)
+		return(PS_SUCCESS);	/* see comments in imap_getpartialsizes() */
 	    else
 		return(PS_ERROR);
 	}
 	else
 	    return(PS_PROTOCOL);
     }
+}
+
+static int imap_ok(int sock, char *argbuf)
+/* parse command response */
+{
+    int ok;
+
+    while ((ok = imap_response(sock, argbuf)) == PS_UNTAGGED)
+	; /* wait for the tagged response */
+    return(ok);
 }
 
 #ifdef NTLM_ENABLE
@@ -713,7 +760,7 @@ static int imap_idle(int sock)
 		report(stdout, "IMAP> DONE\n");
 	    /* reset stage and timeout here: we are not idling any more */
 	    mytimeout = saved_timeout;
-	    stage = STAGE_FETCH;
+	    stage = STAGE_GETRANGE;
 	    /* get OK IDLE message */
 	    ok = imap_ok(sock, NULL);
 	}
@@ -746,7 +793,7 @@ static int imap_idle(int sock)
     /* restore normal timeout value */
     set_timeout(0);
     mytimeout = saved_timeout;
-    stage = STAGE_FETCH;
+    stage = STAGE_GETRANGE;
 
     return(ok);
 }
@@ -864,14 +911,9 @@ static int imap_getrange(int sock,
 
 	/* don't count deleted messages, in case user enabled keep last time */
 	gen_send(sock, "SEARCH UNSEEN NOT DELETED");
-	do {
-	    ok = gen_recv(sock, buf, sizeof(buf));
-	    if (ok != 0)
-	    {
-		report(stderr, GT_("search for unseen messages failed\n"));
-		return(PS_PROTOCOL);
-	    }
-	    else if ((cp = strstr(buf, "* SEARCH")))
+	while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+	{
+	    if ((cp = strstr(buf, "* SEARCH")))
 	    {
 		char	*ep;
 
@@ -904,8 +946,12 @@ static int imap_getrange(int sock,
 		    }
 		}
 	    }
-	} while
-	    (tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
+	}
+	if (ok != 0)
+	{
+	    report(stderr, GT_("search for unseen messages failed\n"));
+	    return(ok);
+	}
 
 	if (outlevel >= O_DEBUG && unseen > 0)
 	    report(stdout, GT_("%u is first unseen\n"), startcount);
@@ -923,6 +969,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 /* capture the sizes of messages #first-#last */
 {
     char buf [MSGBUFSIZE+1];
+    int ok;
 
     /*
      * Some servers (as in, PMDF5.1-9.1 under OpenVMS 6.1)
@@ -954,7 +1001,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
      *	* 1 FETCH (BODY ("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL "7BIT" 35 3))
      *	A006 OK FETCH completed.
      *
-     * To get around this, we terminate the read loop on a NO and count
+     * To get around this, we treat the final NO as success and count
      * on the fact that the sizes array has been preinitialized with a
      * known-bad size value.
      */
@@ -969,23 +1016,12 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	gen_send(sock, "FETCH %d:%d RFC822.SIZE", first, last);
     else /* no unseen messages! */
 	return(PS_SUCCESS);
-    for (;;)
+    while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
     {
 	unsigned int size;
-	int ok, num;
-	char *cp;
+	int num;
 
-	if ((ok = gen_recv(sock, buf, sizeof(buf))))
-	    return(ok);
-	/* we want response matching to be case-insensitive */
-	for (cp = buf; *cp; cp++)
-	    *cp = toupper((unsigned char)*cp);
-	/* an untagged NO means that a message was not readable */
-	if (strstr(buf, "* NO"))
-	    ;
-	else if (strstr(buf, "OK") || strstr(buf, "NO"))
-	    break;
-	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %u)", &num, &size) == 2
+	if (sscanf(buf, "* %d FETCH (RFC822.SIZE %u)", &num, &size) == 2
 	/* some servers (like mail.internode.on.net bld-mail04) return UID information here
 	 *
 	 * IMAP> A0005 FETCH 1 RFC822.SIZE
@@ -1002,8 +1038,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 			GT_("Warning: ignoring bogus data for message sizes returned by the server.\n"));
 	}
     }
-
-    return(PS_SUCCESS);
+    return(ok);
 }
 
 static int imap_getsizes(int sock, int count, int *sizes)
@@ -1194,24 +1229,9 @@ static int imap_trail(int sock, struct query *ctl, const char *tag)
     /* number -= expunged; */
 
     (void)ctl;
-    for (;;)
-    {
-	char buf[MSGBUFSIZE+1], *t;
-	int ok;
+    (void)tag;
 
-	if ((ok = gen_recv(sock, buf, sizeof(buf))))
-	    return(ok);
-
-	/* UW IMAP returns "OK FETCH", Cyrus returns "OK Completed" */
-	if (strncmp(buf, tag, strlen(tag)) == 0) {
-	    t = buf + strlen(tag);
-	    t += strspn(t, " \t");
-	    if (strncmp(t, "OK", 2) == 0)
-		break;
-	}
-    }
-
-    return(PS_SUCCESS);
+    return imap_ok(sock, NULL);
 }
 
 static int imap_delete(int sock, struct query *ctl, int number)
