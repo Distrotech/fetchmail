@@ -59,6 +59,10 @@ fetchmail 6.3.14 (not yet released):
   improving overall robustness of the IMAP client), bug report and testing by
   Matt Doran, with further hints from Timo Sirainen.
 
+# DOCUMENTATION
+* The README.SSL document was revised for grammar, spelling, and clarity.
+  Courtesy of Robert Mullin.
+
 # TRANSLATION UPDATES
 * [it]    Italian, by Vincenzo Campanella
 
