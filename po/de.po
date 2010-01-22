@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.10-beta1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+"POT-Creation-Date: 2010-01-22 03:03+0100\n"
 "PO-Revision-Date: 2009-05-26 00:53+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -447,7 +447,7 @@ msgstr " (%d Bytes).\n"
 msgid "No mail for %s\n"
 msgstr "Keine Post für %s\n"
 
-#: driver.c:1393 imap.c:90
+#: driver.c:1393 imap.c:87
 msgid "bogus message count!"
 msgstr "ungültige Nachrichtenanzahl!"
 
@@ -1726,103 +1726,108 @@ msgstr "Fehler beim Freigeben der Beglaubigungen\n"
 msgid "fetchmail: thread sleeping for %d sec.\n"
 msgstr "fetchmail: Thread schläft für %d Sek.\n"
 
-#: imap.c:326
+#: imap.c:73
+#, c-format
+msgid "Received BYE response from IMAP server: %s"
+msgstr "\"BYE\"-Antwort vom IMAP-Server erhalten: %s"
+
+#: imap.c:373
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Protokoll identifiziert als IMAP4 rev 1\n"
 
-#: imap.c:332
+#: imap.c:379
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Protokoll identifiziert als IMAP4 rev 0\n"
 
-#: imap.c:339
+#: imap.c:386
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Protokoll identifiziert als IMAP2 oder IMAP2BIS\n"
 
-#: imap.c:354
+#: imap.c:401
 msgid "will idle after poll\n"
 msgstr "werde nach Abfrage untätig sein\n"
 
-#: imap.c:446 pop3.c:518
+#: imap.c:493 pop3.c:518
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: Upgrade auf TLS erfolgreich.\n"
 
-#: imap.c:455 pop3.c:527
+#: imap.c:502 pop3.c:527
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: Upgrade auf TLS fehlgeschlagen.\n"
 
-#: imap.c:459
+#: imap.c:506
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 "%s: opportunistisches Upgrade auf TLS fehlgeschlagen, versuche Fortsetzung.\n"
 
-#: imap.c:579
+#: imap.c:626
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Benötigte OTP-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:601 pop3.c:385
+#: imap.c:648 pop3.c:385
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Benötigte NTLM-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:610
+#: imap.c:657
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Benötigte LOGIN-Fähigkeit nicht vom Server unterstützt\n"
 
-#: imap.c:676
+#: imap.c:723
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "unerwartete Expunge-Bestätigung (%d tatsächlich != %d erwartet)\n"
 
-#: imap.c:782 imap.c:841
+#: imap.c:829 imap.c:888
 msgid "re-poll failed\n"
 msgstr "erneute Abfrage fehlgeschlagen\n"
 
-#: imap.c:790 imap.c:846
+#: imap.c:837 imap.c:893
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d Nachricht wartet nach erneuter Abfrage\n"
 msgstr[1] "%d Nachrichten warten nach erneuter Abfrage\n"
 
-#: imap.c:807
+#: imap.c:854
 msgid "mailbox selection failed\n"
 msgstr "Postfach-Auswahl fehlgeschlagen\n"
 
-#: imap.c:811
+#: imap.c:858
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d Nachricht wartet nach der ersten Abfrage\n"
 msgstr[1] "%d Nachrichten warten nach der ersten Abfrage\n"
 
-#: imap.c:825
+#: imap.c:872
 msgid "expunge failed\n"
 msgstr "Säubern fehlgeschlagen\n"
 
-#: imap.c:829
+#: imap.c:876
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d Nachricht wartet nach dem Löschen\n"
 msgstr[1] "%d Nachrichten warten nach dem Löschen\n"
 
-#: imap.c:871
-msgid "search for unseen messages failed\n"
-msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
-
-#: imap.c:899
+#: imap.c:941
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu ist ungesehen\n"
 
-#: imap.c:911 pop3.c:889
+#: imap.c:952
+msgid "search for unseen messages failed\n"
+msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
+
+#: imap.c:957 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
 
-#: imap.c:1002
+#: imap.c:1038
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr "Warnung: ignoriere falsche Größendaten vom Server.\n"

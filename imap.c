@@ -70,7 +70,7 @@ static int imap_untagged_response(int sock, const char *buf)
 	/* log the unexpected bye from server as we expect the
 	 * connection to be cut-off after this */
 	if (outlevel > O_SILENT)
-	    report(stderr, GT_("bye from imap server: %s"), buf + 5);
+	    report(stderr, GT_("Received BYE response from IMAP server: %s"), buf + 5);
     }
     else if (strstr(buf, " EXISTS"))
     {
