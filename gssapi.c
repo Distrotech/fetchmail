@@ -24,7 +24,7 @@
 #  ifdef HAVE_GSS_H
 #    include <gss.h>
 #  else
-#  ifdef HAVE_GSSAPI_H
+#  if defined(HAVE_GSSAPI_H) && !defined(HAVE_GSSAPI_GSSAPI_H)
 #    include <gssapi.h>
 #  endif
 #  ifdef HAVE_GSSAPI_GSSAPI_H
