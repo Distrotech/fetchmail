@@ -65,7 +65,7 @@ void smtp_close(struct query *ctl, int sayquit)
     batchcount = 0;
 }
 
-void smtp_rset(struct query *ctl)
+static void smtp_rset(struct query *ctl)
 /* reset the mail transaction */
 {
     if (SMTP_rset(ctl->smtp_socket, ctl->smtphostmode) == SM_UNRECOVERABLE)
