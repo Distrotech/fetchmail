@@ -135,9 +135,10 @@ static RETSIGTYPE donothing(int sig)
 
 static void printcopyright(FILE *fp) {
 	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
-		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
-		   "Copyright (C) 2005 - 2006 Sunil Shetye\n"
-		   "Copyright (C) 2005 - 2009 Matthias Andree\n"
+		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
+		   "                   Robert M. Funk, Graham Wilson\n"
+		   "Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
+		   "Copyright (C) 2005 - 2010 Matthias Andree\n"
 		   ));
 	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 		   "are welcome to redistribute it under certain conditions. For details,\n"
