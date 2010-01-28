@@ -58,6 +58,9 @@ fetchmail 6.3.14 (not yet released):
     Fix by Sunil Shetye (the fix also consolidates IMAP response handling,
   improving overall robustness of the IMAP client), bug report and testing by
   Matt Doran, with further hints from Timo Sirainen.
+* The SMTP client now recovers from errors (such as servers dropping the
+  connection after errors) when sending an RSET command.
+    Fix by Sunil Shetye. Report by James Moe.
 
 # CHANGES
 * Only include gssapi.h if we're not including gssapi/gssapi.h, to fix a FreeBSD

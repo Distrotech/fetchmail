@@ -65,6 +65,17 @@ void smtp_close(struct query *ctl, int sayquit)
     batchcount = 0;
 }
 
+void smtp_rset(struct query *ctl)
+/* reset the mail transaction */
+{
+    if (SMTP_rset(ctl->smtp_socket, ctl->smtphostmode) == SM_UNRECOVERABLE)
+    {
+	/* close the bad connection. fetchmail will reconnect for the
+	 * next mail */
+	smtp_close(ctl, 0);
+    }
+}
+
 int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
@@ -441,7 +452,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
      * RSET discards the message body and it doesn't get sent to the
      * valid recipients.
      */
-    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
+    smtp_rset(ctl);    /* stay on the safe side */
     if (outlevel >= O_DEBUG)
 	report(stdout, GT_("Saved error is still %d\n"), smtperr);
 #endif /* __UNUSED */
@@ -938,7 +949,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     {
 	int err = handle_smtp_report(ctl, msg); /* map to PS_TRANSIENT or PS_REFUSED */
 
-	SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);    /* stay on the safe side */
+	smtp_rset(ctl);    /* stay on the safe side */
 	return(err);
     }
 
@@ -1006,7 +1017,7 @@ transient:
 	     * crap. If one of the recipients returned PS_TRANSIENT,
 	     * we return exactly that.
 	     */
-	    SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);        /* required by RFC1870 */
+	    smtp_rset(ctl);        /* required by RFC1870 */
 	    goto transient;
     }
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
@@ -1041,7 +1052,7 @@ transient:
 	{
 	    if (outlevel >= O_VERBOSE)
 		report(stderr, GT_("no address matches; no postmaster set.\n"));
-	    SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);	/* required by RFC1870 */
+	    smtp_rset(ctl);	/* required by RFC1870 */
 	    return(PS_REFUSED);
 	}
 	if ((smtp_err = SMTP_rcpt(ctl->smtp_socket, ctl->smtphostmode,
@@ -1053,7 +1064,7 @@ transient:
 	if (smtp_err != SM_OK)
 	{
 	    report(stderr, GT_("can't even send to %s!\n"), run.postmaster);
-	    SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);	/* required by RFC1870 */
+	    smtp_rset(ctl);	/* required by RFC1870 */
 	    return(PS_REFUSED);
 	}
 
@@ -1074,7 +1085,7 @@ transient:
     if (smtp_err != SM_OK)
     {
 	int err = handle_smtp_report(ctl, msg);
-	SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);    /* stay on the safe side */
+	smtp_rset(ctl);    /* stay on the safe side */
 	return(err);
     }
 
@@ -1409,13 +1420,13 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	{
 	    if (handle_smtp_report(ctl, msg) != PS_REFUSED)
 	    {
-	        SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);    /* stay on the safe side */
+	        smtp_rset(ctl);    /* stay on the safe side */
 		return(FALSE);
 	    }
 	    else
 	    {
 		report(stderr, GT_("SMTP listener refused delivery\n"));
-	        SMTP_rset(ctl->smtp_socket, ctl->smtphostmode);    /* stay on the safe side */
+	        smtp_rset(ctl);    /* stay on the safe side */
 		return(TRUE);
 	    }
 	}
