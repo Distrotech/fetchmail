@@ -74,7 +74,9 @@ static int imap_untagged_response(int sock, const char *buf)
     }
     else if (strstr(buf, " EXISTS"))
     {
-	count = atoi(buf+2);
+	char *t; unsigned long u;
+	errno = 0;
+	u = strtoul(buf+2, &t, 10);
 	/*
 	 * Don't trust the message count passed by the server.
 	 * Without this check, it might be possible to do a
@@ -82,11 +84,15 @@ static int imap_untagged_response(int sock, const char *buf)
 	 * count, and allocate a malloc area that would overlap
 	 * a portion of the stack.
 	 */
-	if ((unsigned)count > INT_MAX/sizeof(int))
+	if (errno /* strtoul failed */
+		|| t == buf+2 /* no valid data */
+		|| u > (unsigned long)(INT_MAX/sizeof(int)) /* too large */)
 	{
-	    report(stderr, GT_("bogus message count!"));
+	    report(stderr, GT_("bogus message count in \"%s\"!"), buf);
 	    return(PS_PROTOCOL);
 	}
+	count = u; /* safe as long as count <= INT_MAX - checked above */
+
 	if ((recentcount = count - oldcount) < 0)
 	    recentcount = 0;
 
@@ -117,14 +123,22 @@ static int imap_untagged_response(int sock, const char *buf)
 # if 0
     else if (strstr(buf, " RECENT"))
     {
+	/* fixme: use strto[u]l and error checking */
 	recentcount = atoi(buf+2);
     }
 # endif
     else if (strstr(buf, " EXPUNGE"))
     {
+	unsigned long u; char *t;
 	/* the response "* 10 EXPUNGE" means that the currently
 	 * tenth (i.e. only one) message has been deleted */
-	if (atoi(buf+2) > 0)
+	errno = 0;
+	u = strtoul(buf+2, &t, 10);
+	if (errno /* conversion error */ || t == buf+2 /* no number found */) {
+	    report(stderr, GT_("bogus EXPUNGE count in \"%s\"!"), buf);
+	    return PS_PROTOCOL;
+	}
+	if (u > 0)
 	{
 	    if (count > 0)
 		count--;
@@ -854,7 +868,8 @@ restartsearch:
 
 			errno = 0;
 			um = strtoul(cp,&ep,10);
-			if (errno == 0 && um <= UINT_MAX && um <= (unsigned)count)
+			if (errno == 0 && ep > cp
+				&& um <= INT_MAX && um <= (unsigned)count)
 			{
 			    unseen_messages[unseen++] = um;
 			    if (outlevel >= O_DEBUG)
@@ -912,7 +927,7 @@ fetchflags:
 	 */
 	if (unseen < count
 		&& sscanf(buf, "* %u FETCH ", &num) == 1
-		&& num >= 1 && num <= count
+		&& num >= 1 && num <= (unsigned)count
 		&& strstr(buf, "FLAGS ")
 		&& !strstr(buf, "\\SEEN")
 		&& !strstr(buf, "\\DELETED"))
@@ -1302,15 +1317,21 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      * server called dbmail that returns huge garbage lengths.
      */
     if ((cp = strchr(buf, '{'))) {
+	long l; char *t;
         errno = 0;
-	*lenp = (int)strtol(cp + 1, (char **)NULL, 10);
-        if (errno == ERANGE || *lenp < 0)
-            *lenp = -1;    /* length is too big/small for us to handle */
-    }
-    else
+	++ cp;
+	l = strtol(cp, &t, 10);
+        if (errno || t == cp || (t && !strchr(t, '}')) /* parse error */
+		    || l < 0 || l > INT_MAX /* range check */) {
+	    *lenp = -1;
+	} else {
+	    *lenp = l;
+	}
+    } else {
 	*lenp = -1;	/* missing length part in FETCH reponse */
+    }
 
-    return(PS_SUCCESS);
+    return PS_SUCCESS;
 }
 
 static int imap_trail(int sock, struct query *ctl, const char *tag)

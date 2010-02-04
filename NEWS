@@ -79,6 +79,7 @@ fetchmail 6.3.14 (not yet released):
     Note that this wasn't security relevant because fetchmail would only read up
   to the maximum buffer size and leave the remainder of the string unread, going
   out of synch afterwards.
+* Stricter validation of IMAP responses containing byte or message counts.
 
 # CHANGES
 * Only include gssapi.h if we're not including gssapi/gssapi.h, to fix a FreeBSD
