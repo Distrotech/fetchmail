@@ -798,6 +798,135 @@ static int imap_idle(int sock)
     return(ok);
 }
 
+/* maximum number of numbers we can process in "SEARCH" response */
+# define IMAP_SEARCH_MAX 1000
+
+static int imap_search(int sock, struct query *ctl, int count)
+/* search for unseen messages */
+{
+    int ok, first, last;
+    char buf[MSGBUFSIZE+1], *cp;
+
+    /* Don't count deleted messages. Enabled only for IMAP4 servers or
+     * higher and only when keeping mails. This flag will have an
+     * effect only when user has marked some unread mails for deletion
+     * using another e-mail client. */
+    flag skipdeleted = (imap_version >= IMAP4) && ctl->keep;
+    const char *undeleted;
+
+    /* Skip range search if there are less than or equal to
+     * IMAP_SEARCH_MAX mails. */
+    flag skiprangesearch = (count <= IMAP_SEARCH_MAX);
+
+    /* startcount is higher than count so that if there are no
+     * unseen messages, imap_getsizes() will not need to do
+     * anything! */
+    startcount = count + 1;
+
+    for (first = 1, last = IMAP_SEARCH_MAX; first <= count; first += IMAP_SEARCH_MAX, last += IMAP_SEARCH_MAX)
+    {
+	if (last > count)
+	    last = count;
+
+restartsearch:
+	undeleted = (skipdeleted ? " UNDELETED" : "");
+	if (skiprangesearch)
+	    gen_send(sock, "SEARCH UNSEEN%s", undeleted);
+	else if (last == first)
+	    gen_send(sock, "SEARCH %d UNSEEN%s", last, undeleted);
+	else
+	    gen_send(sock, "SEARCH %d:%d UNSEEN%s", first, last, undeleted);
+	while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+	{
+	    if ((cp = strstr(buf, "* SEARCH")))
+	    {
+		char	*ep;
+
+		cp += 8;	/* skip "* SEARCH" */
+		while (*cp && unseen < count)
+		{
+		    /* skip whitespace */
+		    while (*cp && isspace((unsigned char)*cp))
+			cp++;
+		    if (*cp) 
+		    {
+			unsigned long um;
+
+			errno = 0;
+			um = strtoul(cp,&ep,10);
+			if (errno == 0 && um <= UINT_MAX && um <= (unsigned)count)
+			{
+			    unseen_messages[unseen++] = um;
+			    if (outlevel >= O_DEBUG)
+				report(stdout, GT_("%lu is unseen\n"), um);
+			    if (startcount > um)
+				startcount = um;
+			}
+			cp = ep;
+		    }
+		}
+	    }
+	}
+	/* if there is a protocol error on the first loop, try a
+	 * different search command */
+	if (ok == PS_ERROR && first == 1)
+	{
+	    if (skipdeleted)
+	    {
+		/* retry with "SEARCH 1:1000 UNSEEN" */
+		skipdeleted = FALSE;
+		goto restartsearch;
+	    }
+	    if (!skiprangesearch)
+	    {
+		/* retry with "SEARCH UNSEEN" */
+		skiprangesearch = TRUE;
+		goto restartsearch;
+	    }
+	    /* try with "FETCH 1:n FLAGS" */
+	    goto fetchflags;
+	}
+	if (ok != PS_SUCCESS)
+	    return(ok);
+	/* loop back only when searching in range */
+	if (skiprangesearch)
+	    break;
+    }
+    return(PS_SUCCESS);
+
+fetchflags:
+    if (count == 1)
+	gen_send(sock, "FETCH %d FLAGS", count);
+    else
+	gen_send(sock, "FETCH %d:%d FLAGS", 1, count);
+    while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+    {
+	unsigned int num;
+
+	/* expected response format:
+	 * IMAP< * 1 FETCH (FLAGS (\Seen))
+	 * IMAP< * 2 FETCH (FLAGS (\Seen \Deleted))
+	 * IMAP< * 3 FETCH (FLAGS ())
+	 * IMAP< * 4 FETCH (FLAGS (\Recent))
+	 * IMAP< * 5 FETCH (UID 10 FLAGS (\Recent))
+	 */
+	if (unseen < count
+		&& sscanf(buf, "* %u FETCH ", &num) == 1
+		&& num >= 1 && num <= count
+		&& strstr(buf, "FLAGS ")
+		&& !strstr(buf, "\\SEEN")
+		&& !strstr(buf, "\\DELETED"))
+	{
+	    unseen_messages[unseen++] = num;
+	    if (outlevel >= O_DEBUG)
+		report(stdout, GT_("%u is unseen\n"), num);
+	    if (startcount > num)
+		startcount = num;
+	}
+    }
+    return(ok);
+}
+
 static int imap_getrange(int sock, 
 			 struct query *ctl, 
 			 const char *folder, 
@@ -805,7 +934,6 @@ static int imap_getrange(int sock,
 /* get range of messages to be fetched */
 {
     int ok;
-    char buf[MSGBUFSIZE+1], *cp;
 
     /* find out how many messages are waiting */
     *bytes = -1;
@@ -909,44 +1037,7 @@ static int imap_getrange(int sock,
 	memset(unseen_messages, 0, count * sizeof(unsigned int));
 	unseen = 0;
 
-	/* don't count deleted messages, in case user enabled keep last time */
-	gen_send(sock, "SEARCH UNSEEN NOT DELETED");
-	while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
-	{
-	    if ((cp = strstr(buf, "* SEARCH")))
-	    {
-		char	*ep;
-
-		cp += 8;	/* skip "* SEARCH" */
-		/* startcount is higher than count so that if there are no
-		 * unseen messages, imap_getsizes() will not need to do
-		 * anything! */
-		startcount = count + 1;
-
-		while (*cp && unseen < count)
-		{
-		    /* skip whitespace */
-		    while (*cp && isspace((unsigned char)*cp))
-			cp++;
-		    if (*cp) 
-		    {
-			unsigned long um;
-
-			errno = 0;
-			um = strtoul(cp,&ep,10);
-			if (errno == 0 && um <= UINT_MAX && um <= (unsigned)count)
-			{
-			    unseen_messages[unseen++] = um;
-			    if (outlevel >= O_DEBUG)
-				report(stdout, GT_("%lu is unseen\n"), um);
-			    if (startcount > um)
-				startcount = um;
-			}
-			cp = ep;
-		    }
-		}
-	    }
-	}
+	ok = imap_search(sock, ctl, count);
 	if (ok != 0)
 	{
 	    report(stderr, GT_("search for unseen messages failed\n"));

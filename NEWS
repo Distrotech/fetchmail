@@ -67,6 +67,18 @@ fetchmail 6.3.14 (not yet released):
 * The SMTP client now recovers from errors (such as servers dropping the
   connection after errors) when sending an RSET command.
     Fix by Sunil Shetye. Report by James Moe.
+* The IMAP client now uses "SEARCH UNSEEN" rather than "SEARCH UNSEEN NOT
+  DELETED" again on IMAP2, to fix a regression in fetchmail 6.2.5 reported by
+  Will Stringer in June 2004. (Sunil Shetye)
+* The IMAP client now uses "SEARCH UNSEEN UNDELETED" on IMAP4 and IMAP4r1
+  servers (Sunil Shetye).
+* Workaround: The IMAP client now falls back to "FETCH n:m FLAGS" if the server
+  does not support "SEARCH". (Sunil Shetye)
+* The IMAP client now requests message numbers in batches of 1,000 to avoid
+  problems if there are more than 1860 unseen messages. (Sunil Shetye)
+    Note that this wasn't security relevant because fetchmail would only read up
+  to the maximum buffer size and leave the remainder of the string unread, going
+  out of synch afterwards.
 
 # CHANGES
 * Only include gssapi.h if we're not including gssapi/gssapi.h, to fix a FreeBSD
