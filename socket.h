@@ -46,6 +46,11 @@ Returns number of bytes successfully written.
 */
 int SockWrite(int sock, char *buf, int size);
 
+/* from /usr/include/sys/cdefs.h */
+#if !defined __GNUC__ || __GNUC__ < 2
+# define __attribute__(xyz)    /* Ignore. */
+#endif
+
 /* 
 Send formatted output to the socket (matches interface of fprintf).
 Returns number of bytes successfully written.
