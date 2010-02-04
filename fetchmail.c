@@ -1555,7 +1555,7 @@ static void dump_params (struct runctl *runp,
 	printf(GT_("Fetchmail will direct error mail to the sender.\n"));
 
     if (!runp->softbounce)
-	printf(GT_("Fetchmail will treat permanent errors as permanent (drop messsages).\n"));
+	printf(GT_("Fetchmail will treat permanent errors as permanent (drop messages).\n"));
     else if (outlevel >= O_VERBOSE)
 	printf(GT_("Fetchmail will treat permanent errors as temporary (keep messages).\n"));
 
