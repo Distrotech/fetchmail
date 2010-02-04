@@ -127,7 +127,7 @@ int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
     /* ship the authentication back, accept the server's responses */
     /* PMDF5.2 IMAP has a bug that requires this to be a single write */
     suppress_tags = TRUE;
-    result = gen_transact(sock, buf1, sizeof(buf1));
+    result = gen_transact(sock, "%s", buf1);
     suppress_tags = FALSE;
     if (result)
 	return(result);
