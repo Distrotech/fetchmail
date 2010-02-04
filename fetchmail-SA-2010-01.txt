@@ -52,7 +52,7 @@ buffer overrun because non-printing characters are escaped as
 This might be exploitable to inject code if
 - fetchmail is run in verbose mode
 AND
-- the host running fetchmail considers char unsigned
+- the host running fetchmail considers char signed
 AND
 - the server uses malicious certificates with non-printing characters
   that have the high bit set
