@@ -49,6 +49,12 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.14 (not yet released):
 
+# SECURITY FIXES
+* SSL/TLS certificate information is now also reported properly on computers
+  that consider the "char" type signed. Fixes malloc() buffer overrun.
+  Workaround for older versions: do not use verbose mode.
+  See fetchmail-SA-2010-01.txt for details, including a minimal patch.
+
 # BUG FIXES
 * The IMAP client no longer skips messages from several IMAP servers including
   Dovecot if fetchmail's "idle" is in use.  Causes were that fetchmail (a)
