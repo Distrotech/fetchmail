@@ -543,7 +543,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * and IGNORE errors. */
     {
 	char *tmp = strstr(capabilities, " ID");
-	if (tmp && !isalnum(tmp[3]) && strstr(ctl->server.via ? ctl->server.via : ctl->server.pollname, "yahoo.com")) {
+	if (tmp && !isalnum((unsigned char)tmp[3]) && strstr(ctl->server.via ? ctl->server.via : ctl->server.pollname, "yahoo.com")) {
 		(void)gen_transact(sock, "ID (\"guid\" \"1\")");
 	}
     }
