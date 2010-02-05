@@ -8,11 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+"POT-Creation-Date: 2010-02-04 14:52+0100\n"
 "PO-Revision-Date: 2009-10-12 11:45中国标准时间\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
-"sourceforge.net>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -410,7 +409,7 @@ msgstr "(%d 字节)。\n"
 msgid "No mail for %s\n"
 msgstr "%s 无邮件\n"
 
-#: driver.c:1393 imap.c:90
+#: driver.c:1393
 msgid "bogus message count!"
 msgstr "发现无效邮件！"
 
@@ -623,12 +622,13 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "ETRN 不支持 --check 选项\n"
 
 #: fetchmail.c:137
+#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
-"Wilson\n"
-"Copyright (C) 2005 - 2006 Sunil Shetye\n"
-"Copyright (C) 2005 - 2009 Matthias Andree\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
+"                   Robert M. Funk, Graham Wilson\n"
+"Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
+"Copyright (C) 2005 - 2010 Matthias Andree\n"
 msgstr ""
 "版权所有 (C) 2002, 2003 Eric S. Raymond\n"
 "版权所有 (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -636,7 +636,7 @@ msgstr ""
 "版权所有 (C) 2005 - 2006 Sunil Shetye\n"
 "版权所有 (C) 2005 - 2009 Matthias Andree\n"
 
-#: fetchmail.c:142
+#: fetchmail.c:143
 msgid ""
 "Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 "are welcome to redistribute it under certain conditions. For details,\n"
@@ -646,906 +646,907 @@ msgstr ""
 "重新分发它。\n"
 "详情请看源文件或是文档目录中的 COPYING 部分。\n"
 
-#: fetchmail.c:176
+#: fetchmail.c:177
 msgid "WARNING: Running as root is discouraged.\n"
 msgstr "警告: 不提倡以 root 身份运行\n"
 
-#: fetchmail.c:188
+#: fetchmail.c:189
 msgid "fetchmail: invoked with"
 msgstr "fetchmail: 调用参数"
 
-#: fetchmail.c:212
+#: fetchmail.c:213
 msgid "could not get current working directory\n"
 msgstr "无法得到当前工作目录\n"
 
-#: fetchmail.c:283
+#: fetchmail.c:284
 #, c-format
 msgid "This is fetchmail release %s"
 msgstr "这是 fetchmail 发行版 %s"
 
-#: fetchmail.c:403
+#: fetchmail.c:404
 #, c-format
 msgid "Taking options from command line%s%s\n"
 msgstr "正从命令行获得选项 %s%s\n"
 
-#: fetchmail.c:404
+#: fetchmail.c:405
 msgid " and "
 msgstr "和"
 
-#: fetchmail.c:409
+#: fetchmail.c:410
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
 msgstr "未设置邮件服务器 -- 可能未找到 %s？\n"
 
-#: fetchmail.c:430
+#: fetchmail.c:431
 msgid "fetchmail: no mailservers have been specified.\n"
 msgstr "fetchmail: 未指定邮件服务器\n"
 
-#: fetchmail.c:442
+#: fetchmail.c:443
 msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: 无其它 fetchmail 正在运行\n"
 
-#: fetchmail.c:448
+#: fetchmail.c:449
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
 msgstr "fetchmail: 终止 %s fetchmail 进程号 %d 时出错；退出\n"
 
-#: fetchmail.c:449 fetchmail.c:458
+#: fetchmail.c:450 fetchmail.c:459
 msgid "background"
 msgstr "后台"
 
-#: fetchmail.c:449 fetchmail.c:458
+#: fetchmail.c:450 fetchmail.c:459
 msgid "foreground"
 msgstr "前台"
 
-#: fetchmail.c:457
+#: fetchmail.c:458
 #, c-format
 msgid "fetchmail: %s fetchmail at %d killed.\n"
 msgstr "fetchmail: %s fetchmail 进程号 %d 终止\n"
 
-#: fetchmail.c:480
+#: fetchmail.c:481
 msgid ""
 "fetchmail: can't check mail while another fetchmail to same host is "
 "running.\n"
 msgstr "fetchmail: 有另一个 fetchmail 在同一主机上运行时无法检查邮件。\n"
 
-#: fetchmail.c:486
+#: fetchmail.c:487
 #, c-format
 msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
 msgstr ""
 "fetchmail: 有另一个 fetchmail 进程号 %d 在指定主机上运行时无法收邮件。\n"
 
-#: fetchmail.c:493
+#: fetchmail.c:494
 #, c-format
 msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr "fetchmail: 另一个前台 fetchmail 进程号 %d 正在运行。\n"
 
-#: fetchmail.c:503
+#: fetchmail.c:504
 msgid ""
 "fetchmail: can't accept options while a background fetchmail is running.\n"
 msgstr "fetchmail: 有后台 fetchmail 正在运行时无法接受选项\n"
 
-#: fetchmail.c:509
+#: fetchmail.c:510
 #, c-format
 msgid "fetchmail: background fetchmail at %d awakened.\n"
 msgstr "fetchmail: 后台 fetchmail 进程号 %d 被唤醒\n"
 
-#: fetchmail.c:521
+#: fetchmail.c:522
 #, c-format
 msgid "fetchmail: elder sibling at %d died mysteriously.\n"
 msgstr "fetchmail: 上次 fetchmail 进程号 %d 不明原因的终止\n"
 
-#: fetchmail.c:536
+#: fetchmail.c:537
 #, c-format
 msgid "fetchmail: can't find a password for %s@%s.\n"
 msgstr "fetchmail: 无法找到 %s@%s 的密码\n"
 
-#: fetchmail.c:540
+#: fetchmail.c:541
 #, c-format
 msgid "Enter password for %s@%s: "
 msgstr "输入 %s@%s 的密码:"
 
-#: fetchmail.c:582
+#: fetchmail.c:583
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
 msgstr "fetchmail: 无法转入后台。退出\n"
 
-#: fetchmail.c:586
+#: fetchmail.c:587
 #, c-format
 msgid "starting fetchmail %s daemon \n"
 msgstr "开启 fetchmail %s 后台服务\n"
 
-#: fetchmail.c:602 fetchmail.c:604
+#: fetchmail.c:603 fetchmail.c:605
 #, c-format
 msgid "could not open %s to append logs to \n"
 msgstr "无法打开 %s 添加记录\n"
 
-#: fetchmail.c:606
+#: fetchmail.c:607
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
 msgstr "fetchmail: 警告: 设置了 syslog 和 logfile。通过两者查看记录！\n"
 
-#: fetchmail.c:625
+#: fetchmail.c:626
 msgid "--check mode enabled, not fetching mail\n"
 msgstr "开启 --check 模式, 而非真正取回邮件\n"
 
-#: fetchmail.c:647
+#: fetchmail.c:648
 #, fuzzy, c-format
 msgid "couldn't time-check %s (error %d)\n"
 msgstr "无法时限检测 %s (错误号 %d)\n"
 
-#: fetchmail.c:652
+#: fetchmail.c:653
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
 msgstr "正在重启 fetchmail (%s 改变了)\n"
 
-#: fetchmail.c:657
+#: fetchmail.c:658
 msgid "attempt to re-exec may fail as directory has not been restored\n"
 msgstr "由于目录尚未重置，因此重新执行的尝试可能失败\n"
 
-#: fetchmail.c:684
+#: fetchmail.c:685
 msgid "attempt to re-exec fetchmail failed\n"
 msgstr "重新执行 fetchmail 的尝试失败了\n"
 
-#: fetchmail.c:714
+#: fetchmail.c:715
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
 msgstr "忽略收取 %s 的邮件 (验证失败或多次超时)\n"
 
-#: fetchmail.c:726
+#: fetchmail.c:727
 #, c-format
 msgid "interval not reached, not querying %s\n"
 msgstr "时间间隔未到，不查寻 %s \n"
 
-#: fetchmail.c:764
+#: fetchmail.c:765
 msgid "Query status=0 (SUCCESS)\n"
 msgstr "查询状态=0 (成功)\n"
 
-#: fetchmail.c:766
+#: fetchmail.c:767
 msgid "Query status=1 (NOMAIL)\n"
 msgstr "查询状态=1 (无邮件)\n"
 
-#: fetchmail.c:768
+#: fetchmail.c:769
 msgid "Query status=2 (SOCKET)\n"
 msgstr "查询状态=2 (套接字输入输出错误)\n"
 
-#: fetchmail.c:770
+#: fetchmail.c:771
 msgid "Query status=3 (AUTHFAIL)\n"
 msgstr "查询状态=3 (用户验证失败)\n"
 
-#: fetchmail.c:772
+#: fetchmail.c:773
 msgid "Query status=4 (PROTOCOL)\n"
 msgstr "查询状态=4 (协议无效)\n"
 
-#: fetchmail.c:774
+#: fetchmail.c:775
 msgid "Query status=5 (SYNTAX)\n"
 msgstr "查询状态=5 (命令行语法错误)\n"
 
-#: fetchmail.c:776
+#: fetchmail.c:777
 msgid "Query status=6 (IOERR)\n"
 msgstr "查询状态=6 (配置文件权限错误)\n"
 
-#: fetchmail.c:778
+#: fetchmail.c:779
 msgid "Query status=7 (ERROR)\n"
 msgstr "查询状态=7 (协议错误)\n"
 
-#: fetchmail.c:780
+#: fetchmail.c:781
 msgid "Query status=8 (EXCLUDE)\n"
 msgstr "查询状态=8 (客户端受到排斥)\n"
 
-#: fetchmail.c:782
+#: fetchmail.c:783
 msgid "Query status=9 (LOCKBUSY)\n"
 msgstr "查询状态=9 (服务器死锁)\n"
 
-#: fetchmail.c:784
+#: fetchmail.c:785
 msgid "Query status=10 (SMTP)\n"
 msgstr "查询状态=10 (SMTP 错误)\n"
 
-#: fetchmail.c:786
+#: fetchmail.c:787
 msgid "Query status=11 (DNS)\n"
 msgstr "查询状态=11 (DNS 错误)\n"
 
-#: fetchmail.c:788
+#: fetchmail.c:789
 msgid "Query status=12 (BSMTP)\n"
 msgstr "查询状态=12 (无法打开批量输出)\n"
 
-#: fetchmail.c:790
+#: fetchmail.c:791
 msgid "Query status=13 (MAXFETCH)\n"
 msgstr "查询状态=13 (到达收件上限)\n"
 
-#: fetchmail.c:792
+#: fetchmail.c:793
 #, c-format
 msgid "Query status=%d\n"
 msgstr "查询状态=%d\n"
 
-#: fetchmail.c:834
+#: fetchmail.c:835
 msgid "All connections are wedged.  Exiting.\n"
 msgstr "所有连接堵塞。退出\n"
 
-#: fetchmail.c:842
+#: fetchmail.c:843
 #, c-format
 msgid "sleeping at %s for %d seconds\n"
 msgstr "在 %s 休眠 %d 秒\n"
 
-#: fetchmail.c:866
+#: fetchmail.c:867
 #, c-format
 msgid "awakened by %s\n"
 msgstr "通过信号 %s 唤醒\n"
 
-#: fetchmail.c:869
+#: fetchmail.c:870
 #, c-format
 msgid "awakened by signal %d\n"
 msgstr "通过信号 %d 唤醒\n"
 
-#: fetchmail.c:877
+#: fetchmail.c:878
 #, c-format
 msgid "awakened at %s\n"
 msgstr "在 %s 被唤醒\n"
 
-#: fetchmail.c:882
+#: fetchmail.c:883
 #, c-format
 msgid "normal termination, status %d\n"
 msgstr "正常结束，返回值 %d\n"
 
-#: fetchmail.c:1036
+#: fetchmail.c:1037
 #, fuzzy
 msgid "couldn't time-check the run-control file\n"
 msgstr "无法对 run-control 文件进行时限检测\n"
 
-#: fetchmail.c:1069
+#: fetchmail.c:1070
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
 msgstr "警告: 在配置文件中多次提及主机 %s\n"
 
-#: fetchmail.c:1102
+#: fetchmail.c:1103
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
 msgstr "fetchmail: 错误: 在配置文件中有多个 “default” 记录。\n"
 
-#: fetchmail.c:1224
+#: fetchmail.c:1225
 msgid "SSL support is not compiled in.\n"
 msgstr "SSL 支持未编译在内\n"
 
-#: fetchmail.c:1231
+#: fetchmail.c:1232
 msgid "KERBEROS v4 support is configured, but not compiled in.\n"
 msgstr "设置了 KERBEROS v4 支持，但未编译在内\n"
 
-#: fetchmail.c:1237
+#: fetchmail.c:1238
 msgid "KERBEROS v5 support is configured, but not compiled in.\n"
 msgstr "设置了 KERBEROS v5 支持，但未编译在内\n"
 
-#: fetchmail.c:1243
+#: fetchmail.c:1244
 msgid "GSSAPI support is configured, but not compiled in.\n"
 msgstr "设置了 GSSAPI 支持，但未编译在内\n"
 
-#: fetchmail.c:1273
+#: fetchmail.c:1274
 #, c-format
 msgid ""
 "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
 msgstr "fetchmail: 警告: 无可用的 DNS 来检查取自 %s 的多投邮件\n"
 
-#: fetchmail.c:1284
+#: fetchmail.c:1285
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
 msgstr "警告: %s 设置了多投邮件，需设置 envelope 选项！\n"
 
-#: fetchmail.c:1285
+#: fetchmail.c:1286
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
 msgstr "警告: 如果所有邮件均被邮件管理员收取，不要寻求支持！\n"
 
-#: fetchmail.c:1302
+#: fetchmail.c:1303
 #, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
 "service or port\n"
 msgstr "fetchmail: %s 配置无效，为服务或端口指定大于零的端口\n"
 
-#: fetchmail.c:1309
+#: fetchmail.c:1310
 #, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
 msgstr "fetchmail: %s 配置无效，RPOP 要求开放一个特许端口\n"
 
-#: fetchmail.c:1327
+#: fetchmail.c:1328
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
 msgstr "%s 配置无效，LMTP 不能用默认的 SMTP 端口\n"
 
-#: fetchmail.c:1341
+#: fetchmail.c:1342
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
 msgstr "收取所有邮件并保留服务器上的备份或使用 idle 模式是错误的！\n"
 
-#: fetchmail.c:1366
+#: fetchmail.c:1367
 #, c-format
 msgid "terminated with signal %d\n"
 msgstr "以信号 %d 终止\n"
 
-#: fetchmail.c:1439
+#: fetchmail.c:1440
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
 msgstr "%1$s 在 %4$s 查寻 %2$s (协议 %3$s): 收件开始\n"
 
-#: fetchmail.c:1464
+#: fetchmail.c:1465
 msgid "POP2 support is not configured.\n"
 msgstr "未设置 POP2 支持\n"
 
-#: fetchmail.c:1476
+#: fetchmail.c:1477
 msgid "POP3 support is not configured.\n"
 msgstr "未设置 POP3 支持\n"
 
-#: fetchmail.c:1486
+#: fetchmail.c:1487
 msgid "IMAP support is not configured.\n"
 msgstr "未设置 IMAP 支持\n"
 
-#: fetchmail.c:1492
+#: fetchmail.c:1493
 msgid "ETRN support is not configured.\n"
 msgstr "未设置 ETRN 支持\n"
 
-#: fetchmail.c:1500
+#: fetchmail.c:1501
 msgid "ODMR support is not configured.\n"
 msgstr "未设置 ODMR 支持\n"
 
-#: fetchmail.c:1507
+#: fetchmail.c:1508
 msgid "unsupported protocol selected.\n"
 msgstr "选中了不支持的协议\n"
 
-#: fetchmail.c:1517
+#: fetchmail.c:1518
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
 msgstr "%1$s 在 %4$s 查询 %2$s (协议 %3$s): 收件完成\n"
 
-#: fetchmail.c:1534
+#: fetchmail.c:1535
 #, c-format
 msgid "Poll interval is %d seconds\n"
 msgstr "收件间隔 %d 秒\n"
 
-#: fetchmail.c:1536
+#: fetchmail.c:1537
 #, c-format
 msgid "Logfile is %s\n"
 msgstr "日志文件为 %s\n"
 
-#: fetchmail.c:1538
+#: fetchmail.c:1539
 #, c-format
 msgid "Idfile is %s\n"
 msgstr "Idfile 文件为 %s\n"
 
-#: fetchmail.c:1541
+#: fetchmail.c:1542
 msgid "Progress messages will be logged via syslog\n"
 msgstr "邮件情况将通过 syslog 来记录\n"
 
-#: fetchmail.c:1544
+#: fetchmail.c:1545
 msgid "Fetchmail will masquerade and will not generate Received\n"
 msgstr "Fetchmail 将进行伪装且不会生成 Receiverd 部分\n"
 
-#: fetchmail.c:1546
+#: fetchmail.c:1547
 msgid "Fetchmail will show progress dots even in logfiles.\n"
 msgstr "Fetchmail 将在日志文件中显示进度条(以点的形式)\n"
 
-#: fetchmail.c:1548
+#: fetchmail.c:1549
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
 msgstr "Fetchmail 将转发地址错误的多投邮件给 %s。\n"
 
-#: fetchmail.c:1552
+#: fetchmail.c:1553
 msgid "Fetchmail will direct error mail to the postmaster.\n"
 msgstr "Fetchmail 将把错误邮件转给邮件管理员\n"
 
-#: fetchmail.c:1554
+#: fetchmail.c:1555
 msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail 将把错误邮件退给发送者\n"
 
-#: fetchmail.c:1557
-msgid "Fetchmail will treat permanent errors as permanent (drop messsages).\n"
+#: fetchmail.c:1558
+#, fuzzy
+msgid "Fetchmail will treat permanent errors as permanent (drop messages).\n"
 msgstr "Fetchmail 将把惯性错误当成不可恢复的错误(删除邮件)。\n"
 
-#: fetchmail.c:1559
+#: fetchmail.c:1560
 msgid "Fetchmail will treat permanent errors as temporary (keep messages).\n"
 msgstr "Fetchmail 将把惯性错误当成临时问题(保留邮件)。\n"
 
-#: fetchmail.c:1566
+#: fetchmail.c:1567
 #, c-format
 msgid "Options for retrieving from %s@%s:\n"
 msgstr "从 %s@%s 收件时的选项:\n"
 
-#: fetchmail.c:1570
+#: fetchmail.c:1571
 #, c-format
 msgid "  Mail will be retrieved via %s\n"
 msgstr " 邮件将通过 %s 收取\n"
 
-#: fetchmail.c:1573
+#: fetchmail.c:1574
 #, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
 msgstr[0] "每隔 %d 秒将收取此服务器中的邮件\n"
 
-#: fetchmail.c:1577
+#: fetchmail.c:1578
 #, c-format
 msgid "  True name of server is %s.\n"
 msgstr " 服务器的实名为 %s。\n"
 
-#: fetchmail.c:1580
+#: fetchmail.c:1581
 msgid "  This host will not be queried when no host is specified.\n"
 msgstr " 若不指明主机将不查询此主机\n"
 
-#: fetchmail.c:1581
+#: fetchmail.c:1582
 msgid "  This host will be queried when no host is specified.\n"
 msgstr " 若不指明主机将查询此主机\n"
 
-#: fetchmail.c:1585
+#: fetchmail.c:1586
 msgid "  Password will be prompted for.\n"
 msgstr "密码会被提示\n"
 
-#: fetchmail.c:1589
+#: fetchmail.c:1590
 #, c-format
 msgid "  APOP secret = \"%s\".\n"
 msgstr " APOP 密码 = “%s”\n"
 
-#: fetchmail.c:1592
+#: fetchmail.c:1593
 #, c-format
 msgid "  RPOP id = \"%s\".\n"
 msgstr " RPOP 密码 = “%s”\n"
 
-#: fetchmail.c:1595
+#: fetchmail.c:1596
 #, c-format
 msgid "  Password = \"%s\".\n"
 msgstr " 密码 = “%s”\n"
 
-#: fetchmail.c:1604
+#: fetchmail.c:1605
 #, c-format
 msgid "  Protocol is KPOP with Kerberos %s authentication"
 msgstr " 协议是带有 Kerberos %s 认证协议的 KPOP"
 
-#: fetchmail.c:1607
+#: fetchmail.c:1608
 #, c-format
 msgid "  Protocol is %s"
 msgstr " 协议是 %s"
 
-#: fetchmail.c:1609
+#: fetchmail.c:1610
 #, c-format
 msgid " (using service %s)"
 msgstr " (正在使用服务 %s)"
 
-#: fetchmail.c:1611
+#: fetchmail.c:1612
 msgid " (using default port)"
 msgstr " (正在使用默认端口)"
 
-#: fetchmail.c:1613
+#: fetchmail.c:1614
 msgid " (forcing UIDL use)"
 msgstr " (正在强制使用 UIDL)"
 
-#: fetchmail.c:1619
+#: fetchmail.c:1620
 msgid "  All available authentication methods will be tried.\n"
 msgstr " 将尝试所有有效的验证方式\n"
 
-#: fetchmail.c:1622
+#: fetchmail.c:1623
 msgid "  Password authentication will be forced.\n"
 msgstr " 强制密码验证\n"
 
-#: fetchmail.c:1625
+#: fetchmail.c:1626
 msgid "  MSN authentication will be forced.\n"
 msgstr " 强制 MSN 验证\n"
 
-#: fetchmail.c:1628
+#: fetchmail.c:1629
 msgid "  NTLM authentication will be forced.\n"
 msgstr " 强制 NTLM 验证\n"
 
-#: fetchmail.c:1631
+#: fetchmail.c:1632
 msgid "  OTP authentication will be forced.\n"
 msgstr " 强制 OTP 验证\n"
 
-#: fetchmail.c:1634
+#: fetchmail.c:1635
 msgid "  CRAM-Md5 authentication will be forced.\n"
 msgstr " 强制 CRAM-Md5 验证\n"
 
-#: fetchmail.c:1637
+#: fetchmail.c:1638
 msgid "  GSSAPI authentication will be forced.\n"
 msgstr " 强制 GSSAPI 验证\n"
 
-#: fetchmail.c:1640
+#: fetchmail.c:1641
 msgid "  Kerberos V4 authentication will be forced.\n"
 msgstr " 强制 Kerberos V4 验证\n"
 
-#: fetchmail.c:1643
+#: fetchmail.c:1644
 msgid "  Kerberos V5 authentication will be forced.\n"
 msgstr " 强制 Kerberos V5 验证\n"
 
-#: fetchmail.c:1646
+#: fetchmail.c:1647
 msgid "  End-to-end encryption assumed.\n"
 msgstr " 假设为终端到终端加密\n"
 
-#: fetchmail.c:1650
+#: fetchmail.c:1651
 #, c-format
 msgid "  Mail service principal is: %s\n"
 msgstr " 邮件服务协议验证方为: %s\n"
 
-#: fetchmail.c:1653
+#: fetchmail.c:1654
 msgid "  SSL encrypted sessions enabled.\n"
 msgstr "启用 SSL 加密会话\n"
 
-#: fetchmail.c:1655
+#: fetchmail.c:1656
 #, c-format
 msgid "  SSL protocol: %s.\n"
 msgstr " SSL 协议: %s\n"
 
-#: fetchmail.c:1657
+#: fetchmail.c:1658
 msgid "  SSL server certificate checking enabled.\n"
 msgstr " 启用 SSL 服务器证书检查\n"
 
-#: fetchmail.c:1659
+#: fetchmail.c:1660
 #, c-format
 msgid "  SSL trusted certificate directory: %s\n"
 msgstr " SSL 受信证书目录: %s\n"
 
-#: fetchmail.c:1662
+#: fetchmail.c:1663
 #, c-format
 msgid "  SSL server CommonName: %s\n"
 msgstr "  SSL 服务器名: %s\n"
 
-#: fetchmail.c:1664
+#: fetchmail.c:1665
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
 msgstr " SSL 密钥指纹 (与服务器密钥对比过): %s\n"
 
-#: fetchmail.c:1667
+#: fetchmail.c:1668
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
 msgstr " 服务器未响应，超时 %d 秒"
 
-#: fetchmail.c:1669
+#: fetchmail.c:1670
 msgid " (default).\n"
 msgstr " (默认)。\n"
 
-#: fetchmail.c:1676
+#: fetchmail.c:1677
 msgid "  Default mailbox selected.\n"
 msgstr " 已选中默认邮箱。\n"
 
-#: fetchmail.c:1681
+#: fetchmail.c:1682
 msgid "  Selected mailboxes are:"
 msgstr " 选中的邮箱是:"
 
-#: fetchmail.c:1687
+#: fetchmail.c:1688
 msgid "  All messages will be retrieved (--all on).\n"
 msgstr " 收取所有邮件( --all 选项开启).\n"
 
-#: fetchmail.c:1688
+#: fetchmail.c:1689
 msgid "  Only new messages will be retrieved (--all off).\n"
 msgstr " 只收取新邮件( --all 选项关闭).\n"
 
-#: fetchmail.c:1690
+#: fetchmail.c:1691
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
 msgstr " 收取的邮件会在服务器上保留副本( --keep 开启).\n"
 
-#: fetchmail.c:1691
+#: fetchmail.c:1692
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
 msgstr " 收取的邮件不会保留在服务器上( --keep 关闭).\n"
 
-#: fetchmail.c:1693
+#: fetchmail.c:1694
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
 msgstr " 在收取新邮件前删除旧邮件(--flush 开启).\n"
 
-#: fetchmail.c:1694
+#: fetchmail.c:1695
 msgid ""
 "  Old messages will not be flushed before message retrieval (--flush off).\n"
 msgstr " 在收取新邮件前不删除旧邮件(--flush 关闭).\n"
 
-#: fetchmail.c:1696
+#: fetchmail.c:1697
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
 msgstr " 收件前将删除超大的邮件(--limitflush 开启).\n"
 
-#: fetchmail.c:1697
+#: fetchmail.c:1698
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
 msgstr " 收件前将不删除超大的邮件(--limitflush 关闭).\n"
 
-#: fetchmail.c:1699
+#: fetchmail.c:1700
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
 msgstr " 本地收件人地址重写(--norewrite 关闭).\n"
 
-#: fetchmail.c:1700
+#: fetchmail.c:1701
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
 msgstr " 不重写本地收件人地址(--norewrite 开启).\n"
 
-#: fetchmail.c:1702
+#: fetchmail.c:1703
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
 msgstr " 回车符清除(stripcr 开启).\n"
 
-#: fetchmail.c:1703
+#: fetchmail.c:1704
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
 msgstr " 不清除回车符(stripcr 关闭).\n"
 
-#: fetchmail.c:1705
+#: fetchmail.c:1706
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
 msgstr " 强行在换行前插入回车符(forcecr 开启).\n"
 
-#: fetchmail.c:1706
+#: fetchmail.c:1707
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr " 不在换行前强行插入回车符(forcecr 关闭).\n"
 
-#: fetchmail.c:1708
+#: fetchmail.c:1709
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
 msgstr " 忽略 Content-Transfer-Encoding (pass8bits 开启).\n"
 
-#: fetchmail.c:1709
+#: fetchmail.c:1710
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
 msgstr " 不忽略 Content-Transfer-Encoding (pass8bits 关闭).\n"
 
-#: fetchmail.c:1711
+#: fetchmail.c:1712
 msgid "  MIME decoding is enabled (mimedecode on).\n"
 msgstr " 解开 MIME 编码 (mimedecode 开启).\n"
 
-#: fetchmail.c:1712
+#: fetchmail.c:1713
 msgid "  MIME decoding is disabled (mimedecode off).\n"
 msgstr " 不解开 MIME 编码 (mimedecode 关闭).\n"
 
-#: fetchmail.c:1714
+#: fetchmail.c:1715
 msgid "  Idle after poll is enabled (idle on).\n"
 msgstr " 收件后回到 idle 模式 (idle 开启).\n"
 
-#: fetchmail.c:1715
+#: fetchmail.c:1716
 msgid "  Idle after poll is disabled (idle off).\n"
 msgstr " 收件后不回到 idle 模式 (idle 关闭).\n"
 
-#: fetchmail.c:1717
+#: fetchmail.c:1718
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
 msgstr " 删除带有 Status 字样的行 (dropstatus 开启)\n"
 
-#: fetchmail.c:1718
+#: fetchmail.c:1719
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
 msgstr " 保留带有 Status 字样的 行 (dropstatus 关闭)\n"
 
-#: fetchmail.c:1720
+#: fetchmail.c:1721
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
 msgstr " 删除带有 Delivered-to 的行 (dropdelivered 开启)\n"
 
-#: fetchmail.c:1721
+#: fetchmail.c:1722
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
 msgstr " 保留带有 Delivered-to 的行 (dropdelivered 关闭)\n"
 
-#: fetchmail.c:1725
+#: fetchmail.c:1726
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
 msgstr " 邮件大小被限制为 %d 字节 (--limit %d).\n"
 
-#: fetchmail.c:1728
+#: fetchmail.c:1729
 msgid "  No message size limit (--limit 0).\n"
 msgstr " 邮件大小无限制 (--limit 0).\n"
 
-#: fetchmail.c:1730
+#: fetchmail.c:1731
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
 msgstr " 每隔 %d 秒发出邮件大小警告 (--warnings %d).\n"
 
-#: fetchmail.c:1733
+#: fetchmail.c:1734
 msgid "  Size warnings on every poll (--warnings 0).\n"
 msgstr " 每次收件都给出邮件大小警告 (--warnings 0).\n"
 
-#: fetchmail.c:1736
+#: fetchmail.c:1737
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
 msgstr " 单次收件限制为 %d 封(--fetchlimit %d).\n"
 
-#: fetchmail.c:1739
+#: fetchmail.c:1740
 msgid "  No received-message limit (--fetchlimit 0).\n"
 msgstr " 无收件限制 (--fetchlimit 0).\n"
 
-#: fetchmail.c:1741
+#: fetchmail.c:1742
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
 msgstr " 限制所收邮件大小为 %d 字节(--fetchsizelimit %d).\n"
 
-#: fetchmail.c:1744
+#: fetchmail.c:1745
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
 msgstr " 所收邮件大小无限制 (--fetchsizelimit 0).\n"
 
-#: fetchmail.c:1748
+#: fetchmail.c:1749
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
 msgstr " 每次收件期间对 UIDs 进行折半查找 (--fastuidl 1).\n"
 
-#: fetchmail.c:1750
+#: fetchmail.c:1751
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr " 每 %2$d 次收件中有 %1$d 次对 UIDs 进行折半查找 (--fastuidl %3$d).\n"
 
-#: fetchmail.c:1753
+#: fetchmail.c:1754
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr " 每次收件期间对 UIDs 进行线性查找 (--fastuidl 0).\n"
 
-#: fetchmail.c:1755
+#: fetchmail.c:1756
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
 msgstr " 单次 SMTP 会话中最多传送 %d 封邮件。\n"
 
-#: fetchmail.c:1757
+#: fetchmail.c:1758
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
 msgstr " 单次 SMTP 会话中无传送邮件限制 (--batchlimit 0)。\n"
 
-#: fetchmail.c:1761
+#: fetchmail.c:1762
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
 msgstr " 两次删除操作之间最多传送 %d 封邮件(--expunge %d)。\n"
 
-#: fetchmail.c:1763
+#: fetchmail.c:1764
 msgid "  No forced expunges (--expunge 0).\n"
 msgstr " 两次删除操作之间无传送邮件限制(--expunge 0)。\n"
 
-#: fetchmail.c:1770
+#: fetchmail.c:1771
 msgid "  Domains for which mail will be fetched are:"
 msgstr " 要收取的邮件位于服务器:"
 
-#: fetchmail.c:1775 fetchmail.c:1795
+#: fetchmail.c:1776 fetchmail.c:1796
 msgid " (default)"
 msgstr " (默认)"
 
-#: fetchmail.c:1780
+#: fetchmail.c:1781
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
 msgstr " 邮件作为 BSMTP 附加至 %s\n"
 
-#: fetchmail.c:1782
+#: fetchmail.c:1783
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
 msgstr " 邮件通过 “%s” 投递。\n"
 
-#: fetchmail.c:1789
+#: fetchmail.c:1790
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
 msgstr " 邮件将被 %cMPT 转发到:"
 
-#: fetchmail.c:1800
+#: fetchmail.c:1801
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
 msgstr " MAIL FROM 这一行的 Host 部分是 %s\n"
 
-#: fetchmail.c:1803
+#: fetchmail.c:1804
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
 msgstr " RCPT TO 这一行中将要被送往 SMTP 的地址是　%s\n"
 
-#: fetchmail.c:1812
+#: fetchmail.c:1813
 msgid "  Recognized listener spam block responses are:"
 msgstr "  识别出的监听端垃圾邮件拒收响应为:"
 
 # fetchmail.c:1809
-#: fetchmail.c:1818
+#: fetchmail.c:1819
 msgid "  Spam-blocking disabled\n"
 msgstr " 关闭垃圾邮件拒收\n"
 
-#: fetchmail.c:1821
+#: fetchmail.c:1822
 #, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
 msgstr " 服务器连接将被 “%s” 唤起\n"
 
-#: fetchmail.c:1824
+#: fetchmail.c:1825
 msgid "  No pre-connection command.\n"
 msgstr " 无连接前要执行的程序。\n"
 
-#: fetchmail.c:1826
+#: fetchmail.c:1827
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
 msgstr " 服务器连接将被 “%s” 关闭。\n"
 
-#: fetchmail.c:1829
+#: fetchmail.c:1830
 msgid "  No post-connection command.\n"
 msgstr " 无连接后要执行的程序。\n"
 
-#: fetchmail.c:1832
+#: fetchmail.c:1833
 msgid "  No localnames declared for this host.\n"
 msgstr " 此服务器没有要关联的本地用户名。\n"
 
-#: fetchmail.c:1842
+#: fetchmail.c:1843
 msgid "  Multi-drop mode: "
 msgstr " 多投模式: "
 
-#: fetchmail.c:1844
+#: fetchmail.c:1845
 msgid "  Single-drop mode: "
 msgstr " 单投模式: "
 
-#: fetchmail.c:1846
+#: fetchmail.c:1847
 #, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
 msgstr[0] "识别出 %d 个本地用户名。\n"
 
-#: fetchmail.c:1861
+#: fetchmail.c:1862
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
 msgstr " 启用 DNS 搜寻多投地址。\n"
 
-#: fetchmail.c:1862
+#: fetchmail.c:1863
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr " 关闭 DNS 搜寻多投地址。\n"
 
-#: fetchmail.c:1866
+#: fetchmail.c:1867
 msgid ""
 "  Server aliases will be compared with multidrop addresses by IP address.\n"
 msgstr " 服务器昵称将以 IP 地址与多投地址进行比较\n"
 
-#: fetchmail.c:1868
+#: fetchmail.c:1869
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
 msgstr " 服务器昵称将以名字与多投地址进行比较\n"
 
-#: fetchmail.c:1871
+#: fetchmail.c:1872
 msgid "  Envelope-address routing is disabled\n"
 msgstr " 禁用 Envelope-address 路由\n"
 
-#: fetchmail.c:1874
+#: fetchmail.c:1875
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
 msgstr " 邮件头假定为: %s\n"
 
-#: fetchmail.c:1877
+#: fetchmail.c:1878
 #, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
 msgstr " 跳过的邮件头数目为: %d\n"
 
-#: fetchmail.c:1880
+#: fetchmail.c:1881
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
 msgstr " 将从用户 id 中移除前缀 %s\n"
 
-#: fetchmail.c:1883
+#: fetchmail.c:1884
 msgid "  No prefix stripping\n"
 msgstr " 没有要从用户 id 中清除的前缀\n"
 
-#: fetchmail.c:1890
+#: fetchmail.c:1891
 msgid "  Predeclared mailserver aliases:"
 msgstr " 预先声明的邮件服务器昵称: "
 
-#: fetchmail.c:1899
+#: fetchmail.c:1900
 msgid "  Local domains:"
 msgstr " 本地域:"
 
-#: fetchmail.c:1909
+#: fetchmail.c:1910
 #, c-format
 msgid "  Connection must be through interface %s.\n"
 msgstr " 必须通过地址 %s 连接\n"
 
-#: fetchmail.c:1911
+#: fetchmail.c:1912
 msgid "  No interface requirement specified.\n"
 msgstr " 未指定地址要求。\n"
 
-#: fetchmail.c:1913
+#: fetchmail.c:1914
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
 msgstr " 收件轮循将监听 %s。\n"
 
-#: fetchmail.c:1915
+#: fetchmail.c:1916
 msgid "  No monitor interface specified.\n"
 msgstr " 未指定监听地址。\n"
 
-#: fetchmail.c:1919
+#: fetchmail.c:1920
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
 msgstr " 通过外部程序 %s 进行服务器连接 (--plugin %s)。\n"
 
-#: fetchmail.c:1921
+#: fetchmail.c:1922
 msgid "  No plugin command specified.\n"
 msgstr " 未指定外部程序。\n"
 
-#: fetchmail.c:1923
+#: fetchmail.c:1924
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
 msgstr " 通过外部程序 %s 进行 SMTP 连接(--plugout %s)。\n"
 
-#: fetchmail.c:1925
+#: fetchmail.c:1926
 msgid "  No plugout command specified.\n"
 msgstr " 未指定外部程序。\n"
 
-#: fetchmail.c:1930
+#: fetchmail.c:1931
 msgid "  No UIDs saved from this host.\n"
 msgstr " 未从此主机上保存 UIDs。\n"
 
-#: fetchmail.c:1939
+#: fetchmail.c:1940
 #, c-format
 msgid "  %d UIDs saved.\n"
 msgstr " 保存了 %d 个UIDs。\n"
 
-#: fetchmail.c:1947
+#: fetchmail.c:1948
 msgid "  Poll trace information will be added to the Received header.\n"
 msgstr " 收件跟踪信息将被加入 Received 邮件头。\n"
 
-#: fetchmail.c:1949
+#: fetchmail.c:1950
 msgid ""
 "  No poll trace information will be added to the Received header.\n"
 ".\n"
@@ -1553,7 +1554,7 @@ msgstr ""
 " 无收件跟踪信息要被加入 Received 邮件头。\n"
 "。\n"
 
-#: fetchmail.c:1952
+#: fetchmail.c:1953
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
 msgstr " 传送的 properties 选项为 “%s” 。\n"
@@ -1627,99 +1628,119 @@ msgstr "清空证书时出错\n"
 msgid "fetchmail: thread sleeping for %d sec.\n"
 msgstr "fetchmail: 线程休眠 %d 秒。\n"
 
-#: imap.c:326
+#: imap.c:73
+#, c-format
+msgid "Received BYE response from IMAP server: %s"
+msgstr ""
+
+#: imap.c:91
+#, fuzzy, c-format
+msgid "bogus message count in \"%s\"!"
+msgstr "发现无效邮件！"
+
+#: imap.c:138
+#, c-format
+msgid "bogus EXPUNGE count in \"%s\"!"
+msgstr ""
+
+#: imap.c:387
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "协议被识别为 IMAP4 版本 1\n"
 
-#: imap.c:332
+#: imap.c:393
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "协议被识别为 IMAP4 版本 0\n"
 
-#: imap.c:339
+#: imap.c:400
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "协议被识别为 IMAP2 或 IMAP2BIS\n"
 
-#: imap.c:354
+#: imap.c:415
 msgid "will idle after poll\n"
 msgstr "收件后恢复至 idle 模式\n"
 
-#: imap.c:446 pop3.c:518
+#: imap.c:507 pop3.c:518
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: 成功升级至 TLS 协议。\n"
 
-#: imap.c:455 pop3.c:527
+#: imap.c:516 pop3.c:527
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: 升级至 TLS 协议失败。\n"
 
-#: imap.c:459
+#: imap.c:520
 #, fuzzy, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: 升级至 TLS 失败，继续尝试\n"
 
-#: imap.c:579
+#: imap.c:640
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "需要的 OTP 功能未被编译进 fetchmail\n"
 
-#: imap.c:601 pop3.c:385
+#: imap.c:662 pop3.c:385
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "需要的 NTLM 功能未被编译进 fetchmail\n"
 
-#: imap.c:610
+#: imap.c:671
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "需要的 LOGIN 功能未被编译进 fetchmail\n"
 
-#: imap.c:676
+#: imap.c:737
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "邮件删除数不相等 (实际删除 %d 封!= 已删除 %d 封)\n"
 
-#: imap.c:782 imap.c:841
+#: imap.c:876
+#, c-format
+msgid "%lu is unseen\n"
+msgstr "%lu 封未读\n"
+
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1114 pop3.c:1121
+#, c-format
+msgid "%u is unseen\n"
+msgstr "%u 未读\n"
+
+#: imap.c:972 imap.c:1031
 msgid "re-poll failed\n"
 msgstr "重新收件失败\n"
 
-#: imap.c:790 imap.c:846
+#: imap.c:980 imap.c:1036
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "重新收件后又有 %d 封邮件等待收取\n"
 
-#: imap.c:807
+#: imap.c:997
 msgid "mailbox selection failed\n"
 msgstr "邮箱选择失败\n"
 
-#: imap.c:811
+#: imap.c:1001
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "首次收件后又有 %d 封邮件等待收取\n"
 
-#: imap.c:825
+#: imap.c:1015
 msgid "expunge failed\n"
 msgstr "删除操作失败\n"
 
-#: imap.c:829
+#: imap.c:1019
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "删除操作后有 %d 封邮件等待收取\n"
 
-#: imap.c:871
+#: imap.c:1058
 msgid "search for unseen messages failed\n"
 msgstr "查找未读邮件失败\n"
 
-#: imap.c:899
-#, c-format
-msgid "%lu is unseen\n"
-msgstr "%lu 封未读\n"
-
-#: imap.c:911 pop3.c:889
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u 是首个未读邮件\n"
 
-#: imap.c:1002
+#: imap.c:1144
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr "警告: 忽略服务器返回的邮件大小的无效数据。\n"
@@ -2275,11 +2296,6 @@ msgstr "响应的服务器带有错误消息的 UID。\n"
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id = %s (数量 = %d 封) 已被删除，但仍然存在！\n"
 
-#: pop3.c:868 pop3.c:880 pop3.c:1114 pop3.c:1121
-#, c-format
-msgid "%u is unseen\n"
-msgstr "%u 未读\n"
-
 #: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "邮件被插入服务器列表。无法处理。\n"
@@ -2548,125 +2564,125 @@ msgstr "无法将服务 %s 解析为端口号\n"
 msgid "Please specify the service as decimal port number.\n"
 msgstr "请把服务指定为十进制的端口号\n"
 
-#: sink.c:220
+#: sink.c:231
 #, c-format
 msgid "forwarding to %s\n"
 msgstr "正在转发至 %s\n"
 
-#: sink.c:306
+#: sink.c:317
 msgid "SMTP: (bounce-message body)\n"
 msgstr "SMTP: (回送邮件内容)\n"
 
-#: sink.c:309
+#: sink.c:320
 #, c-format
 msgid "mail from %s bounced to %s\n"
 msgstr "邮件从 %s 回送至 %s\n"
 
-#: sink.c:446
+#: sink.c:457
 #, c-format
 msgid "Saved error is still %d\n"
 msgstr "保留的错误仍然为 %d\n"
 
-#: sink.c:506 sink.c:605
+#: sink.c:517 sink.c:616
 #, c-format
 msgid "%cMTP error: %s\n"
 msgstr "%cMTP 出错: %s\n"
 
-#: sink.c:550
+#: sink.c:561
 msgid "SMTP server requires STARTTLS, keeping message.\n"
 msgstr "SMTP 服务器需要 STARTTLS 认证，正在保存邮件。\n"
 
-#: sink.c:730
+#: sink.c:741
 #, c-format
 msgid "BSMTP file open failed: %s\n"
 msgstr "打开 BSMTP 文件失败: %s\n"
 
-#: sink.c:776
+#: sink.c:787
 msgid "BSMTP preamble write failed.\n"
 msgstr "写入 BSMTP 报头失败。\n"
 
-#: sink.c:990
+#: sink.c:1001
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "%cMTP 端不认可收件人地址 “%s”\n"
 
-#: sink.c:997
+#: sink.c:1008
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr "%cMTP 端不是真的认可收件人地址 “%s”\n"
 
-#: sink.c:1043
+#: sink.c:1054
 msgid "no address matches; no postmaster set.\n"
 msgstr "无匹配的地址；也无 postmaster 设置\n"
 
-#: sink.c:1055
+#: sink.c:1066
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "无法稳定发送至 %s！\n"
 
-#: sink.c:1061
+#: sink.c:1072
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "无匹配的地址；转发至 %s。\n"
 
-#: sink.c:1217
+#: sink.c:1228
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "即将用 %s 投递\n"
 
-#: sink.c:1241
+#: sink.c:1252
 msgid "MDA open failed\n"
 msgstr "打开 MDA 失败\n"
 
-#: sink.c:1278
+#: sink.c:1289
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "%cMTP 连接至 %s 失败\n"
 
-#: sink.c:1302
+#: sink.c:1313
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "无法启动 MDA 代理；正在转到 MDA 代理 %s"
 
-#: sink.c:1364
+#: sink.c:1375
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "写入 MDA 时出错: %s\n"
 
-#: sink.c:1367
+#: sink.c:1378
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA 被信号 %d 终止\n"
 
-#: sink.c:1370
+#: sink.c:1381
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA 返回非零值 %d\n"
 
-#: sink.c:1373
+#: sink.c:1384
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr "奇怪: MDA pclose 返回 %d 且 errno 为 %d/%s，在 %s:%d 无法处理\n"
 
-#: sink.c:1395
+#: sink.c:1406
 msgid "Message termination or close of BSMTP file failed\n"
 msgstr "邮件终止或 BSMTP 文件关闭失败\n"
 
-#: sink.c:1417
+#: sink.c:1428
 msgid "SMTP listener refused delivery\n"
 msgstr "SMTP 端拒绝投递\n"
 
-#: sink.c:1447
+#: sink.c:1458
 msgid "LMTP delivery error on EOM\n"
 msgstr "邮件结尾时用 LTMP 协议投递错误\n"
 
-#: sink.c:1450
+#: sink.c:1461
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "邮件结尾时 LMTP 协议的未知的非 503 响应: %s\n"
 
-#: sink.c:1605
+#: sink.c:1616
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.10-beta1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-01-28 01:26+0100\n"
-"PO-Revision-Date: 2010-01-28 01:31+0100\n"
+"POT-Creation-Date: 2010-02-04 14:52+0100\n"
+"PO-Revision-Date: 2010-02-05 00:44+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -447,7 +447,7 @@ msgstr " (%d Bytes).\n"
 msgid "No mail for %s\n"
 msgstr "Keine Post für %s\n"
 
-#: driver.c:1393 imap.c:87
+#: driver.c:1393
 msgid "bogus message count!"
 msgstr "ungültige Nachrichtenanzahl!"
 
@@ -1099,7 +1099,7 @@ msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail wird Fehlerbenachrichtigungen an den Absender schicken.\n"
 
 #: fetchmail.c:1558
-msgid "Fetchmail will treat permanent errors as permanent (drop messsages).\n"
+msgid "Fetchmail will treat permanent errors as permanent (drop messages).\n"
 msgstr ""
 "Fetchmail wird permanente Fehler als solche behandeln (Nachrichten "
 "verwerfen).\n"
@@ -1731,103 +1731,118 @@ msgstr "fetchmail: Thread schläft für %d Sek.\n"
 msgid "Received BYE response from IMAP server: %s"
 msgstr "\"BYE\"-Antwort vom IMAP-Server erhalten: %s"
 
-#: imap.c:373
+#: imap.c:91
+#, c-format
+msgid "bogus message count in \"%s\"!"
+msgstr "ungültige Nachrichtenanzahl in \"%s\"!"
+
+#: imap.c:138
+#, c-format
+msgid "bogus EXPUNGE count in \"%s\"!"
+msgstr "ungültige Zahl für EXPUNGE in \"%s\"!"
+
+#: imap.c:387
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Protokoll identifiziert als IMAP4 rev 1\n"
 
-#: imap.c:379
+#: imap.c:393
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Protokoll identifiziert als IMAP4 rev 0\n"
 
-#: imap.c:386
+#: imap.c:400
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Protokoll identifiziert als IMAP2 oder IMAP2BIS\n"
 
-#: imap.c:401
+#: imap.c:415
 msgid "will idle after poll\n"
 msgstr "werde nach Abfrage untätig sein\n"
 
-#: imap.c:493 pop3.c:518
+#: imap.c:507 pop3.c:518
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: Upgrade auf TLS erfolgreich.\n"
 
-#: imap.c:502 pop3.c:527
+#: imap.c:516 pop3.c:527
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: Upgrade auf TLS fehlgeschlagen.\n"
 
-#: imap.c:506
+#: imap.c:520
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 "%s: opportunistisches Upgrade auf TLS fehlgeschlagen, versuche Fortsetzung.\n"
 
-#: imap.c:626
+#: imap.c:640
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Benötigte OTP-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:648 pop3.c:385
+#: imap.c:662 pop3.c:385
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Benötigte NTLM-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:657
+#: imap.c:671
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Benötigte LOGIN-Fähigkeit nicht vom Server unterstützt\n"
 
-#: imap.c:723
+#: imap.c:737
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "unerwartete Expunge-Bestätigung (%d tatsächlich != %d erwartet)\n"
 
-#: imap.c:829 imap.c:888
+#: imap.c:876
+#, c-format
+msgid "%lu is unseen\n"
+msgstr "%lu ist ungesehen\n"
+
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1114 pop3.c:1121
+#, c-format
+msgid "%u is unseen\n"
+msgstr "%u ist ungesehen\n"
+
+#: imap.c:972 imap.c:1031
 msgid "re-poll failed\n"
 msgstr "erneute Abfrage fehlgeschlagen\n"
 
-#: imap.c:837 imap.c:893
+#: imap.c:980 imap.c:1036
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d Nachricht wartet nach erneuter Abfrage\n"
 msgstr[1] "%d Nachrichten warten nach erneuter Abfrage\n"
 
-#: imap.c:854
+#: imap.c:997
 msgid "mailbox selection failed\n"
 msgstr "Postfach-Auswahl fehlgeschlagen\n"
 
-#: imap.c:858
+#: imap.c:1001
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d Nachricht wartet nach der ersten Abfrage\n"
 msgstr[1] "%d Nachrichten warten nach der ersten Abfrage\n"
 
-#: imap.c:872
+#: imap.c:1015
 msgid "expunge failed\n"
 msgstr "Säubern fehlgeschlagen\n"
 
-#: imap.c:876
+#: imap.c:1019
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d Nachricht wartet nach dem Löschen\n"
 msgstr[1] "%d Nachrichten warten nach dem Löschen\n"
 
-#: imap.c:941
-#, c-format
-msgid "%lu is unseen\n"
-msgstr "%lu ist ungesehen\n"
-
-#: imap.c:952
+#: imap.c:1058
 msgid "search for unseen messages failed\n"
 msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 
-#: imap.c:957 pop3.c:889
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
 
-#: imap.c:1038
+#: imap.c:1144
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr "Warnung: ignoriere falsche Größendaten vom Server.\n"
@@ -2409,11 +2424,6 @@ msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) wurde gelöscht, ist aber immer noch da!\n"
-
-#: pop3.c:868 pop3.c:880 pop3.c:1114 pop3.c:1121
-#, c-format
-msgid "%u is unseen\n"
-msgstr "%u ist ungesehen\n"
 
 #: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
@@ -3192,6 +3202,3 @@ msgstr "malloc fehlgeschlagen\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc fehlgeschlagen\n"
-
-#~ msgid "message delimiter found while scanning headers\n"
-#~ msgstr "Nachrichtentrenner gefunden beim Scannen der Kopfzeilen\n"
