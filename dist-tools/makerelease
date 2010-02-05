@@ -12,6 +12,8 @@ $svnrepos = "http://mknod.org/svn/$project";
 $website = "http://developer.berlios.de/projects/$project";
 $mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
 
+die "Need GNU sort!" unless `sort --version | head -n1` =~ /GNU/;
+
 # parse options
 $diffs = 0;
 $verbose = 0;
@@ -44,7 +46,7 @@ $tag = "RELEASE_$version";
 $tag =~ tr/./-/;
 
 # extract existing tags
-open(ID, "-|", "svn", "ls", $svnrepos . "/tags") || die "cannot run svn ls: $!\naborting";
+open(ID, "svn ls \"$svnrepos/tags\" | sort -t- -k1,1 -k2,2n -k3,3n |") || die "cannot run svn ls: $!\naborting";
 while (<ID>) {
     if (m{^(RELEASE_.*)/}) {
 	unshift(@versions, $1);
@@ -76,14 +78,14 @@ if (system("autoreconf -isv")) {
 }
 
 print "### Test-building the software...\n";
-if (system("mkdir -p autobuild && cd autobuild && ../configure -C --silent && make -s clean && make distcheck")) {
+if (system("mkdir -p autobuild && cd autobuild && ../configure -C --silent && make -s clean && make check distcheck")) {
 	die("Compilation failure\n");
 }
 
-print "### Building the RPMs...\n";
-if (system("cd autobuild && cp ../fetchmail.xpm . && buildrpms $project-${version}.tar.bz2 $null")) {
-	die("RPM-build failure\n");
-}
+# print "### Building the RPMs...\n";
+# if (system("cd autobuild && cp ../fetchmail.xpm . && buildrpms $project-${version}.tar.bz2 $null")) {
+# 	die("RPM-build failure\n");
+# }
 
 open(REPORT, ">$tmp/$project.PREAMBLE.$$");
 
@@ -144,7 +146,7 @@ if ($diffs) {
 	    ." -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$"
 	    ." -o ANNOUNCE.EMAIL";
 } else {
-	system(mv, "$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
+	system("mv", "$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
 }
 
 #unlink("$tmp/$project.PREAMBLE.$$");
