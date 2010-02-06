@@ -1,7 +1,7 @@
 test "$SEND_ANNOUNCEMENTS" = doit || { echo "read the source, luke! -> $0" ; cat "$0" ; exit 1 ; }
 
-ANN=fetchmail-SA-2009-01
-FILE=$HOME/VCS-mine/fetchmail.svn/BRANCH_6-3/$ANN.txt
+ANN=fetchmail-SA-2010-01
+FILE=$HOME/VCS-mine/fetchmail.git/$ANN.txt
 test -r $FILE || { echo "Cannot find $FILE." ; exit 1 ; }
 CVE=$(sed -n '/^CVE Name:/ { s/^.*:[ 	]*//p;q; }' $FILE)
 SUBJECT="fetchmail security announcement $ANN ($CVE)"

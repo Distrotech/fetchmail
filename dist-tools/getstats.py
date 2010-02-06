@@ -4,6 +4,9 @@
 
 import commands, os, string, ftplib
 
+print "This script must be adjusted for Git."
+exit(1)
+
 # Get version and date
 date = commands.getoutput("LC_TIME=C date -u")
 pid = os.getpid()

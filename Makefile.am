@@ -142,7 +142,6 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 distdirs = rh-config contrib beos
 
 EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
-		ucs/README.svn \
 		fetchmail.spec fetchmail.xpm \
 		trio/CHANGES trio/README \
 		strlcpy.3 bighand.png \
@@ -211,7 +210,7 @@ fetchmail-man.html: fetchmail.man $(srcdir)/dist-tools/manServer.pl
 	|| { rm -f $@ ; exit 1 ; }
 
 dist-hook:
-	cd $(distdir) && find $(distdirs) po -name .svn -type d -prune -exec rm -rf '{}' ';'
+	cd $(distdir) && find $(distdirs) po -name .git -type d -prune -exec rm -rf '{}' ';'
 	cd $(distdir) && find $(distdirs) po -name '*~' -exec rm -f '{}' ';'
 
 .PHONY: lsm

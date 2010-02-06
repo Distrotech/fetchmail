@@ -7,6 +7,8 @@
 use POSIX qw(strftime);
 $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
 
+die "This script ($0) needs to be updated for the Git-orious repo.";
+
 $project = "fetchmail";
 $svnrepos = "http://mknod.org/svn/$project";
 $website = "http://developer.berlios.de/projects/$project";

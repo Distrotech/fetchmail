@@ -47,6 +47,23 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.15 (not yet released):
+
+# CHANGES
+* The repository has been converted and moved from the Subversion (SVN) format
+  kindly hosted by Graham Wilson over the past years to Git format hosted on
+  Gitorious.org.  My deepest thanks to Graham Wilson for this service that
+  kept us going when BerliOS's Subversion service was faulty in its early days.
+* This opportunity was used to convert BRANCH_6-2 and BRANCH_1-9-9 to GnuPG-signed
+  tags, as a sign that these are now closed.
+* The outdated SVN trunk is now called "oldtrunk" in Git just to save the work
+  for future reference. All development in the past few years was on BRANCH_6-3.
+* master was branched from BRANCH_6-3 for user convenience.
+
+# DOCUMENTATION
+* Web site and documentation were adjusted to reflect the SVN->Git move.
+
+
 fetchmail 6.3.14 (released 2010-02-05, 25487 LoC):
 
 # SECURITY FIXES
@@ -116,7 +133,7 @@ fetchmail 6.3.13 (released 2009-10-30, 25333 LoC):
 fetchmail 6.3.12 (released 2009-10-05):
 
 # REGRESSION FIXES
-* The CVS-2009-2666 fix in fetchmail release 6.3.11 caused a free() of
+* The CVE-2009-2666 fix in fetchmail release 6.3.11 caused a free() of
   unallocated memory on SSL connections, which caused crashes or program aborts
   on some systems (depending on how initialization and free() of unallocated
   memory is handled in compiler and libc).

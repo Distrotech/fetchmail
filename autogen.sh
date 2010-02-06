@@ -1,7 +1,7 @@
 #! /bin/sh
 
-# bootstrap.sh - bootstrap the fetchmail build after a fresh subversion checkout
-# (C) 2004  Matthias Andree -- GNU GPL V2
+# autogen.sh - bootstrap the fetchmail build after a fresh git checkout
+# (C) 2004, 2010  Matthias Andree -- GNU GPL V2 or newer
 
 set -e
 # sanity checks:
