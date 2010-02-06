@@ -2,12 +2,11 @@ To do a release:
 
 - Update NEWS, configure.ac, and fetchmail.man, with release number & date.
 
-- Run "perl dist-tools/makerelease" - this entails "make distcheck" and
-  RPM building.
+- Run "perl dist-tools/makerelease.pl" - this entails "make distcheck".
 
-- Commit all files to the VCS.
+- Commit all files to the VCS (Git).
 
-- Tag the new release and record the revision in RELEASE-VERSIONS
+- Tag the new release with a signed tag.
 
 - Upload sig and tarball to ~/public_html/fetchmail/ and edit index.html
   for the new files, NEWS, and the new release and last update.
