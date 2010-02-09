@@ -7,12 +7,13 @@ Topics:		Heap overrun in verbose SSL certificate information display.
 
 Author:		Matthias Andree
 Version:	1.0
-Announced:
+Announced:	2010-02-05
 Type:		malloc() Buffer overrun with printable characters
 Impact:		Code injection (difficult).
 Danger:		low
 
-CVE Name:	to be assigned via oss-security@ list
+CVE Name:	CVE-2010-0562
+CVSSv2:		(AV:N/AC:H/Au:N/C:N/I:C/A:P/E:U/RL:O/RC:C) proposed
 URL:		http://www.fetchmail.info/fetchmail-SA-2010-01.txt
 Project URL:	http://www.fetchmail.info/
 
@@ -21,6 +22,7 @@ Affects:	fetchmail releases 6.3.11, 6.3.12, and 6.3.13
 Not affected:	fetchmail release 6.3.14 and newer
 
 Corrected:	2010-02-04 fetchmail SVN (r5467)
+		           Git (f1c7607615ebd48807db6170937fe79bb89d47d4)
 		2010-02-05 fetchmail release 6.3.14
 
 
@@ -29,6 +31,7 @@ Corrected:	2010-02-04 fetchmail SVN (r5467)
 
 2010-02-04 0.1	first draft (visible in SVN and through oss-security)
 2010-02-05 1.0	fixed signed/unsigned typo (found by Nico Golde)
+2010-02-09 1.1	added CVE/CVSS, Announced: date
 
 
 1. Background
@@ -135,7 +138,7 @@ END OF fetchmail-SA-2010-01.txt
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.12 (GNU/Linux)
 
-iEYEARECAAYFAktrbs0ACgkQvmGDOQUufZWzMQCg49F/WJiOjGwWZKHHzBcfTgx/
-sLIAmQHPO3mezy3Ku0O29b4AXHL2ZQNb
-=kF7s
+iEYEARECAAYFAktxLWcACgkQvmGDOQUufZUGBQCg8AU5mXRaGBo+tETsGYjFX10m
+6SYAnA6IVIeoTjKvspD8BnLLd0yGU2iw
+=b7ry
 -----END PGP SIGNATURE-----

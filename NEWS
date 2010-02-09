@@ -67,9 +67,9 @@ fetchmail 6.3.15 (not yet released):
 fetchmail 6.3.14 (released 2010-02-05, 25487 LoC):
 
 # SECURITY FIXES
-* SSL/TLS certificate information is now also reported properly on computers
-  that consider the "char" type signed. Fixes malloc() buffer overrun.
-  Workaround for older versions: do not use verbose mode.
+* CVE-2010-0562: SSL/TLS certificate information is now also reported properly
+  on computers that consider the "char" type signed. Fixes malloc() buffer
+  overrun.  Workaround for older versions: do not use verbose mode.
   See fetchmail-SA-2010-01.txt for details, including a minimal patch.
 
 # BUG FIXES
