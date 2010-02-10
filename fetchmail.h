@@ -556,6 +556,7 @@ extern volatile int lastsig;
 /* sink.c: forwarding */
 void smtp_close(struct query *, int);
 int smtp_open(struct query *);
+int smtp_setup(struct query *);
 char *rcpt_address(struct query *, const char *, int);
 int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);

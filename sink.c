@@ -76,7 +76,7 @@ static void smtp_rset(struct query *ctl)
     }
 }
 
-int smtp_open(struct query *ctl)
+int smtp_setup(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
     /* maybe it's time to close the socket in order to force delivery */
@@ -1276,7 +1276,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
      * open a socket fails, fall through to attempt delivery via
      * local MDA.
      */
-    else if (!ctl->mda && smtp_open(ctl) != -1)
+    else if (!ctl->mda && smtp_setup(ctl) != -1)
 	return(open_smtp_sink(ctl, msg, good_addresses, bad_addresses));
 
     /*

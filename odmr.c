@@ -138,7 +138,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
      * instead, we'll use select(2) to watch the read sides of both
      * sockets and just throw their data at each other.
      */
-    if ((smtp_sock = smtp_open(ctl)) == -1)
+    if ((smtp_sock = smtp_setup(ctl)) == -1)
 	return(PS_SOCKET);
     else
     {
