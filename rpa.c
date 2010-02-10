@@ -883,7 +883,7 @@ static void md5(const void *in_,int len,unsigned char *out)
     MD5Final(  out, &md5context );
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, GT_("MD5 result is: \n"));
+	report(stdout, GT_("MD5 result is:\n"));
 	for (i=0; i<16; i++)
 	{
 	    report_build(stdout, "%02X ",out[i]);

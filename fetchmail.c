@@ -584,7 +584,7 @@ int main(int argc, char **argv)
 		exit(rc);
 	    }
 	}
-	report(stdout, GT_("starting fetchmail %s daemon \n"), VERSION);
+	report(stdout, GT_("starting fetchmail %s daemon\n"), VERSION);
 
 	/*
 	 * We'll set up a handler for these when we're sleeping,
@@ -600,9 +600,9 @@ int main(int argc, char **argv)
 	if (run.logfile && !nodetach && access(run.logfile, F_OK) == 0)
     	{
 	    if (!freopen(run.logfile, "a", stdout))
-		    report(stderr, GT_("could not open %s to append logs to \n"), run.logfile);
+		    report(stderr, GT_("could not open %s to append logs to\n"), run.logfile);
 	    if (!freopen(run.logfile, "a", stderr))
-		    report(stdout, GT_("could not open %s to append logs to \n"), run.logfile);
+		    report(stdout, GT_("could not open %s to append logs to\n"), run.logfile);
 	    if (run.use_syslog)
 		report(stdout, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
     	}

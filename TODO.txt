@@ -16,8 +16,6 @@ soon - MUST:
   Postfix virtual users" around 2009-09-23 on fetchmail-users@).
 
 soon - SHOULD:
-- replace " \n" by "\n" (and similar) - but make sure translators have
-  time to catch up.
 - make sure the man page completely lists all options (f. i. sslcertpath) in
   the tables.
 - allow \Deleted without \Seen, rf. 
