@@ -579,19 +579,32 @@ be comma-separated.
 .B \-m <command> | \-\-mda <command>
 (Keyword: mda)
 .br
-You can force mail to be passed to an MDA directly
-(rather than forwarded to port 25) with the \-\-mda or \-m option.
+This option lets \fBfetchmail\fP use a Message or Local Delivery Agent
+(MDA or LDA) directly, rather than forward via SMTP or LMTP.
 
-To
-avoid losing mail, use this option only with MDAs like maildrop or
-MTAs like sendmail that return a nonzero status on disk-full and other
-resource-exhaustion errors; the nonzero status tells fetchmail that
-delivery failed and prevents the message from being deleted off the
-server.
+To avoid losing mail, use this option only with MDAs like maildrop or
+MTAs like sendmail that exit with a nonzero status on disk-full and other
+delivery errors; the nonzero status tells fetchmail that delivery failed
+and prevents the message from being deleted on the server.
 
-If \fBfetchmail\fP is running as root, it sets its user id to
-that of the target user while delivering mail through an MDA.  Some
-possible MDAs are "/usr/sbin/sendmail \-i \-f %F \-\- %T" (\fBNote:\fP
+If \fBfetchmail\fP is running as root, it sets its user id while
+delivering mail through an MDA as follows:  First, the FETCHMAILUSER,
+LOGNAME, and USER environment variables are checked in this order. The
+value of the first variable from his list that is defined (even if it is
+empty!) is looked up in the system user database. If none of the
+variables is defined, fetchmail will use the real user id it was started
+with. If one of the variables was defined, but the user stated there
+isn't found, fetchmail continues running as root, without checking
+remaining variables on the list.  Practically, this means that if you
+run fetchmail as root (not recommended), it is most useful to define the
+FETCHMAILUSER environment variable to set the user that the MDA should
+run as. Some MDAs (such as maildrop) are designed to be setuid root and
+setuid to the recipient's user id, so you don't lose functionality this
+way even when running fetchmail as unprivileged user.  Check the MDA's
+manual for details.
+
+Some possible MDAs are "/usr/sbin/sendmail \-i \-f %F \-\- %T"
+(\fBNote:\fP
 some several older or vendor sendmail versions mistake \-\- for an
 address, rather than an indicator to mark the end of the option arguments),
 "/usr/bin/deliver" and "/usr/bin/maildrop \-d %T".  Local delivery

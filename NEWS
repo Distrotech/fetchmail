@@ -54,14 +54,16 @@ fetchmail 6.3.15 (not yet released):
   kindly hosted by Graham Wilson over the past years to Git format hosted on
   Gitorious.org.  My deepest thanks to Graham Wilson for this service that
   kept us going when BerliOS's Subversion service was faulty in its early days.
-* This opportunity was used to convert BRANCH_6-2 and BRANCH_1-9-9 to GnuPG-signed
-  tags, as a sign that these are now closed.
+* This opportunity was used to convert BRANCH_6-2 and BRANCH_1-9-9 to
+  GnuPG-signed tags, as a sign that these are now closed.
 * The outdated SVN trunk is now called "oldtrunk" in Git just to save the work
   for future reference. All development in the past few years was on BRANCH_6-3.
 * master was branched from BRANCH_6-3 for user convenience.
 
 # DOCUMENTATION
 * Web site and documentation were adjusted to reflect the SVN->Git move.
+* The fetchmail manual page is now much clearer on the user id switching
+  (seteuid) when using --mda while running as the super user.
 
 
 fetchmail 6.3.14 (released 2010-02-05, 25487 LoC):
