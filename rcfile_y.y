@@ -63,7 +63,7 @@ extern char * yytext;
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP SDPS ENVELOPE QVIRTUAL
-%token USERNAME PASSWORD FOLDER SMTPHOST FETCHDOMAINS MDA BSMTP LMTP
+%token PINENTRY_TIMEOUT PWMD_SOCKET PWMD_FILE USERNAME PASSWORD FOLDER SMTPHOST FETCHDOMAINS MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
 %token INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
@@ -111,6 +111,13 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = prependdir ($4, rcfiledir);
 		| SET NO INVISIBLE		{run.invisible = FALSE;}
 		| SET SHOWDOTS			{run.showdots = FLAG_TRUE;}
 		| SET NO SHOWDOTS		{run.showdots = FLAG_FALSE;}
+		| SET PINENTRY_TIMEOUT optmap NUMBER {
+#ifdef HAVE_LIBPWMD
+		    run.pinentry_timeout = $4;
+#else
+		    yyerror(GT_("pwmd not enabled"));
+#endif 
+		    }
 
 /* 
  * The way the next two productions are written depends on the fact that
@@ -367,6 +374,22 @@ user_option	: TO localnames HERE
 		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE_IN($2);}
 
 		| PROPERTIES STRING	{current.properties  = xstrdup($2);}
+
+		| PWMD_SOCKET STRING	{
+#ifdef HAVE_LIBPWMD
+		    current.pwmd_socket = xstrdup($2);
+#else
+		    yyerror(GT_("pwmd not enabled"));
+#endif 
+					}
+
+		| PWMD_FILE STRING	{
+#ifdef HAVE_LIBPWMD
+		    current.pwmd_file = xstrdup($2);
+#else
+		    yyerror(GT_("pwmd not enabled"));
+#endif 
+					}
 		;
 %%
 

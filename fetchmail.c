@@ -87,6 +87,12 @@ static time_t parsetime;	/* time of last parse */
 static RETSIGTYPE terminate_run(int);
 static RETSIGTYPE terminate_poll(int);
 
+#ifdef HAVE_LIBPWMD
+static pwm_t *pwm;		/* the handle */
+static const char *pwmd_socket;	/* current socket */
+static const char *pwmd_file;	/* current file */
+#endif
+
 #if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
 /* drop SGID kmem privileage until we need it */
 static void dropprivs(void)
@@ -146,6 +152,282 @@ static void printcopyright(FILE *fp) {
 }
 
 const char *iana_charset;
+
+#ifdef HAVE_LIBPWMD
+static void exit_with_pwmd_error(gpg_error_t error)
+{
+    gpg_err_code_t code = gpg_err_code(error);
+
+    report(stderr, GT_("pwmd: error %i: %s\n"), code, pwmd_strerror(error));
+
+    if (pwm) {
+	pwmd_close(pwm);
+	pwm = NULL;
+    }
+
+    /* Don't exit if daemonized. There may be other active accounts. */
+    if (isatty(1))
+	exit(PS_UNDEFINED);
+}
+
+static int do_pwmd_connect(const char *socketname, const char *filename)
+{
+    static int init;
+    gpg_error_t rc;
+    pwmd_socket_t s;
+
+    if (!init) {
+	pwmd_init();
+	init = 1;
+    }
+
+    if (!pwm || (pwm && socketname && !pwmd_socket) ||
+	    (pwm && !socketname && pwmd_socket) ||
+	    (pwm && socketname && pwmd_socket && strcmp(socketname, pwmd_socket))) {
+	if (pwm)
+	    pwmd_close(pwm);
+
+	pwm = pwmd_new("Fetchmail");
+	rc = pwmd_connect_url(pwm, socketname);
+
+	if (rc) {
+	    exit_with_pwmd_error(rc);
+	    return 1;
+	}
+    }
+
+    if (run.pinentry_timeout > 0) {
+	rc = pwmd_setopt(pwm, PWMD_OPTION_PINENTRY_TIMEOUT,
+		run.pinentry_timeout);
+
+	if (rc) {
+	    exit_with_pwmd_error(rc);
+	    return 1;
+	}
+    }
+
+    rc = pwmd_socket_type(pwm, &s);
+
+    if (rc) {
+	exit_with_pwmd_error(rc);
+	return 1;
+    }
+
+    if (!pwmd_file || strcmp(filename, pwmd_file)) {
+	if (s == PWMD_SOCKET_SSH)
+	    /* use a local pinentry since X11 forwarding is broken. */
+	    rc = pwmd_open2(pwm, filename);
+	else
+	    rc = pwmd_open(pwm, filename);
+
+	if (rc) {
+	    exit_with_pwmd_error(rc);
+	    return 1;
+	}
+    }
+
+    /* May be null to use the default of ~/.pwmd/socket. */
+    pwmd_socket = socketname;
+    pwmd_file = filename;
+    return 0;
+}
+
+static int get_pwmd_details(const char *pwmd_account, int protocol,
+	struct query *ctl)
+{
+    const char *prot = showproto(protocol);
+    gpg_error_t error;
+    char *result;
+    char *tmp = xstrdup(pwmd_account);
+    int i;
+
+    for (i = 0; tmp[i]; i++) {
+	if (i && tmp[i] == '^')
+	    tmp[i] = '\t';
+    }
+
+    /*
+     * Get the hostname for this protocol. Element path must be
+     * account->[protocol]->hostname.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\thostname", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->%s->hostname: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+	    pwmd_close(pwm);
+	    pwm = NULL;
+
+	    if (isatty(1))
+		exit(PS_SYNTAX);
+
+	    return 1;
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+
+    if (ctl->server.pollname != ctl->server.via)
+	xfree(ctl->server.via);
+
+    ctl->server.via = xstrdup(result);
+
+    if (ctl->server.queryname)
+	xfree(ctl->server.queryname);
+
+    ctl->server.queryname = xstrdup(ctl->server.via);
+
+    if (ctl->server.truename)
+	xfree(ctl->server.truename);
+
+    ctl->server.truename = xstrdup(ctl->server.queryname);
+    pwmd_free(result);
+
+    /*
+     * Server port. Fetchmail tries standard ports for known services so it
+     * should be alright if this element isn't found. ctl->server.protocol is
+     * already set. This sets ctl->server.service.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\tport", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND)
+	    report(stderr, GT_("pwmd: %s->%s->port: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->server.service)
+	    xfree(ctl->server.service);
+
+	ctl->server.service = xstrdup(result);
+	pwmd_free(result);
+    }
+
+    /*
+     * Get the remote username. Element must be account->username.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\tusername", tmp);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->username: %s\n"), pwmd_account, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->remotename)
+	    xfree(ctl->remotename);
+
+	if (ctl->server.esmtp_name)
+	    xfree(ctl->server.esmtp_name);
+
+	ctl->remotename = xstrdup(result);
+	ctl->server.esmtp_name = xstrdup(result);
+	pwmd_free(result);
+    }
+
+    /*
+     * Get the remote password. Element must be account->password.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\tpassword", tmp);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->password: %s\n"), pwmd_account, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->password)
+	    xfree(ctl->password);
+
+	ctl->password= xstrdup(result);
+	pwmd_free(result);
+    }
+
+#ifdef SSL_ENABLE
+    /*
+     * If there is a ssl element and set to 1, enable ssl for this account.
+     * Element path must be account->[protocol]->ssl.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\tssl", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->%s->ssl: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	ctl->use_ssl = atoi(result) >= 1 ? FLAG_TRUE : FLAG_FALSE;
+	pwmd_free(result);
+    }
+
+    /*
+     * account->[protocol]->sslfingerprint.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\tsslfingerprint", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->%s->sslfingerprint: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->sslfingerprint)
+	    xfree(ctl->sslfingerprint);
+
+	ctl->sslfingerprint = xstrdup(result);
+	pwmd_free(result);
+    }
+#endif
+
+    xfree(tmp);
+    return 0;
+}
+#endif
 
 int main(int argc, char **argv)
 {
@@ -280,6 +562,9 @@ int main(int argc, char **argv)
 #ifndef HAVE_RES_SEARCH
 	"-DNS"
 #endif
+#ifdef HAVE_LIBPWMD
+	"+PWMD"
+#endif /* HAVE_LIBPWMD */
 	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
@@ -639,6 +924,11 @@ int main(int argc, char **argv)
 	 * leaks...
 	 */
 	struct stat	rcstat;
+#ifdef HAVE_LIBPWMD
+	time_t now;
+
+	time(&now);
+#endif
 
 	if (strcmp(rcfile, "-") == 0) {
 	    /* do nothing */
@@ -648,7 +938,15 @@ int main(int argc, char **argv)
 		       GT_("couldn't time-check %s (error %d)\n"),
 		       rcfile, errno);
 	}
+#ifdef HAVE_LIBPWMD
+	/*
+	 * isatty() to make sure this is a background process since the
+	 * lockfile is removed after each invokation.
+	 */
+	else if (!isatty(1) && rcstat.st_mtime > parsetime)
+#else
 	else if (rcstat.st_mtime > parsetime)
+#endif
 	{
 	    report(stdout, GT_("restarting fetchmail (%s changed)\n"), rcfile);
 
@@ -741,6 +1039,19 @@ int main(int argc, char **argv)
 
 		    dofastuidl = 0; /* this is reset in the driver if required */
 
+#ifdef HAVE_LIBPWMD
+		    /*
+		     * At each poll interval, check the pwmd server for
+		     * changes in host and auth settings.
+		     */
+		    if (ctl->pwmd_file) {
+			if (do_pwmd_connect(ctl->pwmd_socket, ctl->pwmd_file))
+			    continue;
+
+			if (get_pwmd_details(ctl->server.pollname, ctl->server.protocol, ctl))
+			    continue;
+		    }
+#endif
 		    querystatus = query_host(ctl);
 
 		    if (NUM_NONZERO(ctl->fastuidl))
@@ -808,6 +1119,13 @@ int main(int argc, char **argv)
 #endif /* CAN_MONITOR */
 		}
 	    }
+
+#ifdef HAVE_LIBPWMD
+	if (pwm) {
+	    pwmd_close(pwm);
+	    pwm = NULL;
+	}
+#endif
 
 	/* close connections cleanly */
 	terminate_poll(0);
@@ -1048,8 +1366,36 @@ static int load_params(int argc, char **argv, int optind)
 
     if ((implicitmode = (optind >= argc)))
     {
+#ifdef HAVE_LIBPWMD
+	for (ctl = querylist; ctl; ctl = ctl->next) {
+	    ctl->active = !ctl->server.skip;
+
+	    if (ctl->pwmd_file) {
+		/*
+		 * Cannot get an element path without a service.
+		 */
+		if (ctl->server.protocol <= 1) {
+		    report(stderr, GT_("fetchmail: %s configuration invalid, pwmd_file requires a protocol specification\n"),
+			    ctl->server.pollname);
+		    pwmd_close(pwm);
+		    exit(PS_SYNTAX);
+		}
+
+		if (do_pwmd_connect(ctl->pwmd_socket, ctl->pwmd_file))
+		    continue;
+
+		if (get_pwmd_details(ctl->server.pollname, ctl->server.protocol,
+			    ctl))
+		    continue;
+
+		time(&rcstat.st_mtime);
+	    }
+	}
+
+#else
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    ctl->active = !ctl->server.skip;
+#endif
     }
     else
 	for (; optind < argc; optind++) 
@@ -1070,6 +1416,27 @@ static int load_params(int argc, char **argv, int optind)
 			fprintf(stderr,GT_("Warning: multiple mentions of host %s in config file\n"),argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;
+
+#ifdef HAVE_LIBPWMD
+		    if (ctl->pwmd_file) {
+			/*
+			 * Cannot get an element path without a service.
+			 */
+			if (ctl->server.protocol <= 1) {
+			    report(stderr, GT_("%s configuration invalid, pwmd_file requires a protocol specification\n"),
+				   ctl->server.pollname);
+			    exit(PS_SYNTAX);
+			}
+
+			fprintf(stderr, "%s(%i): %s\n", __FILE__, __LINE__, __FUNCTION__);
+			if (do_pwmd_connect(ctl->pwmd_socket, ctl->pwmd_file))
+			    continue;
+
+			if (get_pwmd_details(ctl->server.pollname,
+				    ctl->server.protocol, ctl))
+			    continue;
+		    }
+#endif
 		}
 
 	    if (!predeclared)
@@ -1080,8 +1447,32 @@ static int load_params(int argc, char **argv, int optind)
 		 * call later on.
 		 */
 		ctl = hostalloc((struct query *)NULL);
-		ctl->server.via =
-		    ctl->server.pollname = xstrdup(argv[optind]);
+
+#ifdef HAVE_LIBPWMD
+		if (cmd_opts.pwmd_file) {
+		    /*
+		     * Cannot get an element path without a service.
+		     */
+		    if (cmd_opts.server.protocol == 0 || cmd_opts.server.protocol == 1) {
+			report(stderr, GT_("Option --pwmd-file needs a service (-p) parameter.\n"));
+			exit(PS_SYNTAX);
+		    }
+
+			fprintf(stderr, "%s(%i): %s\n", __FILE__, __LINE__, __FUNCTION__);
+		    if (do_pwmd_connect(cmd_opts.pwmd_socket, cmd_opts.pwmd_file))
+			continue;
+
+		    if (get_pwmd_details(argv[optind], cmd_opts.server.protocol,
+			    ctl))
+			continue;
+		}
+		else
+		    ctl->server.via =
+			ctl->server.pollname = xstrdup(argv[optind]);
+#else
+ 		ctl->server.via =
+ 		    ctl->server.pollname = xstrdup(argv[optind]);
+#endif
 		ctl->active = TRUE;
 		ctl->server.lead_server = (struct hostdata *)NULL;
 	    }

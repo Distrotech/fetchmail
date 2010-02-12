@@ -287,6 +287,22 @@ done
 AC_MSG_RESULT(root-mode pid file will go in $dir)
 AC_DEFINE_UNQUOTED(PID_DIR, "$dir", directory for PID lock files)
 
+AC_ARG_ENABLE(pwmd,
+	[  --enable-pwmd           enable Password Manager Daemon support],
+	, [enable_pwmd=no])
+
+if test "$enable_pwmd" = "yes"; then
+    PKG_CHECK_EXISTS([libpwmd], have_libpwmd=1,
+		     AC_MSG_ERROR([Could not find libpwmd pkg-config module.]))
+
+
+    PKG_CHECK_MODULES([libpwmd], [libpwmd >= 6.0.0])
+    AM_CONDITIONAL(HAVE_LIBPWMD, true)
+    AC_DEFINE(HAVE_LIBPWMD, 1, [Define if you have libPWMD installed.])
+else
+    AM_CONDITIONAL(HAVE_LIBPWMD, false)
+fi
+
 # We may have a fallback MDA available in case the socket open to the 
 # local SMTP listener fails.  Best to use procmail for this, as we know
 # it won't try delivering through local SMTP and cause a mail loop.

@@ -39,6 +39,10 @@ struct addrinfo;
 #  include "trio/trio.h"
 #endif
 
+#ifdef HAVE_LIBPWMD
+#include <libpwmd.h>
+#endif
+
 /* We need this for strstr */
 #if !defined(HAVE_STRSTR) && !defined(strstr)
 char *strstr(const char *, const char *);
@@ -178,6 +182,9 @@ struct runctl
     char	*pidfile;	/** where to record the PID of daemon mode processes */
     char	*postmaster;
     char	*properties;
+#ifdef HAVE_LIBPWMD
+    int		pinentry_timeout;
+#endif
     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
     flag	spambounce;
@@ -314,6 +321,11 @@ struct query
     char *remotename;		/* remote login name to use */
     char *password;		/* remote password to use */
     struct idlist *mailboxes;	/* list of mailboxes to check */
+
+#ifdef HAVE_LIBPWMD
+    char *pwmd_socket;		/* socket to connect to */
+    char *pwmd_file;		/* file to open on the server */
+#endif
 
     /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */

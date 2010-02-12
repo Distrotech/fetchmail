@@ -1,0 +1,82 @@
+When compiled with pwmd (Password Manager Daemon) support (--enable-pwmd)
+fetchmail can retrieve server details from pwmd. pwmd v2.0 and libpwmd v6.0.0
+or later are required.
+
+Three new configuration parameters are added: pwmd_socket (optional) to
+specify the socket to connect to (default is ~/.pwmd/socket), pwmd_file
+(required) which specifies the filename on the server to open, and a global
+parameter pinentry_timeout (optional) which specifies the number of seconds
+until pinentry is cancelled while waiting for the password.
+
+Three new command line options are also added:
+    --pwmd-socket, -C	   same as pwmd_socket
+    --pwmd-file, -G	   same as pwmd_file
+    --pinentry_timeout, -O same as pinentry_timeout
+
+If no pinentry timeout value is specified then the server default will be
+used.
+
+The format of pwmd_socket and --pwmd-socket can be either a URL string in the
+form of:
+	file://[path/to/socket]
+	
+	or
+
+	ssh[46]://[username@]hostname[:port],identity_file,known_hosts_file
+
+If neither file:// or ssh[46]:// are specified it is assumed to be a local
+UNIX domain socket to connect to (file://~/.pwmd/socket).
+
+See the pwmc(1) manual page for details about the identity and known_hosts
+files. Note that if connecting to a remote pwmd server, pwmd's pinentry will
+be disabled and a local pinentry will be tried.
+
+The data that pwmd uses to serve clients is stored in an (encrypted) XML file.
+You'll need to create the file you want fetchmail to use by connecting to the
+server with a pwmd client (socat or pwmc from libpwmd) and send commands to
+store the data. See COMMANDS included with pwmd for details.
+
+The password, if any, to open the encrypted data file is either cached on the
+server (the file has been opened before), or gotten from pinentry(1). See the
+pwmd(1) manual page for information about the ~/.pwmd/pinentry.conf file which
+may contain DISPLAY and TTYNAME settings to let pinentry(1) know where to
+prompt for the password.
+
+An account (e.g., pollname) may be an element path. Instead of separating the
+elements with a TAB character, separate them with a '^'.
+
+Here are the elements that fetchmail uses:
+
+    [...]elements in the element path (^ separated)[...]
+    <pollname>
+	<username>		- Optional (--username/username)
+	<password>		- Optional (--password/password)
+	<POP3|IMAP|etc..>       - Server protocol (must match the protocol
+				  keyword from the rcfile or command line)
+	    <hostname>		- Required (servername/via)
+	    <port>		- Required (--service/protocol)
+	    <ssl>		- Optional (--ssl/ssl)
+	    <sslfingerprint>	- Optional (--sslfingerprint/sslfingerprint)
+	</POP3|IMAP|etc..>
+    </pollname>
+
+
+A minimal fetchmailrc might look like this:
+
+    set pinentry_timeout 30
+    poll isp proto POP3:
+	pwmd_file default
+
+    poll myaccounts^isp proto IMAP:
+	pwmd_file default
+	pwmd_socket "ssh://user@host,~/.pwmd/fetchmail,~/.pwmd/known_hosts"
+
+
+Or from the command line:
+
+    fetchmail -f fetchmailrc isp
+    fetchmail --pwmd-file somefile -p POP3 isp
+
+
+Ben Kibbey <bjk@luxsci.net>
+http://bjk.sourceforge.net/pwmd/.

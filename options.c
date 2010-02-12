@@ -56,12 +56,22 @@ enum {
     LA_SOFTBOUNCE
 };
 
+#ifdef HAVE_LIBPWMD
+static const char *shortoptions = 
+	"O:C:G:?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:I:M:yw:D:";
+#else
 /* options still left: CgGhHjJoORTWxXYz */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:I:M:yw:D:";
+#endif
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
+#ifdef HAVE_LIBPWMD
+  {"pwmd-socket",      required_argument,         (int *) 0, 'C' },
+  {"pwmd-file",        required_argument,         (int *) 0, 'G' },
+  {"pinentry-timeout",    required_argument,         (int *) 0, 'O' },
+#endif
   {"help",	no_argument,	   (int *) 0, '?' },
   {"version",	no_argument,	   (int *) 0, 'V' },
   {"check",	no_argument,	   (int *) 0, 'c' },
@@ -254,6 +264,17 @@ int parsecmdline (int argc /** argument count */,
 			    longoptions, &option_index)) != -1)
     {
 	switch (c) {
+#ifdef HAVE_LIBPWMD
+	case 'C':
+	    ctl->pwmd_socket = prependdir(optarg, currentwd);
+	    break;
+	case 'G':
+	    ctl->pwmd_file = xstrdup(optarg);
+	    break;
+	case 'O':
+	    rctl->pinentry_timeout = atoi(optarg);
+	    break;
+#endif
 	case 'V':
 	    versioninfo = TRUE;
 	    break;
@@ -637,6 +658,12 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
+#ifdef HAVE_LIBPWMD
+        P(GT_("  -C, --pwmd-socket pwmd socket path (~/.pwmd/socket)\n"));
+        P(GT_("  -G, --pwmd-file   filename to use on the pwmd server\n"));
+        P(GT_("  -O, --pinentry-timeout   seconds until pinentry is canceled\n"));
+#endif
+ 
 	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
 	P(GT_("      --port        TCP port to connect to (obsolete, use --service)\n"));
 	P(GT_("  -P, --service     TCP service to connect to (can be numeric TCP port)\n"));
