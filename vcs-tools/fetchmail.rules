@@ -1,0 +1,35 @@
+#
+# Declare the repositories we know about:
+#
+
+create repository fetchmail
+end repository
+
+#
+# Declare the rules
+# Note: rules must end in a slash
+#
+
+match /branches/([^/]+)/
+  repository fetchmail
+  branch \1
+end match
+
+match /tags/([^/]+)/
+  repository fetchmail
+  branch _tag_\1
+end match
+
+match /trunk/
+  repository fetchmail
+  branch master
+end match
+
+match /vendor/([^/]+)/
+  repository fetchmail
+  branch vendor_\1
+end match
+
+# fix a goofup
+match /branches/branch_6-2
+end match
