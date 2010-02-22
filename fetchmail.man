@@ -38,7 +38,40 @@ While \fBfetchmail\fP is primarily intended to be used over on-demand
 TCP/IP links (such as SLIP or PPP connections), it may also be useful as
 a message transfer agent for sites which refuse for security reasons to
 permit (sender-initiated) SMTP transactions with sendmail.
+
+.SS SUPPORT, TROUBLESHOOTING
 .PP
+For troubleshooting, tracing and debugging, you need to increase
+fetchmail's verbosity to actually see what happens. To do that, please
+run \fBboth of the two following commands,
+adding all of the options you'd normally use.\fP
+
+.IP
+.nf
+env LC_ALL=C fetchmail -V -v --nodetach --nosyslog
+.fi
+.IP
+(This command line prints in English how fetchmail understands your
+configuration.)
+
+.IP
+.nf
+env LC_ALL=C fetchmail -vvv  --nodetach --nosyslog
+.fi
+.IP
+(This command line actually runs fetchmail with verbose English output.)
+.PP
+Also see 
+.URL "http://fetchmail.berlios.de/fetchmail-FAQ.html#G3" "item #G3 in fetchmail's FAQ"
+.PP
+You can omit the LC_ALL=C part above if you want output in the local
+language (if supported). However if you are posting to mailing lists,
+please leave it in. The maintainers do not necessarily understand your
+language, please use English.
+
+
+
+.SS CONCEPTS
 If \fBfetchmail\fP is used with a POP or an IMAP server (but not with
 ETRN or ODMR), it has two fundamental modes of operation for each user
 account from which it retrieves mail: \fIsingledrop\fP- and
