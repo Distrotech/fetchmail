@@ -80,6 +80,8 @@ extern char * yytext;
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 
+%expect 2
+
 %%
 
 rcfile		: /* empty */
