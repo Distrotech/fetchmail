@@ -75,6 +75,9 @@ fetchmail 6.3.15 (not yet released):
 * The fetchmail manual page is now much clearer on the user id switching
   (seteuid) when using --mda while running as the super user.
 
+# TRANSLATION UPDATES
+* [fr]   French, by Frédéric Marchal
+* [de]   German
 
 fetchmail 6.3.14 (released 2010-02-05, 25487 LoC):
 
