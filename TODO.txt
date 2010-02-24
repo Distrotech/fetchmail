@@ -33,8 +33,6 @@ soon - SHOULD:
 - Fix TOCTOU race around prc_filecheck*
 - Read CAPABILITY from greeting if present, saves one round trip.
 - Check if LAST argument is properly validated against message count.
-- find a solution for the "invalid header" discards message problem
-  (escape headers and stuff reminder into body)
 - add Message-ID: header and other SHOULD headers to warning mails?
 
 soon - MAY:
