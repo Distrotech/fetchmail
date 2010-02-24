@@ -55,6 +55,11 @@ fetchmail 6.3.15 (not yet released):
   will pass messages with bad headers on.  This has been rejected for a long
   time, and the right behaviour was disputed for too long.
 
+# BUG FIXES
+* In the rcfile, recognize "local" as abbreviation for "localdomains", as
+  documented. The short form has not ever worked since this feature was added in
+  January 1997. Reported by Frédéric Marchal.
+
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format
   kindly hosted by Graham Wilson over the past years to Git format hosted on

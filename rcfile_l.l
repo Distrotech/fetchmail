@@ -88,7 +88,7 @@ poll		{ return POLL; }
 skip		{ return SKIP; }
 via		{ return VIA; }
 aka		{ return AKA; }
-local(domains)	{ return LOCALDOMAINS; }
+local(domains)?	{ return LOCALDOMAINS; }
 proto(col)? 	{ return PROTOCOL; }
 service		{ return SERVICE; }
 port		{ return PORT; }
