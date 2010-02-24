@@ -1949,7 +1949,7 @@ static void dump_params (struct runctl *runp,
         if (ctl->server.tracepolls)
             printf(GT_("  Poll trace information will be added to the Received header.\n"));
         else if (outlevel >= O_VERBOSE)
-            printf(GT_("  No poll trace information will be added to the Received header.\n.\n"));
+            printf(GT_("  No poll trace information will be added to the Received header.\n"));
 
 	switch (ctl->server.badheader) {
 	    case BHREJECT:
