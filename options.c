@@ -53,7 +53,8 @@ enum {
     LA_LIMITFLUSH,
     LA_IDLE,
     LA_NOSOFTBOUNCE,
-    LA_SOFTBOUNCE
+    LA_SOFTBOUNCE,
+    LA_BADHEADER
 };
 
 /* options still left: CgGhHjJoORTWxXYz */
@@ -93,6 +94,7 @@ static const struct option longoptions[] = {
   {"timeout",	required_argument, (int *) 0, 't' },
   {"envelope",	required_argument, (int *) 0, 'E' },
   {"qvirtual",	required_argument, (int *) 0, 'Q' },
+  {"bad-header",required_argument, (int *) 0, LA_BADHEADER},
 
   {"user",	required_argument, (int *) 0, 'u' },
   {"username",	required_argument, (int *) 0, 'u' },
@@ -310,6 +312,17 @@ int parsecmdline (int argc /** argument count */,
 	case LA_SOFTBOUNCE:
 	    run.softbounce = TRUE;
 	    break;
+	case LA_BADHEADER:
+	    if (strcasecmp(optarg,"pass") == 0) {
+		ctl->server.badheader = BHPASS;
+	    } else if (strcasecmp(optarg,"reject") == 0) {
+		ctl->server.badheader = BHREJECT;
+	    } else {
+		fprintf(stderr,GT_("Invalid bad-header policy `%s' specified.\n"), optarg);
+		errflag++;
+	    }
+	    break;
+
 	case 'p':
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"auto") == 0)
@@ -635,6 +648,8 @@ int parsecmdline (int argc /** argument count */,
 #endif
 	P(GT_("      --plugin      specify external command to open connection\n"));
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
+	P(GT_("      --bad-header {reject|pass}\n"
+	      "                    specify policy for handling messages with bad headers\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));

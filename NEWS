@@ -49,6 +49,12 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.15 (not yet released):
 
+# FEATURE
+* Fetchmail now supports a bad-header command line or rcfile option that takes
+  exactly one argument, pass or reject (default).  If set to pass, fetchmail
+  will pass messages with bad headers on.  This has been rejected for a long
+  time, and the right behaviour was disputed for too long.
+
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format
   kindly hosted by Graham Wilson over the past years to Git format hosted on

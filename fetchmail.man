@@ -699,6 +699,15 @@ to be written to standard output.  Note that fetchmail's
 reconstruction of MAIL FROM and RCPT TO lines is not guaranteed
 correct; the caveats discussed under THE USE AND ABUSE OF MULTIDROP
 MAILBOXES below apply.
+.TP
+.B \-\-bad\-header {reject|pass}
+(Keyword: bad\-header; since v6.3.15)
+.br
+Specify how fetchmail is supposed to treat messages with bad headers,
+i. e. headers with bad syntax. Traditionally, fetchmail has rejected such
+messages, but some distributors modified fetchmail to pass them. You can now
+configure fetchmail's behaviour per server.
+
 .SS Resource Limit Control Options
 .TP
 .B \-l <maxbytes> | \-\-limit <maxbytes>
@@ -1748,6 +1757,9 @@ Set name for RFC2554 authentication to the ESMTP server.
 T}
 esmtppassword	\&	\&	T{
 Set password for RFC2554 authentication to the ESMTP server.
+T}
+bad-header	\&	\&	T{
+How to treat messages with a bad header. Can be reject (default) or pass.
 T}
 .TE
 

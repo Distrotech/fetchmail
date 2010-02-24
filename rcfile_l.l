@@ -113,7 +113,9 @@ qvirtual	{ return QVIRTUAL; }
 principal	{ return PRINCIPAL; }
 esmtpname	{ return ESMTPNAME; }
 esmtppassword	{ return ESMTPPASSWORD; }
-
+bad-header	{ return BADHEADER; }
+pass		{ return PASS; }
+reject		{ return REJECT_; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
 <INITIAL,NAME>pass(word)?	{SETSTATE(NAME); return PASSWORD; }

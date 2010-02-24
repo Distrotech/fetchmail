@@ -70,6 +70,7 @@ extern char * yytext;
 %token BATCHLIMIT FETCHLIMIT FETCHSIZELIMIT FASTUIDL EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
 %token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
+%token BADHEADER PASS REJECT_
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
@@ -231,6 +232,8 @@ serv_option	: AKA alias_list
 		| NO ENVELOPE		{current.server.envelope = STRING_DISABLED;}
 		| TRACEPOLLS		{current.server.tracepolls = FLAG_TRUE;}
 		| NO TRACEPOLLS		{current.server.tracepolls = FLAG_FALSE;}
+		| BADHEADER PASS	{current.server.badheader = BHPASS;}
+		| BADHEADER REJECT_	{current.server.badheader = BHREJECT;}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}

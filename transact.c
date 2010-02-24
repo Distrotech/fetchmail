@@ -583,7 +583,10 @@ eoh:
 	     * message/rfc822 attachment and forward to postmaster (Rob
 	     * MacGregor)
 	     */
-	    if (!refuse_mail && !isspace((unsigned char)line[0]) && !strchr(line, ':'))
+	    if (!refuse_mail
+		&& !ctl->server.badheader == BHPASS
+		&& !isspace((unsigned char)line[0])
+		&& !strchr(line, ':'))
 	    {
 		if (linelen != strlen (line))
 		    has_nuls = TRUE;

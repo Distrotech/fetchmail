@@ -245,6 +245,8 @@ struct method		/* describe methods for protocol state machine */
     flag retry;			/* can getrange poll for new messages? */
 };
 
+enum badheader { BHREJECT = 0, BHPASS };
+
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
@@ -270,6 +272,7 @@ struct hostdata		/* shared among all user connections to given server */
     flag tracepolls;			/* if TRUE, add poll trace info to Received */
     char *principal;			/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
+    enum badheader badheader;		/* bad-header {pass|reject} */
 
 #if defined(linux) || defined(__FreeBSD__)
 #define CAN_MONITOR

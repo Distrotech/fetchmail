@@ -944,6 +944,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.plugin);
     FLAG_MERGE(server.plugout);
     FLAG_MERGE(server.tracepolls);
+    FLAG_MERGE(server.badheader);
 
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
@@ -1012,6 +1013,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.server.esmtp_name = user;
+    def_opts.server.badheader = BHREJECT;
     def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
     def_opts.listener = SMTP_MODE;
@@ -1948,6 +1950,16 @@ static void dump_params (struct runctl *runp,
             printf(GT_("  Poll trace information will be added to the Received header.\n"));
         else if (outlevel >= O_VERBOSE)
             printf(GT_("  No poll trace information will be added to the Received header.\n.\n"));
+
+	switch (ctl->server.badheader) {
+	    case BHREJECT:
+		if (outlevel >= O_VERBOSE)
+		    printf(GT_("  Messages with bad headers will be rejected.\n"));
+		break;
+	    case BHPASS:
+		printf(GT_("  Messages with bad headers will be passed on.\n"));
+		break;
+	}
 
 	if (ctl->properties)
 	    printf(GT_("  Pass-through properties \"%s\".\n"),
