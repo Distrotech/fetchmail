@@ -1956,7 +1956,7 @@ static void dump_params (struct runctl *runp,
 		if (outlevel >= O_VERBOSE)
 		    printf(GT_("  Messages with bad headers will be rejected.\n"));
 		break;
-	    case BHPASS:
+	    case BHACCEPT:
 		printf(GT_("  Messages with bad headers will be passed on.\n"));
 		break;
 	}

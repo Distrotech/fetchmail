@@ -200,7 +200,7 @@ class Server:
 	    if folded:
 		res = res + "\n"
 	if self.badheader:
-		res = res + "bad-header pass "
+		res = res + "bad-header accept "
 
 	if res[-1] == " ": res = res[0:-1]
 

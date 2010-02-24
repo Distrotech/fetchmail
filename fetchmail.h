@@ -245,7 +245,7 @@ struct method		/* describe methods for protocol state machine */
     flag retry;			/* can getrange poll for new messages? */
 };
 
-enum badheader { BHREJECT = 0, BHPASS };
+enum badheader { BHREJECT = 0, BHACCEPT };
 
 struct hostdata		/* shared among all user connections to given server */
 {

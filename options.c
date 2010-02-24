@@ -313,8 +313,8 @@ int parsecmdline (int argc /** argument count */,
 	    run.softbounce = TRUE;
 	    break;
 	case LA_BADHEADER:
-	    if (strcasecmp(optarg,"pass") == 0) {
-		ctl->server.badheader = BHPASS;
+	    if (strcasecmp(optarg,"accept") == 0) {
+		ctl->server.badheader = BHACCEPT;
 	    } else if (strcasecmp(optarg,"reject") == 0) {
 		ctl->server.badheader = BHREJECT;
 	    } else {
@@ -648,7 +648,7 @@ int parsecmdline (int argc /** argument count */,
 #endif
 	P(GT_("      --plugin      specify external command to open connection\n"));
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
-	P(GT_("      --bad-header {reject|pass}\n"
+	P(GT_("      --bad-header {reject|accept}\n"
 	      "                    specify policy for handling messages with bad headers\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));

@@ -317,7 +317,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		/* this is a hack - we map this to a boolean option for
 		 * fetchmailconf purposes */
 		case BHREJECT: puts("'badheader': FALSE,"); break;
-		case BHPASS:   puts("'badheader': TRUE,"); break;
+		case BHACCEPT: puts("'badheader': TRUE,"); break;
 	    }
 
 	    indent(0);

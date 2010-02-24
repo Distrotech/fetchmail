@@ -584,7 +584,7 @@ eoh:
 	     * MacGregor)
 	     */
 	    if (!refuse_mail
-		&& !ctl->server.badheader == BHPASS
+		&& !ctl->server.badheader == BHACCEPT
 		&& !isspace((unsigned char)line[0])
 		&& !strchr(line, ':'))
 	    {

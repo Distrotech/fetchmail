@@ -700,12 +700,12 @@ reconstruction of MAIL FROM and RCPT TO lines is not guaranteed
 correct; the caveats discussed under THE USE AND ABUSE OF MULTIDROP
 MAILBOXES below apply.
 .TP
-.B \-\-bad\-header {reject|pass}
+.B \-\-bad\-header {reject|accept}
 (Keyword: bad\-header; since v6.3.15)
 .br
 Specify how fetchmail is supposed to treat messages with bad headers,
 i. e. headers with bad syntax. Traditionally, fetchmail has rejected such
-messages, but some distributors modified fetchmail to pass them. You can now
+messages, but some distributors modified fetchmail to accept them. You can now
 configure fetchmail's behaviour per server.
 
 .SS Resource Limit Control Options
@@ -1759,7 +1759,7 @@ esmtppassword	\&	\&	T{
 Set password for RFC2554 authentication to the ESMTP server.
 T}
 bad-header	\&	\&	T{
-How to treat messages with a bad header. Can be reject (default) or pass.
+How to treat messages with a bad header. Can be reject (default) or accept.
 T}
 .TE
 

@@ -114,7 +114,7 @@ principal	{ return PRINCIPAL; }
 esmtpname	{ return ESMTPNAME; }
 esmtppassword	{ return ESMTPPASSWORD; }
 bad-header	{ return BADHEADER; }
-pass		{ return PASS; }
+accept		{ return ACCEPT; }
 reject		{ return REJECT_; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
