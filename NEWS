@@ -44,6 +44,7 @@ removed from a 6.4.0 or newer release.)
 * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
   requirements (dependencies), such as Boost or other class libraries.
 * The softbounce option default will change to "false" in the next release.
+* The --bsmtp - mode of operation may be removed in a future release.
 
 --------------------------------------------------------------------------------
 
