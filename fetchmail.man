@@ -698,7 +698,8 @@ mail to an SMTP listener daemon.  An argument of '\-' causes the mail
 to be written to standard output.  Note that fetchmail's
 reconstruction of MAIL FROM and RCPT TO lines is not guaranteed
 correct; the caveats discussed under THE USE AND ABUSE OF MULTIDROP
-MAILBOXES below apply.
+MAILBOXES below apply.  This mode has precedence before \-\-mda and
+SMTP/LMTP.
 .TP
 .B \-\-bad\-header {reject|accept}
 (Keyword: bad\-header; since v6.3.15)
