@@ -58,6 +58,8 @@ fetchmail 6.3.15 (not yet released):
 * In the rcfile, recognize "local" as abbreviation for "localdomains", as
   documented. The short form has not ever worked since this feature was added in
   January 1997. Reported by Frédéric Marchal.
+* Do not close stdout when using mda and "bsmtp -" at the same time.
+* Log operating system errors when BSMTP writes fail.
 
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format

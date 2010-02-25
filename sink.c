@@ -784,7 +784,7 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 
     if (fflush(sinkfp) || ferror(sinkfp))
     {
-	report(stderr, GT_("BSMTP preamble write failed.\n"));
+	report(stderr, GT_("BSMTP preamble write failed: %s.\n"), strerror(errno));
 	return(PS_BSMTP);
     }
 
@@ -1347,8 +1347,29 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 /* perform end-of-message actions on the current output sink */
 {
     int smtp_err;
-    if (ctl->mda)
-    {
+
+    if (ctl->bsmtp && sinkfp) {
+	int error, oerrno;
+
+	/* implicit disk-full check here... */
+	fputs(".\r\n", sinkfp);
+	error = ferror(sinkfp);
+	oerrno = errno;
+	if (strcmp(ctl->bsmtp, "-"))
+	{
+	    if (fclose(sinkfp) == EOF) {
+		error = 1;
+		oerrno = errno;
+	    }
+	    sinkfp = (FILE *)NULL;
+	}
+	if (error)
+	{
+	    report(stderr, 
+		   GT_("Message termination or close of BSMTP file failed: %s\n"), strerror(oerrno));
+	    return(FALSE);
+	}
+    } else if (ctl->mda) {
 	int rc = 0, e = 0, e2 = 0, err = 0;
 
 	/* close the delivery pipe, we'll reopen before next message */
@@ -1385,25 +1406,6 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 			rc, e, strerror(e), __FILE__, __LINE__);
 	    }
 
-	    return(FALSE);
-	}
-    }
-    else if (ctl->bsmtp && sinkfp)
-    {
-	int error;
-
-	/* implicit disk-full check here... */
-	fputs(".\r\n", sinkfp);
-	error = ferror(sinkfp);
-	if (strcmp(ctl->bsmtp, "-"))
-	{
-	    if (fclose(sinkfp) == EOF) error = 1;
-	    sinkfp = (FILE *)NULL;
-	}
-	if (error)
-	{
-	    report(stderr, 
-		   GT_("Message termination or close of BSMTP file failed\n"));
 	    return(FALSE);
 	}
     }
