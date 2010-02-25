@@ -1269,6 +1269,8 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 {
     *bad_addresses = *good_addresses = 0;
 
+    if (want_progress() && outlevel >= O_VERBOSE && !ctl->mda && !ctl->bsmtp) puts("");
+
     if (ctl->bsmtp)		/* dump to a BSMTP batch file */
 	return(open_bsmtp_sink(ctl, msg, good_addresses, bad_addresses));
     /* 
@@ -1347,6 +1349,8 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 /* perform end-of-message actions on the current output sink */
 {
     int smtp_err;
+
+    if (want_progress() && outlevel >= O_VERBOSE && !ctl->mda && !ctl->bsmtp) puts("");
 
     if (ctl->bsmtp && sinkfp) {
 	int error, oerrno;

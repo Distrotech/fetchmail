@@ -61,6 +61,8 @@ fetchmail 6.3.15 (not yet released):
   January 1997. Reported by Frédéric Marchal.
 * Do not close stdout when using mda and "bsmtp -" at the same time.
 * Log operating system errors when BSMTP writes fail.
+* Fix verbose mode progress formatting regression from 6.3.10; SMTP trace lines
+  were no longer on a line of their own. Reported by Melchior Franz.
 
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format
