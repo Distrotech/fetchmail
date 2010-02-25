@@ -15,9 +15,9 @@
 # Frédéric Marchal <frederic.marchal@wowcompany.com>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: fr\n"
+"Project-Id-Version: fetchmail 6.3.15-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-02-24 23:25+0100\n"
+"POT-Creation-Date: 2010-02-25 23:11+0100\n"
 "PO-Revision-Date: 2010-02-24 12:26+0100\n"
 "Last-Translator: Frédéric Marchal <frederic.marchal@wowcompany.com>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -2251,7 +2251,6 @@ msgstr ""
 "smtp\n"
 
 #: options.c:651
-#, fuzzy
 msgid ""
 "      --bad-header {reject|accept}\n"
 "                    specify policy for handling messages with bad headers\n"

@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.15-beta1\n"
+"Project-Id-Version: fetchmail 6.3.15-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-02-24 23:25+0100\n"
+"POT-Creation-Date: 2010-02-25 23:11+0100\n"
 "PO-Revision-Date: 2010-02-24 01:58+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -2230,13 +2230,12 @@ msgid "      --plugout     specify external command to open smtp connection\n"
 msgstr "      --plugout     externes Kommando zum Öffnen der SMTP-Verbindung\n"
 
 #: options.c:651
-#, fuzzy
 msgid ""
 "      --bad-header {reject|accept}\n"
 "                    specify policy for handling messages with bad headers\n"
 msgstr ""
 "      --bad-header {reject|accept}\n"
-"                   Umgang mit Nachrichten mit defekten Headern\n"
+"                    Umgang mit Nachrichten mit defekten Headern\n"
 
 #: options.c:654
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
