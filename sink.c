@@ -1235,7 +1235,10 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
      * under all BSDs and Linux)
      */
     orig_uid = getuid();
-    seteuid(ctl->uid);
+    if (seteuid(ctl->uid)) {
+	report(stderr, GT_("Cannot switch effective user id to %ld: %s\n"), (long)ctl->uid, strerror(errno));
+	return PS_IOERR;
+    }
 #endif /* HAVE_SETEUID */
 
     sinkfp = popen(before, "w");
@@ -1244,7 +1247,10 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 
 #ifdef HAVE_SETEUID
     /* this will fail quietly if we didn't start as root */
-    seteuid(orig_uid);
+    if (seteuid(orig_uid)) {
+	report(stderr, GT_("Cannot switch effective user id back to original %ld: %s\n"), (long)orig_uid, strerror(errno));
+	return PS_IOERR;
+    }
 #endif /* HAVE_SETEUID */
 
     if (!sinkfp)

@@ -63,6 +63,7 @@ fetchmail 6.3.15 (not yet released):
 * Log operating system errors when BSMTP writes fail.
 * Fix verbose mode progress formatting regression from 6.3.10; SMTP trace lines
   were no longer on a line of their own. Reported by Melchior Franz.
+* Check seteuid() return value and abort running MDA if switch fails.
 
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format
