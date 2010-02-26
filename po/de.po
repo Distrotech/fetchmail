@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.15-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-02-25 23:11+0100\n"
+"POT-Creation-Date: 2010-02-26 01:04+0100\n"
 "PO-Revision-Date: 2010-02-24 01:58+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -2749,8 +2749,9 @@ msgid "BSMTP file open failed: %s\n"
 msgstr "Öffnen der BSMTP-Datei fehlgeschlagen: %s\n"
 
 #: sink.c:787
-msgid "BSMTP preamble write failed.\n"
-msgstr "Schreiben der BSMTP-Präambel fehlgeschlagen.\n"
+#, c-format
+msgid "BSMTP preamble write failed: %s.\n"
+msgstr "Schreiben der BSMTP-Präambel fehlgeschlagen: %s.\n"
 
 #: sink.c:1001
 #, c-format
@@ -2785,32 +2786,37 @@ msgstr "dabei, auszuliefern mit: %s\n"
 msgid "MDA open failed\n"
 msgstr "MDA Öffnen fehlgeschlagen\n"
 
-#: sink.c:1289
+#: sink.c:1291
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "%cMTP-Verbindung zu %s fehlgeschlagen\n"
 
-#: sink.c:1313
+#: sink.c:1315
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "kann SMTP/LMTP-Server nicht erreichen; falle zurück auf %s"
 
-#: sink.c:1375
+#: sink.c:1373
+#, c-format
+msgid "Message termination or close of BSMTP file failed: %s\n"
+msgstr "Nachrichtenbeendigung oder Schließen der BSMTP-Datei fehlgeschlagen: %s\n"
+
+#: sink.c:1400
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Fehler beim Transport an den MDA: %s\n"
 
-#: sink.c:1378
+#: sink.c:1403
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA starb durch Signal %d\n"
 
-#: sink.c:1381
+#: sink.c:1406
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA gab Status %d ungleich Null zurück\n"
 
-#: sink.c:1384
+#: sink.c:1409
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
@@ -2818,24 +2824,20 @@ msgstr ""
 "Merkwürdig: MDA pclose gab %d und errno %d/%s zurück, kann das nicht "
 "behandeln bei %s:%d\n"
 
-#: sink.c:1406
-msgid "Message termination or close of BSMTP file failed\n"
-msgstr "Nachrichtenbeendigung oder Schließen der BSMTP-Datei fehlgeschlagen\n"
-
-#: sink.c:1428
+#: sink.c:1434
 msgid "SMTP listener refused delivery\n"
 msgstr "SMTP-Server verweigerte Auslieferung\n"
 
-#: sink.c:1458
+#: sink.c:1464
 msgid "LMTP delivery error on EOM\n"
 msgstr "LMTP-Auslieferungsfehler bei EOM\n"
 
-#: sink.c:1461
+#: sink.c:1467
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Unerwartete Nicht-503-Erwiderung auf LMTP EOM: %s\n"
 
-#: sink.c:1616
+#: sink.c:1622
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
