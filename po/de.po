@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.15-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-02-26 01:04+0100\n"
+"POT-Creation-Date: 2010-02-26 10:14+0100\n"
 "PO-Revision-Date: 2010-02-24 01:58+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -2782,41 +2782,52 @@ msgstr "keine Adressen stimmten überein; leite an %s weiter.\n"
 msgid "about to deliver with: %s\n"
 msgstr "dabei, auszuliefern mit: %s\n"
 
-#: sink.c:1252
+#: sink.c:1239
+#, c-format
+msgid "Cannot switch effective user id to %ld: %s\n"
+msgstr "Kann nicht zur User-ID %ld umschalten: %s\n"
+
+#: sink.c:1251
+#, c-format
+msgid "Cannot switch effective user id back to original %ld: %s\n"
+msgstr "Kann nicht zur ursprünglichen User-ID %ld zurückschalten: %s\n"
+
+#: sink.c:1258
 msgid "MDA open failed\n"
 msgstr "MDA Öffnen fehlgeschlagen\n"
 
-#: sink.c:1291
+#: sink.c:1297
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "%cMTP-Verbindung zu %s fehlgeschlagen\n"
 
-#: sink.c:1315
+#: sink.c:1321
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "kann SMTP/LMTP-Server nicht erreichen; falle zurück auf %s"
 
-#: sink.c:1373
+#: sink.c:1379
 #, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
-msgstr "Nachrichtenbeendigung oder Schließen der BSMTP-Datei fehlgeschlagen: %s\n"
+msgstr ""
+"Nachrichtenbeendigung oder Schließen der BSMTP-Datei fehlgeschlagen: %s\n"
 
-#: sink.c:1400
+#: sink.c:1406
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Fehler beim Transport an den MDA: %s\n"
 
-#: sink.c:1403
+#: sink.c:1409
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA starb durch Signal %d\n"
 
-#: sink.c:1406
+#: sink.c:1412
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA gab Status %d ungleich Null zurück\n"
 
-#: sink.c:1409
+#: sink.c:1415
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
@@ -2824,20 +2835,20 @@ msgstr ""
 "Merkwürdig: MDA pclose gab %d und errno %d/%s zurück, kann das nicht "
 "behandeln bei %s:%d\n"
 
-#: sink.c:1434
+#: sink.c:1440
 msgid "SMTP listener refused delivery\n"
 msgstr "SMTP-Server verweigerte Auslieferung\n"
 
-#: sink.c:1464
+#: sink.c:1470
 msgid "LMTP delivery error on EOM\n"
 msgstr "LMTP-Auslieferungsfehler bei EOM\n"
 
-#: sink.c:1467
+#: sink.c:1473
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Unerwartete Nicht-503-Erwiderung auf LMTP EOM: %s\n"
 
-#: sink.c:1622
+#: sink.c:1628
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
