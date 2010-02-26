@@ -56,8 +56,8 @@ libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
 			trio/trionan.h trio/triostr.h
 check_PROGRAMS+=	regression
 regression_SOURCES=	trio/regression.c
-LDADD +=		libtrio.a -lm
-TESTS+=			regression
+LDADD+=			libtrio.a -lm
+TESTS+=			t.regression
 endif
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
@@ -175,7 +175,7 @@ EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
 		m4/xsize.m4 \
 		m4-local/ac-archive-license.txt \
 		m4-local/ac_ma_search_package.m4 \
-		$(TESTS) t.rc \
+		$(TESTS) t.rc t.regression \
 		dist-tools/html2txt \
 		dist-tools/manServer.pl \
 		Doxyfile
