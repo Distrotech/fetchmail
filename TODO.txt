@@ -24,9 +24,6 @@ soon - SHOULD:
 - document IMAP4 ACL requirements
 - CRYPTO: log configured server name on certificate mismatch (perhaps pay
   attention to via entries and stuff like that)
-- CRYPTO: BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
-  Philip Susi, SSL negotiation does not use ERR_error_string(3ssl) to report
-  errors in a readable way, we just report socket errors with no good reason.
 - CRYPTO: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
   * write a table of combinations of TLS/SSL options
 - add To: header to warning mails (authfail for instance)
