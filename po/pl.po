@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.14\n"
+"Project-Id-Version: fetchmail 6.3.15-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-02-25 23:11+0100\n"
-"PO-Revision-Date: 2010-02-08 17:01+0100\n"
+"POT-Creation-Date: 2010-02-26 10:14+0100\n"
+"PO-Revision-Date: 2010-02-26 18:12+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -57,14 +57,14 @@ msgid "kerberos error %s\n"
 msgstr "b³±d Kerberosa: %s\n"
 
 #: driver.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s']\n"
-msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%s'] \n"
+msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%s']\n"
 
 #: driver.c:254
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%*s']\n"
-msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%*s'] \n"
+msgstr "krb5_sendauth: %s [serwer odpowiedzia³ '%*s']\n"
 
 #: driver.c:335
 msgid "Subject: Fetchmail oversized-messages warning"
@@ -791,14 +791,14 @@ msgid "fetchmail: Cannot detach into background. Aborting.\n"
 msgstr "fetchmail: Nie mo¿na przej¶æ w t³o. Zakoñczenie.\n"
 
 #: fetchmail.c:587
-#, fuzzy, c-format
+#, c-format
 msgid "starting fetchmail %s daemon\n"
-msgstr "startuje fetchmail %s w trybie demona\n"
+msgstr "uruchamianie fetchmaila %s w trybie demona\n"
 
 #: fetchmail.c:603 fetchmail.c:605
-#, fuzzy, c-format
+#, c-format
 msgid "could not open %s to append logs to\n"
-msgstr "nie mo¿na otworzyæ %s w celu do³±czania logów \n"
+msgstr "nie mo¿na otworzyæ %s w celu do³±czania logów\n"
 
 #: fetchmail.c:607
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
@@ -1641,25 +1641,22 @@ msgstr ""
 "  Informacje o ¶ledzeniu po³±czenia bêd± dodane do nag³ówka Received.\n"
 
 #: fetchmail.c:1952
-#, fuzzy
 msgid "  No poll trace information will be added to the Received header.\n"
 msgstr ""
 "  Informacje o ¶ledzeniu po³±czenia nie bêd± dodane do nag³ówka Received.\n"
-".\n"
 
 #: fetchmail.c:1957
 msgid "  Messages with bad headers will be rejected.\n"
-msgstr ""
+msgstr "  Listy z b³êdnymi nag³ówkami bêd± odrzucane.\n"
 
 #: fetchmail.c:1960
 msgid "  Messages with bad headers will be passed on.\n"
-msgstr ""
+msgstr "  Listy z b³êdnymi nag³ówkami bêd± przepuszczane.\n"
 
-# XXX -PK
 #: fetchmail.c:1965
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
-msgstr "  W³asno¶ci przepuszczania \"%s\".\n"
+msgstr "  Przepuszczane ustawienia \"%s\".\n"
 
 #: getpass.c:71
 msgid "ERROR: no support for getpassword() routine\n"
@@ -2073,9 +2070,9 @@ msgid "larger"
 msgstr "wiêksza"
 
 #: options.c:321
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid bad-header policy `%s' specified.\n"
-msgstr "Podano b³êdny protokó³ `%s'.\n"
+msgstr "Podano b³êdn± politykê b³êdnych nag³ówków `%s'.\n"
 
 #: options.c:362
 #, c-format
@@ -2243,6 +2240,9 @@ msgid ""
 "      --bad-header {reject|accept}\n"
 "                    specify policy for handling messages with bad headers\n"
 msgstr ""
+"      --bad-header {reject|accept}\n"
+"                    okre¶lenie polityki obs³ugi listów z b³êdnymi "
+"nag³ówkami\n"
 
 #: options.c:654
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
@@ -2715,9 +2715,8 @@ msgid "MD5 being applied to data block:\n"
 msgstr "MD5 zastosowany do bloku danych:\n"
 
 #: rpa.c:886
-#, fuzzy
 msgid "MD5 result is:\n"
-msgstr "Wynik MD5: \n"
+msgstr "Wynik MD5:\n"
 
 #: servport.c:53
 #, c-format
@@ -2767,8 +2766,9 @@ msgid "BSMTP file open failed: %s\n"
 msgstr "BSMTP: otwarcie pliku nie powiod³o siê: %s\n"
 
 #: sink.c:787
-msgid "BSMTP preamble write failed.\n"
-msgstr "BSMTP: zapis nag³ówka nie powiód³ siê.\n"
+#, c-format
+msgid "BSMTP preamble write failed: %s.\n"
+msgstr "BSMTP: zapis nag³ówka nie powiód³ siê: %s.\n"
 
 #: sink.c:1001
 #, c-format
@@ -2799,61 +2799,72 @@ msgstr "brak pasuj±cych lokalnych adresów, przesy³am do %s\n"
 msgid "about to deliver with: %s\n"
 msgstr "list zostanie dorêczony przy pomocy: %s\n"
 
-#: sink.c:1252
+#: sink.c:1239
+#, fuzzy, c-format
+msgid "Cannot switch effective user id to %ld: %s\n"
+msgstr "Nie mo¿na zmieniæ nazwy pliku fetchids %s na %s: %s\n"
+
+#: sink.c:1251
+#, c-format
+msgid "Cannot switch effective user id back to original %ld: %s\n"
+msgstr ""
+
+#: sink.c:1258
 msgid "MDA open failed\n"
 msgstr "b³±d podczas uruchamiania MDA (programu dorêczaj±cego pocztê)\n"
 
-#: sink.c:1289
+#: sink.c:1297
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "po³±czenie %cMTP z %s nie powiod³o siê\n"
 
-#: sink.c:1313
+#: sink.c:1321
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "nie mo¿na podnie¶æ procesu s³uchaj±cego; powrót do %s"
 
+#: sink.c:1379
+#, c-format
+msgid "Message termination or close of BSMTP file failed: %s\n"
+msgstr "Zakoñczenie listu lub zamkniêcie pliku BSMTP nie powiod³o siê: %s\n"
+
 # XXX
-#: sink.c:1375
+#: sink.c:1406
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "B³±d podczas pisania do MDA: %s\n"
 
-#: sink.c:1378
+#: sink.c:1409
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA zabity przez sygna³ %d\n"
 
-#: sink.c:1381
+#: sink.c:1412
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA zwróci³ niezerowy kod b³êdu %d\n"
 
-#: sink.c:1384
+#: sink.c:1415
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr ""
 "Dziwne: MDA pclose zwróci³o %d a errno %d/%s, nie mo¿na obs³u¿yæ w %s:%d\n"
 
-#: sink.c:1406
-msgid "Message termination or close of BSMTP file failed\n"
-msgstr "Zakoñczenie listu lub zamkniêcie pliku BSMTP nie powiod³o siê\n"
-
-#: sink.c:1428
+#: sink.c:1440
 msgid "SMTP listener refused delivery\n"
 msgstr "serwer SMTP odmówi³ dostarczenia listu\n"
 
-#: sink.c:1458
+#: sink.c:1470
 msgid "LMTP delivery error on EOM\n"
 msgstr "B³±d podczas dorêczania LMTP w momencie wykonywania komendy EOM\n"
 
-#: sink.c:1461
+#: sink.c:1473
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Niespodziewana odpowied¼ inna ni¿ 503 na LSTMP EOM: %s\n"
 
-#: sink.c:1616
+#: sink.c:1628
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"

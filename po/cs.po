@@ -11,10 +11,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.15-pre1\n"
+"Project-Id-Version: fetchmail 6.3.15-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-02-25 23:11+0100\n"
-"PO-Revision-Date: 2010-02-24 11:44+0100\n"
+"POT-Creation-Date: 2010-02-26 10:14+0100\n"
+"PO-Revision-Date: 2010-02-26 10:15+0100\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -2206,14 +2206,13 @@ msgid "      --plugout     specify external command to open smtp connection\n"
 msgstr "      --plugout     externí příkaz pro otevření spojení smtp\n"
 
 #: options.c:651
-#, fuzzy
 msgid ""
 "      --bad-header {reject|accept}\n"
 "                    specify policy for handling messages with bad headers\n"
 msgstr ""
-"      --bad-header {reject|pass}\n"
+"      --bad-header {reject|accept}\n"
 "                    určuje, jak zacházet se zprávami obsahujícími chybné\n"
-"                    hlavičky: reject (odmítnout), pass (vpustit)\n"
+"                    hlavičky: reject (odmítnout), accept (přijmout)\n"
 
 #: options.c:654
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
@@ -2725,8 +2724,9 @@ msgid "BSMTP file open failed: %s\n"
 msgstr "Otevírání BSMTP souboru selhalo: %s\n"
 
 #: sink.c:787
-msgid "BSMTP preamble write failed.\n"
-msgstr "Zápis BSMTP preambule selhal.\n"
+#, c-format
+msgid "BSMTP preamble write failed: %s.\n"
+msgstr "Zápis BSMTP preambule selhal: %s.\n"
 
 #: sink.c:1001
 #, c-format
@@ -2757,59 +2757,70 @@ msgstr "neodpovídá žádná adresa; přeposílám na %s.\n"
 msgid "about to deliver with: %s\n"
 msgstr "chystám se doručit pomocí: %s\n"
 
-#: sink.c:1252
+#: sink.c:1239
+#, fuzzy, c-format
+msgid "Cannot switch effective user id to %ld: %s\n"
+msgstr "Nemohu přejmenovat soubor fetchids %s na %s: %s\n"
+
+#: sink.c:1251
+#, c-format
+msgid "Cannot switch effective user id back to original %ld: %s\n"
+msgstr ""
+
+#: sink.c:1258
 msgid "MDA open failed\n"
 msgstr "otevírání MDA selhalo\n"
 
-#: sink.c:1289
+#: sink.c:1297
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "připojení%cMTP k %s selhalo\n"
 
-#: sink.c:1313
+#: sink.c:1321
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "nemohu se spustit démona; nahrazuji jej %s"
 
-#: sink.c:1375
+#: sink.c:1379
+#, c-format
+msgid "Message termination or close of BSMTP file failed: %s\n"
+msgstr "Ukončení zprávy nebo zavření souboru BSMTP selhalo: %s\n"
+
+#: sink.c:1406
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Chyba při zapisování do MDA: %s\n"
 
-#: sink.c:1378
+#: sink.c:1409
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA umřel na signál %d\n"
 
-#: sink.c:1381
+#: sink.c:1412
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA vrátil nenulový stav %d\n"
 
-#: sink.c:1384
+#: sink.c:1415
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr "Záhada: MDA pclose vrátil %d a errno %d/%s, nezle zpracovat v %s:%d\n"
 
-#: sink.c:1406
-msgid "Message termination or close of BSMTP file failed\n"
-msgstr "Ukončení zprávy nebo zavření souboru BSMTP selhalo\n"
-
-#: sink.c:1428
+#: sink.c:1440
 msgid "SMTP listener refused delivery\n"
 msgstr "Démon SMTP odmítl doručení\n"
 
-#: sink.c:1458
+#: sink.c:1470
 msgid "LMTP delivery error on EOM\n"
 msgstr "Chyba doručování LMTP při EOM\n"
 
-#: sink.c:1461
+#: sink.c:1473
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Neočekávaná odpověď na LMTP EOM jiná než 503: %s\n"
 
-#: sink.c:1616
+#: sink.c:1628
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
