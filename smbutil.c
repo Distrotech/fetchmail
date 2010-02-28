@@ -85,7 +85,7 @@ static void dumpRaw(FILE *fp, unsigned char *buf, size_t len)
 /* helper macro to destructively resize buffers; assumes that bufsiz
  * is initialized to 0 if buf is unallocated! */
 #define allocbuf(buf, bufsiz, need) do { \
-  if ((need) > (bufsiz)) \
+  if (!buf || (need) > (bufsiz)) \
     { \
     (bufsiz) = ((need) < 1024) ? 1024 : (need); \
     xfree(buf); \

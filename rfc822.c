@@ -247,6 +247,8 @@ char *nxtaddr(const char *hdr /* header to be parsed, NUL to continue previous h
 	tp = 0;
     }
 
+    if (!hp) return NULL;
+
     for (; *hp; hp++)
     {
 #ifdef MAIN

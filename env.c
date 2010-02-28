@@ -290,7 +290,7 @@ char *visbuf(const char *buf)
 
     needed = strlen(buf) * 5 + 1; /* worst case: HEX, plus NUL byte */
 
-    if (needed > vbufs) {
+    if (!vbuf || needed > vbufs) {
 	vbufs = needed;
 	vbuf = (char *)xrealloc(vbuf, vbufs);
     }
