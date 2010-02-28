@@ -1032,11 +1032,14 @@ static int load_params(int argc, char **argv, int optind)
     }
 
     /* note the parse time, so we can pick up on modifications */
-    parsetime = 0;	/* foil compiler warnings */
-    if (strcmp(rcfile, "-") == 0 || stat(rcfile, &rcstat) != -1)
-	parsetime = rcstat.st_mtime;
-    else if (errno != ENOENT)
-	report(stderr, GT_("couldn't time-check the run-control file\n"));
+    if (strcmp(rcfile, "-") == 0)
+	parsetime = time(NULL);
+    else {
+	if (stat(rcfile, &rcstat) != -1)
+	    parsetime = rcstat.st_mtime;
+	else if (errno != ENOENT)
+	    report(stderr, GT_("couldn't time-check the run-control file\n"));
+    }
 
     /* this builds the host list */
     if ((st = prc_parse_file(rcfile, !versioninfo)) != 0)
