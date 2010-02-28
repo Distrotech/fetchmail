@@ -462,7 +462,7 @@ int SockRead(int sock, char *buf, int len)
 			/* SSL_peek says no data...  Does he mean no data
 			or did the connection blow up?  If we got an error
 			then bail! */
-			if( 0 != ( n = SSL_get_error(ssl, n) ) ) {
+			if (0 != SSL_get_error(ssl, n)) {
 				return -1;
 			}
 			/* We didn't get an error so read at least one
@@ -542,7 +542,7 @@ int SockPeek(int sock)
 			/* SSL_peek says 0...  Does that mean no data
 			or did the connection blow up?  If we got an error
 			then bail! */
-			if( 0 != ( n = SSL_get_error(ssl, n) ) ) {
+			if(0 != SSL_get_error(ssl, n)) {
 				return -1;
 			}
 

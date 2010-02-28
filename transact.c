@@ -529,8 +529,8 @@ int readheaders(int sock,
 		tcp = line + linelen - 1;
 		*tcp++ = '\r';
 		*tcp++ = '\n';
-		*tcp++ = '\0';
-		n++;
+		*tcp = '\0';
+		/* n++; - not used later on */
 		linelen++;
 	    }
 	    else
@@ -1332,7 +1332,7 @@ process_headers:
     cp = buf;
     *cp++ = '\r';
     *cp++ = '\n';
-    *cp++ = '\0';
+    *cp = '\0';
     n = stuffline(ctl, buf);
 
     if ((size_t)n == strlen(buf))

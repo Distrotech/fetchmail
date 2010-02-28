@@ -1518,7 +1518,6 @@ is restored."));
 	smtp_close(ctl, 0);
 	if (mailserver_socket != -1) {
 	    cleanupSockClose(mailserver_socket);
-	    mailserver_socket = -1;
 	}
 	/* If there was a connect timeout, the socket should be closed.
 	 * mailserver_socket_temp contains the socket to close.

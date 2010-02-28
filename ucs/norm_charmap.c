@@ -84,7 +84,7 @@ const char *norm_charmap(const char *name)
     p += 5;
     if (digit(*p)) {
       buf[9] = *p++;
-      if (digit(*p)) buf[10] = *p++;
+      if (digit(*p)) buf[10] = *p;
       return buf;
     }
   }
@@ -95,7 +95,7 @@ const char *norm_charmap(const char *name)
     p += 4;
     if (digit(*p)) {
       buf[10] = *p++;
-      if (digit(*p)) buf[11] = *p++;
+      if (digit(*p)) buf[11] = *p;
       return buf;
     }
   }

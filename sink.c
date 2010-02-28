@@ -114,7 +114,7 @@ int smtp_setup(struct query *ctl)
 	 */
 	struct idlist	*idp;
 	const char *id_me = run.invisible ? ctl->server.truename : fetchmailhost;
-	int oldphase = phase;
+	int oldphase;
 	char *parsed_host = NULL;
 
 	errno = 0;

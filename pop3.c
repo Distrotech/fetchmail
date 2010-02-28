@@ -774,7 +774,7 @@ static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
     if ((ok = gen_transact(sock, "%s", buf)) != 0)
        return ok;
     got_it = 0;
-    while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0) 
+    while (gen_recv(sock, buf, sizeof(buf)) == 0)
     {
 	if (DOTLINE(buf))
 	    break;
@@ -1065,10 +1065,10 @@ static int pop3_getrange(int sock,
 	    if (dofastuidl)
 		return(pop3_fastuidl( sock, ctl, *countp, newp));
 	    /* grab the mailbox's UID list */
-	    if ((ok = gen_transact(sock, "UIDL")) != 0)
+	    if (gen_transact(sock, "UIDL") != 0)
 	    {
 		/* don't worry, yet! do it the slow way */
-		if ((ok = pop3_slowuidl(sock, ctl, countp, newp)))
+		if (pop3_slowuidl(sock, ctl, countp, newp))
 		{
 		    report(stderr, GT_("protocol error while fetching UIDLs\n"));
 		    return(PS_ERROR);
@@ -1080,7 +1080,7 @@ static int pop3_getrange(int sock,
 		unsigned long unum;
 
 		*newp = 0;
-		while ((ok = gen_recv(sock, buf, sizeof(buf))) == PS_SUCCESS)
+		while (gen_recv(sock, buf, sizeof(buf)) == PS_SUCCESS)
 		{
 		    if (DOTLINE(buf))
 			break;

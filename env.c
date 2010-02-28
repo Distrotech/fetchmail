@@ -318,7 +318,7 @@ char *visbuf(const char *buf)
 	    buf++;
 	}
     }
-    *tp++ = '\0';
+    *tp = '\0';
     return(vbuf);
 }
 /* env.c ends here */

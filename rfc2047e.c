@@ -174,7 +174,7 @@ char *rfc2047e(const char *string, const char *charset) {
 	if (i + 1 < count)
 	    m += strcspn(words[i+1], "\r\n");
 	if (l + m > 74)
-	    l = 0, t = stpcpy(t, "\r\n");
+	    t = stpcpy(t, "\r\n");
 	t = stpcpy(t, words[i]);
 	if (i + 1 < count) {
 	    t = stpcpy(t, words[i+1]);
