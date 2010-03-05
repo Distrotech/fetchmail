@@ -57,13 +57,13 @@ static RETSIGTYPE
 sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {
-    pid_t pid;
 #if 	defined(HAVE_WAITPID)				/* the POSIX way */
     int status;
 
     while (waitpid(-1, &status, WNOHANG) > 0)
 	continue; /* swallow 'em up. */
 #elif 	defined(HAVE_WAIT3)				/* the BSD way */
+    pid_t pid;
 #if defined(HAVE_UNION_WAIT) && !defined(__FreeBSD__)
     union wait status;
 #else
