@@ -285,7 +285,7 @@ int parsecmdline (int argc /** argument count */,
 	    rctl->logfile = prependdir (optarg, currentwd);
 	    break;
 	case LA_INVISIBLE:
-	    rctl->invisible = TRUE;
+	    rctl->invisible = FLAG_TRUE;
 	    break;
 	case LA_SHOWDOTS:
 	    rctl->showdots = FLAG_TRUE;
@@ -304,13 +304,13 @@ int parsecmdline (int argc /** argument count */,
 	    rctl->postmaster = (char *) xstrdup(optarg);
 	    break;
 	case LA_NOBOUNCE:
-	    run.bouncemail = FALSE;
+	    rctl->bouncemail = FLAG_FALSE;
 	    break;
 	case LA_NOSOFTBOUNCE:
-	    run.softbounce = FALSE;
+	    rctl->softbounce = FLAG_FALSE;
 	    break;
 	case LA_SOFTBOUNCE:
-	    run.softbounce = TRUE;
+	    rctl->softbounce = FLAG_TRUE;
 	    break;
 	case LA_BADHEADER:
 	    if (strcasecmp(optarg,"accept") == 0) {

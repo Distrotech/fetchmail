@@ -1124,17 +1124,17 @@ static int load_params(int argc, char **argv, int optind)
     if (cmd_run.poll_interval >= 0)
 	run.poll_interval = cmd_run.poll_interval;
     if (cmd_run.invisible)
-	run.invisible = cmd_run.invisible;
+	run.invisible = (cmd_run.invisible == FLAG_TRUE);
     if (cmd_run.showdots)
-	run.showdots = cmd_run.showdots;
+	run.showdots = (cmd_run.showdots == FLAG_TRUE);
     if (cmd_run.use_syslog)
 	run.use_syslog = (cmd_run.use_syslog == FLAG_TRUE);
     if (cmd_run.postmaster)
 	run.postmaster = cmd_run.postmaster;
     if (cmd_run.bouncemail)
-	run.bouncemail = cmd_run.bouncemail;
+	run.bouncemail = (cmd_run.bouncemail == FLAG_TRUE);
     if (cmd_run.softbounce)
-	run.softbounce = cmd_run.softbounce;
+	run.softbounce = (cmd_run.softbounce == FLAG_TRUE);
 
     /* check and daemon options are not compatible */
     if (check_only && run.poll_interval)
