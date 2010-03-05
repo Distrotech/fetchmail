@@ -66,6 +66,8 @@ fetchmail 6.3.15 (not yet released):
 * Check seteuid() return value and abort running MDA if switch fails.
 * Set global flags in a consistent manner. Make --nosoftbounce work. Reported by
   N.J. Mann.
+* Properly import h_errno declarations, even on systems where h_errno isn't a
+  macro. (Adds ./configure check, fixes Cygwin dllimport warnings.)
 
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format

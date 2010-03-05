@@ -75,15 +75,9 @@ static ssize_t cygwin_read(int sock, void *buf, size_t count);
 
 /* We need to define h_errno only if it is not already */
 #ifndef h_errno
-
-#ifdef HAVE_RES_SEARCH
-/* some versions of FreeBSD should declare this but don't */
+# if !HAVE_DECL_H_ERRNO
 extern int h_errno;
-#else
-/* pretend we have h_errno to avoid some #ifdef's later */
-static int h_errno;
-#endif
-
+# endif
 #endif /* ndef h_errno */
 
 #ifdef HAVE_SOCKETPAIR

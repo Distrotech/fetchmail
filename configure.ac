@@ -93,6 +93,13 @@ AC_CHECK_HEADERS([resolv.h],,,[
 #endif
 ])
 
+AC_CHECK_DECLS([h_errno],,,[
+	AC_INCLUDES_DEFAULT
+	#ifdef HAVE_NETDB_H
+	#include <netdb.h>
+	#endif
+])
+
 AC_C_CONST			dnl getopt needs this.
 
 AM_PROG_LEX
