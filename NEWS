@@ -64,8 +64,9 @@ fetchmail 6.3.15 (not yet released):
 * Fix verbose mode progress formatting regression from 6.3.10; SMTP trace lines
   were no longer on a line of their own. Reported by Melchior Franz.
 * Check seteuid() return value and abort running MDA if switch fails.
-* Set global flags in a consistent manner. Make --nosoftbounce work. Reported by
-  N.J. Mann. (Sunil Shetye)
+* Set global flags in a consistent manner. Make --nosoftbounce and
+  --nobounce work from command line (these used to work in rcfiles).
+  Reported by N.J. Mann. (Sunil Shetye)
 * Properly import h_errno declarations, even on systems where h_errno isn't a
   macro. (Adds ./configure check, fixes Cygwin dllimport warnings.)
 
