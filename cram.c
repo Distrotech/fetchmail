@@ -18,7 +18,7 @@
 #include "fm_md5.h"
 
 void hmac_md5 (const unsigned char *password,  size_t pass_len,
-               const char *challenge, size_t chal_len,
+               const unsigned char *challenge, size_t chal_len,
                unsigned char *response,  size_t resp_len)
 {
     int i;
@@ -111,7 +111,7 @@ int do_cram_md5 (int sock, const char *command, struct query *ctl, const char *s
      */
 
     hmac_md5((unsigned char *)ctl->password, strlen(ctl->password),
-              msg_id, strlen (msg_id),
+              (unsigned char *)msg_id, strlen (msg_id),
               response, sizeof (response));
 
     snprintf (reply, sizeof(reply),

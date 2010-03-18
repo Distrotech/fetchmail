@@ -983,7 +983,7 @@ process_headers:
 	MD5_CTX context;
 
 	MD5Init(&context);
-	MD5Update(&context, msgblk.headers, strlen(msgblk.headers));
+	MD5Update(&context, (unsigned char *)msgblk.headers, strlen(msgblk.headers));
 	MD5Final(ctl->digest, &context);
 
 	if (!received_for && env_offs == -1 && !delivered_to)

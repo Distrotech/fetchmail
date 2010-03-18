@@ -98,7 +98,7 @@ static void SMTP_auth(int sock, char smtp_mode, char *username, char *password, 
 		if (outlevel >= O_DEBUG)
 			report(stdout, GT_("Challenge decoded: %s\n"), b64buf);
 		hmac_md5((unsigned char *)password, strlen(password),
-			 b64buf, strlen(b64buf), digest, sizeof(digest));
+			 (unsigned char *)b64buf, strlen(b64buf), digest, sizeof(digest));
 		snprintf(tmp, sizeof(tmp),
 		"%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
 		username,  digest[0], digest[1], digest[2], digest[3],

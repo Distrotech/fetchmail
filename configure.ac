@@ -114,8 +114,8 @@ darwin*)
     ;;
 # Check for FreeBSD special case: more libs needed
 freebsd*)
-    AC_MSG_NOTICE(found FreeBSD - Adding -lmd -lkvm -lcom_err to standard libraries)
-    LIBS="$LIBS -lmd -lkvm -lcom_err"
+    AC_MSG_NOTICE(found FreeBSD - Adding -lkvm -lcom_err to standard libraries)
+    LIBS="$LIBS -lkvm -lcom_err"
     ;;
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
 # not working.
@@ -170,7 +170,7 @@ dnl 		[LIBS="$LIBS -lintl"])
 
 AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
 
-AC_CHECK_FUNC(MD5Init, [],
+AC_SEARCH_LIBS(MD5Init, [md5, md], [],
 	      [AC_LIBSOURCE(md5c.c)
                EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"])
 
