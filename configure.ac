@@ -72,7 +72,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
-	sys/select.h sys/socket.h sys/time.h langinfo.h])
+	sys/select.h sys/socket.h sys/time.h langinfo.h md5.h])
 if test _$ac_cv_header_stdarg_h != _yes ; then
 AC_MSG_WARN([stdarg.h is not defined. Unsupported configuration, proceed at your own risk.])
 fi
@@ -502,7 +502,7 @@ AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
 #include <netdb.h>
 #endif
 #ifndef NULL
-#define NULL ((void *)0)
+#define NULL 0
 #endif
   ], [getnameinfo(NULL,0, NULL,0, NULL, 0, 0);],
     [ fm_cv_getnameinfo=yes],
@@ -791,7 +791,7 @@ then
   save_LIBS="$LIBS"
   for i in "" "-ldl" ; do
       LIBS="$LDFLAGS $save_LIBS $i"
-      AC_LINK_IFELSE([AC_LANG_PROGRAM(,[SSL_library_init()])],[found=1; break])
+      AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <openssl/ssl.h>],[SSL_library_init()])],[found=1; break])
   done
   if test $found = 0 ; then
       AC_MSG_RESULT([error])

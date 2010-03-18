@@ -61,7 +61,7 @@ TESTS+=			t.regression
 endif
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		i18n.h kerberos.h md5.h mx.h netrc.h smtp.h \
+		i18n.h kerberos.h fm_md5.h mx.h netrc.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c daemon.c \

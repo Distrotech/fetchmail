@@ -324,7 +324,7 @@ struct query
     char *smtpaddress;		/* address to force in RCPT TO */ 
     char *smtpname;             /* full RCPT TO name, including domain */
     struct idlist *antispam;	/* list of listener's antispam response */
-    char *mda;			/* local MDA to pass mail to */
+    const char *mda;		/* local MDA to pass mail to */
     char *bsmtp;		/* BSMTP output file */
     char listener;		/* what's the listener's wire protocol? */
 #define SMTP_MODE	'S'
@@ -384,7 +384,7 @@ struct query
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
-    char digest[DIGESTLEN];	/* md5 digest buffer */
+    unsigned char digest[DIGESTLEN];	/* md5 digest buffer */
 
     /* internal use -- housekeeping */
     struct query *next;		/* next query control block in chain */
@@ -651,8 +651,8 @@ extern char currentwd[1024], rcfiledir[1024];
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct runctl *, struct query *);
 char *prependdir (const char *, const char *);
-char *MD5Digest (unsigned const char *);
-void hmac_md5 (const char *, size_t, const char *, size_t, unsigned char *, size_t);
+unsigned char *MD5Digest (unsigned const char *);
+void hmac_md5 (const unsigned char *, size_t, const char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(char *, char *, int socket);
 typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);

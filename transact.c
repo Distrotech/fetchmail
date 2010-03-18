@@ -29,7 +29,7 @@
 #endif
 #include <sys/socket.h>
 #include <netdb.h>
-#include "md5.h"
+#include "fm_md5.h"
 
 #include "i18n.h"
 #include "socket.h"

@@ -16,7 +16,7 @@
  */
 
 #include "config.h"
-#include "md5.h"
+#include "fm_md5.h"
 #ifdef HAVE_STRING_H
 #include <string.h>   /* memmove */
 #endif

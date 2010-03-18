@@ -15,16 +15,16 @@
 #include  "socket.h"
 
 #include  "i18n.h"
-#include "md5.h"
+#include "fm_md5.h"
 
-void hmac_md5 (const char *password,  size_t pass_len,
+void hmac_md5 (const unsigned char *password,  size_t pass_len,
                const char *challenge, size_t chal_len,
                unsigned char *response,  size_t resp_len)
 {
     int i;
     unsigned char ipad[64];
     unsigned char opad[64];
-    char hash_passwd[16];
+    unsigned char hash_passwd[16];
 
     MD5_CTX ctx;
     
@@ -110,7 +110,7 @@ int do_cram_md5 (int sock, const char *command, struct query *ctl, const char *s
      * (including angle-brackets).
      */
 
-    hmac_md5(ctl->password, strlen(ctl->password),
+    hmac_md5((unsigned char *)ctl->password, strlen(ctl->password),
               msg_id, strlen (msg_id),
               response, sizeof (response));
 

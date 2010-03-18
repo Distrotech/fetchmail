@@ -15,7 +15,7 @@
 #include  "socket.h"
 
 #include  "i18n.h"
-#include "md5.h"
+#include "fm_md5.h"
 
 #include <sys/types.h>
 #include <netinet/in.h>  /* for htonl/ntohl */

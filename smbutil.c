@@ -84,12 +84,12 @@ static void dumpRaw(FILE *fp, unsigned char *buf, size_t len)
 
 /* helper macro to destructively resize buffers; assumes that bufsiz
  * is initialized to 0 if buf is unallocated! */
-#define allocbuf(buf, bufsiz, need) do { \
+#define allocbuf(buf, bufsiz, need, type) do { \
   if (!buf || (need) > (bufsiz)) \
     { \
     (bufsiz) = ((need) < 1024) ? 1024 : (need); \
     xfree(buf); \
-    (buf) = xmalloc(bufsiz); \
+    (buf) = (type)xmalloc(bufsiz); \
     } \
   } while (0);
 
@@ -101,7 +101,7 @@ static char *unicodeToString(char *p, size_t len)
   static char *buf;
   static size_t bufsiz;
 
-  allocbuf(buf, bufsiz, len + 1);
+  allocbuf(buf, bufsiz, len + 1, char *);
 
   for (i=0; i<len; ++i)
     {
@@ -121,7 +121,7 @@ static unsigned char *strToUnicode(char *p)
   size_t l = strlen(p);
   int i = 0;
 
-  allocbuf(buf, bufsiz, l * 2);
+  allocbuf(buf, bufsiz, l * 2, unsigned char *);
 
   while (l--)
     {
@@ -137,7 +137,7 @@ static unsigned char *toString(char *p, size_t len)
   static unsigned char *buf;
   static size_t bufsiz;
 
-  allocbuf(buf, bufsiz, len + 1);
+  allocbuf(buf, bufsiz, len + 1, unsigned char *);
 
   memcpy(buf,p,len);
   buf[len] = 0;
