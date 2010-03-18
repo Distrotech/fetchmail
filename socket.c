@@ -385,7 +385,7 @@ static	SSL *_ssl_context[FD_SETSIZE];
 static SSL	*SSLGetContext( int );
 #endif /* SSL_ENABLE */
 
-int SockWrite(int sock, char *buf, int len)
+int SockWrite(int sock, const char *buf, int len)
 {
     int n, wrlen = 0;
 #ifdef	SSL_ENABLE
@@ -813,7 +813,7 @@ static const char *SSLCertGetCN(const char *mycert,
  * uses SSL *ssl global variable, which is currently defined
  * in this file
  */
-int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
+int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck, char *certpath,
     char *fingerprint, char *servercname, char *label, char **remotename)
 {
         struct stat randstat;

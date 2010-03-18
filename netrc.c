@@ -28,7 +28,7 @@
 # define xmalloc malloc
 # define xrealloc realloc
 
-char *program_name = "netrc";
+const char *program_name = "netrc";
 #endif
 
 /* Maybe add NEWENTRY to the account information list, LIST.  NEWENTRY is

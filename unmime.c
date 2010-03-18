@@ -337,7 +337,7 @@ static int CheckContentType(char *CntType)
    * be really careful if you change this.
    */
 
-  static char *DecodedTypes[] = {
+  static const char *DecodedTypes[] = {
     "text/",        /* Will match ALL content-type's starting with 'text/' */
     "message/rfc822", 
     NULL
@@ -651,7 +651,7 @@ int UnMimeBodyline(char **bufp, flag delimited, flag softline)
 #include <stdio.h>
 #include <unistd.h>
 
-char *program_name = "unmime";
+const char *program_name = "unmime";
 int outlevel = 0;
 
 #define BUFSIZE_INCREMENT 4096

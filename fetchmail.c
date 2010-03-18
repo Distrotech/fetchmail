@@ -72,9 +72,9 @@ flag versioninfo;	    /* emit only version info */
 char *user;		    /* the name of the invoking user */
 char *home;		    /* invoking user's home directory */
 char *fmhome;		    /* fetchmail's home directory */
-char *program_name;	    /* the name to prefix error messages with */
+const char *program_name;   /* the name to prefix error messages with */
 flag configdump;	    /* dump control blocks for configurator */
-char *fetchmailhost;	    /* either `localhost' or the host's FQDN */
+const char *fetchmailhost;  /* either `localhost' or the host's FQDN */
 
 static int quitonly;	    /* if we should quit after killing the running daemon */
 

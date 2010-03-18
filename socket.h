@@ -44,7 +44,7 @@ int SockPeek(int sock);
 Write a chunk of bytes to the socket (matches interface of fwrite).
 Returns number of bytes successfully written.
 */
-int SockWrite(int sock, char *buf, int size);
+int SockWrite(int sock, const char *buf, int size);
 
 /* from /usr/include/sys/cdefs.h */
 #if !defined __GNUC__ || __GNUC__ < 2
@@ -75,7 +75,7 @@ FIXME: document this
 int UnixOpen(const char *path);
 
 #ifdef SSL_ENABLE
-int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
+int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck, char *certpath,
     char *fingerprint, char *servercname, char *label, char **remotename);
 #endif /* SSL_ENABLE */
 

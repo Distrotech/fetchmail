@@ -19,6 +19,8 @@ int prc_lineno = 1;
 #define SETSTATE(n)	BEGIN(n)
 #endif /* LEXDEBUG */
 
+#define YY_NO_INPUT
+
 %}
 
 /* this doesn't work with Linux lex, see the INSTALL file */
@@ -244,7 +246,7 @@ void escapes(const char *cp /** source string with escapes */,
 	 * always succeed! */
 	if (*cp == '\\' && cp[1] && strchr("0123456789xX", cp[1]))
 	{
-	    char *dp;
+	    const char *dp;
 	    const char *hex = "00112233445566778899aAbBcCdDeEfF";
 	    int dcount = 0;
 

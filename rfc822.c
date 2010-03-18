@@ -31,7 +31,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #else
 #include  <unistd.h>
 static int verbose;
-char *program_name = "rfc822";
+const char *program_name = "rfc822";
 #endif /* MAIN */
 
 #ifndef TRUE

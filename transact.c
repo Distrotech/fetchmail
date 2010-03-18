@@ -799,9 +799,10 @@ eoh:
 	 */
 	if ((already_has_return_path==FALSE) && !strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
+	    char nulladdr[] = "<>";
 	    already_has_return_path = TRUE;
 	    if (cp[0]=='\0')	/* nxtaddr() strips the brackets... */
-		cp="<>";
+		cp=nulladdr;
 	    strncpy(msgblk.return_path, cp, sizeof(msgblk.return_path));
 	    msgblk.return_path[sizeof(msgblk.return_path)-1] = '\0';
 	    if (!ctl->mda) {

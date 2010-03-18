@@ -40,7 +40,7 @@ static char buf[16];
 
 const char *norm_charmap(const char *name)
 {
-  char *p;
+  const char *p;
   
   if (!name)
     return name;

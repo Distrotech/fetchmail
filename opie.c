@@ -26,7 +26,7 @@ extern "C" {
 }
 #endif
 
-int do_otp(int sock, char *command, struct query *ctl)
+int do_otp(int sock, const char *command, struct query *ctl)
 {
     int i, rval;
     char buffer[128];

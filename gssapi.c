@@ -42,7 +42,8 @@
 #define GSSAUTH_P_INTEGRITY 2
 #define GSSAUTH_P_PRIVACY   4
 
-int do_gssauth(int sock, char *command, char *service, char *hostname, char *username)
+int do_gssauth(int sock, const char *command, const char *service,
+		const char *hostname, const char *username)
 {
     gss_buffer_desc request_buf, send_token;
     gss_buffer_t sec_token;

@@ -418,7 +418,7 @@ static void capa_probe(int sock, struct query *ctl)
     peek_capable = (imap_version >= IMAP4);
 }
 
-static int do_authcert (int sock, char *command, const char *name)
+static int do_authcert (int sock, const char *command, const char *name)
 /* do authentication "external" (authentication provided by client cert) */
 {
     char buf[256];

@@ -17,8 +17,8 @@
 #include  "i18n.h"
 #include "md5.h"
 
-void hmac_md5 (char *password,  size_t pass_len,
-               char *challenge, size_t chal_len,
+void hmac_md5 (const char *password,  size_t pass_len,
+               const char *challenge, size_t chal_len,
                unsigned char *response,  size_t resp_len)
 {
     int i;
@@ -60,7 +60,7 @@ void hmac_md5 (char *password,  size_t pass_len,
     MD5Final (response, &ctx);
 }
 
-int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
+int do_cram_md5 (int sock, const char *command, struct query *ctl, const char *strip)
 /* authenticate as per RFC2195 */
 {
     int result;

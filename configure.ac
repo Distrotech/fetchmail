@@ -187,7 +187,7 @@ AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
   atexit inet_aton strftime setrlimit socketpair dnl
   sigaction strdup setlocale)
 
-AC_CHECK_DECLS(strerror)
+AC_CHECK_DECLS([strerror,getenv])
 dnl INET6 is used by KAME/getnameinfo
 AC_CACHE_CHECK(for AF_INET6/PF_INET6,ac_cv_inet6,
 AC_COMPILE_IFELSE([

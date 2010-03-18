@@ -176,7 +176,7 @@ struct runctl
     char	*logfile;	/** where to write log information */
     char	*idfile;	/** where to store UID data */
     char	*pidfile;	/** where to record the PID of daemon mode processes */
-    char	*postmaster;
+    const char	*postmaster;
     char	*properties;
     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
@@ -255,7 +255,7 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
-    char *service;			/* service name */
+    const char *service;		/* service name */
     int interval;			/* # cycles to skip between polls */
     int authenticate;			/* authentication mode to try */
     int timeout;			/* inactivity timout in seconds */
@@ -454,7 +454,7 @@ extern char *home;		/* home directory of invoking user */
 extern char *fmhome;		/* fetchmail home directory */
 extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
-extern char *fetchmailhost;	/* either "localhost" or an FQDN */
+extern const char *fetchmailhost; /* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
 extern char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE
@@ -638,10 +638,10 @@ int doETRN (struct query *);
 int doODMR (struct query *);
 
 /* authentication functions */
-int do_cram_md5(int sock, char *command, struct query *ctl, char *strip);
-int do_rfc1731(int sock, char *command, char *truename);
-int do_gssauth(int sock, char *command, char *service, char *hostname, char *username);
-int do_otp(int sock, char *command, struct query *ctl);
+int do_cram_md5(int sock, const char *command, struct query *ctl, const char *strip);
+int do_rfc1731(int sock, const char *command, const char *truename);
+int do_gssauth(int sock, const char *command, const char *service, const char *hostname, const char *username);
+int do_otp(int sock, const char *command, struct query *ctl);
 
 /* miscellanea */
 
@@ -652,7 +652,7 @@ struct query *hostalloc(struct query *);
 int parsecmdline (int, char **, struct runctl *, struct query *);
 char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned const char *);
-void hmac_md5 (char *, size_t, char *, size_t, unsigned char *, size_t);
+void hmac_md5 (const char *, size_t, const char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(char *, char *, int socket);
 typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
@@ -723,7 +723,7 @@ char *stpcpy(char *, const char*);
 #endif /* __CYGWIN__ */
 
 extern int mailserver_socket_temp;
-extern char *program_name;
+extern const char *program_name;
 
 /* POSIX space characters,
  * <tab>;<newline>;<vertical-tab>;<form-feed>;<carriage-return>;<space> */

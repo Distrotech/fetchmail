@@ -30,7 +30,9 @@
 #include <locale.h>
 #endif
 
+#ifndef HAVE_DECL_GETENV
 extern char *getenv(const char *);	/* needed on sysV68 R3V7.1. */
+#endif
 
 void envquery(int argc, char **argv)
 /* set up basic stuff from the environment (including the rc file name) */

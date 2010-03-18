@@ -492,10 +492,13 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	/* check if the message is old
 	 * Note: the size of the message may not be known here */
-	if (ctl->fetchall || force_retrieval)
-	    ;
-	else if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num))
-	    msgcode = MSGLEN_OLD;
+	if (ctl->fetchall || force_retrieval) {
+	    /* empty */
+	} else { 
+	    if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num)) {
+		    msgcode = MSGLEN_OLD;
+	    }
+        }
 	if (msgcode == MSGLEN_OLD)
 	{
   		/* To avoid flooding the syslog when using --keep,

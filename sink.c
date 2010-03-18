@@ -131,7 +131,7 @@ int smtp_setup(struct query *ctl)
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp;
-	    char	*portnum = SMTP_PORT;
+	    const char	*portnum = SMTP_PORT;
 
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 	    if (ctl->smtphost[0]=='/')
@@ -262,12 +262,13 @@ char *rcpt_address(struct query *ctl, const char *id,
 }
 
 static int send_bouncemail(struct query *ctl, struct msgblk *msg,
-			   int userclass, char *message /* should have \r\n at the end */,
+			   int userclass, const char *message /* should have \r\n at the end */,
 			   int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
     char daemon_name[15 + HOSTLEN] = "MAILER-DAEMON@";
-    char boundary[BUFSIZ], *bounce_to;
+    char boundary[BUFSIZ];
+    const char *bounce_to;
     int sock;
     static char *fqdn_of_host = NULL;
     const char *md1 = "MAILER-DAEMON", *md2 = "MAILER-DAEMON@";
