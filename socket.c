@@ -82,7 +82,8 @@ extern int h_errno;
 
 #ifdef HAVE_SOCKETPAIR
 static char *const *parse_plugin(const char *plugin, const char *host, const char *service)
-{	const char **argvec;
+{
+	char **argvec;
 	const char *c, *p;
 	char *cp, *plugin_copy;
 	unsigned int plugin_copy_len;
@@ -129,25 +130,25 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	}
 	plugin_copy[plugin_copy_len] = 0;
 
-	argvec = (const char **)malloc(s);
+	argvec = (char **)malloc(s);
 	if (!argvec)
 	{
 		report(stderr, GT_("fetchmail: malloc failed\n"));
 		return NULL;
 	}
 	memset(argvec, 0, s);
-	for (c = p = plugin_copy, i = 0; *c; c++)
-	{	if ((!isspace((unsigned char)*c)) && (c == p ? 1 : isspace((unsigned char)*p))) {
-			argvec[i] = c;
+	for (p = cp = plugin_copy, i = 0; *cp; cp++)
+	{	if ((!isspace((unsigned char)*cp)) && (cp == p ? 1 : isspace((unsigned char)*p))) {
+			argvec[i] = cp;
 			i++;
 		}
-		p = c;
+		p = cp;
 	}
 	for (cp = plugin_copy; *cp; cp++)
 	{	if (isspace((unsigned char)*cp))
 			*cp = 0;
 	}
-	return (char *const*)argvec;
+	return argvec;
 }
 
 static int handle_plugin(const char *host,

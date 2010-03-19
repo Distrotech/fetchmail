@@ -43,7 +43,7 @@ int suppress_tags = FALSE;	/* emit tags? */
 char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
-static struct method *protocol;
+static const struct method *protocol;
 char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
 
 /* session variables initialized in do_session() */
@@ -1462,7 +1462,7 @@ void init_transact(const struct method *proto)
     suppress_tags = FALSE;
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
-    protocol = (struct method *)proto;
+    protocol = proto;
     shroud[0] = '\0';
 }
 
