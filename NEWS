@@ -79,7 +79,9 @@ fetchmail 6.3.15 (not yet released):
   GnuPG-signed tags, as a sign that these are now closed.
 * The outdated SVN trunk is now called "oldtrunk" in Git just to save the work
   for future reference. All development in the past few years was on BRANCH_6-3.
-* master was branched from BRANCH_6-3 for user convenience.
+* master was branched from BRANCH_6-3.  BRANCH_6-3 is now obsolete (and in fact
+  was also converted to a tag to record where the conversion from SVN to Git
+  took place).
 * "make check" now skips HTML validation if xmllint or XHTML DTD are missing.
 
 # DOCUMENTATION
