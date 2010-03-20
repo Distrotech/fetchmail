@@ -170,7 +170,7 @@ dnl 		[LIBS="$LIBS -lintl"])
 
 AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
 
-AC_SEARCH_LIBS(MD5Init, [md5, md], [],
+AC_SEARCH_LIBS(MD5Init, [md5 md], [],
 	      [AC_LIBSOURCE(md5c.c)
                EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"])
 
@@ -844,6 +844,7 @@ then
   LDFLAGS="$ac_savedLDFLAGS"
 fi])
 
+dnl for libesmtp/ modules:
 ACX_WHICH_GETHOSTBYNAME_R
 
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
