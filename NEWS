@@ -19,6 +19,8 @@ removed from a 6.4.0 or newer release.)
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not reasonably portable across operating systems.
 * POP2 is obsolete, support will be removed from a future fetchmail version.
+* IMAP2 and IMAP4 (not IMAP4r1) are obsolete, support may be removed from a
+  future fetchmail version.
 * RPOP is obsolete, support will be removed from a future fetchmail release.
 * --sslcertck will become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
@@ -48,7 +50,7 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.15 (not yet released):
+fetchmail-6.3.15 (released 2010-03-28, 25572 LoC):
 
 # FEATURE
 * Fetchmail now supports a bad-header command line or rcfile option that takes
