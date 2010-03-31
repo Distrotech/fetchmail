@@ -18,10 +18,6 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
-#ifdef __BEOS__
-#include "beos/beos_nameser.h"
-#endif
-
 #ifdef HAVE_ARPA_NAMESER_H
 #include <arpa/nameser.h>
 #endif

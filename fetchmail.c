@@ -313,12 +313,7 @@ int main(int argc, char **argv)
     /* logging should be set up early in case we were restarted from exec */
     if (run.use_syslog)
     {
-#if defined(LOG_MAIL)
 	openlog(program_name, LOG_PID, LOG_MAIL);
-#else
-	/* Assume BSD4.2 openlog with two arguments */
-	openlog(program_name, LOG_PID);
-#endif
 	report_init(-1);
     }
     else

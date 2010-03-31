@@ -695,19 +695,6 @@ char *rfc2047e(const char*, const char *);
 void yyerror(const char *);
 int yylex(void);
 
-#ifdef __EMX__
-void itimerthread(void*);
-/* Have to include these first to avoid errors from redefining getcwd
-   and chdir.  They're re-include protected in EMX, so it's okay, I
-   guess.  */
-#include <stdlib.h>
-#include <unistd.h>
-/* Redefine getcwd and chdir to get drive-letter support so we can
-   find all of our lock files and stuff. */
-#define getcwd _getcwd2
-#define chdir _chdir2
-#endif /* _EMX_ */
-
 #ifdef HAVE_STRERROR
 #  if !defined(strerror) && !defined(HAVE_DECL_STRERROR)	/* On some systems, strerror is a macro */
 char *strerror (int);

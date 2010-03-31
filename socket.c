@@ -54,24 +54,17 @@
 #include "i18n.h"
 #include "sdump.h"
 
-/* Defines to allow BeOS and Cygwin to play nice... */
-#ifdef __BEOS__
-static char peeked;
-#define fm_close(a)  closesocket(a)
-#define fm_write(a,b,c)  send(a,b,c,0)
-#define fm_peek(a,b,c)   recv(a,b,c,0)
-#define fm_read(a,b,c)   recv(a,b,c,0)
-#else
-#define fm_close(a)  close(a)
+/* Defines to allow Cygwin to play nice... */
+#define fm_close(a)  	 close(a)
 #define fm_write(a,b,c)  write(a,b,c)
 #define fm_peek(a,b,c)   recv(a,b,c, MSG_PEEK)
+
 #ifdef __CYGWIN__
 #define fm_read(a,b,c)   cygwin_read(a,b,c)
 static ssize_t cygwin_read(int sock, void *buf, size_t count);
 #else /* ! __CYGWIN__ */
 #define fm_read(a,b,c)   read(a,b,c)
 #endif /* __CYGWIN__ */
-#endif
 
 /* We need to define h_errno only if it is not already */
 #ifndef h_errno
@@ -431,14 +424,6 @@ int SockRead(int sock, char *buf, int len)
 
     if (--len < 1)
 	return(-1);
-#ifdef __BEOS__
-    if (peeked != 0){
-        (*bp) = peeked;
-        bp++;
-        len--;
-        peeked = 0;
-    }
-#endif        
     do {
 	/* 
 	 * The reason for these gymnastics is that we want two things:
@@ -501,18 +486,12 @@ int SockRead(int sock, char *buf, int len)
 #endif /* SSL_ENABLE */
 	{
 
-#ifdef __BEOS__
-	    if ((n = fm_read(sock, bp, 1)) <= 0)
-#else
 	    if ((n = fm_peek(sock, bp, len)) <= 0)
-#endif
 		return (-1);
 	    if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
 		n = newline - bp + 1;
-#ifndef __BEOS__
 	    if ((n = fm_read(sock, bp, n)) == -1)
 		return(-1);
-#endif /* __BEOS__ */
 	}
 	bp += n;
 	len -= n;
@@ -567,9 +546,6 @@ int SockPeek(int sock)
 	if (n == -1)
 		return -1;
 
-#ifdef __BEOS__
-    peeked = ch;
-#endif
     return(ch);
 }
 

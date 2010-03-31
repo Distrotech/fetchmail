@@ -396,7 +396,6 @@ void yyerror (const char *s)
 int prc_filecheck(const char *pathname,
 		  const flag securecheck /** shortcuts permission, filetype and uid tests if false */)
 {
-#ifndef __EMX__
     struct stat statbuf;
 
     errno = 0;
@@ -430,7 +429,6 @@ int prc_filecheck(const char *pathname,
 	return(PS_IOERR);
     }
 
-#ifndef __BEOS__
 #ifdef __CYGWIN__
     if (cygwin_internal(CW_CHECK_NTSEC, pathname))
 #endif /* __CYGWIN__ */
@@ -440,7 +438,6 @@ int prc_filecheck(const char *pathname,
 		pathname);
 	return(PS_IOERR);
     }
-#endif /* __BEOS__ */
 
 #ifdef HAVE_GETEUID
     if (statbuf.st_uid != geteuid())
@@ -451,7 +448,6 @@ int prc_filecheck(const char *pathname,
 	fprintf(stderr, GT_("File %s must be owned by you.\n"), pathname);
 	return(PS_IOERR);
     }
-#endif
     return(PS_SUCCESS);
 }
 

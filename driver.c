@@ -98,7 +98,6 @@ void resetidletimeout(void)
 void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
-#if !defined(__EMX__) && !defined(__BEOS__)
     struct itimerval ntimeout;
 
     if (timeleft == 0)
@@ -108,7 +107,6 @@ void set_timeout(int timeleft)
     ntimeout.it_value.tv_sec  = timeleft;
     ntimeout.it_value.tv_usec = 0;
     setitimer(ITIMER_REAL, &ntimeout, (struct itimerval *)NULL);
-#endif
 }
 
 static RETSIGTYPE timeout_handler (int signal)

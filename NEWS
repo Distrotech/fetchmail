@@ -57,6 +57,7 @@ fetchmail-6.4.0 (not yet released):
 
 # REMOVED FEATURES
 * POP2 was long obsolete and removed
+* BeOS and EMX support was removed
 
 --------------------------------------------------------------------------------
 

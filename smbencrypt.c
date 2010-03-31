@@ -33,10 +33,6 @@ extern int DEBUGLEVEL;
 #include "smbencrypt.h"
 #include "smbmd4.h"
 
-#ifndef _AIX
-typedef unsigned char uchar;
-typedef signed short int16;
-#endif
 typedef int BOOL;
 #define False 0
 #define True  1
@@ -89,7 +85,7 @@ while (*s)
   }
 }
 
-extern void SMBOWFencrypt(uchar passwd[16], uchar *c8, uchar p24[24]);
+extern void SMBOWFencrypt(unsigned char passwd[16], unsigned char *c8, unsigned char p24[24]);
 
 /*
  This implements the X/Open SMB password encryption
@@ -97,9 +93,9 @@ extern void SMBOWFencrypt(uchar passwd[16], uchar *c8, uchar p24[24]);
  encrypted password into p24 
  */
 
-void SMBencrypt(uchar *passwd, uchar *c8, uchar *p24)
+void SMBencrypt(unsigned char *passwd, unsigned char *c8, unsigned char *p24)
   {
-  uchar p14[15], p21[21];
+  unsigned char p14[15], p21[21];
   
   memset(p21,'\0',21);
   memset(p14,'\0',14);
@@ -119,7 +115,7 @@ void SMBencrypt(uchar *passwd, uchar *c8, uchar *p24)
   }
 
 /* Routines for Windows NT MD4 Hash functions. */
-static int _my_wcslen(int16 *str)
+static int _my_wcslen(int16_t *str)
 {
 	int len = 0;
 	while(*str++ != 0)
@@ -134,10 +130,10 @@ static int _my_wcslen(int16 *str)
  * format.
  */
  
-static int _my_mbstowcs(int16 *dst, uchar *src, int len)
+static int _my_mbstowcs(int16_t *dst, unsigned char *src, int len)
 {
 	int i;
-	int16 val;
+	int16_t val;
  
 	for(i = 0; i < len; i++) {
 		val = *src;
@@ -157,7 +153,7 @@ static int _my_mbstowcs(int16 *dst, uchar *src, int len)
 static void E_md4hash(uchar *passwd, uchar *p16)
 {
 	int len;
-	int16 wpwd[129];
+	int16_t wpwd[129];
 	
 	/* Password cannot be longer than 128 characters */
 	len = strlen((char *)passwd);
@@ -167,15 +163,15 @@ static void E_md4hash(uchar *passwd, uchar *p16)
 	_my_mbstowcs(wpwd, passwd, len);
 	wpwd[len] = 0; /* Ensure string is null terminated */
 	/* Calculate length in bytes */
-	len = _my_wcslen(wpwd) * sizeof(int16);
+	len = _my_wcslen(wpwd) * sizeof(int16_t);
 
 	mdfour(p16, (unsigned char *)wpwd, len);
 }
 
 /* Does the des encryption from the NT or LM MD4 hash. */
-void SMBOWFencrypt(uchar passwd[16], uchar *c8, uchar p24[24])
+void SMBOWFencrypt(unsigned char passwd[16], unsigned char *c8, unsigned char p24[24])
 {
-	uchar p21[21];
+	unsigned char p21[21];
  
 	memset(p21,'\0',21);
  
@@ -185,9 +181,9 @@ void SMBOWFencrypt(uchar passwd[16], uchar *c8, uchar p24[24])
 
 /* Does the NT MD4 hash then des encryption. */
  
-void SMBNTencrypt(uchar *passwd, uchar *c8, uchar *p24)
+void SMBNTencrypt(unsigned char *passwd, unsigned char *c8, unsigned char *p24)
 {
-	uchar p21[21];
+	unsigned char p21[21];
  
 	memset(p21,'\0',21);
  
@@ -204,7 +200,7 @@ void SMBNTencrypt(uchar *passwd, uchar *c8, uchar *p24)
 
 #if 0
 
-BOOL make_oem_passwd_hash(char data[516], const char *passwd, uchar old_pw_hash[16], BOOL unicode)
+BOOL make_oem_passwd_hash(char data[516], const char *passwd, unsigned char old_pw_hash[16], BOOL unicode)
 {
 	int new_pw_len = strlen(passwd) * (unicode ? 2 : 1);
 

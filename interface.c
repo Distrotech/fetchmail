@@ -37,18 +37,16 @@
 #include <net/if.h>
 #if defined(__FreeBSD__)
 #if defined __FreeBSD_USE_KVM
-#if __FreeBSD_version >= 300001
 #include <net/if_var.h>
-#endif
 #include <kvm.h>
 #include <nlist.h>
 #include <sys/fcntl.h>
-#else
+#else /* !defined __FreeBSD_USE_KVM */
 #include <sys/sysctl.h>
 #include <net/route.h>
 #include <net/if_dl.h>
-#endif
-#endif
+#endif /* defined __FreeBSD_USE_KVM */
+#endif /* defined __FreeBSD__ */
 #include "socket.h"
 #include "i18n.h"
 #include "tunable.h"

@@ -9,7 +9,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl XXX - if bumping version here, check fetchmail.man, too!
-AC_INIT([fetchmail],[6.3.19],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.4.0-alpha1],[fetchmail-devel@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -38,14 +38,6 @@ AC_PROG_CPP			dnl Later checks need this.
 AC_PROG_RANLIB
 AM_PROG_CC_C_O
 AC_USE_SYSTEM_EXTENSIONS
-
-AC_ISC_POSIX
-dnl AC_ISC_POSIX: - XXX FIXME: remove in fetchmail 6.4.
-dnl This macro adds `-lcposix' to output variable `LIBS' if necessary
-dnl for Posix facilities.  Sun dropped support for the obsolete
-dnl INTERACTIVE Systems Corporation Unix on 2006-07-23.  New programs
-dnl need not use this macro.  It is implemented as
-dnl `AC_SEARCH_LIBS([strerror], [cposix])'
 
 dnl check for b0rked Solaris (and other shells) and find one that works
 AC_MSG_CHECKING(for a working shell...)
