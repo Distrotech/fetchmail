@@ -821,7 +821,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
         int i;
 
 	SSL_load_error_strings();
-	SSLeay_add_ssl_algorithms(); /* synonym for SSL_library_init() */
+	SSL_library_init();
 	
 #ifdef SSL_ENABLE
         if (stat("/dev/random", &randstat)  &&
