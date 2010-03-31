@@ -14,11 +14,7 @@
 #endif /* HAVE_MEMORY_H */
 #include  <stdlib.h>
 #include <unistd.h>
-#if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
-#else
-#include  <varargs.h>
-#endif
 #include <limits.h>
 
 #ifdef HAVE_NET_SOCKET_H
@@ -1499,14 +1495,7 @@ static void enshroud(char *buf)
     }
 }
 
-#if defined(HAVE_STDARG_H)
 void gen_send(int sock, const char *fmt, ... )
-#else
-void gen_send(sock, fmt, va_alist)
-int sock;		/* socket to which server is connected */
-const char *fmt;	/* printf-style format */
-va_dcl
-#endif
 /* assemble command in printf(3) style and send to the server */
 {
     char buf [MSGBUFSIZE+1];
@@ -1517,11 +1506,7 @@ va_dcl
     else
 	buf[0] = '\0';
 
-#if defined(HAVE_STDARG_H)
     va_start(ap, fmt);
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf + strlen(buf), sizeof(buf)-2-strlen(buf), fmt, ap);
     va_end(ap);
 
@@ -1571,14 +1556,7 @@ int gen_recv(int sock  /** socket to which server is connected */,
     }
 }
 
-#if defined(HAVE_STDARG_H)
 int gen_transact(int sock, const char *fmt, ... )
-#else
-int gen_transact(int sock, fmt, va_alist)
-int sock;		/* socket to which server is connected */
-const char *fmt;	/* printf-style format */
-va_dcl
-#endif
 /* assemble command in printf(3) style, send to server, accept a response */
 {
     int ok;
@@ -1593,11 +1571,7 @@ va_dcl
     else
 	buf[0] = '\0';
 
-#if defined(HAVE_STDARG_H)
     va_start(ap, fmt) ;
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf + strlen(buf), sizeof(buf)-2-strlen(buf), fmt, ap);
     va_end(ap);
 

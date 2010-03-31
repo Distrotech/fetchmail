@@ -28,11 +28,7 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <unistd.h>
-#if defined(HAVE_STDARG_H)
 #include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
@@ -349,28 +345,15 @@ int SockOpen(const char *host, const char *service,
 }
 
 
-#if defined(HAVE_STDARG_H)
 int SockPrintf(int sock, const char* format, ...)
 {
-#else
-int SockPrintf(sock,format,va_alist)
-int sock;
-char *format;
-va_dcl {
-#endif
-
     va_list ap;
     char buf[8192];
 
-#if defined(HAVE_STDARG_H)
     va_start(ap, format) ;
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf, sizeof(buf), format, ap);
     va_end(ap);
     return SockWrite(sock, buf, strlen(buf));
-
 }
 
 #ifdef SSL_ENABLE

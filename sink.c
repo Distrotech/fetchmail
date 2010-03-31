@@ -20,11 +20,7 @@
 #endif /* HAVE_MEMORY_H */
 #include  <stdlib.h>
 #include  <unistd.h>
-#if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
-#else
-#include  <varargs.h>
-#endif
 #include  <ctype.h>
 #include  <langinfo.h>
 
@@ -1572,15 +1568,7 @@ int open_warning_by_mail(struct query *ctl)
 /* if rfc2047charset is non-NULL, encode the line (that is assumed to be
  * a header line) as per RFC-2047 using rfc2047charset as the character
  * set field */
-#if defined(HAVE_STDARG_H)
 void stuff_warning(const char *rfc2047charset, struct query *ctl, const char *fmt, ... )
-#else
-void stuff_warning(rfc2047charset, ctl, fmt, va_alist)
-const char *charset;
-struct query *ctl;
-const char *fmt;	/* printf-style format */
-va_dcl
-#endif
 {
     /* make huge -- i18n can bulk up error messages a lot */
     char	buf[2*MSGBUFSIZE+4];
@@ -1592,11 +1580,7 @@ va_dcl
      * case it was a string constant.  We make a virtue of that necessity
      * here by supporting stdargs/varargs.
      */
-#if defined(HAVE_STDARG_H)
     va_start(ap, fmt) ;
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf, sizeof(buf) - 2, fmt, ap);
     va_end(ap);
 

@@ -5,7 +5,6 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-/* We need this for HAVE_STDARG_H, etc */
 #include "config.h"
 
 struct addrinfo;
@@ -486,7 +485,6 @@ extern const char *iana_charset;	/* IANA assigned charset name */
 #endif
 
 /* error.c: Error reporting */
-#if defined(HAVE_STDARG_H)
 void report_init(int foreground);
  /** Flush partial message, suppress program name tag for next report printout. */
 void report_flush(FILE *fp);
@@ -502,12 +500,6 @@ void report_complete (FILE *fp, const char *format, ...)
 void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...)
     __attribute__ ((format (printf, 5, 6)))
     ;
-#else
-void report ();
-void report_build ();
-void report_complete ();
-void report_at_line ();
-#endif
 
 /* driver.c -- main driver loop */
 void set_timeout(int);
@@ -524,7 +516,6 @@ int readheaders(int sock,
 		       int num,
 		       flag *suppress_readbody);
 int readbody(int sock, struct query *ctl, flag forward, int len);
-#if defined(HAVE_STDARG_H)
 void gen_send(int sock, const char *, ... )
     __attribute__ ((format (printf, 2, 3)))
     ;
@@ -532,11 +523,6 @@ int gen_recv(int sock, char *buf, int size);
 int gen_transact(int sock, const char *, ... )
     __attribute__ ((format (printf, 2, 3)))
     ;
-#else
-void gen_send();
-int gen_recv();
-int gen_transact();
-#endif
 extern struct msgblk msgblk;
 
 /* use these to track what was happening when the nonresponse timer fired */
@@ -577,13 +563,9 @@ int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);
 int close_sink(struct query *, struct msgblk *, flag);
 int open_warning_by_mail(struct query *);
-#if defined(HAVE_STDARG_H)
 void stuff_warning(const char *, struct query *, const char *, ... )
     __attribute__ ((format (printf, 3, 4)))
     ;
-#else
-void stuff_warning();
-#endif
 void close_warning_by_mail(struct query *, struct msgblk *);
 
 /* rfc822.c: RFC822 header parsing */
