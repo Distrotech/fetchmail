@@ -1403,10 +1403,6 @@ static RETSIGTYPE terminate_run(int sig)
 	if (ctl->password)
 	  memset(ctl->password, '\0', strlen(ctl->password));
 
-#if !defined(HAVE_ATEXIT)
-    fm_lock_release();
-#endif
-
     if (activecount == 0)
 	exit(PS_NOMAIL);
     else

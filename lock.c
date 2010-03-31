@@ -60,9 +60,7 @@ static void unlockit(void)
 void fm_lock_dispose(void)
 /* arrange for a lock to be removed on process exit */
 {
-#ifdef HAVE_ATEXIT
     atexit(unlockit);
-#endif
 }
 
 int fm_lock_state(void)
