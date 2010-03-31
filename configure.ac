@@ -176,13 +176,10 @@ AC_CHECK_FUNC(getopt_long, [],
               [AC_LIBSOURCES([getopt.c, getopt1.c])
 	       EXTRAOBJ="$EXTRAOBJ getopt.\$(OBJEXT) getopt1.\$(OBJEXT)"])
 
-AC_FUNC_VPRINTF
-
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(tcsetattr setsid geteuid seteuid dnl
-  syslog snprintf vprintf vsnprintf vsyslog dnl
-  inet_aton strftime setrlimit socketpair dnl
+AC_CHECK_FUNCS(vsyslog dnl
+  inet_aton setrlimit socketpair dnl
   sigaction strdup setlocale)
 
 AC_CHECK_DECLS([getenv])
@@ -890,58 +887,6 @@ then
     AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi/gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
   fi
 fi])
-
-dnl ,------------------------------------------------------------------
-dnl Check if we need TRIO
-needtrio=0
-if test "$FORCE_TRIO" = "yes" ; then
-    needtrio=1
-    ac_cv_func_vsnprintf=no
-    ac_cv_func_snprintf=no
-fi
-if test "x$ac_cv_func_snprintf" != "xyes" ; then
-    AC_DEFINE(snprintf, trio_snprintf,
-	      [Define to trio_snprintf if your system lacks snprintf])
-    needtrio=1
-fi
-if test "x$ac_cv_func_vsnprintf" != "xyes" ; then
-    AC_DEFINE(vsnprintf, trio_vsnprintf,
-	      [Define to trio_vsnprintf if your system lacks vsnprintf])
-    needtrio=1
-fi
-AM_CONDITIONAL(NEED_TRIO, test "$needtrio" = 1)
-
-dnl TRIO IEEE compiler option for Alpha
-dnl
-if test "$needtrio" = 1 ; then
-    AC_MSG_CHECKING(for IEEE compilation options)
-    AC_CACHE_VAL(ac_cv_ieee_option, [
-    AC_TRY_COMPILE(,[
-    #if !(defined(__alpha) && (defined(__DECC) || defined(__DECCXX) || (defined(__osf__) && defined(__LANGUAGE_C__))) && (defined(VMS) || defined(__VMS)))
-    # error "Option needed"
-    #endif
-    ],ac_cv_ieee_option="/IEEE_MODE=UNDERFLOW_TO_ZERO/FLOAT=IEEE",
-    AC_TRY_COMPILE(,[
-    #if !(defined(__alpha) && (defined(__DECC) || defined(__DECCXX) || (defined(__osf__) && defined(__LANGUAGE_C__))) && !(defined(VMS) || defined(__VMS)) && !defined(_CFE))
-    # error "Option needed"
-    #endif
-    ],ac_cv_ieee_option="-ieee",
-    AC_TRY_COMPILE(,[
-    #if !(defined(__alpha) && (defined(__GNUC__) && (defined(__osf__) || defined(__linux__))))
-    # error "Option needed"
-    #endif
-    ],ac_cv_ieee_option="-mieee",
-    ac_cv_ieee_option="none"
-    )
-    )
-    )
-    ])
-    AC_MSG_RESULT($ac_cv_ieee_option)
-    if test $ac_cv_ieee_option != none; then
-      CFLAGS="${CFLAGS} ${ac_cv_ieee_option}"
-    fi
-fi
-dnl ----------------------------------------------------------------'
 
 AC_CONFIG_FILES([Makefile po/Makefile.in genlsm.sh])
 AC_OUTPUT

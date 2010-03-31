@@ -11,9 +11,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
-#if defined(HAVE_SYSLOG)
 #include <syslog.h>
-#endif
 #include <pwd.h>
 #ifdef __FreeBSD__
 #include <grp.h>
@@ -104,7 +102,7 @@ static void dropprivs(void)
 }
 #endif
 
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
 #include <locale.h>
 /** returns timestamp in current locale,
  * and resets LC_TIME locale to POSIX. */
@@ -305,7 +303,6 @@ int main(int argc, char **argv)
 	run.use_syslog = 0;
     }
 
-#if defined(HAVE_SYSLOG)
     /* logging should be set up early in case we were restarted from exec */
     if (run.use_syslog)
     {
@@ -313,7 +310,6 @@ int main(int argc, char **argv)
 	report_init(-1);
     }
     else
-#endif
 	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
 #ifdef POP3_ENABLE
@@ -1526,10 +1522,8 @@ static void dump_params (struct runctl *runp,
 	printf(GT_("Logfile is %s\n"), runp->logfile);
     if (strcmp(runp->idfile, IDFILE_NAME))
 	printf(GT_("Idfile is %s\n"), runp->idfile);
-#if defined(HAVE_SYSLOG)
     if (runp->use_syslog)
 	printf(GT_("Progress messages will be logged via syslog\n"));
-#endif
     if (runp->invisible)
 	printf(GT_("Fetchmail will masquerade and will not generate Received\n"));
     if (runp->showdots)

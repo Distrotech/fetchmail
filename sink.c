@@ -1088,9 +1088,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* open a stream to a local MDA */
 {
-#ifdef HAVE_SETEUID
     uid_t orig_uid;
-#endif /* HAVE_SETEUID */
     struct	idlist *idp;
     int	length = 0, fromlen = 0, nameslen = 0;
     char	*names = NULL, *before, *after, *from = NULL;
@@ -1213,7 +1211,6 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
     if (outlevel >= O_DEBUG)
 	report(stdout, GT_("about to deliver with: %s\n"), before);
 
-#ifdef HAVE_SETEUID
     /*
      * Arrange to run with user's permissions if we're root.
      * This will initialize the ownership of any files the
@@ -1225,19 +1222,16 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	report(stderr, GT_("Cannot switch effective user id to %ld: %s\n"), (long)ctl->uid, strerror(errno));
 	return PS_IOERR;
     }
-#endif /* HAVE_SETEUID */
 
     sinkfp = popen(before, "w");
     free(before);
     before = NULL;
 
-#ifdef HAVE_SETEUID
     /* this will fail quietly if we didn't start as root */
     if (seteuid(orig_uid)) {
 	report(stderr, GT_("Cannot switch effective user id back to original %ld: %s\n"), (long)orig_uid, strerror(errno));
 	return PS_IOERR;
     }
-#endif /* HAVE_SETEUID */
 
     if (!sinkfp)
     {

@@ -22,7 +22,7 @@
 #include "getaddrinfo.h"
 
 #include "i18n.h"
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
 #include <locale.h>
 #endif
 
@@ -222,7 +222,6 @@ char *rfc822timestamp(void)
     static char buf[50];
 
     time(&now);
-#ifdef HAVE_STRFTIME
     /*
      * Conform to RFC822.  We generate a 4-digit year here, avoiding
      * Y2K hassles.  Max length of this timestamp in an English locale
@@ -240,16 +239,6 @@ char *rfc822timestamp(void)
     setlocale (LC_TIME, "");
 #endif
     strncpy(strstr(buf, "XXXXX"), tzoffset(&now), 5);
-#else
-    /*
-     * This is really just a portability fallback, as the
-     * date format ctime(3) emits is not RFC822
-     * conformant.
-     */
-    strlcpy(buf, ctime(&now), sizeof(buf));
-    buf[strlen(buf)-1] = '\0';	/* remove trailing \n */
-#endif /* HAVE_STRFTIME */
-
     return(buf);
 }
 

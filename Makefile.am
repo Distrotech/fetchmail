@@ -53,17 +53,6 @@ check_PROGRAMS=
 TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
-if NEED_TRIO
-noinst_LIBRARIES+=	libtrio.a
-libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
-			trio/trio.h trio/triop.h trio/triodef.h \
-			trio/trionan.h trio/triostr.h
-check_PROGRAMS+=	regression
-regression_SOURCES=	trio/regression.c
-LDADD+=			libtrio.a -lm
-TESTS+=			t.regression
-endif
-
 fetchmail_SOURCES=	fetchmail.h getopt.h \
 		i18n.h kerberos.h fm_md5.h mx.h netrc.h smtp.h \
 		socket.h tunable.h \
@@ -151,7 +140,6 @@ distdirs = rh-config contrib beos
 
 EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
 		fetchmail.spec fetchmail.xpm \
-		trio/CHANGES trio/README \
 		strlcpy.3 bighand.png \
 		m4/codeset.m4 \
 		m4/gettext.m4 \

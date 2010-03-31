@@ -16,9 +16,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#if defined(HAVE_SYSLOG)
 #include <syslog.h>
-#endif
 #include "i18n.h"
 #include "fetchmail.h"
 
@@ -50,7 +48,6 @@ void report(FILE *errfp, const char *message, ...)
 	report (errfp, GT_("%s (log message incomplete)\n"), partial_message);
     }
 
-#if defined(HAVE_SYSLOG)
     if (use_syslog)
     {
 	int priority;
@@ -77,7 +74,6 @@ void report(FILE *errfp, const char *message, ...)
 	va_end(args);
     }
     else /* i. e. not using syslog */
-#endif
     {
 	if ( *message == '\n' )
 	{
@@ -114,12 +110,10 @@ void report_init(int mode /** 0: regular output, 1: unbuffered output, -1: syslo
 	use_syslog = FALSE;
 	break;
 
-#ifdef HAVE_SYSLOG
     case -1:			/* syslogd */
 	unbuffered = FALSE;
 	use_syslog = TRUE;
 	break;
-#endif /* HAVE_SYSLOG */
     }
 }
 
