@@ -151,9 +151,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
      * in fetchmail.c.
      */
     features = "feature_options = ("
-#ifdef POP2_ENABLE
-    "'pop2',"
-#endif /* POP2_ENABLE */
 #ifdef POP3_ENABLE
     "'pop3',"
 #endif /* POP3_ENABLE */

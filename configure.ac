@@ -389,14 +389,6 @@ AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
 
-###	use option --enable-POP2 to compile in the POP2 support
-AC_ARG_ENABLE(POP2,
-	[  --enable-POP2           compile in POP2 protocol support (obsolete)],
-	[with_POP2=$enableval],
-	[with_POP2=no])
-test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE,1,Define if you want POP2 support compiled in)
-AM_CONDITIONAL(POP2_ENABLE, test "$with_POP2" = yes)
-
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
 	[  --disable-POP3          don't compile in POP3 protocol support],
@@ -458,9 +450,8 @@ if test "$with_SDPS" = yes ; then
        AC_DEFINE(SDPS_ENABLE,1,Define if you want SDPS support compiled in)
    fi
 fi
-if test "$with_POP3" != yes && test "$with_POP2" != yes \
-    && test "$with_IMAP"  != yes ; then
-    AC_MSG_ERROR([You must enable at least one of POP2, POP3 and IMAP.])
+if test "$with_POP3" != yes && test "$with_IMAP"  != yes ; then
+    AC_MSG_ERROR([You must enable at least one of POP3 and IMAP.])
 fi
 
 AC_CACHE_SAVE

@@ -329,8 +329,6 @@ int parsecmdline (int argc /** argument count */,
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"auto") == 0)
 		ctl->server.protocol = P_AUTO;
-	    else if (strcasecmp(optarg,"pop2") == 0)
-		ctl->server.protocol = P_POP2;
 #ifdef SDPS_ENABLE
 	    else if (strcasecmp(optarg,"sdps") == 0)
 	    {

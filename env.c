@@ -263,9 +263,6 @@ const char *showproto(int proto)
     switch (proto)
     {
     case P_AUTO: return("auto");
-#ifdef POP2_ENABLE
-    case P_POP2: return("POP2");
-#endif /* POP2_ENABLE */
 #ifdef POP3_ENABLE
     case P_POP3: return("POP3");
     case P_APOP: return("APOP");

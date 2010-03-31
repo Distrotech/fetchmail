@@ -82,11 +82,6 @@ The configure script accepts certain standard configuration options.
 These include --prefix, --exec-prefix, --bindir, --infodir, --mandir,
 and --srcdir.  Do 'configure --help' for more.
 
-POP2 support is no longer compiled in by default, as POP2 is way obsolete
-and there don't seem to be any live servers for it anymore.  You can
-configure it back in if you want with 'configure --enable-POP2', but
-leaving it out cuts the executable's size slightly.
-
 Support for CompuServe's RPA authentication method (rather similar to
 APOP) is available but also not included in the standard build.  You
 can compile it in with 'configure --enable-RPA'.

@@ -57,9 +57,9 @@ Summary(da):	Alsidig POP/IMAP post-afhentnings dæmon
 Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
 Summary(es):	Recolector de correo via POP/IMAP
 Summary(fr):	Daemon de récupération de courrier électronique POP/IMAP complet
-Summary(pl):	Zdalny demon pocztowy do protokołów POP2, POP3, APOP, IMAP
+Summary(pl):	Zdalny demon pocztowy do protokołów POP3, APOP, IMAP
 Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
-Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazılımı
+Summary(tr):	POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazılımı
 Summary(vi):	trình nền lấy thư POP/IMAP có tính năng đầy đủ
 BuildRoot: %{_tmppath}/%{name}-root
 #Keywords: mail, client, POP3, APOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL

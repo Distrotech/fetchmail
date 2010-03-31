@@ -432,8 +432,7 @@ class User:
 #
 
 # IANA port assignments and bogus 1109 entry
-ianaservices = {"pop2":109,
-		"pop3":110,
+ianaservices = {"pop3":110,
 		"1109":1109,
 		"imap":143,
 		"smtp":25,
@@ -441,7 +440,6 @@ ianaservices = {"pop2":109,
 
 # fetchmail protocol to IANA service name
 defaultports = {"auto":None,
-		"POP2":"pop2",
 		"POP3":"pop3",
 		"APOP":"pop3",
 		"KPOP":"1109",
@@ -1149,8 +1147,6 @@ class ServerEdit(Frame, MyWidget):
 
 	# Compute the available protocols from the compile-time options
 	protolist = ['auto']
-	if 'pop2' in feature_options:
-	    protolist.append("POP2")
 	if 'pop3' in feature_options:
 	    protolist = protolist + ["POP3", "APOP", "KPOP"]
 	if 'sdps' in feature_options:
@@ -1247,7 +1243,7 @@ class ServerEdit(Frame, MyWidget):
 	else:
 	    realhost = self.server.pollname
 	greetline = None
-	for protocol in ("IMAP","POP3","POP2"):
+	for protocol in ("IMAP","POP3"):
 	    service = defaultports[protocol]
 	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	    try:
@@ -1271,18 +1267,6 @@ out before getting a response.
 	else:
 	    warnings = ''
 	    # OK, now try to recognize potential problems
-
-	    if protocol == "POP2":
-		warnings = warnings + """
-It appears you have somehow found a mailserver running only POP2.
-Congratulations.  Have you considered a career in archaeology?
-
-Unfortunately, stock fetchmail binaries don't include POP2 support anymore.
-Unless the first line of your fetchmail -V output includes the string "POP2",
-you'll have to build it from sources yourself with the configure
-switch --enable-POP2.
-
-"""
 
 ### POP3 servers start here
 

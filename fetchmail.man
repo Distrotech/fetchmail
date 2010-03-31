@@ -29,10 +29,9 @@ normal mail user agents such as \fBmutt\fP(1), \fBelm\fP(1) or
 to repeatedly poll one or more systems at a specified interval.
 .PP
 The \fBfetchmail\fP program can gather mail from servers supporting any
-of the common mail-retrieval protocols: POP2 (legacy, to be removed from
-future release), POP3, IMAP2bis, IMAP4, and IMAP4rev1.  It can also use
-the ESMTP ETRN extension and ODMR.  (The RFCs describing all these
-protocols are listed at the end of this manual page.)
+of the common mail-retrieval protocols: POP3, IMAP2bis, IMAP4, and IMAP4rev1.
+It can also use the ESMTP ETRN extension and ODMR.  (The RFCs describing all
+these protocols are listed at the end of this manual page.)
 .PP
 While \fBfetchmail\fP is primarily intended to be used over on-demand
 TCP/IP links (such as SLIP or PPP connections), it may also be useful as
@@ -180,7 +179,7 @@ doesn't play well with queries to multiple sites, and doesn't work
 with ETRN or ODMR.  It will return a false positive if you leave read but
 undeleted mail in your server mailbox and your fetch protocol can't
 tell kept messages from new ones.  This means it will work with IMAP,
-not work with POP2, and may occasionally flake out under POP3.
+and may occasionally flake out under POP3.
 .TP
 .B \-s | \-\-silent
 Silent mode.  Suppresses all progress/status messages that are
@@ -214,11 +213,9 @@ mode in the next fetchmail release.
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Under POP3, this option also forces the use of RETR rather than TOP.
-Note that POP2 retrieval behaves as though \-\-all is always on (see
-RETRIEVAL FAILURE MODES below) and this option does not work with ETRN
-or ODMR.  While the \-a and \-\-all command-line and fetchall rcfile
-options have been supported for a long time, the \-\-fetchall
-command-line option was added in v6.3.3.
+While the \-a and \-\-all command-line and fetchall rcfile options have been
+supported for a long time, the \-\-fetchall command-line option was added in
+v6.3.3.
 .TP
 .B \-k | \-\-keep
 (Keyword: keep)
@@ -268,10 +265,8 @@ mailserver.  If no protocol is specified, the default is AUTO.
 \fBproto\fP may be one of the following:
 .RS
 .IP AUTO
-Tries IMAP, POP3, and POP2 (skipping any of these for which support
+Tries IMAP and POP3 (skipping any of these for which support
 has not been compiled in).
-.IP POP2
-Post Office Protocol 2 (legacy, to be removed from future release)
 .IP POP3
 Post Office Protocol 3
 .IP APOP
@@ -828,7 +823,7 @@ This option works with POP3 only.
 (Keyword: expunge)
 .br
 Arrange for deletions to be made final after a given number of
-messages.  Under POP2 or POP3, fetchmail cannot make deletions final
+messages.  Under POP3, fetchmail cannot make deletions final
 without sending QUIT and ending the session -- with this option on,
 fetchmail will break a long mail retrieval session into multiple
 sub-sessions, sending QUIT after each sub-session. This is a good
@@ -1379,7 +1374,7 @@ or Gerrit Pape's
 Note that this also causes the logfile option to be ignored (though
 perhaps it shouldn't).
 .PP
-Note that while running in daemon mode polling a POP2 or IMAP2bis server,
+Note that while running in daemon mode polling a IMAP2bis server,
 transient errors (such as DNS failures or sendmail delivery refusals)
 may force the fetchall option on for the duration of the next polling
 cycle.  This is a robustness feature.  It means that if a message is
@@ -1481,11 +1476,6 @@ read directly on the server (or fetched with a previous \fIfetchmail
 \-\-keep\fP).  But you may find that messages you've already read on the
 server are being fetched (and deleted) even when you don't specify
 \-\-all.  There are several reasons this can happen.
-.PP
-One could be that you're using POP2.  The POP2 protocol includes no
-representation of 'new' or 'old' state in messages, so \fBfetchmail\fP
-must treat all messages as new all the time.  But POP2 is obsolete, so
-this is unlikely.
 .PP
 A potential POP3 problem might be servers that insert messages
 in the middle of mailboxes (some VMS implementations of mail are
@@ -1729,7 +1719,7 @@ Specify DNS name of mailserver, overriding poll name
 T}
 proto[col]	\-p	\&	T{
 Specify protocol (case insensitive):
-POP2, POP3, IMAP, APOP, KPOP
+POP3, IMAP, APOP, KPOP
 T}
 local[domains]	\&	m	T{
 Specify domain(s) to be regarded as local
@@ -2199,7 +2189,6 @@ Legal protocol identifiers for use with the 'protocol' keyword are:
 .sp
 .nf
     auto (or AUTO) (legacy, to be removed from future release)
-    pop2 (or POP2) (legacy, to be removed from future release)
     pop3 (or POP3)
     sdps (or SDPS)
     imap (or IMAP)
@@ -2374,7 +2363,7 @@ Multiple servers may be listed:
 .IP
 .nf
 poll pop.provider.net proto pop3 user "jsmith" pass "secret1"
-poll other.provider.net proto pop2 user "John.Smith" pass "My^Hat"
+poll other.provider.net proto imap user "John.Smith" pass "My^Hat"
 .fi
 
 .PP
@@ -2384,7 +2373,7 @@ Here's the same version with more whitespace and some noise words:
 .nf
 poll pop.provider.net proto pop3
      user "jsmith", with password secret1, is "jsmith" here;
-poll other.provider.net proto pop2:
+poll other.provider.net proto imap:
      user "John.Smith", with password "My^Hat", is "John.Smith" here;
 .fi
 
@@ -2953,8 +2942,6 @@ RFC 2554.
 mail:
 RFC 822, RFC 2822, RFC 1123, RFC 1892, RFC 1894.
 .TP 5
-POP2:
-RFC 937
 .TP 5
 POP3:
 RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1734, RFC 1939, RFC 1957,

@@ -676,15 +676,6 @@ eoh:
 	 * We will just check if the first message in the mailbox has an
 	 * X-IMAP: header.
 	 */
-#ifdef POP2_ENABLE
-	/*
-	 * We disable this check under POP2 because there's no way to
-	 * prevent deletion of the message.  So at least we ought to
-	 * forward it to the user so he or she will have some clue
-	 * that things have gone awry.
-	 */
-	if (servport("pop2") != servport(protocol->service))
-#endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);
 		retain_mail = 1;

@@ -48,7 +48,6 @@ char *strstr(const char *, const char *);
 
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
-#define		P_POP2		2
 #define		P_POP3		3
 #define		P_APOP		4
 #define		P_RPOP		5
@@ -643,7 +642,6 @@ int interface_approve(struct hostdata *, flag domonitor);
 #include "xmalloc.h"
 
 /* protocol driver and methods */
-int doPOP2 (struct query *); 
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
 int doETRN (struct query *);

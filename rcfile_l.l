@@ -188,7 +188,6 @@ options		{/* EMPTY */}
 [;:,]		{/* EMPTY */}
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
-(pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
 (sdps)|(SDPS)   { return SDPS; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }

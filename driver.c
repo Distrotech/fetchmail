@@ -464,7 +464,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
     }
 
     /*
-     * What forces this code is that in POP2 and
+     * What forces this code is that in
      * IMAP2bis you can't fetch a message without
      * having it marked `seen'.  In POP3 and IMAP4, on the
      * other hand, you can (peek_capable is set by 

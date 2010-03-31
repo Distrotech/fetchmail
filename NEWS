@@ -18,7 +18,6 @@ removed from a 6.4.0 or newer release.)
   Non-DNS based alias keywords such as "aka" will remain in fetchmail.
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not reasonably portable across operating systems.
-* POP2 is obsolete, support will be removed from a future fetchmail version.
 * IMAP2 and IMAP4 (not IMAP4r1) are obsolete, support may be removed from a
   future fetchmail version.
 * RPOP is obsolete, support will be removed from a future fetchmail release.
@@ -51,6 +50,13 @@ removed from a 6.4.0 or newer release.)
 * The --bsmtp - mode of operation may be removed in a future release.
 * Given that OpenSSL is severely underdocumented, and needs license exceptions,
   fetchmail may switch to a different SSL library.
+
+--------------------------------------------------------------------------------
+
+fetchmail-6.4.0 (not yet released):
+
+# REMOVED FEATURES
+* POP2 was long obsolete and removed
 
 --------------------------------------------------------------------------------
 
