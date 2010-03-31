@@ -14,12 +14,8 @@
 #endif
 #include <sys/stat.h>
 #include <errno.h>
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 #include <string.h>
 
 #if defined(__CYGWIN__)

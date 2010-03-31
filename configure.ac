@@ -57,12 +57,11 @@ if test "x$SHELL" = "x" ; then
 fi
 
 
-AC_HEADER_STDC
 AC_HEADER_TIME
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 AC_TYPE_SIGNAL
-AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
+AC_CHECK_HEADERS([stdarg.h \
 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
 	sys/select.h sys/socket.h sys/time.h langinfo.h md5.h])
@@ -261,7 +260,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #ifdef WEXITSTATUS
 /* Some POSIXoid systems have both the new-style macros and the old
    union wait type, and they do not work together.  If union wait
-   conflicts with WEXITSTATUS et al, we don't want to use it at all.  */
+   conflicts with WEXITSTATUS et al, we do not want to use it at all.  */
 if (WEXITSTATUS (status) != 0) pid = -1;
 #endif
 #ifdef HAVE_WAITPID
@@ -273,9 +272,8 @@ pid = waitpid (-1, &status, 0);
 AC_MSG_CHECKING(sys_siglist declaration in signal.h or unistd.h)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>
 /* NetBSD declares sys_siglist in <unistd.h>.  */
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif]], [[char *msg = *(sys_siglist + 1);]])],[AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+]], [[char *msg = *(sys_siglist + 1);]])],[AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 # Find the right directory to put the root-mode PID file in
 for dir in "/var/run" "/etc"

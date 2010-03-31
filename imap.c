@@ -10,11 +10,9 @@
 #include  <string.h>
 #include  <strings.h>
 #include  <ctype.h>
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <limits.h>
 #include  <errno.h>
-#endif
 #include  "fetchmail.h"
 #include  "socket.h"
 

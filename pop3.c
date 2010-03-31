@@ -10,12 +10,8 @@
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
-#endif
 #include  <errno.h>
 
 #include  "fetchmail.h"

@@ -6,15 +6,9 @@
 #include "config.h"
 
 #include <stdio.h>
-#ifdef HAVE_STRING_H
 #include <string.h> /* strcat() */
-#endif
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>

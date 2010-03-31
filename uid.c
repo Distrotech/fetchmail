@@ -10,13 +10,9 @@
 #include <errno.h>
 #include <stdio.h>
 #include <limits.h>
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
 #include <string.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 
 #include "fetchmail.h"
 #include "i18n.h"

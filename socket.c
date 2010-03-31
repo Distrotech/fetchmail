@@ -26,12 +26,8 @@
 #include <arpa/inet.h>
 #endif
 #include <netdb.h>
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 #if defined(HAVE_STDARG_H)
 #include <stdarg.h>
 #else

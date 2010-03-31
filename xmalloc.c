@@ -10,9 +10,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
-#endif
 #include "fetchmail.h"
 #include "i18n.h"
 
