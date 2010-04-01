@@ -26,6 +26,7 @@ extern int DEBUGLEVEL;
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <ctype.h>
 #include "smbbyteorder.h"
@@ -60,12 +61,6 @@ static size_t skip_multibyte_char(char c)
     (void)c;
     return 0;
 }
-
-
-/*******************************************************************
-safe string copy into a known length string. maxlength does not
-include the terminating zero.
-********************************************************************/
 
 static void strupper(char *s)
 {
@@ -150,7 +145,7 @@ static int _my_mbstowcs(int16_t *dst, unsigned char *src, int len)
  * Creates the MD4 Hash of the users password in NT UNICODE.
  */
  
-static void E_md4hash(uchar *passwd, uchar *p16)
+static void E_md4hash(unsigned char *passwd, unsigned char *p16)
 {
 	int len;
 	int16_t wpwd[129];
@@ -180,7 +175,6 @@ void SMBOWFencrypt(unsigned char passwd[16], unsigned char *c8, unsigned char p2
 }
 
 /* Does the NT MD4 hash then des encryption. */
- 
 void SMBNTencrypt(unsigned char *passwd, unsigned char *c8, unsigned char *p24)
 {
 	unsigned char p21[21];

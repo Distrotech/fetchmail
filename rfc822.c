@@ -20,6 +20,8 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 
 ******************************************************************************/
 
+#define _XOPEN_SOURCE 600
+
 #include "config.h"
 
 #include  <stdio.h>

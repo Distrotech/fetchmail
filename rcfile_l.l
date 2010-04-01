@@ -5,12 +5,13 @@
  *
  * For license terms, see the file COPYING in this directory.
  */
-#include <string.h>
 
 #include "config.h"
 #include "fetchmail.h"
 #include "xmalloc.h"
 #include "rcfile_y.h"
+
+#include <string.h>
 
 int prc_lineno = 1;
 

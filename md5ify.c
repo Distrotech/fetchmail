@@ -14,6 +14,7 @@
 #include <string.h>
 #include <string.h>
 
+#include "fetchmail.h"
 #include "fm_md5.h"
 
 char *

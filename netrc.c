@@ -10,6 +10,8 @@
    (Makefile.am should have a rule so you can just type "make netrc")
 */
 
+#define _XOPEN_SOURCE 600
+
 #include "config.h"
 
 #include <stdio.h>
