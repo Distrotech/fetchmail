@@ -19,7 +19,7 @@
 #include "getaddrinfo.h"
 
 #include "gettext.h"
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
+#if defined(ENABLE_NLS)
 #include <locale.h>
 #endif
 
@@ -223,12 +223,12 @@ char *rfc822timestamp(void)
      * weird multibyte i18n characters (such as kanji) from showing up
      * in your Received headers.
      */
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
+#if defined(ENABLE_NLS)
     setlocale (LC_TIME, "C");
 #endif
     strftime(buf, sizeof(buf)-1, 
 	     "%a, %d %b %Y %H:%M:%S XXXXX (%Z)", localtime(&now));
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
+#if defined(ENABLE_NLS)
     setlocale (LC_TIME, "");
 #endif
     strncpy(strstr(buf, "XXXXX"), tzoffset(&now), 5);

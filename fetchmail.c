@@ -98,8 +98,8 @@ static void dropprivs(void)
 }
 #endif
 
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
 #include <locale.h>
+#if defined(ENABLE_NLS)
 /** returns timestamp in current locale,
  * and resets LC_TIME locale to POSIX. */
 static char *timestamp (void)
