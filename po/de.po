@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.15-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-03-19 19:41+0100\n"
+"POT-Creation-Date: 2010-04-01 21:33+0200\n"
 "PO-Revision-Date: 2010-02-24 01:58+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -2515,15 +2515,15 @@ msgstr "Unbekannter Systemfehler"
 msgid "%s (log message incomplete)\n"
 msgstr "%s (Log-Meldung unvollständig)\n"
 
-#: rfc822.c:76
-#, c-format
-msgid "About to rewrite %s"
-msgstr "Dabei, %s umzuschreiben"
+#: rfc822.c:78
+#, fuzzy, c-format
+msgid "About to rewrite %.*s...\n"
+msgstr "Schreibe %.*s um... "
 
-#: rfc822.c:212
-#, c-format
-msgid "Rewritten version is %s\n"
-msgstr "Umgeschriebene Version ist %s\n"
+#: rfc822.c:215
+#, fuzzy, c-format
+msgid "...rewritten version is %.*s.\n"
+msgstr "umgeschriebene Version ist %.*s.\n"
 
 #: rpa.c:118
 msgid "Success"
@@ -2780,7 +2780,7 @@ msgstr "keine Adressen stimmten überein; leite an %s weiter.\n"
 #: sink.c:1229
 #, c-format
 msgid "about to deliver with: %s\n"
-msgstr "dabei, auszuliefern mit: %s\n"
+msgstr "werde mit %s ausliefern\n"
 
 #: sink.c:1240
 #, c-format

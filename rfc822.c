@@ -41,6 +41,8 @@ const char *program_name = "rfc822";
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
+#define BEFORE_EOL(s)   (strcspn((s), "\r\n"))
+
 char *reply_hack(
 	char *buf		/* header to be hacked */,
 	const char *host	/* server hostname */,
@@ -73,7 +75,8 @@ char *reply_hack(
 
 #ifndef MAIN
     if (outlevel >= O_DEBUG)
-	report_build(stdout, GT_("About to rewrite %s"), buf);
+	report_build(stdout, GT_("About to rewrite %.*s...\n"),
+			BEFORE_EOL(buf), buf);
 
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
@@ -209,7 +212,8 @@ char *reply_hack(
 
 #ifndef MAIN
     if (outlevel >= O_DEBUG)
-	report_complete(stdout, GT_("Rewritten version is %s\n"), buf);
+	report_complete(stdout, GT_("...rewritten version is %.*s.\n"),
+			BEFORE_EOL(buf), buf);
 #endif /* MAIN */
     *length = strlen(buf);
     return(buf);
