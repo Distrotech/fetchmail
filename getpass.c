@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 
 #define INPUT_BUF_SIZE	PASSWORDLEN
 

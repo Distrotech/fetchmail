@@ -33,7 +33,7 @@ extern "C" {
 
 #include "kerberos.h"
 
-#include "i18n.h"
+#include "gettext.h"
 #include "socket.h"
 
 #include "fetchmail.h"

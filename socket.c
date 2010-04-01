@@ -26,7 +26,7 @@
 #include "socket.h"
 #include "fetchmail.h"
 #include "getaddrinfo.h"
-#include "i18n.h"
+#include "gettext.h"
 #include "sdump.h"
 
 /* Defines to allow Cygwin to play nice... */

@@ -26,7 +26,7 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 #include  "fm_md5.h"
-#include  "i18n.h"
+#include  "gettext.h"
 
 #ifdef TESTMODE
 extern unsigned char line1[];

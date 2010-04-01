@@ -18,7 +18,7 @@
 #include "fetchmail.h"
 #include "getaddrinfo.h"
 
-#include "i18n.h"
+#include "gettext.h"
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
 #include <locale.h>
 #endif

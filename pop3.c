@@ -16,7 +16,7 @@
 
 #include  "fetchmail.h"
 #include  "socket.h"
-#include  "i18n.h"
+#include  "gettext.h"
 
 #ifdef OPIE_ENABLE
 #ifdef __cplusplus

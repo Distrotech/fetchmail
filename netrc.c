@@ -19,7 +19,7 @@
 
 #include "fetchmail.h"
 #include "netrc.h"
-#include "i18n.h"
+#include "gettext.h"
 
 #ifdef STANDALONE
 /* Normally defined in xstrdup.c. */

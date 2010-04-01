@@ -44,7 +44,7 @@
 #endif /* defined __FreeBSD_USE_KVM */
 #endif /* defined __FreeBSD__ */
 #include "socket.h"
-#include "i18n.h"
+#include "gettext.h"
 #include "tunable.h"
 
 typedef struct {

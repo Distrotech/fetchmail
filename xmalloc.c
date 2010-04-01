@@ -12,7 +12,7 @@
 #include <string.h>
 #include  <stdlib.h>
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 
 void *xmalloc (size_t n)
 {

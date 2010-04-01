@@ -12,7 +12,7 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
-#include  "i18n.h"
+#include  "gettext.h"
 #include "fm_md5.h"
 
 #ifdef OPIE_ENABLE

@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <string.h>
 #include <syslog.h>
-#include "i18n.h"
+#include "gettext.h"
 #include "fetchmail.h"
 
 #  include <stdarg.h>

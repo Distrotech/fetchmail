@@ -31,7 +31,7 @@
 
 #include  "socket.h"
 #include  "smtp.h"
-#include  "i18n.h"
+#include  "gettext.h"
 
 /* BSD portability hack...I know, this is an ugly place to put it */
 #if !defined(SIGCHLD) && defined(SIGCLD)

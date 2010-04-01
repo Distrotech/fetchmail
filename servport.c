@@ -7,7 +7,7 @@
  */
 #include "fetchmail.h"
 #include "getaddrinfo.h"
-#include "i18n.h"
+#include "gettext.h"
 
 #include <errno.h>
 #include <stdlib.h>

@@ -16,7 +16,7 @@
 
 #include "getopt.h"
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 
 enum {
     LA_INVISIBLE = 256,

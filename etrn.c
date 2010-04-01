@@ -12,7 +12,7 @@
 #include  <netdb.h>
 #include  <errno.h>
 #include  <unistd.h>
-#include  "i18n.h"
+#include  "gettext.h"
 #include  "fetchmail.h"
 #include  "smtp.h"
 #include  "socket.h"

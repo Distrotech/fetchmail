@@ -16,7 +16,7 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
-#include  "i18n.h"
+#include  "gettext.h"
 
 /* imap_version values */
 #define IMAP2		-1	/* IMAP2 or IMAP2BIS, RFC1176 */

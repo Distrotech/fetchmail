@@ -18,7 +18,7 @@
 #include <signal.h>
 #include "socket.h"
 #include "smtp.h"
-#include "i18n.h"
+#include "gettext.h"
 
 struct opt
 {

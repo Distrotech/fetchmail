@@ -32,7 +32,7 @@
 #include "tunable.h"
 #include "smtp.h"
 #include "netrc.h"
-#include "i18n.h"
+#include "gettext.h"
 #include "lock.h"
 
 /* need these (and sys/types.h) for res_init() */

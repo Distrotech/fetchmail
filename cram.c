@@ -12,7 +12,7 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
-#include  "i18n.h"
+#include  "gettext.h"
 #include "fm_md5.h"
 
 void hmac_md5 (const unsigned char *password,  size_t pass_len,

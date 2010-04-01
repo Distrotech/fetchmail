@@ -54,7 +54,7 @@ TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		i18n.h kerberos.h fm_md5.h netrc.h smtp.h \
+		gettext.h kerberos.h fm_md5.h netrc.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c daemon.c \

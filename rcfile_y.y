@@ -21,7 +21,7 @@
 #endif /* __CYGWIN__ */
 
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
   
 /* parser reads these */
 char *rcfile;			/* path name of rc file */

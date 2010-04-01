@@ -14,7 +14,7 @@
 #include <signal.h>
 
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 #include "lock.h"
 
 static char *lockfile;		/** name of lockfile */
