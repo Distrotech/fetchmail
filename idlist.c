@@ -82,21 +82,6 @@ void save_str_pair(struct idlist **idl, const char *str1, const char *str2)
     (*end)->next = (struct idlist *)NULL;
 }
 
-#ifdef __UNUSED__
-void free_str_pair_list(struct idlist **idl)
-/* free the given ID pair list */
-{
-    if (*idl == (struct idlist *)NULL)
-	return;
-
-    free_idpair_list(&(*idl)->next);
-    free ((*idl)->id);
-    free ((*idl)->val.id2);
-    free(*idl);
-    *idl = (struct idlist *)NULL;
-}
-#endif
-
 /** Check if ID \a str is in idlist \a idl. \return idlist entry if found,
  * NULL if not found. */
 struct idlist *str_in_list(struct idlist **idl, const char *str,

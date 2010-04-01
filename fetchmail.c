@@ -262,9 +262,6 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
 	"+NLS"
 #endif /* ENABLE_NLS */
-#ifdef KERBEROS_V4
-	"+KRB4"
-#endif /* KERBEROS_V4 */
 #ifdef KERBEROS_V5
 	"+KRB5"
 #endif /* KERBEROS_V5 */
@@ -1142,7 +1139,6 @@ static int load_params(int argc, char **argv, int optind)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && 
 		(ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
-		 || ctl->server.authenticate == A_KERBEROS_V4
 		 || ctl->server.authenticate == A_KERBEROS_V5))
 	{
 	    fetchmailhost = host_fqdn(1);
@@ -1218,12 +1214,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 #endif /* SSL_ENABLE */
 #undef DEFAULT
-#ifndef KERBEROS_V4
-	    if (ctl->server.authenticate == A_KERBEROS_V4) {
-		report(stderr, GT_("KERBEROS v4 support is configured, but not compiled in.\n"));
-		exit(PS_SYNTAX);
-	    }
-#endif
 #ifndef KERBEROS_V5
 	    if (ctl->server.authenticate == A_KERBEROS_V5) {
 		report(stderr, GT_("KERBEROS v5 support is configured, but not compiled in.\n"));
@@ -1283,13 +1273,6 @@ static int load_params(int argc, char **argv, int optind)
 		{
 		    (void) fprintf(stderr,
 				   GT_("fetchmail: %s configuration invalid, specify positive port number for service or port\n"),
-				   ctl->server.pollname);
-		    exit(PS_SYNTAX);
-		}
-		if (ctl->server.protocol == P_RPOP && port >= 1024)
-		{
-		    (void) fprintf(stderr,
-				   GT_("fetchmail: %s configuration invalid, RPOP requires a privileged port\n"),
 				   ctl->server.pollname);
 		    exit(PS_SYNTAX);
 		}
@@ -1435,7 +1418,6 @@ static int query_host(struct query *ctl)
 	break;
     case P_POP3:
     case P_APOP:
-    case P_RPOP:
 #ifdef POP3_ENABLE
 	do {
 	    st = doPOP3(ctl);
@@ -1554,9 +1536,6 @@ static void dump_params (struct runctl *runp,
 		if (ctl->server.protocol == P_APOP)
 		    printf(GT_("  APOP secret = \"%s\".\n"),
 			   visbuf(ctl->password));
-		else if (ctl->server.protocol == P_RPOP)
-		    printf(GT_("  RPOP id = \"%s\".\n"),
-			   visbuf(ctl->password));
 		else
 		    printf(GT_("  Password = \"%s\".\n"),
 							visbuf(ctl->password));
@@ -1565,8 +1544,7 @@ static void dump_params (struct runctl *runp,
 
 	if (ctl->server.protocol == P_POP3 
 	    && ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT)
-	    && (ctl->server.authenticate == A_KERBEROS_V4 ||
-		ctl->server.authenticate == A_KERBEROS_V5))
+	    && (ctl->server.authenticate == A_KERBEROS_V5))
 	    printf(GT_("  Protocol is KPOP with Kerberos %s authentication"),
 		   ctl->server.authenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
@@ -1601,9 +1579,6 @@ static void dump_params (struct runctl *runp,
 	    break;
 	case A_GSSAPI:
 	    printf(GT_("  GSSAPI authentication will be forced.\n"));
-	    break;
-	case A_KERBEROS_V4:
-	    printf(GT_("  Kerberos V4 authentication will be forced.\n"));
 	    break;
 	case A_KERBEROS_V5:
 	    printf(GT_("  Kerberos V5 authentication will be forced.\n"));

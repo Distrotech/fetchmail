@@ -148,14 +148,13 @@ serv_option	: AKA alias_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
-
-					    if (current.server.authenticate == A_PASSWORD)
 #ifdef KERBEROS_V5
+					    if (current.server.authenticate == A_PASSWORD)
 						current.server.authenticate = A_KERBEROS_V5;
-#else
-						current.server.authenticate = A_KERBEROS_V4;
-#endif /* KERBEROS_V5 */
 					    current.server.service = KPOP_PORT;
+#else
+					    yyerror(GT_("Kerberos not enabled."));
+#endif
 					}
 		| PRINCIPAL STRING	{current.server.principal = $2;}
 		| ESMTPNAME STRING	{current.server.esmtp_name = $2;}

@@ -10,7 +10,6 @@ gssapi.c
 idle.c
 imap.c
 interface.c
-kerberos.c
 lock.c
 netrc.c
 odmr.c

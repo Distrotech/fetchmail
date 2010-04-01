@@ -272,10 +272,8 @@ Post Office Protocol 3
 .IP APOP
 Use POP3 with old-fashioned MD5-challenge authentication.
 Considered not resistant to man-in-the-middle attacks.
-.IP RPOP
-Use POP3 with RPOP authentication.
 .IP KPOP
-Use POP3 with Kerberos V4 authentication on port 1109.
+Use POP3 with Kerberos V5 authentication on port 1109.
 .IP SDPS
 Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
@@ -908,12 +906,11 @@ Note that this option may be removed from a future fetchmail version.
 .br
 This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are \fBany\fP,
-\&\fBpassword\fP, \fBkerberos_v5\fP, \fBkerberos\fP (or, for
-excruciating exactness, \fBkerberos_v4\fP), \fBgssapi\fP,
+\&\fBpassword\fP, \fBkerberos_v5\fP, \fBgssapi\fP,
 \fBcram\-md5\fP, \fBotp\fP, \fBntlm\fP, \fBmsn\fP (only for POP3),
 \fBexternal\fP (only IMAP) and \fBssh\fP.
 When \fBany\fP (the default) is specified, fetchmail tries
-first methods that don't require a password (EXTERNAL, GSSAPI, KERBEROS\ IV,
+first methods that don't require a password (EXTERNAL, GSSAPI,
 KERBEROS\ 5); then it looks for methods that mask your password
 (CRAM-MD5, NTLM, X\-OTP - note that MSN is only supported for POP3, but not
 autoprobed); and only if the server doesn't
@@ -925,11 +922,10 @@ Any value other than \fBpassword\fP, \fBcram\-md5\fP, \fBntlm\fP,
 \&\fBmsn\fP or \fBotp\fP suppresses fetchmail's normal inquiry for a
 password.  Specify \fBssh\fP when you are using an end-to-end secure
 connection such as an ssh tunnel; specify \fBexternal\fP when you use
-TLS with client authentication and specify \fBgssapi\fP or
-\&\fBkerberos_v4\fP if you are using a protocol variant that employs
-GSSAPI or K4.  Choosing KPOP protocol automatically selects Kerberos
-authentication.  This option does not work with ETRN.  GSSAPI service names are
-in line with RFC-2743 and IANA registrations, see
+TLS with client authentication and specify \fBgssapi\fP if you are using a
+protocol variant that employs GSSAPI.  Choosing KPOP protocol automatically
+selects Kerberos authentication.  This option does not work with ETRN.
+GSSAPI service names are in line with RFC-2743 and IANA registrations, see
 .URL http://www.iana.org/assignments/gssapi-service-names/ "Generic Security Service Application Program Interface (GSSAPI)/Kerberos/Simple Authentication and Security Layer (SASL) Service Names" . 
 .SS Miscellaneous Options
 .TP
@@ -1101,17 +1097,6 @@ a mailbox on the server.  Contact your server administrator if you don't know
 the correct user-id and password for your mailbox account.
 .SH POP3 VARIANTS
 .PP
-Early versions of POP3 (RFC1081, RFC1225) supported a crude form of
-independent authentication using the \fI.rhosts\fP file on the
-mailserver side.  Under this RPOP variant, a fixed per-user ID
-equivalent to a password was sent in clear over a link to a reserved
-port, with the command RPOP rather than PASS to alert the server that it
-should do special checking.  RPOP is supported by \fBfetchmail\fP
-(you can specify 'protocol RPOP' to have the program send 'RPOP'
-rather than 'PASS') but its use is strongly discouraged, and support
-will be removed from a future fetchmail version.  This
-facility was vulnerable to spoofing and was withdrawn in RFC1460.
-.PP
 RFC1460 introduced APOP authentication.  In this variant of POP3,
 you register an APOP password on your server host (on some servers, the
 program to do this is called \fBpopauth\fP(8)).  You put the same
@@ -1150,7 +1135,7 @@ command causes much grief on some servers and is only optional.
 .PP
 If your \fBfetchmail\fP was built with Kerberos support and you specify
 Kerberos authentication (either with \-\-auth or the \fI.fetchmailrc\fP
-option \fBauthenticate kerberos_v4\fP) it will try to get a Kerberos
+option \fBauthenticate kerberos_v5\fP) it will try to get a Kerberos
 ticket from the mailserver at the start of each query.  Note: if
 either the pollname or via name is 'hesiod', fetchmail will try to use
 Hesiod to look up the mailserver.
@@ -2197,18 +2182,18 @@ Legal protocol identifiers for use with the 'protocol' keyword are:
 .fi
 .sp
 .PP
-Legal authentication types are 'any', 'password', 'kerberos',
-\&'kerberos_v4', 'kerberos_v5' and 'gssapi', 'cram\-md5', 'otp', 'msn'
+Legal authentication types are 'any', 'password',
+\&'kerberos_v5' and 'gssapi', 'cram\-md5', 'otp', 'msn'
 (only for POP3), 'ntlm', 'ssh', 'external' (only IMAP).
 The 'password' type specifies
 authentication by normal transmission of a password (the password may be
 plain text or subject to protocol-specific encryption as in CRAM-MD5);
-\&'kerberos' tells \fBfetchmail\fP to try to get a Kerberos ticket at the
+\&'kerberos_v5' tells \fBfetchmail\fP to try to get a Kerberos ticket at the
 start of each query instead, and send an arbitrary string as the
 password; and 'gssapi' tells fetchmail to use GSSAPI authentication.
 See the description of the 'auth' keyword for more.
 .PP
-Specifying 'kpop' sets POP3 protocol over port 1109 with Kerberos V4
+Specifying 'kpop' sets POP3 protocol over port 1109 with Kerberos V5
 authentication.  These defaults may be overridden by later options.
 .PP
 There are some global option statements: 'set logfile'
@@ -2869,7 +2854,7 @@ buggy terminal ioctl code in the kernel.
 The \-f\~\- option (reading a configuration from stdin) is incompatible
 with the plugin option.
 .PP
-The 'principal' option only handles Kerberos IV, not V.
+The 'principal' option does not work for Kerberos V.
 .PP
 Interactively entered passwords are truncated after 63 characters. If
 you really need to use a longer password, you will have to use a
@@ -2949,9 +2934,6 @@ RFC 2195, RFC 2449.
 .TP 5
 APOP:
 RFC 1939.
-.TP 5
-RPOP:
-RFC 1081, RFC 1225.
 .TP 5
 IMAP2/IMAP2BIS:
 RFC 1176, RFC 1732.

@@ -12,7 +12,7 @@ can then be be read by normal mail user agents such as mutt(1), elm(1) or
 Mail(1).
 
 Fetchmail supports all standard mail-retrieval protocols in use on the 
-Internet: POP3 (including some variants such as RPOP, APOP, KPOP), IMAP4rev1 
+Internet: POP3 (including some variants such as APOP, KPOP), IMAP4rev1 
 (also IMAP4, IMAP2bis), IMAP4, ETRN, and ODMR. On the output side, 
 fetchmail supports ESMTP/SMTP, LMTP, and invocation of a local delivery agent.
 

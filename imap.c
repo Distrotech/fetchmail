@@ -528,24 +528,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* GSSAPI */
 
-#ifdef KERBEROS_V4
-    if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate == A_KERBEROS_V4
-	 || ctl->server.authenticate == A_KERBEROS_V5) 
-	&& strstr(capabilities, "AUTH=KERBEROS_V4"))
-    {
-	if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
-	{
-	    /* SASL cancellation of authentication */
-	    gen_send(sock, "*");
-	    if(ctl->server.authenticate != A_ANY)
-                return ok;
-	}
-	else
-	    return ok;
-    }
-#endif /* KERBEROS_V4 */
-
     /*
      * No such luck.  OK, now try the variants that mask your password
      * in a challenge-response.
@@ -604,15 +586,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	   GT_("Required NTLM capability not compiled into fetchmail\n"));
     }
 #endif /* NTLM_ENABLE */
-
-#ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
-    /* this handles either AUTH=LOGIN or AUTH-LOGIN */
-    if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN")))
-    {
-	report(stderr, 
-	       GT_("Required LOGIN capability not supported by server\n"));
-    }
-#endif /* __UNUSED__ */
 
     /* 
      * We're stuck with sending the password en clair.

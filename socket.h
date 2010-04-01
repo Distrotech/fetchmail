@@ -43,7 +43,7 @@ Returns number of bytes successfully written.
 int SockWrite(int sock, const char *buf, int size);
 
 /* from /usr/include/sys/cdefs.h */
-#if !defined __GNUC__ || __GNUC__ < 2
+#if !defined __GNUC__
 # define __attribute__(xyz)    /* Ignore. */
 #endif
 

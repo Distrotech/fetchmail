@@ -25,7 +25,6 @@ struct addrinfo;
 #define		P_AUTO		1
 #define		P_POP3		3
 #define		P_APOP		4
-#define		P_RPOP		5
 #define		P_IMAP		6
 #define		P_ETRN		7
 #define		P_ODMR		8
@@ -52,7 +51,6 @@ struct addrinfo;
 #define		A_NTLM		2	/* Microsoft NTLM protocol */
 #define		A_CRAM_MD5	3	/* CRAM-MD5 shrouding (RFC2195) */
 #define		A_OTP		4	/* One-time password (RFC1508) */
-#define		A_KERBEROS_V4	5	/* authenticate w/ Kerberos V4 */
 #define		A_KERBEROS_V5	6	/* authenticate w/ Kerberos V5 */
 #define 	A_GSSAPI	7	/* authenticate with GSSAPI */
 #define		A_SSH		8	/* authentication at session level */
@@ -63,7 +61,6 @@ struct addrinfo;
  * require a password */
 #define NO_PASSWORD(ctl) \
     ((ctl)->server.authenticate == A_OTP \
-     || (ctl)->server.authenticate == A_KERBEROS_V4 \
      || (ctl)->server.authenticate == A_KERBEROS_V5 \
      || (ctl)->server.authenticate == A_GSSAPI \
      || (ctl)->server.authenticate == A_SSH \
@@ -456,7 +453,7 @@ extern const char *iana_charset;	/* IANA assigned charset name */
 /* prototypes for globally callable functions */
 
 /* from /usr/include/sys/cdefs.h */
-#if !defined __GNUC__ || __GNUC__ < 2
+#if !defined __GNUC__
 # define __attribute__(xyz)    /* Ignore. */
 #endif
 
@@ -655,12 +652,6 @@ int yylex(void);
 
 #define STRING_DISABLED	(char *)-1
 #define STRING_DUMMY	""
-
-#ifdef NeXT
-#ifndef S_IXGRP
-#define S_IXGRP 0000010
-#endif
-#endif
 
 #ifndef HAVE_STPCPY
 char *stpcpy(char *, const char*);

@@ -433,18 +433,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 
     responses[0] = xstrdup(smtp_response);
 
-#ifdef __UNUSED__
-    /*
-     * Don't do this!  It can really mess you up if, for example, you're
-     * reporting an error with a single RCPT TO address among several;
-     * RSET discards the message body and it doesn't get sent to the
-     * valid recipients.
-     */
-    smtp_rset(ctl);    /* stay on the safe side */
-    if (outlevel >= O_DEBUG)
-	report(stdout, GT_("Saved error is still %d\n"), smtperr);
-#endif /* __UNUSED */
-
     /*
      * Note: send_bouncemail message strings are not made subject
      * to gettext translation because (a) they're going to be 
@@ -521,12 +509,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * (b) we wouldn't want spammers to get confirmation that
 	 * this address is live, anyway.
 	 */
-#ifdef __DONT_FEED_THE_SPAMMERS__
-	if (run.bouncemail)
-	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
-			1, responses);
-#endif /* __DONT_FEED_THE_SPAMMERS__ */
 	free(responses[0]);
 	return(PS_REFUSED);
 
@@ -605,10 +587,7 @@ static int handle_smtp_report_without_bounce(struct query *ctl, struct msgblk *m
 	return(PS_REFUSED);
 
     case 553: /* invalid sending domain */
-#ifdef __DONT_FEED_THE_SPAMMERS__
-	if (run.bouncemail)
-	    return(PS_SUCCESS);
-#endif /* __DONT_FEED_THE_SPAMMERS__ */
+	/* do not send bounce mail - it would feed spammers */
 	return(PS_REFUSED);
 
     default:

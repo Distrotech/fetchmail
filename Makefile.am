@@ -77,9 +77,6 @@ endif
 if ODMR_ENABLE
 fetchmail_SOURCES += odmr.c
 endif
-if KERBEROS_V4_ENABLE
-fetchmail_SOURCES += kerberos.c
-endif
 if RPA_ENABLE
 fetchmail_SOURCES += rpa.c
 endif

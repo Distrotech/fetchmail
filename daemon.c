@@ -33,26 +33,10 @@ static void
 sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {
-#if 	defined(HAVE_WAITPID)				/* the POSIX way */
     int status;
 
     while (waitpid(-1, &status, WNOHANG) > 0)
 	continue; /* swallow 'em up. */
-#elif 	defined(HAVE_WAIT3)				/* the BSD way */
-    pid_t pid;
-#if defined(HAVE_UNION_WAIT) && !defined(__FreeBSD__)
-    union wait status;
-#else
-    int status;
-#endif
-
-    while ((pid = wait3(&status, WNOHANG, 0)) > 0)
-	continue; /* swallow 'em up. */
-#else	/* Zooks! Nothing to do but wait(), and hope we don't block... */
-    int status;
-
-    wait(&status);
-#endif
     lastsig = SIGCHLD;
     (void)sig;
 }

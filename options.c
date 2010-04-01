@@ -300,16 +300,12 @@ int parsecmdline (int argc /** argument count */,
 		ctl->server.protocol = P_POP3;
 	    else if (strcasecmp(optarg,"apop") == 0)
 		ctl->server.protocol = P_APOP;
-	    else if (strcasecmp(optarg,"rpop") == 0)
-		ctl->server.protocol = P_RPOP;
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
 		ctl->server.service = KPOP_PORT;
 #ifdef KERBEROS_V5
 		ctl->server.authenticate =  A_KERBEROS_V5;
-#else
-		ctl->server.authenticate =  A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
@@ -335,16 +331,12 @@ int parsecmdline (int argc /** argument count */,
 	case LA_AUTH:
 	    if (strcmp(optarg, "password") == 0)
 		ctl->server.authenticate = A_PASSWORD;
-	    else if (strcmp(optarg, "kerberos") == 0)
 #ifdef KERBEROS_V5
+	    else if (strcmp(optarg, "kerberos") == 0)
 		ctl->server.authenticate = A_KERBEROS_V5;
-#else
-		ctl->server.authenticate = A_KERBEROS_V4;
-#endif /* KERBEROS_V5 */
 	    else if (strcmp(optarg, "kerberos_v5") == 0)
 		ctl->server.authenticate = A_KERBEROS_V5;
-	    else if (strcmp(optarg, "kerberos_v4") == 0)
-		ctl->server.authenticate = A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
 	    else if (strcmp(optarg, "ssh") == 0)
 		ctl->server.authenticate = A_SSH;
 	    else if (strcasecmp(optarg, "external") == 0)

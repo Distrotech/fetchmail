@@ -60,15 +60,11 @@ if test "x$SHELL" = "x" ; then
 fi
 
 
-AC_TYPE_SIZE_T
-AC_TYPE_PID_T
 AC_CHECK_HEADERS([arpa/nameser.h md5.h])
 
 AC_CHECK_HEADERS([resolv.h],,,[
 #include <sys/types.h>
-#ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#endif
 #ifdef HAVE_ARPA_NAMESER_H
 #include <arpa/nameser.h>
 #endif
@@ -76,9 +72,7 @@ AC_CHECK_HEADERS([resolv.h],,,[
 
 AC_CHECK_DECLS([h_errno],,,[
 	AC_INCLUDES_DEFAULT
-	#ifdef HAVE_NETDB_H
 	#include <netdb.h>
-	#endif
 ])
 
 AC_C_CONST			dnl getopt needs this.
@@ -141,12 +135,8 @@ dnl INET6 is used by KAME/getnameinfo
 AC_CACHE_CHECK(for AF_INET6/PF_INET6,ac_cv_inet6,
 AC_COMPILE_IFELSE([
   AC_LANG_PROGRAM([[
-    #ifdef HAVE_SYS_TYPES_H
     #include <sys/types.h>
-    #endif
-    #ifdef HAVE_SYS_SOCKET_H
     #include <sys/socket.h>
-    #endif
   ]],[[
     int foo = AF_INET6;
     int bar = PF_INET6;
@@ -172,9 +162,7 @@ for lib in '' -lresolv; do
     LIBS="$old_LIBS $lib"
     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#endif
 #ifdef HAVE_ARPA_NAMESER_H
 #include <arpa/nameser.h>
 #endif
@@ -193,32 +181,8 @@ done
 dnl Check for libcrypt -- it may live in libc or libcrypt, as on IRIX
 AC_CHECK_FUNC(crypt, , AC_CHECK_LIB(crypt,crypt))
 
-dnl Check for usable void pointer type
-AC_MSG_CHECKING(use of void pointer type)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[char *p;
-    void *xmalloc();
-    p = (char *) xmalloc(1);
-   ]])],[AC_DEFINE(HAVE_VOIDPOINTER,1,[Define if your C compiler allows void * as a function result]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
-
 dnl Check for ANSI volatile
 AC_C_VOLATILE
-
-dnl Check out the wait reality.  We have to assume sys/wait.h is present.
-AC_CHECK_FUNCS(waitpid wait3)
-AC_MSG_CHECKING(for union wait);
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <sys/wait.h>]], [[union wait status; int pid; pid = wait (&status);
-#ifdef WEXITSTATUS
-/* Some POSIXoid systems have both the new-style macros and the old
-   union wait type, and they do not work together.  If union wait
-   conflicts with WEXITSTATUS et al, we do not want to use it at all.  */
-if (WEXITSTATUS (status) != 0) pid = -1;
-#endif
-#ifdef HAVE_WAITPID
-/* Make sure union wait works with waitpid.  */
-pid = waitpid (-1, &status, 0);
-#endif
-]])],[AC_DEFINE(HAVE_UNION_WAIT,1,Define if 'union wait' is the type of the first arg to wait functions.) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING(sys_siglist declaration in signal.h or unistd.h)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>
@@ -226,16 +190,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>
 #include <unistd.h>
 ]], [[char *msg = *(sys_siglist + 1);]])],[AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
-# Find the right directory to put the root-mode PID file in
-for dir in "/var/run" "/etc"
-do
-	if test -d $dir 
-	then
-		break;
-	fi
-done
-AC_MSG_RESULT(root-mode pid file will go in $dir)
-AC_DEFINE_UNQUOTED(PID_DIR, "$dir", directory for PID lock files)
+AC_DEFINE_UNQUOTED(PID_DIR, "/var/run", directory for PID lock files)
 
 # We may have a fallback MDA available in case the socket open to the 
 # local SMTP listener fails.  Best to use procmail for this, as we know
@@ -326,10 +281,6 @@ case "$enable_fallback" in
 			;;
 esac
 
-AC_CHECK_SIZEOF(short)
-AC_CHECK_SIZEOF(int)
-AC_CHECK_SIZEOF(long)
-
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
 	[  --disable-POP3          don't compile in POP3 protocol support],
@@ -411,12 +362,8 @@ AC_SEARCH_LIBS(getaddrinfo, [nsl socket])
 AC_CACHE_CHECK([for getaddrinfo],[fm_cv_getaddrinfo],[
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NETDB_H
 #include <netdb.h>
-#endif
   ]], [[getaddrinfo(0, 0, 0, 0);]])],[ fm_cv_getaddrinfo=yes],[ fm_cv_getaddrinfo=no ])
 ])
 
@@ -428,12 +375,8 @@ fi
 AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NETDB_H
 #include <netdb.h>
-#endif
 #ifndef NULL
 #define NULL 0
 #endif
@@ -464,20 +407,10 @@ if test "$fm_cv_getaddrinfo" = yes ; then
     fi
 fi
 
-# This version of the Kerberos 4 and 5 options addresses the follwing issues:
+# This version of the Kerberos 5 options addresses the follwing issues:
 # 
 # * Build correctly under Heimdal kerberos if it is compiled with db2 and
 #   OpenSSL support (Debian's is)
-# * Build the kerberos.c stuff (KPOP) only for kerberosIV, to avoid breakage.
-#   I don't know if this is 100% correct, but now at least IMAP and POP3
-#   behave the same way regarding kerberosV.
-# * Build without any fuss for both kerberosIV and V at the same time.
-# * Move all the kerberos header mess to kerberos.h, and #include that
-#   in driver.c and kerberos.c.
-# 
-# Tested using the Heimdal Kerberos V libs, Kungliga Tekniska Högskolan (the
-# Royal Institute of Technology in Stockholm, Sweden)'s kerberos IV libs, and
-# the MIT reference implementation of KerberosV (all as packaged in Debian).
 
 ###    use option --with-kerberos5=DIR to point at a Kerberos 5 directory
 ### make sure --with-ssl is run before --with-kerberos* !
@@ -566,97 +499,6 @@ else
 fi
 fi
 ]) dnl --with-kerberos5=DIR
-
-###    use option --with-kerberos=DIR to point at a Kerberos 4 directory
-KERBEROS_V4=0
-AC_ARG_WITH(kerberos,
-       [  --with-kerberos=DIR     point fetchmail compilation at a Kerberos 4 directory],
-[
-if test "$with_kerberos" != "no"
-then
-    AC_MSG_WARN([Kerberos IV support is obsolete. Use --with-kerberos5 if possible.])
-# Check for a NetBSD/OpenBSD special case
-if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname` = "OpenBSD" )
-then
-  AS_MESSAGE(checking kerberosIV for `uname`...)
-  KERBEROS_V4=1
-  CFLAGS="$CFLAGS -I/usr/include/kerberosIV"
-  case `uname` in
-      NetBSD)  LIBS="$LIBS -lkrb -ldes -lroken -lcom_err" ;;
-      OpenBSD) LIBS="$LIBS -lkrb -ldes" ;;
-  esac
-elif krb4-config 2> /dev/null >/dev/null ; then
-  krb4_prefix=`krb4-config --prefix`
-  AC_MSG_RESULT([krb4-config points to kerberosIV under $krb4_prefix])
-  unset krb4_prefix
-  CFLAGS="$CFLAGS `krb4-config --cflags`"
-  LIBS="$LIBS `krb4-config --libs`"
-  KERBEROS_V4=1
-elif krb5-config 2> /dev/null >/dev/null ; then
-  krb4_prefix=`krb5-config --prefix krb4`
-  AC_MSG_RESULT([krb5-config points to kerberosIV under $krb4_prefix])
-  if test -f ${krb4_prefix}/include/kerberosIV/krb.h ; then
-    AC_DEFINE(KERBEROS_V4_V5,1,Define if you have Kerberos V4 headers under a kerberosIV directory)
-  fi
-  unset krb4_prefix
-  CFLAGS="$CFLAGS `krb5-config --cflags krb4`"
-  LIBS="$LIBS `krb5-config --libs krb4`"
-  KERBEROS_V4=1
-else
-  #we need to detect when we're building under a kerberosV compatibility
-  #layer, btw...
-  if test "$with_kerberos" != "yes" ; then
-     searchdirs="$with_kerberos"
-  else
-     searchdirs="$with_kerberos5 /usr/kerberos /usr/kerberosIV /usr/athena /usr"
-  fi
-  with_kerberos=
-  ac_saveLDFLAGS="$LDFLAGS"
-  for dir in $searchdirs
-  do
-     AC_MSG_CHECKING([for Kerberos IV in $dir])
-     if test -f "$dir/include/krb.h" || test -f "$dir/include/krb4.h" \
-            || test -f "$dir/include/kerberosIV/krb.h"
-     then
-        AC_MSG_RESULT([found])
-     else
-        AC_MSG_RESULT([not found])
-       continue
-     fi
-     #Find libs
-     if test -f "$with_kerberos5/roken.h" ; then
-       AC_CHECK_LIB(45, krb_mk_req)
-     fi
-     LDFLAGS="-L$dir/lib $ac_saveLDFLAGS"
-     if test `uname` = "FreeBSD"; then
-        AC_SEARCH_LIBS(_ossl_old_des_string_to_key, [des425 des crypto], [], continue)
-     else
-        AC_SEARCH_LIBS(des_string_to_key, [crypto], [], continue)
-     fi
-     AC_SEARCH_LIBS(krb_realmofhost, [krb4 krb], [], continue)
-     with_kerberos="$dir"
-     if test -f "$dir/include/kerberosIV/krb.h" ; then
-        dir="$dir/include/kerberosIV"
-     else
-       dir="$dir/include"
-     fi
-     KERBEROS_V4=1
-     test -f "$with_kerberos5/roken.h" && AC_DEFINE(HEIMDAL)
-     test "$dir" != "/usr/include" && CFLAGS="$CFLAGS -I$dir"
-     LDFLAGS="$LDFLAGS -L$with_kerberos/lib"
-     break
-  done
-  if test -z "$with_kerberos" ; then
-     AC_MSG_ERROR([Kerberos 4 libraries not found])
-  fi
-  LDFLAGS="$ac_saveLDFLAGS"
-fi
-fi
-]) dnl --with-kerberos=DIR
-if test "$KERBEROS_V4" = 1 ; then
-    AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
-fi
-AM_CONDITIONAL(KERBEROS_V4_ENABLE, test "$KERBEROS_V4" = 1)
 
 ###	use option --with-ssl to compile in the SSL support
 AC_ARG_WITH(ssl,

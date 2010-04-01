@@ -156,9 +156,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef GSSAPI
     "'gssapi',"
 #endif /* GSSAPI */
-#if defined(KERBEROS_V4)
-    "'kerberos',"
-#endif /* defined(IMAP4) */
 #ifdef RPA_ENABLE
     "'rpa',"
 #endif /* RPA_ENABLE */
@@ -241,7 +238,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    using_kpop =
 		(ctl->server.protocol == P_POP3 &&
 		 ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT ) &&
-		 ctl->server.authenticate == A_KERBEROS_V4);
+		 ctl->server.authenticate == A_KERBEROS_V5);
 
 	    stringdump("pollname", ctl->server.pollname); 
 	    booldump("active", !ctl->server.skip); 
@@ -273,8 +270,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		stringdump("auth", "cram-md5");
 	    else if (ctl->server.authenticate == A_GSSAPI)
 		stringdump("auth", "gssapi");
-	    else if (ctl->server.authenticate == A_KERBEROS_V4)
-		stringdump("auth", "kerberos_v4");
 	    else if (ctl->server.authenticate == A_KERBEROS_V5)
 		stringdump("auth", "kerberos_v5");
 	    else if (ctl->server.authenticate == A_SSH)

@@ -15,7 +15,6 @@ removed from a 6.4.0 or newer release.)
   version as they are not reasonably portable across operating systems.
 * IMAP2 and IMAP4 (not IMAP4r1) are obsolete, support may be removed from a
   future fetchmail version.
-* RPOP is obsolete, support will be removed from a future fetchmail release.
 * --sslcertck will become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
   is deprecated and may be removed from a future release.
@@ -30,7 +29,6 @@ removed from a 6.4.0 or newer release.)
   inconsistent and confusing.
 * The "protocol auto" default inside fetchmail may be removed from a future
   fetchmail release. Explicit configuration of the protocol is recommended.
-* Kerberos IV support may be removed from a future fetchmail release.
 * Kerberos 5 support may be removed from a future fetchmail release.
 * The --principal option may be removed from a future fetchmail release.
 * SIGHUP wakeup support may be removed from a future fetchmail release and
@@ -49,15 +47,16 @@ fetchmail-6.4.0 (not yet released):
 NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
 # REMOVED FEATURES
-* POP2 was long obsolete and removed
-* BeOS and EMX support was removed
+* POP2 and RPOP were long obsolete and removed
 * Trio was removed
-* Support for systems that do not conform to C89 and POSIX 2001 was removed.
+* Support for systems that do not conform to C89 and POSIX 2001 was removed, this includes
+  BeOS, EMX, NeXTSTEP.
 * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
   have been removed. They were based on the mistaken assumption that the
   IMAP/POP3 server was also the MX server, which is rarely the case.  They have
   never supported IPv6 (including IPv6-mapped IPv4) either.
   Non-DNS based alias keywords such as "aka" remain.
+* Kerberos IV support was removed.
 
 --------------------------------------------------------------------------------
 

@@ -41,9 +41,9 @@ flag done_capa = FALSE;
 #if defined(GSSAPI)
 flag has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+#if defined(KERBEROS_V5)
 flag has_kerberos = FALSE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+#endif /* defined(KERBEROS_V5) */
 static flag has_cram = FALSE;
 #ifdef OPIE_ENABLE
 flag has_otp = FALSE;
@@ -201,9 +201,9 @@ static int capa_probe(int sock)
 #if defined(GSSAPI)
     has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+#if defined(KERBEROS_V5)
     has_kerberos = FALSE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+#endif /* defined(KERBEROS_V5) */
     has_cram = FALSE;
 #ifdef OPIE_ENABLE
     has_otp = FALSE;
@@ -232,11 +232,6 @@ static int capa_probe(int sock)
 	    if (strstr(buffer, "GSSAPI"))
 		has_gssapi = TRUE;
 #endif /* defined(GSSAPI) */
-
-#if defined(KERBEROS_V4)
-	    if (strstr(buffer, "KERBEROS_V4"))
-		has_kerberos = TRUE;
-#endif /* defined(KERBEROS_V4)  */
 
 #ifdef OPIE_ENABLE
 	    if (strstr(buffer, "X-OTP"))
@@ -283,9 +278,9 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #if defined(GSSAPI)
     has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+#if defined(KERBEROS_V5)
     has_kerberos = FALSE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+#endif /* defined(KERBEROS_V5) */
     has_cram = FALSE;
 #ifdef OPIE_ENABLE
     has_otp = FALSE;
@@ -385,7 +380,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 */
 	if ((ctl->server.authenticate == A_ANY) ||
 		(ctl->server.authenticate == A_GSSAPI) ||
-		(ctl->server.authenticate == A_KERBEROS_V4) ||
 		(ctl->server.authenticate == A_KERBEROS_V5) ||
 		(ctl->server.authenticate == A_OTP) ||
 		(ctl->server.authenticate == A_CRAM_MD5) ||
@@ -494,22 +488,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	/*
 	 * OK, we have an authentication type now.
 	 */
-#if defined(KERBEROS_V4)
-	/* 
-	 * Servers doing KPOP have to go through a dummy login sequence
-	 * rather than doing SASL.
-	 */
-	if (has_kerberos &&
-	    ctl->server.service && (strcmp(ctl->server.service, KPOP_PORT)!=0)
-	    && (ctl->server.authenticate == A_KERBEROS_V4
-	     || ctl->server.authenticate == A_KERBEROS_V5
-	     || ctl->server.authenticate == A_ANY))
-	{
-	    ok = do_rfc1731(sock, "AUTH", ctl->server.truename);
-	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
-		break;
-	}
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 
 #if defined(GSSAPI)
 	if (has_gssapi &&
@@ -596,7 +574,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * users switching *to* KPOP accidentally revealing their
 	 * password */
 	if ((ctl->server.authenticate == A_ANY
-		    || ctl->server.authenticate == A_KERBEROS_V4
 		    || ctl->server.authenticate == A_KERBEROS_V5)
 		&& (ctl->server.service != NULL
 		    && strcmp(ctl->server.service, KPOP_PORT) == 0))
@@ -662,15 +639,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	free(msg);
 
 	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, (char *)ctl->digest);
-	break;
-
-    case P_RPOP:
-	if ((ok = gen_transact(sock,"USER %s", ctl->remotename)) == 0) {
-	    strlcpy(shroud, ctl->password, sizeof(shroud));
-	    ok = gen_transact(sock, "RPOP %s", ctl->password);
-	    memset(shroud, 0x55, sizeof(shroud));
-	    shroud[0] = '\0';
-	}
 	break;
 
     default:
@@ -1078,29 +1046,6 @@ static int pop3_is_old(int sock, struct query *ctl, int num)
 	    newl->val.status.mark != UID_UNSEEN);
 }
 
-#ifdef UNUSED
-/*
- * We could use this to fetch headers only as we do for IMAP.  The trouble 
- * is that there's no way to fetch the body only.  So the following RETR 
- * would have to re-fetch the header.  Enough messages have longer headers
- * than bodies to make this a net loss.
- */
-static int pop_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
-/* request headers of nth message */
-{
-    int ok;
-    char buf[POPBUFSIZE+1];
-
-    gen_send(sock, "TOP %d 0", number);
-    if ((ok = pop3_ok(sock, buf)) != 0)
-	return(ok);
-
-    *lenp = -1;		/* we got sizes from the LIST response */
-
-    return(PS_SUCCESS);
-}
-#endif /* UNUSED */
-
 static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
@@ -1231,24 +1176,6 @@ static int pop3_logout(int sock, struct query *ctl)
 /* send logout command */
 {
     int ok;
-
-#ifdef __UNUSED__
-    /*
-     * We used to do this in case the server marks messages deleted when seen.
-     * (Yes, this has been reported, in the MercuryP/NLM server.
-     * It's even legal under RFC 1939 (section 8) as a site policy.)
-     * It interacted badly with UIDL, though.  Thomas Zajic wrote:
-     * "Running 'fetchmail -F -v' and checking the logs, I found out
-     * that fetchmail did in fact flush my mailbox properly, but sent
-     * a RSET just before sending QUIT to log off.  This caused the
-     * POP3 server to undo/forget about the previous DELEs, resetting
-     * my mailbox to its original (ie.  unflushed) state. The
-     * ~/.fetchids file did get flushed though, so the next time
-     * fetchmail was run it saw all the old messages as new ones ..."
-     */
-     if (ctl->keep)
-	gen_transact(sock, "RSET");
-#endif /* __UNUSED__ */
 
     ok = gen_transact(sock, "QUIT");
     if (!ok)

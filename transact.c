@@ -854,24 +854,6 @@ eoh:
 	else if (!strncasecmp("Resent-Sender:", line, 14) && (strchr(line, '@') || strchr(line, '!')))
 	    resent_sender_offs = (line - msgblk.headers);
 
-#ifdef __UNUSED__
- 	else if (!strncasecmp("Message-Id:", line, 11))
-	{
-	    if (ctl->server.uidl)
- 	    {
-	        char id[IDLEN+1];
-
-		line[IDLEN+12] = 0;		/* prevent stack overflow */
- 		sscanf(line+12, "%s", id);
- 	        if (!str_find( &ctl->newsaved, num))
-		{
- 		    struct idlist *newl = save_str(&ctl->newsaved,id,UID_SEEN);
-		    newl->val.status.num = num;
-		}
- 	    }
- 	}
-#endif /* __UNUSED__ */
-
 	/* if multidrop is on, gather addressee headers */
 	if (MULTIDROP(ctl))
 	{

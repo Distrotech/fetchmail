@@ -32,9 +32,6 @@ extern "C" {
 #include <langinfo.h>
 
 #include "kerberos.h"
-#ifdef KERBEROS_V4
-#include <netinet/in.h>
-#endif /* KERBEROS_V4 */
 
 #include "i18n.h"
 #include "socket.h"
@@ -122,74 +119,9 @@ static int cleanupSockClose (int fd)
     return (scerror);
 }
 
-#ifdef KERBEROS_V4
-static int kerberos_auth(socket, canonical, principal) 
-/* authenticate to the server host using Kerberos V4 */
-int socket;		/* socket to server host */
-char *canonical;	/* server name */
-char *principal;
-{
-    KTEXT ticket;
-    MSG_DAT msg_data;
-    CREDENTIALS cred;
-    Key_schedule schedule;
-    int rem;
-    char * prin_copy = (char *) NULL;
-    char * prin = (char *) NULL;
-    char * inst = (char *) NULL;
-    char * realm = (char *) NULL;
-
-    if (principal != (char *)NULL && *principal)
-    {
-        char *cp;
-        prin = prin_copy = xstrdup(principal);
-	for (cp = prin_copy; *cp && *cp != '.'; ++cp)
-	    ;
-	if (*cp)
-	{
-	    *cp++ = '\0';
-	    inst = cp;
-	    while (*cp && *cp != '@')
-	        ++cp;
-	    if (*cp)
-	    {
-	        *cp++ = '\0';
-	        realm = cp;
-	    }
-	}
-    }
-  
-    ticket = xmalloc(sizeof (KTEXT_ST));
-    rem = (krb_sendauth (0L, socket, ticket,
-			 prin ? prin : "pop",
-			 inst ? inst : canonical,
-			 realm ? realm : ((char *) (krb_realmofhost (canonical))),
-			 ((unsigned long) 0),
-			 (&msg_data),
-			 (&cred),
-			 (schedule),
-			 ((struct sockaddr_in *) 0),
-			 ((struct sockaddr_in *) 0),
-			 "KPOPV0.1"));
-    free(ticket);
-    if (prin_copy)
-    {
-        free(prin_copy);
-    }
-    if (rem != KSUCCESS)
-    {
-	report(stderr, GT_("kerberos error %s\n"), (krb_get_err_text (rem)));
-	return (PS_AUTHFAIL);
-    }
-    return (0);
-}
-#endif /* KERBEROS_V4 */
-
 #ifdef KERBEROS_V5
-static int kerberos5_auth(socket, canonical)
-/* authenticate to the server host using Kerberos V5 */
-int socket;             /* socket to server host */
-const char *canonical;  /* server name */
+/** authenticate to the server host using Kerberos V5 */
+static int kerberos5_auth(int socket /** socket to server host */, const char *canonical /** server name */)
 {
     krb5_error_code retval;
     krb5_context context;
@@ -436,7 +368,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	 * could be "auto". */
 	switch (ctl->server.protocol)
 	{
-	    case P_POP3: case P_APOP: case P_RPOP:
+	    case P_POP3: case P_APOP:
 	    fetchsizelimit = 1;
 	}
 
@@ -1064,26 +996,6 @@ static int do_session(
 			     ctl->server.base_protocol->name, ctl->server.pollname);
 		    strlcpy(errbuf, strerror(err_no), sizeof(errbuf));
 		report_complete(stderr, ": %s\n", errbuf);
-
-#ifdef __UNUSED__
-		/* 
-		 * Don't use this.  It was an attempt to address Debian bug
-		 * #47143 (Notify user by mail when pop server nonexistent).
-		 * Trouble is, that doesn't work; you trip over the case 
-		 * where your SLIP or PPP link is down...
-		 */
-		/* warn the system administrator */
-		if (open_warning_by_mail(ctl) == 0)
-		{
-		    stuff_warning(iana_charset, ctl,
-			 GT_("Subject: Fetchmail unreachable-server warning."));
-		    stuff_warning(NULL, ctl, "");
-		    stuff_warning(NULL, ctl, GT_("Fetchmail could not reach the mail server %s:"),
-				  ctl->server.pollname);
-		    stuff_warning(NULL, ctl, errbuf, ctl->server.pollname);
-		    close_warning_by_mail(ctl, (struct msgblk *)NULL);
-		}
-#endif
 	    }
 	    err = PS_SOCKET;
 	    set_timeout(0);
@@ -1123,17 +1035,6 @@ static int do_session(
 	 */
 	set_timeout(0);
 	phase = oldphase;
-#ifdef KERBEROS_V4
-	if (ctl->server.authenticate == A_KERBEROS_V4 && (strcasecmp(proto->name,"IMAP") != 0))
-	{
-	    set_timeout(mytimeout);
-	    err = kerberos_auth(mailserver_socket, ctl->server.truename,
-			       ctl->server.principal);
-	    set_timeout(0);
- 	    if (err != 0)
-		goto cleanUp;
-	}
-#endif /* KERBEROS_V4 */
 
 #ifdef KERBEROS_V5
 	if (ctl->server.authenticate == A_KERBEROS_V5)
@@ -1597,14 +1498,6 @@ int do_protocol(struct query *ctl /** parsed options with merged-in defaults */,
 		const struct method *proto /** protocol method table */)
 {
     int	err;
-
-#ifndef KERBEROS_V4
-    if (ctl->server.authenticate == A_KERBEROS_V4)
-    {
-	report(stderr, GT_("Kerberos V4 support not linked.\n"));
-	return(PS_ERROR);
-    }
-#endif /* KERBEROS_V4 */
 
 #ifndef KERBEROS_V5
     if (ctl->server.authenticate == A_KERBEROS_V5)
