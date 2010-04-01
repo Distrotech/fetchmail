@@ -409,7 +409,7 @@ test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE sup
 dnl Mostly stolen from gnulib's getaddrinfo.m4
 AC_SEARCH_LIBS(getaddrinfo, [nsl socket])
 AC_CACHE_CHECK([for getaddrinfo],[fm_cv_getaddrinfo],[
-  AC_TRY_LINK([
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
@@ -417,9 +417,7 @@ AC_CACHE_CHECK([for getaddrinfo],[fm_cv_getaddrinfo],[
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
-  ], [getaddrinfo(0, 0, 0, 0);],
-    [ fm_cv_getaddrinfo=yes],
-    [ fm_cv_getaddrinfo=no ])
+  ]], [[getaddrinfo(0, 0, 0, 0);]])],[ fm_cv_getaddrinfo=yes],[ fm_cv_getaddrinfo=no ])
 ])
 
 if test x"$fm_cv_getaddrinfo" = "xyes"; then  
@@ -428,7 +426,7 @@ if test x"$fm_cv_getaddrinfo" = "xyes"; then
 fi
 
 AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
-  AC_TRY_LINK([
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
@@ -439,9 +437,7 @@ AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
 #ifndef NULL
 #define NULL 0
 #endif
-  ], [getnameinfo(NULL,0, NULL,0, NULL, 0, 0);],
-    [ fm_cv_getnameinfo=yes],
-    [ fm_cv_getnameinfo=no ])
+  ]], [[getnameinfo(NULL,0, NULL,0, NULL, 0, 0);]])],[ fm_cv_getnameinfo=yes],[ fm_cv_getnameinfo=no ])
 ])
 if test $fm_cv_getnameinfo = yes ; then
     AC_DEFINE(HAVE_GETNAMEINFO,1,[Define to 1 if your system has getnameinfo()])
