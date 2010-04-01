@@ -9,15 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#else
 #include <sys/socket.h>
-#endif
 #include <netinet/in.h>
-#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
-#endif
 #include <netdb.h>
 #include "i18n.h"
 #include "mx.h"

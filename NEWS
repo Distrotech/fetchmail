@@ -40,10 +40,6 @@ removed from a 6.4.0 or newer release.)
 * The --principal option may be removed from a future fetchmail release.
 * SIGHUP wakeup support may be removed from a future fetchmail release and
   cause fetchmail to terminate - it was broken for many years.
-* Support for operating systems that are not sufficiently POSIX compliant may be
-  removed or operation on such systems may be suboptimal for future releases.
-  This means that fetchmail may only continue to work on C99 and POSIX 2001
-  based systems.
 * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
   requirements (dependencies), such as Boost or other class libraries.
 * The softbounce option default will change to "false" in the next release.
@@ -55,9 +51,13 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.4.0 (not yet released):
 
+NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
+
 # REMOVED FEATURES
 * POP2 was long obsolete and removed
 * BeOS and EMX support was removed
+* Trio was removed
+* Support for systems that do not conform to C89 and POSIX 2001 was removed.
 
 --------------------------------------------------------------------------------
 

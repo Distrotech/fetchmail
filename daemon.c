@@ -11,16 +11,8 @@
 #include <signal.h>
 #include <string.h>
 #include <sys/types.h>
-#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif
-#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
-#else /* !HAVE_FCNTL_H */
-#ifdef HAVE_SYS_FCNTL_H
-#include <sys/fcntl.h>
-#endif /* HAVE_SYS_FCNTL_H */
-#endif /* !HAVE_FCNTL_H */
 #include <sys/stat.h>	/* get umask(2) prototyped */
 
 #include <unistd.h>
@@ -37,7 +29,7 @@
 #include "fetchmail.h"
 #include "tunable.h"
 
-static RETSIGTYPE
+static void
 sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {
@@ -65,7 +57,7 @@ sigchld_handler (int sig)
     (void)sig;
 }
 
-RETSIGTYPE null_signal_handler(int sig) { (void)sig; }
+void null_signal_handler(int sig) { (void)sig; }
 
 SIGHANDLERTYPE set_signal_handler(int sig, SIGHANDLERTYPE handler)
 /* 

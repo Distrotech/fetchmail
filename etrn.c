@@ -9,9 +9,6 @@
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <assert.h>
-#ifdef HAVE_NET_SOCKET_H /* BeOS needs this */
-#include <net/socket.h>
-#endif
 #include  <netdb.h>
 #include  <errno.h>
 #include  <unistd.h>

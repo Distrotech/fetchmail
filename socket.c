@@ -10,35 +10,18 @@
 #include <errno.h>
 #include <string.h>
 #include <ctype.h> /* isspace() */
-#ifdef HAVE_MEMORY_H
-#include <memory.h>
-#endif /* HAVE_MEMORY_H */
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef HAVE_NET_SOCKET_H
 #include <sys/socket.h>
-#else
-#include <net/socket.h>
-#endif
 #include <sys/un.h>
 #include <netinet/in.h>
-#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
-#endif
 #include <netdb.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdarg.h>
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
 
 #include "socket.h"
 #include "fetchmail.h"

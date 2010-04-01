@@ -33,10 +33,13 @@ AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 AC_PROG_AWK
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_PROG_INSTALL
 AC_PROG_CPP			dnl Later checks need this.
+AC_PROG_INSTALL
+AM_PROG_LEX
+AC_PROG_MAKE_SET
 AC_PROG_RANLIB
-AM_PROG_CC_C_O
+AC_PROG_YACC
+
 AC_USE_SYSTEM_EXTENSIONS
 
 dnl check for b0rked Solaris (and other shells) and find one that works
@@ -57,24 +60,10 @@ if test "x$SHELL" = "x" ; then
 fi
 
 
-AC_HEADER_TIME
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
-AC_TYPE_SIGNAL
-AC_CHECK_HEADERS([ \
-	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
-	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
-	sys/select.h sys/socket.h sys/time.h langinfo.h md5.h])
-if test _$ac_cv_header_stdarg_h != _yes ; then
-AC_MSG_WARN([stdarg.h is not defined. Unsupported configuration, proceed at your own risk.])
-fi
-AC_CHECK_TYPE(u_int32_t,,
-	AC_DEFINE(u_int32_t,unsigned int,
-		[Define to unsigned int if <sys/types.h> does not define.]),
-	[AC_INCLUDES_DEFAULT
-#ifdef HAVE_ARPA_NAMESER_H
-#include <arpa/nameser.h>
-#endif])
+AC_CHECK_HEADERS([arpa/nameser.h md5.h])
+
 AC_CHECK_HEADERS([resolv.h],,,[
 #include <sys/types.h>
 #ifdef HAVE_NETINET_IN_H
@@ -94,10 +83,6 @@ AC_CHECK_DECLS([h_errno],,,[
 
 AC_C_CONST			dnl getopt needs this.
 
-AM_PROG_LEX
-AC_PROG_MAKE_SET
-AC_PROG_YACC
-
 # Check for OS special cases
 case $host_os in
 darwin*)
@@ -108,20 +93,6 @@ darwin*)
 freebsd*)
     AC_MSG_NOTICE(found FreeBSD - Adding -lkvm -lcom_err to standard libraries)
     LIBS="$LIBS -lkvm -lcom_err"
-    ;;
-# Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
-# not working.
-lynxos*)
-    AC_MSG_NOTICE(found LynxOS - Adding -lbsd to standard libraries)
-    LIBS="$LIBS -lbsd"
-    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
-    AC_MSG_NOTICE(found LynxOS - Prepending standard include path to gcc flags)
-    CPPFLAGS="$CPPFLAGS -I/usr/include"
-    ;;
-# Check for Rhapsody special case: it doesn't like -s
-rhapsody*)
-    AC_MSG_NOTICE(found Rhapsody - Removing -s load flag)
-    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
     ;;
 esac
 
@@ -146,21 +117,7 @@ AC_CHECK_FUNC(inet_addr,
     AC_MSG_RESULT(using libc's inet_addr),
     AC_CHECK_LIB(nsl,inet_addr))
 
-dnl Port hack for Interactive UNIX System V/386 Release 3.2
-AC_CHECK_LIB(cposix, strchr,
-		[DEFS="$DEFS -D_SYSV3"
-		LIBS="$LIBS -lcposix"])
-
-dnl Port hack for Sparc/NetBSD-1.5
-dnl
-dnl NB: this has been disabled as it causes the unconditional
-dnl addition of libintl to the build, which is both undesired
-dnl and breaks on Solaris/Blastwave.org machines.
-dnl
-dnl AC_CHECK_LIB(intl, gettext,
-dnl 		[LIBS="$LIBS -lintl"])
-
-AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
+AC_REPLACE_FUNCS([stpcpy strlcpy strlcat])
 
 have_md5=no
 if test "$ac_cv_header_md5_h" != no ; then

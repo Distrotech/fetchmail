@@ -12,31 +12,12 @@ struct addrinfo;
 /* We need this for size_t */
 #include <sys/types.h>
 
-/* We need this for time_t */
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
 
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <netdb.h>
 #include <stdio.h>
-
-/* We need this for strstr */
-#if !defined(HAVE_STRSTR) && !defined(strstr)
-char *strstr(const char *, const char *);
-#endif
 
 #include "fm_strl.h"
 
@@ -642,9 +623,9 @@ char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned const char *);
 void hmac_md5 (const unsigned char *, size_t, const unsigned char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(char *, char *, int socket);
-typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
+typedef void (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
-RETSIGTYPE null_signal_handler(int sig);
+void null_signal_handler(int sig);
 SIGHANDLERTYPE set_signal_handler(int sig, SIGHANDLERTYPE handler);
 int daemonize(const char *);
 char *fm_getpassword(char *);

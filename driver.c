@@ -10,26 +10,14 @@
 #include  <setjmp.h>
 #include  <errno.h>
 #include  <string.h>
-#ifdef HAVE_MEMORY_H
-#include  <memory.h>
-#endif /* HAVE_MEMORY_H */
 #include  <stdlib.h>
 #include  <limits.h>
 #include <unistd.h>
-#if defined(HAVE_SYS_ITIMER_H)
-#include <sys/itimer.h>
-#endif
 #include  <signal.h>
-#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif
+#include <sys/time.h>
 
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <netdb.h>
 #ifdef HAVE_PKG_hesiod
 #ifdef __cplusplus
@@ -105,7 +93,7 @@ void set_timeout(int timeleft)
     setitimer(ITIMER_REAL, &ntimeout, (struct itimerval *)NULL);
 }
 
-static RETSIGTYPE timeout_handler (int signal)
+static void timeout_handler (int signal)
 /* handle SIGALRM signal indicating a server timeout */
 {
     (void)signal;

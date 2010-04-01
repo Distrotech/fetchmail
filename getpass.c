@@ -34,7 +34,7 @@ static tcflag_t flags;
 static void save_tty_state(void);
 static void disable_tty_echo(void);
 static void restore_tty_state(void);
-static RETSIGTYPE sigint_handler(int);
+static void sigint_handler(int);
 
 char *fm_getpassword(char *prompt)
 {
@@ -121,7 +121,7 @@ static void restore_tty_state(void)
     tcsetattr(ttyfd, TCSAFLUSH, &termb);
 }
 
-static RETSIGTYPE sigint_handler(int signum)
+static void sigint_handler(int signum)
 {
     (void)signum;
     restore_tty_state();

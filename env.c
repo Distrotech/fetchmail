@@ -12,9 +12,6 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <string.h>
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>

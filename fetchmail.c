@@ -27,9 +27,7 @@
 #include <socks.h> /* SOCKSinit() */
 #endif /* HAVE_SOCKS */
 
-#ifdef HAVE_LANGINFO_H
 #include <langinfo.h>
-#endif
 
 #include "fetchmail.h"
 #include "socket.h"
@@ -78,8 +76,8 @@ static int activecount;		/* count number of active entries */
 static struct runctl cmd_run;	/* global options set from command line */
 static time_t parsetime;	/* time of last parse */
 
-static RETSIGTYPE terminate_run(int);
-static RETSIGTYPE terminate_poll(int);
+static void terminate_run(int);
+static void terminate_poll(int);
 
 #if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
 /* drop SGID kmem privileage until we need it */
@@ -121,7 +119,7 @@ static char *timestamp (void)
 #define timestamp rfc822timestamp
 #endif
 
-static RETSIGTYPE donothing(int sig) 
+static void donothing(int sig) 
 {
     set_signal_handler(sig, donothing);
     lastsig = sig;
@@ -1359,7 +1357,7 @@ static int load_params(int argc, char **argv, int optind)
     return(implicitmode);
 }
 
-static RETSIGTYPE terminate_poll(int sig)
+static void terminate_poll(int sig)
 /* to be executed at the end of a poll cycle */
 {
 
@@ -1377,7 +1375,7 @@ static RETSIGTYPE terminate_poll(int sig)
 #endif /* POP3_ENABLE */
 }
 
-static RETSIGTYPE terminate_run(int sig)
+static void terminate_run(int sig)
 /* to be executed on normal or signal-induced termination */
 {
     struct query	*ctl;

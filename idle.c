@@ -42,7 +42,7 @@ volatile int lastsig;		/* last signal received */
  */
 static sig_atomic_t	alarm_latch = FALSE;
 
-RETSIGTYPE gotsigalrm(int sig)
+void gotsigalrm(int sig)
 {
     set_signal_handler(sig, gotsigalrm);
     lastsig = sig;

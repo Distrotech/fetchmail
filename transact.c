@@ -9,17 +9,11 @@
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
-#ifdef HAVE_MEMORY_H
-#include  <memory.h>
-#endif /* HAVE_MEMORY_H */
 #include  <stdlib.h>
 #include <unistd.h>
 #include  <stdarg.h>
 #include <limits.h>
 
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <sys/socket.h>
 #include <netdb.h>
 #include "fm_md5.h"

@@ -10,11 +10,7 @@
 struct addrinfo;
 
 #include <config.h>
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#elif HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <netdb.h>
 
 /** Create a new client socket; returns -1 on error */

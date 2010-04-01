@@ -9,16 +9,9 @@
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <assert.h>
-#ifdef HAVE_STRING_H /* strcat() */
 #include <string.h>
-#endif
 #include  <sys/types.h>
-#ifdef HAVE_NET_SELECT_H /* AIX needs this */
-#include <net/select.h>
-#endif
-#ifdef HAVE_SYS_SELECT_H /* AIX 4.1, at least, needs this */
 #include  <sys/select.h>
-#endif
 #include  <netdb.h>
 #include  <errno.h>
 #include  <unistd.h>
