@@ -7,6 +7,10 @@
 
 #include "config.h"
 
+#ifdef __NetBSD__
+#define _NETBSD_SOURCE 1
+#endif
+
 struct addrinfo;
 
 /* We need this for size_t */

@@ -16,8 +16,11 @@ AC_CONFIG_LIBOBJ_DIR([.])
 
 AC_CANONICAL_HOST
 
+dnl keep this before stuff that runs the compiler!
+AC_USE_SYSTEM_EXTENSIONS
+
 dnl automake options are in Makefile.am
-AC_PREREQ(2.60)
+AC_PREREQ(2.64)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE
 
@@ -31,16 +34,12 @@ AM_PATH_PYTHON(2.0,,AC_MSG_WARN([Disabling fetchmailconf: python 2.0 or greater 
 AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 
 AC_PROG_AWK
-AC_PROG_CC
-AM_PROG_CC_C_O
-AC_PROG_CPP			dnl Later checks need this.
+AC_PROG_CC_C99
 AC_PROG_INSTALL
 AM_PROG_LEX
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 AC_PROG_YACC
-
-AC_USE_SYSTEM_EXTENSIONS
 
 dnl check for b0rked Solaris (and other shells) and find one that works
 AC_MSG_CHECKING(for a working shell...)
@@ -74,8 +73,6 @@ AC_CHECK_DECLS([h_errno],,,[
 	AC_INCLUDES_DEFAULT
 	#include <netdb.h>
 ])
-
-AC_C_CONST			dnl getopt needs this.
 
 # Check for OS special cases
 case $host_os in
@@ -180,9 +177,6 @@ done
 
 dnl Check for libcrypt -- it may live in libc or libcrypt, as on IRIX
 AC_CHECK_FUNC(crypt, , AC_CHECK_LIB(crypt,crypt))
-
-dnl Check for ANSI volatile
-AC_C_VOLATILE
 
 AC_MSG_CHECKING(sys_siglist declaration in signal.h or unistd.h)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>

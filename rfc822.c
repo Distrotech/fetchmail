@@ -23,6 +23,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #define _XOPEN_SOURCE 600
 
 #include "config.h"
+#include "fetchmail.h"
 
 #include  <stdio.h>
 #include  <ctype.h>
