@@ -48,7 +48,6 @@ extern int h_errno;
 # endif
 #endif /* ndef h_errno */
 
-#ifdef HAVE_SOCKETPAIR
 static char *const *parse_plugin(const char *plugin, const char *host, const char *service)
 {
 	char **argvec;
@@ -166,7 +165,6 @@ static int handle_plugin(const char *host,
     (void) close(fds[0]);
     return fds[1];
 }
-#endif /* HAVE_SOCKETPAIR */
 
 #ifdef __UNUSED__
 
@@ -235,10 +233,8 @@ int SockOpen(const char *host, const char *service,
     int ord;
     char errbuf[8192] = "";
 
-#ifdef HAVE_SOCKETPAIR
     if (plugin)
 	return handle_plugin(host,service,plugin);
-#endif /* HAVE_SOCKETPAIR */
 
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;

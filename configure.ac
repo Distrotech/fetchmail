@@ -135,9 +135,7 @@ AC_CHECK_FUNC(getopt_long, [],
 
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(vsyslog dnl
-  inet_aton setrlimit socketpair dnl
-  sigaction strdup setlocale)
+AC_CHECK_FUNCS(vsyslog inet_aton)
 
 dnl INET6 is used by KAME/getnameinfo
 AC_CACHE_CHECK(for AF_INET6/PF_INET6,ac_cv_inet6,

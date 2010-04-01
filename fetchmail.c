@@ -19,9 +19,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_SETRLIMIT
 #include <sys/resource.h>
-#endif /* HAVE_SETRLIMIT */
 
 #ifdef HAVE_SOCKS
 #include <socks.h> /* SOCKSinit() */
@@ -325,7 +323,6 @@ int main(int argc, char **argv)
     /* construct the lockfile */
     fm_lock_setup(&run);
 
-#ifdef HAVE_SETRLIMIT
     /*
      * Before getting passwords, disable core dumps unless -v -d0 mode is on.
      * Core dumps could otherwise contain passwords to be scavenged by a
@@ -338,7 +335,6 @@ int main(int argc, char **argv)
 	corelimit.rlim_max = 0;
 	setrlimit(RLIMIT_CORE, &corelimit);
     }
-#endif /* HAVE_SETRLIMIT */
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
