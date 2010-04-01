@@ -1289,12 +1289,12 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 		 * as a workaround. */
 		if (strspn(buf, " \t") == strlen(buf))
 		    strcpy(buf, "<>");
-		sdps_envfrom = xmalloc(strlen(buf)+1);
+		sdps_envfrom = (char *)xmalloc(strlen(buf)+1);
 		strcpy(sdps_envfrom,buf);
 		break;
 	    case 5:
                 /* Wrap address with To: <> so nxtaddr() likes it */
-                sdps_envto = xmalloc(strlen(buf)+7);
+                sdps_envto = (char *)xmalloc(strlen(buf)+7);
                 sprintf(sdps_envto,"To: <%s>",buf);
 		break;
             }
