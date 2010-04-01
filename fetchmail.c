@@ -268,9 +268,6 @@ int main(int argc, char **argv)
 #ifdef KERBEROS_V5
 	"+KRB5"
 #endif /* KERBEROS_V5 */
-#ifndef HAVE_RES_SEARCH
-	"-DNS"
-#endif
 	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
@@ -1259,15 +1256,6 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
 	    if (!ctl->localnames)	/* for local delivery via SMTP */
 		save_str_pair(&ctl->localnames, user, NULL);
-
-#ifndef HAVE_RES_SEARCH
-	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (MULTIDROP(ctl) && ctl->server.dns)
-	    {
-		ctl->server.dns = FALSE;
-		report(stderr, GT_("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
-	    }
-#endif /* !HAVE_RES_SEARCH */
 
 	    /*
 	     * can't handle multidrop mailboxes without "envelope"

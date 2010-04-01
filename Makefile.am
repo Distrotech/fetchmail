@@ -54,12 +54,12 @@ TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		i18n.h kerberos.h fm_md5.h mx.h netrc.h smtp.h \
+		i18n.h kerberos.h fm_md5.h netrc.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
-		idlist.c uid.c mxget.c md5ify.c cram.c gssapi.c \
+		idlist.c uid.c md5ify.c cram.c gssapi.c \
 		opie.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c \
 		lock.h lock.c \
@@ -90,7 +90,7 @@ if NEED_GETADDRINFO
 fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
-check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget rfc822valid \
+check_PROGRAMS +=	rfc822 unmime netrc rfc2047e rfc822valid \
 			x509_name_match
 
 rfc2047e_CFLAGS=	-DTEST
@@ -106,9 +106,6 @@ unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
 netrc_SOURCES=	netrc.c xmalloc.c report.c
 netrc_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
-
-mxget_SOURCES=	mxget.c
-mxget_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
 @SET_MAKE@
 
