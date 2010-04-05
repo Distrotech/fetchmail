@@ -822,8 +822,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 
 	SSL_load_error_strings();
 	SSL_library_init();
-	
-#ifdef SSL_ENABLE
+	OpenSSL_add_all_algorithms(); /* see Debian Bug#576430 and manpage */
+
         if (stat("/dev/random", &randstat)  &&
             stat("/dev/urandom", &randstat)) {
           /* Neither /dev/random nor /dev/urandom are present, so add
@@ -839,8 +839,6 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
             RAND_add (buf, sizeof buf, 0.1);
           }
         }
-#endif /* SSL_ENABLE */
-
 
 	if( sock < 0 || (unsigned)sock > FD_SETSIZE ) {
 		report(stderr, GT_("File descriptor out of range for SSL") );

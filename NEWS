@@ -50,6 +50,12 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail-6.3.16 (not yet released):
+
+# BUG FIXES
+* Call OpenSSL_add_all_algorithms(). Sjoerd Simons, to fix Debian Bug #576430.
+  Not that OpenSSL would document this in any findable or useful way :-(
+
 fetchmail-6.3.15 (released 2010-03-28, 25572 LoC):
 
 # FEATURE
