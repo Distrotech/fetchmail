@@ -41,7 +41,7 @@ const char *program_name = "rfc822";
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
-#define BEFORE_EOL(s)	strcspn((s), "\r\n"))
+#define BEFORE_EOL(s)	(strcspn((s), "\r\n"))
 
 char *reply_hack(
 	char *buf		/* header to be hacked */,
