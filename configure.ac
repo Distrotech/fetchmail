@@ -244,11 +244,6 @@ done
 dnl Check for libcrypt -- it may live in libc or libcrypt, as on IRIX
 AC_CHECK_FUNC(crypt, , AC_CHECK_LIB(crypt,crypt))
 
-dnl Check for RSA refersence library in case we're using SSL
-AC_CHECK_LIB(rsaref, RSAPublicDecrypt)
-
-dnl AC_FUNC_SETVBUF_REVERSED
-
 dnl Check for usable void pointer type
 AC_MSG_CHECKING(use of void pointer type)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[char *p;
