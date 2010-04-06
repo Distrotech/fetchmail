@@ -1173,6 +1173,15 @@ username and the part to the right as the NTLM domain.
 
 .SS Secure Socket Layers (SSL) and Transport Layer Security (TLS)
 .PP
+Note that fetchmail currently uses the OpenSSL library, which is
+severely underdocumented, so failures may occur just because the
+programmers are not aware of OpenSSL's requirement of the day.
+For instance, since v6.3.16, fetchmail calls
+OpenSSL_add_all_algorithms(), which is necessary to support certificates
+with SHA256 on OpenSSL 0.9.8 -- this information is deeply hidden in the
+documentation and not at all obvious.  Please do not hesitate to report
+subtle SSL failures.
+.PP
 You can access SSL encrypted services by specifying the \-\-ssl option.
 You can also do this using the "ssl" user option in the .fetchmailrc
 file. With SSL encryption enabled, queries are initiated over a
