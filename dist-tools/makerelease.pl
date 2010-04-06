@@ -5,48 +5,59 @@
 # in RELEASE_NOTES
 #
 
+my $project = "fetchmail";
+my $website = "http://developer.berlios.de/projects/$project";
+my $mailfrom = "<$project-devel\@lists.berlios.de> (Fetchmail Development Team)";
+my $distsufx = '.tar.bz2';
+
+# ---------------------------------------------------------------------
+
 use POSIX qw(strftime);
-$tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
+use Getopt::Long;
+use strict vars;
 
-$project = "fetchmail";
-$website = "http://developer.berlios.de/projects/$project";
-$mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
-
+# check environment
+(-r "NEWS" and -r "fetchmail.c" and -r "configure.ac") or die "Please cd to the top-level source directory!";
 die "Need GNU sort!" unless `sort --version | head -n1` =~ /GNU/;
+system("lftp --version >/dev/null 2>&1") and die "lftp not found!";
 
 # parse options
-$diffs = 0;
-$verbose = 0;
-$null = ">/dev/null";
-$errnull = "2>/dev/null";
-while ($i = shift @ARGV)
-{
-	if ($i =~ /^(--diffs|-d)$/i)
-	{
-		die "$0 does not yet work with --diffs - needs to be updated for Git first!";
-		$diffs = 1;
-		next;
-	}
+my $diffs = 0;
+my $verbose = 0;
+my $help = 0;
+my $null = ">/dev/null";
+my $errnull = "2>/dev/null";
 
-	if ($i =~ /^(--verbose|-v)$/i)
-	{
-		$verbose = 1;
-		$null = "";
-		next;
-	}
+sub usage($$) {
+    my ($own, $rc) = @_;
 
-	die "Error: Unknown option: $i\n";
+    print STDERR "Usage: $_[0] [--verbose,-v] [--help,-h,-?]\n";
+    exit($_[1]);
 }
 
+GetOptions("diffs|d" => \$diffs, "verbose|v" => \$verbose, "help|h|?" => \$help)
+    or usage($0, 1);
+
+usage($0, 0) if $help;
+
+die "$0 does not yet work with --diffs - needs to be updated for Git first!" if $diffs;
+
+if ($verbose) {
+    $null = "";
+}
+
+my $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
+
 # extract version from source
-$version =`grep 'AC_INIT' configure.ac`;
+my $version =`grep 'AC_INIT' configure.ac`;
 $version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\,.*\)/;
 $version = $1;
 die "cannot determine version" unless defined $1;
-$tag = "RELEASE_$version";
+my $tag = "RELEASE_$version";
 $tag =~ tr/./-/;
 
 # extract existing tags
+my @versions;
 open(ID, "git tag | sort -t- -k1,1 -k2,2n -k3,3n |") || die "cannot run git tag: $!\naborting";
 while (<ID>) {
 	chomp;
@@ -56,6 +67,7 @@ while (<ID>) {
 }
 close ID || die "git tag   failed, aborting";
 
+my $oldtag; my $oldver;
 if ($versions[0] eq $tag) {
 	$tag = $versions[0];
 	$oldtag = $versions[1];
@@ -64,7 +76,7 @@ if ($versions[0] eq $tag) {
 	$oldtag = $versions[0];
 }
 
-$pwd = `pwd`; chomp $pwd;
+my $pwd = `pwd`; chomp $pwd;
 
 $ENV{PATH} .= ":$pwd/dist-tools:$pwd/dist-tools/shipper";
 
@@ -75,12 +87,20 @@ if (-d "autom4te.cache") {
 		and die "Failure in removing autom4te.cache";
 }
 
-if (system("autoreconf -ifs") . ($verbose ? 'v' : '')) {
+printf "### autoreconf\n";
+
+if (system("autoreconf -ifs" . ($verbose ? 'v' : ''))) {
 	die("Failure in regenerating autoconf files\n");
 }
 
+print "### configure\n";
+
+if (system("mkdir -p autobuild && cd autobuild " 
+	. " && ../configure -C --silent ")) { die("Configuration failure\n"); }
+
 print "### Test-building the software...\n";
-if (system("mkdir -p autobuild && cd autobuild && ../configure -C --silent && make -s clean && make " . ($verbose ? '' : '-s') . " check distcheck")) {
+if (system("cd autobuild && make -s clean"
+	. " && make " . ($verbose ? '' : '-s') . " check distcheck lsm")) {
 	die("Compilation failure\n");
 }
 
@@ -94,7 +114,7 @@ The $version release of $project is now available at the usual locations,
 including <$website>.
 
 The source archive is available at:
-<$website/$project-${version}.tar.gz>
+<$website/$project-$version$distsufx>
 
 Here are the release notes:
 
@@ -149,6 +169,24 @@ if ($diffs) {
 #unlink("$tmp/$project.PREAMBLE.$$");
 unlink("$tmp/$project.DIFFS.$$");
 
-print "Done\n";
+print "### Signing tarballs...\n";
+system("cd autobuild && gpg -ba --sign $project-$version$distsufx");
+
+print "### Uploading\n";
+print "=== local\n";
+
+system("cp", "autobuild/$project-$version$distsufx", "autobuild/$project-$version$distsufx.asc", "$ENV{HOME}/public_html/fetchmail/") and die "Cannot upload to \$HOME/public_html/fetchmail/: $!";
+
+print "=== ibiblio\n";
+
+system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc $project-$version.lsm ; quit\" ibiblio.org:/incoming/linux/") and warn "Upload to ibiblio failed: $!";
+
+print "=== berlios\n";
+
+system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc ; quit\" ftp.berlios.de:/incoming/") and warn "Upload to berlios failed: $!";
+
+print "Done - please review final tasks\n";
+
+system("cat RELEASE-INSTRUCTIONS");
 
 # makerelease ends here

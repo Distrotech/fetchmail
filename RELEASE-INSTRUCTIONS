@@ -8,12 +8,13 @@ To do a release:
 
 - Tag the new release with a signed tag.
 
-- Upload sig and tarball to ~/public_html/fetchmail/ and edit index.html
-  for the new files, NEWS, and the new release and last update.
+- cd to ~/public_html/fetchmail and edit index.html for the new tarballs
+  and NEWS files and last update.
 
-- Upload sig and tarball to ftp.berlios.de:/incoming/ and release
-
-- Upload lsm and tarball to ibiblio.org:/incoming/linux/
+- These would be done automatically by makerelease.pl:
+  - Upload sig and tarball to ~/public_html/fetchmail/
+  - Upload sig and tarball to ftp.berlios.de:/incoming/ and release
+  - Upload lsm, sig and tarball to ibiblio.org:/incoming/linux/
 
 - Update the fetchmail website for version, link to release nodes
   (update release_id) and last update, commit, and upload.

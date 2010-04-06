@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-03-19 19:41+0100\n"
+"POT-Creation-Date: 2010-04-06 21:17+0200\n"
 "PO-Revision-Date: 2009-10-06 19:04+0200\n"
 "Last-Translator: Francisco Molinero <paco@byasl.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -2554,14 +2554,14 @@ msgstr "Error de sistema desconocido"
 msgid "%s (log message incomplete)\n"
 msgstr "%s (mensaje de registro incompleto)\n"
 
-#: rfc822.c:76
-#, c-format
-msgid "About to rewrite %s"
+#: rfc822.c:78
+#, fuzzy, c-format
+msgid "About to rewrite %.*s...\n"
 msgstr "A punto de reescribir %s"
 
-#: rfc822.c:212
-#, c-format
-msgid "Rewritten version is %s\n"
+#: rfc822.c:215
+#, fuzzy, c-format
+msgid "...rewritten version is %.*s.\n"
 msgstr "La versión reescrita es %s\n"
 
 #: rpa.c:118
@@ -3098,27 +3098,27 @@ msgstr "Falló la verificación del certificado del servidor: %s\n"
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "Emisor desconocido (primeros %d caracteres): %s\n"
 
-#: socket.c:846
+#: socket.c:844
 msgid "File descriptor out of range for SSL"
 msgstr "Descriptor de archivo fuera de rango para SSL"
 
-#: socket.c:862
+#: socket.c:860
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr ""
 "El protocolo SSL «%s» especificado es inválido, usando el predeterminado "
 "(SSLv23).\n"
 
-#: socket.c:938
+#: socket.c:936
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr ""
 "¡La verificación de certificado/huella digital fue de algún modo omitida!\n"
 
-#: socket.c:1016
+#: socket.c:1014
 msgid "Cygwin socket read retry\n"
 msgstr "Reintento de lectura del zócalo cygwin\n"
 
-#: socket.c:1019
+#: socket.c:1017
 msgid "Cygwin socket read retry failed!\n"
 msgstr "¡Falló el reintento de lectura del zócalo cygwin\n"
 

@@ -25,7 +25,8 @@ Author:		matthias.andree@gmx.de (Matthias Andree)
 Maintained-by:	fetchmail-devel@lists.berlios.de
 Primary-site:	http://developer.berlios.de/projects/fetchmail
 		`ls -sk @PACKAGE@-@VERSION@.tar.bz2 | \
-		 @AWK@ '{ printf "%dkB", $1 }'` @PACKAGE@-@VERSION@.tar.bz2
+		 @AWK@ '{ printf "%4dkB", $1 }'` @PACKAGE@-@VERSION@.tar.bz2
+		   1kB @PACKAGE@-@VERSION@.tar.bz2.asc
 Platforms:	All
 Copying-policy: GPL
 End

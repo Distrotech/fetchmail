@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.15\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-03-19 19:41+0100\n"
+"POT-Creation-Date: 2010-04-06 21:17+0200\n"
 "PO-Revision-Date: 2010-03-22 12:59+0100\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -2490,14 +2490,14 @@ msgstr "Neznámá chyba systému"
 msgid "%s (log message incomplete)\n"
 msgstr "%s (zpráva protokolu nedokončena)\n"
 
-#: rfc822.c:76
-#, c-format
-msgid "About to rewrite %s"
+#: rfc822.c:78
+#, fuzzy, c-format
+msgid "About to rewrite %.*s...\n"
 msgstr "Chystám se přepsat %s"
 
-#: rfc822.c:212
-#, c-format
-msgid "Rewritten version is %s\n"
+#: rfc822.c:215
+#, fuzzy, c-format
+msgid "...rewritten version is %.*s.\n"
 msgstr "Přepsaná verze je %s\n"
 
 #: rpa.c:118
@@ -3024,24 +3024,24 @@ msgstr "Chyba ověřování certifikátu serveru: %s\n"
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "neznámý vydavatel (prvních %d znaků): %s\n"
 
-#: socket.c:846
+#: socket.c:844
 msgid "File descriptor out of range for SSL"
 msgstr "Deskriptor souboru mimo rozsah pro SSL"
 
-#: socket.c:862
+#: socket.c:860
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Zadán neplatný protokol SSL „%s“, používám implicitní (SSLv23).\n"
 
-#: socket.c:938
+#: socket.c:936
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Ověření certifikátu/otisku bylo nějak přeskočeno!\n"
 
-#: socket.c:1016
+#: socket.c:1014
 msgid "Cygwin socket read retry\n"
 msgstr "Další pokus čtení ze socketu Cygwin\n"
 
-#: socket.c:1019
+#: socket.c:1017
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Další pokus čtení ze socketu Cygwin selhal!\n"
 
