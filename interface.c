@@ -178,7 +178,7 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	    /* hide slash and trailing info from ifname */
 	    if (sp)
 		*sp = '\0';
-	    result = _get_ifinfoGT_(socket_fd, stats_file, ifname, ifinfo);
+	    result = _get_ifinfoGT_(socket_fd, stats_file, tmp, ifinfo);
 	    free(tmp);
 	}
 	if (socket_fd >= 0)

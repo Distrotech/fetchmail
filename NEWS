@@ -55,6 +55,10 @@ removed from a 6.4.0 or newer release.)
 fetchmail-6.3.16 (not yet released):
 
 # BUG FIXES
+# BUG FIX
+* Fix --interface option, broken in 6.3.15. Reported by Vladmimir Stavrinov.
+  Fixes Debian Bug #576717.
+
 * Call OpenSSL_add_all_algorithms(). This is needed to support non-mandatory
   algorithms in certificates. Sjoerd Simons, to fix Debian Bug #576430.
   OpenSSL 0.9.8* does not load - for instance - the SHA256 digest by default.
