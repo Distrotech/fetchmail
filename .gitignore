@@ -2,6 +2,7 @@
 #*#
 ABOUT-NLS
 aclocal.m4
+autobuild/
 autom4te.cache
 build*
 build*/
@@ -13,6 +14,7 @@ config.sub
 configure
 cscope.out
 depcomp
+dox/
 install-sh
 m4/
 Makefile.in
