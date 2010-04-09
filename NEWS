@@ -52,6 +52,13 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail-6.3.17 (not yet released):
+
+# DOCUMENTATION
+* Fix table of global option to read "set softbounce" where there used to be a
+  2nd copy of "set spambounce".  Patch by Michael Banack, BerliOS Bug #17067.
+
+
 fetchmail-6.3.16 (released 2010-04-06, 25574 LoC):
 
 # BUG FIX
