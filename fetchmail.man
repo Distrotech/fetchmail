@@ -1666,7 +1666,7 @@ set no softbounce	\&	\&	T{
 Delete permanently undeliverable mail. It is recommended to use this
 option if the configuration has been thoroughly tested.
 T}
-set    spambounce	\&	\&	T{
+set    softbounce	\&	\&	T{
 Keep permanently undeliverable mail as though a temporary error had
 occurred (default).
 T}
