@@ -32,18 +32,36 @@ int prc_lineno = 1;
 %%
 
 \"[^\"]*\"	{
-			yytext[yyleng-1] = '\0';
-			escapes(yytext+1, yytext);
-			yyleng = strlen(yytext);
-			yylval.sval = yytext;
+			static char *in = NULL;
+			static size_t ins = 0;
+
+			if ((size_t)yyleng + 1 > ins) {
+			    ins = yyleng + 1;
+			    in = (char *)xrealloc(in, ins);
+			}
+			memcpy(in, yytext, yyleng);
+
+			in[yyleng-1] = '\0';
+			escapes(in+1, in);
+			yyleng = strlen(in);
+			yylval.sval = in;
                         SETSTATE(0);
 			return STRING;
 		}
 \'[^\']*\'	{
-			yytext[yyleng-1] = '\0';
-			escapes(yytext+1, yytext);
-			yyleng = strlen(yytext);
-			yylval.sval = yytext;
+			static char *in = NULL;
+			static size_t ins = 0;
+
+			if ((size_t)yyleng + 1 > ins) {
+			    ins = yyleng + 1;
+			    in = (char *)xrealloc(in, ins);
+			}
+			memcpy(in, yytext, yyleng);
+
+			in[yyleng-1] = '\0';
+			escapes(in+1, in);
+			yyleng = strlen(in);
+			yylval.sval = in;
                         SETSTATE(0);
 			return STRING;
 		}
@@ -51,8 +69,8 @@ int prc_lineno = 1;
 "*"		{ BEGIN(0); return WILDCARD; }
 
 <NAME>[^=;:, \t\r\n]+	{
-			static char *in;
-			static size_t ins;
+			static char *in = NULL;
+			static size_t ins = 0;
 
 			if ((size_t)yyleng + 1 > ins) {
 			    ins = yyleng + 1;
@@ -220,9 +238,19 @@ options		{/* EMPTY */}
 -?[0-9]+	{ yylval.number = atoi(yytext); return NUMBER; }
 
 [^=;:, \t\r\n]+	{
-			escapes(yytext, yytext);
-			yyleng = strlen(yytext);
-			yylval.sval = yytext;
+			static char *in = NULL;
+			static size_t ins = 0;
+
+			if ((size_t)yyleng + 1 > ins) {
+			    ins = yyleng + 1;
+			    in = (char *)xrealloc(in, ins);
+			}
+			memcpy(in, yytext, yyleng);
+			in[yyleng] = '\0';
+
+			escapes(in, in);
+			yyleng = strlen(in);
+			yylval.sval = in;
 			return STRING;
 		}
 
