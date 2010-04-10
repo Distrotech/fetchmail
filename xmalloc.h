@@ -1,4 +1,4 @@
-/* xmalloc.h -- split out of fetchmail.h */
+/** \file xmalloc.h -- Declarations for the fail-on-OOM string functions */
 
 #ifndef XMALLOC_H
 #define XMALLOC_H
@@ -11,9 +11,18 @@
 #else
 #define XMALLOCTYPE char
 #endif
-XMALLOCTYPE *xmalloc(size_t);
-XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t);
+
+/** Allocate \a n characters of memory, abort program on failure. */
+XMALLOCTYPE *xmalloc(size_t n);
+
+/** Reallocate \a n characters of memory, abort program on failure. */
+XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t n);
+
+/** Free memory at position \a p and set pointer \a p to NULL afterwards. */
 #define xfree(p) { if (p) { free(p); } (p) = 0; }
-char *xstrdup(const char *);
+
+/** Duplicate string \a src to a newly malloc()d memory region and return its
+ * pointer, abort program on failure. */
+char *xstrdup(const char *src);
 
 #endif
