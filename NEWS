@@ -54,6 +54,11 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.17 (not yet released):
 
+# REGRESSION FIX
+* Fix string handling in rcfile scanner, which caused fetchmail to misparse a
+  run control file in certain circumstances.  Fixes BerliOS bug #14257.
+  Patch by Michael Banack.  This fixes a regression introduced before 6.3.0.
+
 # DOCUMENTATION
 * Fix table of global option to read "set softbounce" where there used to be a
   2nd copy of "set spambounce".  Patch by Michael Banack, BerliOS Bug #17067.
