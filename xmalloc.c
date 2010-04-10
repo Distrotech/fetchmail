@@ -69,4 +69,16 @@ char *strdup(const char *s)
 }
 #endif /* !HAVE_STRDUP */
 
+char *xstrndup(const char *s, size_t len)
+{
+    char *p;
+    size_t l = strlen(s);
+
+    if (len < l) l = len;
+    p = (char *)xmalloc(l + 1);
+    memcpy(p, s, l);
+    p[l] = '\0';
+    return p;
+}
+
 /* xmalloc.c ends here */

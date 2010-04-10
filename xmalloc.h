@@ -25,4 +25,10 @@ XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t n);
  * pointer, abort program on failure. */
 char *xstrdup(const char *src);
 
+/** Duplicate at most the first \a n characters from \a src to a newly
+ * malloc()d memory region and NUL-terminate it, and return its pointer, abort
+ * program on failure. The memory size is the lesser of either the string
+ * length including NUL byte or n + 1. */
+char *xstrndup(const char *src, size_t n);
+
 #endif
