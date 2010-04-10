@@ -9,6 +9,7 @@
 
 #include "config.h"
 #include "fetchmail.h"
+#include "xmalloc.h"
 #include "rcfile_y.h"
 
 int prc_lineno = 1;
@@ -31,57 +32,22 @@ int prc_lineno = 1;
 
 %%
 
-\"[^\"]*\"	{
-			static char *in = NULL;
-			static size_t ins = 0;
-
-			if ((size_t)yyleng + 1 > ins) {
-			    ins = yyleng + 1;
-			    in = (char *)xrealloc(in, ins);
-			}
-			memcpy(in, yytext, yyleng);
-
-			in[yyleng-1] = '\0';
-			escapes(in+1, in);
-			yyleng = strlen(in);
-			yylval.sval = in;
-                        SETSTATE(0);
-			return STRING;
-		}
+\"[^\"]*\"	|
 \'[^\']*\'	{
-			static char *in = NULL;
-			static size_t ins = 0;
-
-			if ((size_t)yyleng + 1 > ins) {
-			    ins = yyleng + 1;
-			    in = (char *)xrealloc(in, ins);
-			}
-			memcpy(in, yytext, yyleng);
-
-			in[yyleng-1] = '\0';
-			escapes(in+1, in);
-			yyleng = strlen(in);
+			char *in = xstrndup(yytext+1, yyleng-2);
+			escapes(in, in);
 			yylval.sval = in;
-                        SETSTATE(0);
+			SETSTATE(0);
 			return STRING;
 		}
 
 "*"		{ BEGIN(0); return WILDCARD; }
 
 <NAME>[^=;:, \t\r\n]+	{
-			static char *in = NULL;
-			static size_t ins = 0;
-
-			if ((size_t)yyleng + 1 > ins) {
-			    ins = yyleng + 1;
-			    in = (char *)xrealloc(in, ins);
-			}
-			memcpy(in, yytext, yyleng);
-			in[yyleng] = '\0';
+			char *in = xstrdup(yytext);
 			escapes(in, in);
-			yyleng = strlen(in);
 			yylval.sval = in;
-                        SETSTATE(0);
+			SETSTATE(0);
 			return STRING;
 		}
 
@@ -238,18 +204,8 @@ options		{/* EMPTY */}
 -?[0-9]+	{ yylval.number = atoi(yytext); return NUMBER; }
 
 [^=;:, \t\r\n]+	{
-			static char *in = NULL;
-			static size_t ins = 0;
-
-			if ((size_t)yyleng + 1 > ins) {
-			    ins = yyleng + 1;
-			    in = (char *)xrealloc(in, ins);
-			}
-			memcpy(in, yytext, yyleng);
-			in[yyleng] = '\0';
-
+			char *in = xstrdup(yytext);
 			escapes(in, in);
-			yyleng = strlen(in);
 			yylval.sval = in;
 			return STRING;
 		}
