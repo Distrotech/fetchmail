@@ -1,7 +1,7 @@
 %{
 
 /*
- * rcfile_l.l -- lexer for the run control file
+ * rcfile_l.l -- lexer for the run control file, to be used with GNU flex.
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -23,11 +23,9 @@ int prc_lineno = 1;
 
 %}
 
-/* this doesn't work with Linux lex, see the INSTALL file */
-%o 7000
-%a 4000
-%p 3000
 %option nounput noyywrap
+%option warn nodefault
+%option 8bit batch
 
 %s NAME AUTH
 
