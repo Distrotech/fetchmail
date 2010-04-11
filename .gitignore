@@ -23,3 +23,7 @@ mkinstalldirs
 py-compile
 tags
 ylwrap
+po/stamp-po
+rcfile_l.c
+rcfile_y.c
+rcfile_y.h
