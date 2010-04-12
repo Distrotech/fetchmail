@@ -107,6 +107,8 @@ void envquery(int argc, char **argv)
 	user = xstrdup(pwp->pw_name);
     }
 
+    endpwent();
+
     /* compute user's home directory */
     home = getenv("HOME_ETC");
     if (!home && !(home = getenv("HOME")))
