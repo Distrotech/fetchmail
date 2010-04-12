@@ -54,6 +54,9 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.17 (not yet released):
 
+# BUG FIX
+* Plug memory leak when using a "defaults" entry in the run control file.
+
 # REGRESSION FIX
 * Fix string handling in rcfile scanner, which caused fetchmail to misparse a
   run control file in certain circumstances.  Fixes BerliOS bug #14257.

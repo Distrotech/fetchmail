@@ -1094,12 +1094,18 @@ static int load_params(int argc, char **argv, int optind)
 
     /*
      * If there's a defaults record, merge it and lose it.
+     * FIXME: we don't currently free all entries that might be in struct query.
      */ 
     if (querylist && strcmp(querylist->server.pollname, "defaults") == 0)
     {
+	struct query *tmpq;
+
 	for (ctl = querylist->next; ctl; ctl = ctl->next)
 	    optmerge(ctl, querylist, FALSE);
+	tmpq = querylist;
 	querylist = querylist->next;
+	free(tmpq->server.pollname);
+	free(tmpq);
     }
 
     /* don't allow a defaults record after the first */
