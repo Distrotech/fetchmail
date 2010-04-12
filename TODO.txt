@@ -1,5 +1,8 @@
 Note that there is a separate todo.html with different content than this.
 
+- Add --sslcertfile option to use a bundled certs file instead. This
+  circumvents c_rehash issues ;)
+
 soon - MUST:
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - put bare IP addresses in brackets for SMTP (check if there are RFC
@@ -50,6 +53,7 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- Properly free host/user entries (through C++ class instantiation and destructors...)
 - Remove stupid options, such as spambounce, or deferred bounces for anything
   but wrong addresses
 - Do not ever guess envelope from content headers such as To:/Cc:/Resent-To: or
