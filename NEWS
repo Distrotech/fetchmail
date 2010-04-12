@@ -65,6 +65,8 @@ fetchmail-6.3.17 (not yet released):
 # DOCUMENTATION
 * Fix table of global option to read "set softbounce" where there used to be a
   2nd copy of "set spambounce".  Patch by Michael Banack, BerliOS Bug #17067.
+* In the --sslcertpath description, mention that OpenSSL upgrade (and a 0.9.X
+  to 1.0.0 upgrade in particular) may require running c_rehash.
 
 
 fetchmail-6.3.16 (released 2010-04-06, 25574 LoC):
