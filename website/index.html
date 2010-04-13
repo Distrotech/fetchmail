@@ -42,6 +42,15 @@
 <h1>Fetchmail</h1>
 
 <div style="background-color:#c0ffc0;color:#000000;">
+    <h1>SSL issues after upgrade to 6.3.16 or OpenSSL 1.0.0?</h1>
+    <p>If your fetchmail upgrade entails an upgrade of the OpenSSL
+    library to 1.0.0, remember to re-run <kbd>c_rehash
+	/path/to/certs</kbd>, where the last part is whatever argument
+    you give to fetchmail's <code>sslcertpath</code> option. Details:
+    please <a
+	href="fetchmail-FAQ.html#R14">see fetchmail's FAQ item
+	R14.</a>.</p>
+
     <h1>NEWS: FETCHMAIL 6.3.16 RELEASE</h1>
     <p>On 2010-04-06, <a
 	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.16
