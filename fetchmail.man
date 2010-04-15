@@ -510,10 +510,10 @@ fetchmail versions.
 .B \-\-sslcertpath <directory>
 (Keyword: sslcertpath)
 .br
-Sets the directory fetchmail uses to look up local certificates. The default
-is your OpenSSL default one. The directory must be hashed as OpenSSL expects
-it - every time you add or modify a certificate in the directory, you need
-to use the \fBc_rehash\fP tool (which comes with OpenSSL in the tools/
+Sets the directory fetchmail uses to look up local certificates. The default is
+your OpenSSL default directory. The directory must be hashed the way OpenSSL
+expects it - every time you add or modify a certificate in the directory, you
+need to use the \fBc_rehash\fP tool (which comes with OpenSSL in the tools/
 subdirectory). Also, after OpenSSL upgrades, you may need to run
 \fBc_rehash\fP; particularly when upgrading from 0.9.X to 1.0.0.
 .TP

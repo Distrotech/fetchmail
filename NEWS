@@ -54,13 +54,21 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.17 (not yet released):
 
-# BUG FIX
-* Plug memory leak when using a "defaults" entry in the run control file.
-
 # REGRESSION FIX
 * Fix string handling in rcfile scanner, which caused fetchmail to misparse a
   run control file in certain circumstances.  Fixes BerliOS bug #14257.
   Patch by Michael Banack.  This fixes a regression introduced before 6.3.0.
+
+# BUG FIXES
+* Plug memory leak when using a "defaults" entry in the run control file.
+* Do not print SSL certificate mismatches unless verbose or --sslcertck is
+  enabled.
+
+# CHANGES
+* Usability: SSL certificate chains are fully printed in -v -v mode, and there
+  are now helpful pointers to --sslcertpath and c_rehash for "unable to get
+  local issuer certificate" and self-signed certificates -- these usually hint
+  to missing root signing CAs in the certs directory.
 
 # DOCUMENTATION
 * Fix table of global option to read "set softbounce" where there used to be a

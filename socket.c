@@ -569,7 +569,9 @@ static	int _check_fp;
 static	char *_check_digest;
 static 	char *_server_label;
 static	int _depth0ck;
+static	int _firstrun;
 static	int _prev_err;
+static	int _verify_ok;
 
 SSL *SSLGetContext( int sock )
 {
@@ -586,6 +588,7 @@ SSL *SSLGetContext( int sock )
    errors, and perform additional validation (e.g. CN matches) */
 static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 {
+#define SSLverbose (((outlevel) >= O_DEBUG) || ((outlevel) >= O_VERBOSE && (depth) == 0)) 
 	char buf[257];
 	X509 *x509_cert;
 	int err, depth, i;
@@ -603,10 +606,21 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	subj = X509_get_subject_name(x509_cert);
 	issuer = X509_get_issuer_name(x509_cert);
 
-	if (depth == 0 && !_depth0ck) {
-		_depth0ck = 1;
+	if (outlevel >= O_VERBOSE) {
+		if (depth == 0 && SSLverbose)
+			report(stderr, GT_("Server certificate:\n"));
+		else {
+			if (_firstrun) {
+				_firstrun = 0;
+				if (SSLverbose)
+					report(stdout, GT_("Certificate chain, from root to peer, starting at depth %d:\n"), depth);
+			} else {
+				if (SSLverbose)
+					report(stdout, GT_("Certificate at depth %d:\n"), depth);
+			}
+		}
 
-		if (outlevel >= O_VERBOSE) {
+		if (SSLverbose) {
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
 				report(stdout, GT_("Issuer Organization: %s\n"), (tt = sdump(buf, i)));
 				xfree(tt);
@@ -622,23 +636,33 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			} else
 				report(stdout, GT_("Unknown Issuer CommonName\n"));
 		}
+	}
+
+	if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
+		if (SSLverbose) {
+			report(stdout, GT_("Subject CommonName: %s\n"), (tt = sdump(buf, i)));
+			xfree(tt);
+		}
+		if ((size_t)i >= sizeof(buf) - 1) {
+			/* Possible truncation. In this case, this is a DNS name, so this
+			 * is really bad. We do not tolerate this even in the non-strict case. */
+			report(stderr, GT_("Bad certificate: Subject CommonName too long!\n"));
+			return (0);
+		}
+		if ((size_t)i > strlen(buf)) {
+			/* Name contains embedded NUL characters, so we complain. This is likely
+			 * a certificate spoofing attack. */
+			report(stderr, GT_("Bad certificate: Subject CommonName contains NUL, aborting!\n"));
+			return 0;
+		}
+	}
+
+	if (depth == 0) { /* peer certificate */
+		if (!_depth0ck) {
+			_depth0ck = 1;
+		}
+
 		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
-			if (outlevel >= O_VERBOSE) {
-				report(stdout, GT_("Server CommonName: %s\n"), (tt = sdump(buf, i)));
-				xfree(tt);
-			}
-			if ((size_t)i >= sizeof(buf) - 1) {
-				/* Possible truncation. In this case, this is a DNS name, so this
-				 * is really bad. We do not tolerate this even in the non-strict case. */
-				report(stderr, GT_("Bad certificate: Subject CommonName too long!\n"));
-				return (0);
-			}
-			if ((size_t)i > strlen(buf)) {
-				/* Name contains embedded NUL characters, so we complain. This is likely
-				 * a certificate spoofing attack. */
-				report(stderr, GT_("Bad certificate: Subject CommonName contains NUL, aborting!\n"));
-				return 0;
-			}
 			if (_ssl_server_cname != NULL) {
 				char *p1 = buf;
 				char *p2 = _ssl_server_cname;
@@ -690,12 +714,13 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					matched = 1;
 				}
 				if (!matched) {
-					report(stderr,
-					    GT_("Server CommonName mismatch: %s != %s\n"),
-					    (tt = sdump(buf, i)), _ssl_server_cname );
-					xfree(tt);
-					if (ok_return && strict)
-						return (0);
+					if (strict || SSLverbose) {
+						report(stderr,
+								GT_("Server CommonName mismatch: %s != %s\n"),
+								(tt = sdump(buf, i)), _ssl_server_cname );
+						xfree(tt);
+					}
+					ok_return = 0;
 				}
 			} else if (ok_return) {
 				report(stderr, GT_("Server name not set, could not verify certificate!\n"));
@@ -750,13 +775,30 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 
 	if (err != X509_V_OK && err != _prev_err && !(_check_fp != 0 && _check_digest && !strict)) {
 		_prev_err = err;
-		report(stderr, GT_("Server certificate verification error: %s\n"), X509_verify_cert_error_string(err));
-		/* We gave the error code, but maybe we can add some more details for debugging */
+					
+                report(stderr, GT_("Server certificate verification error: %s\n"), X509_verify_cert_error_string(err));
+                /* We gave the error code, but maybe we can add some more details for debugging */
+
 		switch (err) {
 		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
 			X509_NAME_oneline(issuer, buf, sizeof(buf));
 			buf[sizeof(buf) - 1] = '\0';
 			report(stderr, GT_("unknown issuer (first %d characters): %s\n"), (int)(sizeof(buf)-1), buf);
+			report(stderr, GT_("This error usually happens when the server provides an incomplete certificate "
+						"chain, which is nothing fetchmail could do anything about.  For details, "
+						"please see the README.SSL-SERVER document that comes with fetchmail.\n"));
+			break;
+		case X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT:
+		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
+		case X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN:
+			X509_NAME_oneline(subj, buf, sizeof(buf));
+			buf[sizeof(buf) - 1] = '\0';
+			report(stderr, GT_("This means that the root signing certificate (issued for %s) is not in the "
+						"directory of trusted CA certificates, or that c_rehash needs to be run "
+						"on that directory. For details, please "
+						"see the documentation of --sslcertpath in the manual page.\n"), buf);
+			break;
+		default:
 			break;
 		}
 	}
@@ -764,6 +806,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	 * If not in strict checking mode (--sslcertck), override this
 	 * and pretend that verification had succeeded.
 	 */
+	_verify_ok &= ok_return;
 	if (!strict)
 		ok_return = 1;
 	return (ok_return);
@@ -898,6 +941,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	_check_fp = 1;
 	_check_digest = fingerprint;
 	_depth0ck = 0;
+	_firstrun = 1;
+	_verify_ok = 1;
 	_prev_err = -1;
 
 	if( mycert || mykey ) {
@@ -946,6 +991,11 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 			}
 			return(-1);
 		}
+	}
+
+	if (!certck && (SSL_get_verify_result(_ssl_context[sock]) != X509_V_OK
+|| !_verify_ok)) {
+		report(stderr, GT_("Warning: the connection is insecure, continuing anyways. (Better use --sslcertck!)\n"));
 	}
 
 	return(0);
