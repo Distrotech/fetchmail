@@ -25,6 +25,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #include  <stdlib.h>
 
 #include "fetchmail.h"
+#include "sdump.h"
 
 #ifndef MAIN
 #include "i18n.h"
@@ -74,9 +75,10 @@ char *reply_hack(
     }
 
 #ifndef MAIN
-    if (outlevel >= O_DEBUG)
-	report_build(stdout, GT_("About to rewrite %.*s...\n"),
-			(int)BEFORE_EOL(buf), buf);
+    if (outlevel >= O_DEBUG) {
+	report_build(stdout, GT_("About to rewrite %s...\n"), (cp = sdump(buf, BEFORE_EOL(buf))));
+	xfree(cp);
+    }
 
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
@@ -211,9 +213,12 @@ char *reply_hack(
     }
 
 #ifndef MAIN
-    if (outlevel >= O_DEBUG)
-	report_complete(stdout, GT_("...rewritten version is %.*s.\n"),
-			(int)BEFORE_EOL(buf), buf);
+    if (outlevel >= O_DEBUG) {
+	report_complete(stdout, GT_("...rewritten version is %s.\n"),
+			(cp = sdump(buf, BEFORE_EOL(buf))));
+	xfree(cp)
+    }
+
 #endif /* MAIN */
     *length = strlen(buf);
     return(buf);

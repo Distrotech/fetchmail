@@ -20,6 +20,7 @@
 
 #include "fetchmail.h"
 #include "i18n.h"
+#include "sdump.h"
 
 /*
  * Machinery for handling UID lists live here.  This is mainly to support
@@ -260,8 +261,11 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	if (uidlcount)
 	{
 	    report_build(stdout, GT_("Scratch list of UIDs:"));
-	    for (idp = scratchlist; idp; idp = idp->next)
-		report_build(stdout, " %s", idp->id);
+	    for (idp = scratchlist; idp; idp = idp->next) {
+		char *t = sdump(idp->id, strlen(idp->id));
+		report_build(stdout, " %s", t);
+		free(t);
+	    }
 	    if (!idp)
 		report_build(stdout, GT_(" <empty>"));
 	    report_complete(stdout, "\n");
@@ -517,8 +521,11 @@ void uid_swap_lists(struct query *ctl)
 	    report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
 	else
 	    report_build(stdout, GT_("New UID list from %s:"), ctl->server.pollname);
-	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next)
-	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
+	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next) {
+	    char *t = sdump(idp->id, strlen(idp->id));
+	    report_build(stdout, " %s = %d", t, idp->val.status.mark);
+	    free(t);
+        }
 	if (!idp)
 	    report_build(stdout, GT_(" <empty>"));
 	report_complete(stdout, "\n");
@@ -567,8 +574,11 @@ void uid_discard_new_list(struct query *ctl)
 	/* this is now a merged list! the mails which were seen in this
 	 * poll are marked here. */
 	report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
-	for (idp = ctl->oldsaved; idp; idp = idp->next)
-	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
+	for (idp = ctl->oldsaved; idp; idp = idp->next) {
+	    char *t = sdump(idp->id, strlen(idp->id));
+	    report_build(stdout, " %s = %d", t, idp->val.status.mark);
+	    free(t);
+	}
 	if (!idp)
 	    report_build(stdout, GT_(" <empty>"));
 	report_complete(stdout, "\n");
