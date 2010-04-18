@@ -8,7 +8,7 @@
 #ifdef HAVE_MD5_H
 #include <md5.h>
 #else
-
+#include "fetchmail.h"
 #ifndef HEADER_MD5_H
 /* Try to avoid clashes with OpenSSL */
 #define HEADER_MD5_H 
