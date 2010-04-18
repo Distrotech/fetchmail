@@ -491,7 +491,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		* (see below). */
 	       if (gen_transact(sock, "STLS") == PS_SUCCESS
 		       && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
-			   ctl->sslcertpath, ctl->sslfingerprint, commonname,
+			   ctl->sslcertfile, ctl->sslcertpath, ctl->sslfingerprint, commonname,
 			   ctl->server.pollname, &ctl->remotename) != -1)
 	       {
 		   /*

@@ -10,7 +10,7 @@
 .\" Load www macros to process .URL requests, this requires groff:
 .mso www.tmac
 .\"
-.TH fetchmail 1 "fetchmail 6.3.16" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 6.3.17-pre1" "fetchmail" "fetchmail reference manual"
 
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
@@ -495,10 +495,10 @@ to try appropriate protocols depending on context.
 (Keyword: sslcertck)
 .br
 Causes fetchmail to strictly check the server certificate against a set of
-local trusted certificates (see the \fBsslcertpath\fP option). If the server
-certificate cannot be obtained or is not signed by one of the trusted ones
-(directly or indirectly), the SSL connection will fail, regardless of
-the \fBsslfingerprint\fP option.
+local trusted certificates (see the \fBsslcertfile\fP and \fBsslcertpath\fP
+options). If the server certificate cannot be obtained or is not signed by one
+of the trusted ones (directly or indirectly), the SSL connection will fail,
+regardless of the \fBsslfingerprint\fP option.
 .IP
 Note that CRL (certificate revocation lists) are only supported in
 OpenSSL 0.9.7 and newer! Your system clock should also be reasonably
@@ -506,6 +506,18 @@ accurate when using this option.
 .IP
 Note that this optional behavior may become default behavior in future
 fetchmail versions.
+.TP
+.B \-\-sslcertfile <file>
+(Keyword: sslcertfile, since v6.3.17)
+.br
+Sets the file fetchmail uses to look up local certificates.  The default is
+empty.  This can be given in addition to \fB\-\-sslcertpath\fP below, and
+certificates specified in \fB\-\-sslcertfile\fP will be processed before those
+in \fB\-\-sslcertpath\fP.  The option can be used in addition to \fB\-\-sslcertpath\fP.
+.IP
+Note that fetchmail will always first load the default SSL trusted CA certificates file
+unless that is defeated by setting the environment variable
+.BR FETCHMAIL_NO_DEFAULT_X509_PATHS .
 .TP
 .B \-\-sslcertpath <directory>
 (Keyword: sslcertpath)
@@ -516,6 +528,13 @@ expects it - every time you add or modify a certificate in the directory, you
 need to use the \fBc_rehash\fP tool (which comes with OpenSSL in the tools/
 subdirectory). Also, after OpenSSL upgrades, you may need to run
 \fBc_rehash\fP; particularly when upgrading from 0.9.X to 1.0.0.
+.IP
+This can be given in addition to \fB\-\-sslcertfile\fP above, which see for
+precedence rules.
+.IP
+Note that fetchmail will also add the default SSL trusted CA certificates directory
+first unless defeated by setting the environment variable
+.BR FETCHMAIL_NO_DEFAULT_X509_PATHS .
 .TP
 .B \-\-sslcommonname <common name>
 (Keyword: sslcommonname; since v6.3.9)
@@ -1806,10 +1825,16 @@ ssl     	\&	\&	T{
 Connect to server over the specified base protocol using SSL encryption
 T}
 sslcert 	\&	\&	T{
-Specify file for client side public SSL certificate
+Specify file for \fBclient side\fP public SSL certificate
+T}
+sslcertfile	\&	\&	T{
+Specify file with trusted CA certificates
+T}
+sslcertpath	\&	\&	T{
+Specify c_rehash-ed directory with trusted CA certificates.
 T}
 sslkey  	\&	\&	T{
-Specify file for client side private SSL key
+Specify file for \fBclient side\fP private SSL key
 T}
 sslproto	\&	\&	T{
 Force ssl protocol for connection
@@ -2728,7 +2753,7 @@ lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
 .B FETCHMAILUSER:
-If the FETCHMAILUSER variable is set, it is used as the name of the
+If this environment variable is set, it is used as the name of the
 calling user (default local name) for purposes such as mailing error
 notifications.  Otherwise, if either the LOGNAME or USER variable is
 correctly set (e.g. the corresponding UID matches the session user ID)
@@ -2738,12 +2763,22 @@ session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
 .B FETCHMAILHOME:
-If the environment variable FETCHMAILHOME is set to a valid and
+If this environment variable is set to a valid and
 existing directory name, fetchmail will read $FETCHMAILHOME/fetchmailrc
 (the dot is missing in this case), $FETCHMAILHOME/.fetchids and
 $FETCHMAILHOME/.fetchmail.pid rather than from the user's home
 directory.  The .netrc file is always looked for in the the invoking
 user's home directory regardless of FETCHMAILHOME's setting.
+
+.B FETCHMAIL_NO_DEFAULT_X509_PATHS
+(since v6.3.17):
+If this environment variable is set and not empty, fetchmail will NOT load the
+default X.509 trusted certificate locations for SSL/TLS CA certificates.
+Default (if variable unset or empty): load certificate locations. This is
+rarely necessary outside testing. It might be useful in conjunction with
+\fB\-\-sslcertfile\fP and \fB\-\-sslcertpath\fP in case there are broken
+certificates in the system directories and the user has no administrator
+privileges to remedy the problem.
 
 .B HOME_ETC:
 If the HOME_ETC variable is set, fetchmail will read

@@ -1109,7 +1109,8 @@ static int do_session(
 	/* perform initial SSL handshake on open connection */
 	if (ctl->use_ssl &&
 		SSLOpen(mailserver_socket, ctl->sslcert, ctl->sslkey,
-		    ctl->sslproto, ctl->sslcertck, ctl->sslcertpath,
+		    ctl->sslproto, ctl->sslcertck,
+		    ctl->sslcertfile, ctl->sslcertpath,
 		    ctl->sslfingerprint, ctl->sslcommonname ?
 		    ctl->sslcommonname : realhost, ctl->server.pollname,
 		    &ctl->remotename) == -1)

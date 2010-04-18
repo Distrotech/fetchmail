@@ -75,7 +75,7 @@ FIXME: document this
 int UnixOpen(const char *path);
 
 #ifdef SSL_ENABLE
-int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck, char *certpath,
+int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck, char *cacertfile, char *cacertpath,
     char *fingerprint, char *servercname, char *label, char **remotename);
 #endif /* SSL_ENABLE */
 

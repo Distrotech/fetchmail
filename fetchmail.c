@@ -981,6 +981,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(sslcert);
     FLAG_MERGE(sslproto);
     FLAG_MERGE(sslcertck);
+    FLAG_MERGE(sslcertfile);
     FLAG_MERGE(sslcertpath);
     FLAG_MERGE(sslcommonname);
     FLAG_MERGE(sslfingerprint);
@@ -1667,9 +1668,11 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  SSL protocol: %s.\n"), ctl->sslproto);
 	if (ctl->sslcertck) {
 	    printf(GT_("  SSL server certificate checking enabled.\n"));
-	    if (ctl->sslcertpath != NULL)
-		printf(GT_("  SSL trusted certificate directory: %s\n"), ctl->sslcertpath);
 	}
+	if (ctl->sslcertfile != NULL)
+		printf(GT_("  SSL trusted certificate file: %s\n"), ctl->sslcertfile);
+	if (ctl->sslcertpath != NULL)
+		printf(GT_("  SSL trusted certificate directory: %s\n"), ctl->sslcertpath);
 	if (ctl->sslcommonname != NULL)
 		printf(GT_("  SSL server CommonName: %s\n"), ctl->sslcommonname);
 	if (ctl->sslfingerprint != NULL)

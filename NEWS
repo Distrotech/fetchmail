@@ -62,6 +62,14 @@ fetchmail-6.3.17 (not yet released):
   due to insufficient buffer size allocation. It would then repeatedly reallocate
   a larger buffer and fail formatting again. See fetchmail-SA-2010-02.txt.
 
+# FEATURES
+* Fetchmail now supports a --sslcertfile <file> option to specify a "CA bundle"
+  file (a file that contains trusted CA certificates). Since these bundled CA
+  files do not require c_rehash to be run, they are easier to use and immune to
+  OpenSSL library updates. Also see CHANGES below.
+* Fetchmail now supports a FETCHMAIL_NO_DEFAULT_X509_PATHS environment variable
+  to defeat loading the default SSL CA certificate locations. Also see CHANGES.
+
 # REGRESSION FIX
 * Fix string handling in rcfile scanner, which caused fetchmail to misparse a
   run control file in certain circumstances.  Fixes BerliOS bug #14257.
@@ -77,6 +85,11 @@ fetchmail-6.3.17 (not yet released):
   are now helpful pointers to --sslcertpath and c_rehash for "unable to get
   local issuer certificate" and self-signed certificates -- these usually hint
   to missing root signing CAs in the certs directory.
+* Default locations: Fetchmail will now always load the SSL default trusted CA
+  certificate locations, unless the environmental variable
+  FETCHMAIL_NO_DEFAULT_X509_PATHS is set and non-empty. Fetchmail used to load
+  the default locations only if --sslcertpath was not given.
+  This is a migration aid for systems upgrading to OpenSSL 1.0.0.
 
 # DOCUMENTATION
 * Fix table of global option to read "set softbounce" where there used to be a

@@ -358,6 +358,7 @@ struct query
     char *sslcert;		/* optional SSL certificate file */
     char *sslproto;		/** force transport protocol (ssl2|ssl3|ssl23|tls1) - if NULL,
 				  use ssl23 for SSL and opportunistic tls1 for non-SSL connections. */
+    char *sslcertfile;		/* Trusted certificate file for checking the server cert */
     char *sslcertpath;		/* Trusted certificate directory for checking the server cert */
     flag sslcertck;		/* Strictly check the server cert. */
     char *sslcommonname;	/* CommonName to expect from server */

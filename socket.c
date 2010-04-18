@@ -857,7 +857,8 @@ static const char *SSLCertGetCN(const char *mycert,
  * uses SSL *ssl global variable, which is currently defined
  * in this file
  */
-int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck, char *certpath,
+int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck,
+    char *cacertfile, char *certpath,
     char *fingerprint, char *servercname, char *label, char **remotename)
 {
         struct stat randstat;
@@ -921,10 +922,16 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 		 *  we provide the callback for output and possible fingerprint checks. */
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_nock_verify_callback);
 	}
-	if (certpath)
-		SSL_CTX_load_verify_locations(_ctx[sock], NULL, certpath);
-	else
-		SSL_CTX_set_default_verify_paths(_ctx[sock]);
+
+	{
+		char *t = getenv("FETCHMAIL_NO_DEFAULT_X509_PATHS");
+
+		if (t == NULL || t[0] == '\0')
+			SSL_CTX_set_default_verify_paths(_ctx[sock]);
+	}
+
+	if (certpath || cacertfile)
+		SSL_CTX_load_verify_locations(_ctx[sock], cacertfile, certpath);
 	
 	_ssl_context[sock] = SSL_new(_ctx[sock]);
 	

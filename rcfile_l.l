@@ -177,6 +177,7 @@ sslkey		{ return SSLKEY; }
 sslcert		{ return SSLCERT; }
 sslproto	{ return SSLPROTO; }
 sslcertck	{ return SSLCERTCK; }
+sslcertfile	{ return SSLCERTFILE; }
 sslcertpath	{ return SSLCERTPATH; }
 sslcommonname	{ return SSLCOMMONNAME; }
 sslfingerprint	{ return SSLFINGERPRINT; }

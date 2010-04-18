@@ -45,6 +45,7 @@ enum {
     LA_SSLCERT,
     LA_SSLPROTO,
     LA_SSLCERTCK,
+    LA_SSLCERTFILE,
     LA_SSLCERTPATH,
     LA_SSLCOMMONNAME,
     LA_SSLFINGERPRINT,
@@ -131,6 +132,7 @@ static const struct option longoptions[] = {
   {"sslcert",	required_argument, (int *) 0, LA_SSLCERT },
   {"sslproto",	 required_argument, (int *) 0, LA_SSLPROTO },
   {"sslcertck", no_argument,	   (int *) 0, LA_SSLCERTCK },
+  {"sslcertfile",   required_argument, (int *) 0, LA_SSLCERTFILE },
   {"sslcertpath",   required_argument, (int *) 0, LA_SSLCERTPATH },
   {"sslcommonname",    required_argument, (int *) 0, LA_SSLCOMMONNAME },
   {"sslfingerprint",   required_argument, (int *) 0, LA_SSLFINGERPRINT },
@@ -560,6 +562,10 @@ int parsecmdline (int argc /** argument count */,
 	    ctl->sslcertck = FLAG_TRUE;
 	    break;
 
+	case LA_SSLCERTFILE:
+	    ctl->sslcertfile = prependdir(optarg, currentwd);
+	    break;
+
 	case LA_SSLCERTPATH:
 	    ctl->sslcertpath = prependdir(optarg, currentwd);
 	    break;
@@ -641,7 +647,8 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --sslkey      ssl private key file\n"));
 	P(GT_("      --sslcert     ssl client certificate\n"));
 	P(GT_("      --sslcertck   do strict server certificate check (recommended)\n"));
-	P(GT_("      --sslcertpath path to ssl certificates\n"));
+	P(GT_("      --sslcertfile path to trusted-CA ssl certificate file\n"));
+	P(GT_("      --sslcertpath path to trusted-CA ssl certificate directory\n"));
 	P(GT_("      --sslcommonname  expect this CommonName from server (discouraged)\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
 	P(GT_("      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"));
