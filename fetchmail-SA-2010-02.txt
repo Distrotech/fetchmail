@@ -68,6 +68,8 @@ a. Apply the patch found in section B of this announcement to
    fetchmail 6.3.14 or newer, recompile and reinstall it.
 
 b. Install fetchmail 6.3.17 or newer after it will have become available.
+   (Note that the announcements may be publicly visible quite some time
+   before the release is made, particularly for minor bugs.)
    The fetchmail source code is always available from
    <http://developer.berlios.de/project/showfiles.php?group_id=1824>.
 
