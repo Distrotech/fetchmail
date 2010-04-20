@@ -7,11 +7,11 @@ Topics:		Denial of service in debug output.
 Author:		Matthias Andree
 Version:	0.1 XXX
 Announced:	XXX
-Type:		malloc() Buffer overrun with printable characters
+Type:		Unbounded allocation of memory until exhaustion.
 Impact:		Denial of service.
 Danger:		low
 
-CVE Name:	CVE-2010-XXXX
+CVE Name:	CVE-2010-1167
 CVSSv2:		XXX
 URL:		http://www.fetchmail.info/fetchmail-SA-2010-02.txt
 Project URL:	http://www.fetchmail.info/

@@ -55,12 +55,13 @@ removed from a 6.4.0 or newer release.)
 fetchmail-6.3.17 (not yet released):
 
 # SECURITY FIX
-* Fetchmail before release 6.3.17 did not properly sanitize external input
-  (mail headers and UID). When a multi-character locale (such as UTF-8) was in use, 
-  this could cause memory exhaustion and thus a denial of service, because
-  fetchmail's report.c functions assumed that non-success of [v]snprintf was
-  due to insufficient buffer size allocation. It would then repeatedly reallocate
-  a larger buffer and fail formatting again. See fetchmail-SA-2010-02.txt.
+* CVE-2010-1167: Fetchmail before release 6.3.17 did not properly sanitize
+  external input (mail headers and UID). When a multi-character locale (such as
+  UTF-8) was in use, this could cause memory exhaustion and thus a denial of
+  service, because fetchmail's report.c functions assumed that non-success of
+  [v]snprintf was due to insufficient buffer size allocation. It would then
+  repeatedly reallocate a larger buffer and fail formatting again.
+  See fetchmail-SA-2010-02.txt.
 
 # FEATURES
 * Fetchmail now supports a --sslcertfile <file> option to specify a "CA bundle"
