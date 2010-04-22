@@ -80,6 +80,7 @@ fetchmail-6.3.17 (not yet released):
 * Plug memory leak when using a "defaults" entry in the run control file.
 * Do not print SSL certificate mismatches unless verbose or --sslcertck is
   enabled.
+* Do not lose "set invisible" in fetchmailconf. (Michael Barnack)
 
 # CHANGES
 * Usability: SSL certificate chains are fully printed in -v -v mode, and there
