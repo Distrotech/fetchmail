@@ -794,9 +794,9 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			X509_NAME_oneline(subj, buf, sizeof(buf));
 			buf[sizeof(buf) - 1] = '\0';
 			report(stderr, GT_("This means that the root signing certificate (issued for %s) is not in the "
-						"directory of trusted CA certificates, or that c_rehash needs to be run "
-						"on that directory. For details, please "
-						"see the documentation of --sslcertpath in the manual page.\n"), buf);
+						"trusted CA certificate locations, or that c_rehash needs to be run "
+						"on the certificate directory. For details, please "
+						"see the documentation of --sslcertpath and --sslcertfile in the manual page.\n"), buf);
 			break;
 		default:
 			break;
@@ -919,19 +919,28 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
 	} else {
 		/* In this case, we do not fail if verification fails. However,
-		 *  we provide the callback for output and possible fingerprint checks. */
+		 * we provide the callback for output and possible fingerprint
+		 * checks. */
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_nock_verify_callback);
 	}
 
+	/* Check which trusted X.509 CA certificate store(s) to load */
 	{
-		char *t = getenv("FETCHMAIL_NO_DEFAULT_X509_PATHS");
+		char *tmp;
+		int want_default_cacerts = 0;
 
-		if (t == NULL || t[0] == '\0')
+		/* Load user locations if any is given */
+		if (certpath || cacertfile)
+			SSL_CTX_load_verify_locations(_ctx[sock],
+						cacertfile, certpath);
+		else
+			want_default_cacerts = 1;
+
+		tmp = getenv("FETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS");
+		if (want_default_cacerts || (tmp && tmp[0])) {
 			SSL_CTX_set_default_verify_paths(_ctx[sock]);
+		}
 	}
-
-	if (certpath || cacertfile)
-		SSL_CTX_load_verify_locations(_ctx[sock], cacertfile, certpath);
 	
 	_ssl_context[sock] = SSL_new(_ctx[sock]);
 	

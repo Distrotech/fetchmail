@@ -513,11 +513,15 @@ fetchmail versions.
 Sets the file fetchmail uses to look up local certificates.  The default is
 empty.  This can be given in addition to \fB\-\-sslcertpath\fP below, and
 certificates specified in \fB\-\-sslcertfile\fP will be processed before those
-in \fB\-\-sslcertpath\fP.  The option can be used in addition to \fB\-\-sslcertpath\fP.
+in \fB\-\-sslcertpath\fP.  The option can be used in addition to
+\fB\-\-sslcertpath\fP.
 .IP
-Note that fetchmail will always first load the default SSL trusted CA certificates file
-unless that is defeated by setting the environment variable
-.BR FETCHMAIL_NO_DEFAULT_X509_PATHS .
+The file is a text file. It contains the concatenation of trusted CA
+certificates in PEM format.
+.IP
+Note that using this option will suppress loading the default SSL trusted CA
+certificates file unless you set the environment variable
+\fBFETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS\fP to a non-empty value.
 .TP
 .B \-\-sslcertpath <directory>
 (Keyword: sslcertpath)
@@ -532,9 +536,9 @@ subdirectory). Also, after OpenSSL upgrades, you may need to run
 This can be given in addition to \fB\-\-sslcertfile\fP above, which see for
 precedence rules.
 .IP
-Note that fetchmail will also add the default SSL trusted CA certificates directory
-first unless defeated by setting the environment variable
-.BR FETCHMAIL_NO_DEFAULT_X509_PATHS .
+Note that using this option will suppress adding the default SSL trusted CA
+certificates directory unless you set the environment variable
+\fBFETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS\fP to a non-empty value.
 .TP
 .B \-\-sslcommonname <common name>
 (Keyword: sslcommonname; since v6.3.9)
@@ -2752,7 +2756,15 @@ lock file to help prevent concurrent runs (root mode, Linux systems).
 lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
-.B FETCHMAILUSER:
+.IP \fBFETCHMAILHOME\fP
+If this environment variable is set to a valid and
+existing directory name, fetchmail will read $FETCHMAILHOME/fetchmailrc
+(the dot is missing in this case), $FETCHMAILHOME/.fetchids and
+$FETCHMAILHOME/.fetchmail.pid rather than from the user's home
+directory.  The .netrc file is always looked for in the the invoking
+user's home directory regardless of FETCHMAILHOME's setting.
+
+.IP \fBFETCHMAILUSER\fP
 If this environment variable is set, it is used as the name of the
 calling user (default local name) for purposes such as mailing error
 notifications.  Otherwise, if either the LOGNAME or USER variable is
@@ -2762,47 +2774,34 @@ then that name is used as the default local name.  Otherwise
 session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
-.B FETCHMAILHOME:
-If this environment variable is set to a valid and
-existing directory name, fetchmail will read $FETCHMAILHOME/fetchmailrc
-(the dot is missing in this case), $FETCHMAILHOME/.fetchids and
-$FETCHMAILHOME/.fetchmail.pid rather than from the user's home
-directory.  The .netrc file is always looked for in the the invoking
-user's home directory regardless of FETCHMAILHOME's setting.
-
-.B FETCHMAIL_NO_DEFAULT_X509_PATHS
+.IP \fBFETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS\fP
 (since v6.3.17):
-If this environment variable is set and not empty, fetchmail will NOT load the
-default X.509 trusted certificate locations for SSL/TLS CA certificates.
-Default (if variable unset or empty): load certificate locations. This is
-rarely necessary outside testing. It might be useful in conjunction with
-\fB\-\-sslcertfile\fP and \fB\-\-sslcertpath\fP in case there are broken
-certificates in the system directories and the user has no administrator
-privileges to remedy the problem.
+If this environment variable is set and not empty, fetchmail will always load
+the default X.509 trusted certificate locations for SSL/TLS CA certificates,
+even if \fB\-\-sslcertfile\fP and \fB\-\-sslcertpath\fP are given.  The latter locations take precedence over the system default locations.
+This is useful in case there are broken certificates in the system directories
+and the user has no administrator privileges to remedy the problem.
 
-.B HOME_ETC:
+.IP \fBHOME_ETC\fP
 If the HOME_ETC variable is set, fetchmail will read
 $HOME_ETC/.fetchmailrc instead of ~/.fetchmailrc.
 
 If HOME_ETC and FETCHMAILHOME are both set, HOME_ETC will be ignored.
 
-.B SOCKS_CONF:
+.IP \fBSOCKS_CONF\fP
 (only if SOCKS support is compiled in) this variable is used by the
 socks library to find out which configuration file it should read. Set
 this to /dev/null to bypass the SOCKS proxy.
 
 .SH SIGNALS
-If a
-\fBfetchmail\fP
-daemon is running as root, SIGUSR1 wakes it up from its sleep phase and
-forces a poll of all non-skipped servers. For compatibility reasons,
-SIGHUP can also be used in 6.3.X but may not be available in future
+If a \fBfetchmail\fP daemon is running as root, SIGUSR1 wakes it up from its
+sleep phase and forces a poll of all non-skipped servers. For compatibility
+reasons, SIGHUP can also be used in 6.3.X but may not be available in future
 fetchmail versions.
 .PP
-If
-\fBfetchmail\fP
-is running in daemon mode as non-root, use SIGUSR1 to wake it (this is
-so SIGHUP due to logout can retain the default action of killing it).
+If \fBfetchmail\fP is running in daemon mode as non-root, use SIGUSR1 to wake
+it (this is so SIGHUP due to logout can retain the default action of killing
+it).
 .PP
 Running \fBfetchmail\fP in foreground while a background fetchmail is
 running will do whichever of these is appropriate to wake it up.
