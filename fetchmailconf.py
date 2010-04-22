@@ -65,6 +65,8 @@ class Configuration:
 	    str = str + ("set properties \"%s\"\n" % (self.properties,));
 	if self.poll_interval > 0:
 	    str = str + "set daemon " + `self.poll_interval` + "\n"
+	if self.invisible:
+	   str = str + ("set invisible\n")
 	for site in self.servers:
 	    str = str + repr(site)
 	return str
