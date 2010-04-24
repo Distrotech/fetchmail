@@ -243,36 +243,31 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     if (outlevel >= O_DEBUG)
     {
 	struct idlist	*idp;
-	int uidlcount = 0;
 
 	for (ctl = hostlist; ctl; ctl = ctl->next)
-	    if (ctl->server.uidl)
 	    {
 		report_build(stdout, GT_("Old UID list from %s:"), 
 			     ctl->server.pollname);
-		for (idp = ctl->oldsaved; idp; idp = idp->next) {
+		idp = ctl->oldsaved;
+		if (!idp)
+		    report_build(stdout, GT_(" <empty>"));
+		else for (idp = ctl->oldsaved; idp; idp = idp->next) {
 		    char *t = sdump(idp->id, strlen(idp->id));
 		    report_build(stdout, " %s", t);
 		    free(t);
 		}
-		if (!idp)
-		    report_build(stdout, GT_(" <empty>"));
 		report_complete(stdout, "\n");
-		uidlcount++;
 	    }
 
-	if (uidlcount)
-	{
-	    report_build(stdout, GT_("Scratch list of UIDs:"));
-	    for (idp = scratchlist; idp; idp = idp->next) {
+	report_build(stdout, GT_("Scratch list of UIDs:"));
+	if (!scratchlist)
+		report_build(stdout, GT_(" <empty>"));
+	else for (idp = scratchlist; idp; idp = idp->next) {
 		char *t = sdump(idp->id, strlen(idp->id));
 		report_build(stdout, " %s", t);
 		free(t);
-	    }
-	    if (!idp)
-		report_build(stdout, GT_(" <empty>"));
-	    report_complete(stdout, "\n");
 	}
+	report_complete(stdout, "\n");
     }
 }
 
@@ -287,25 +282,52 @@ void expunge_uids(struct query *ctl)
 	    idl->val.status.mark = UID_EXPUNGED;
 }
 
+const char *str_uidmark(int mark)
+{
+	static char buf[20];
+
+	switch(mark) {
+		case UID_UNSEEN:
+			return "UNSEEN";
+		case UID_SEEN:
+			return "SEEN";
+		case UID_EXPUNGED:
+			return "EXPUNGED";
+		case UID_DELETED:
+			return "DELETED";
+		default:
+			if (snprintf(buf, sizeof(buf), "MARK=%d", mark) < 0)
+				return "ERROR";
+			else
+				return buf;
+	}
+}
+
+static void dump_list(const struct idlist *idp)
+{
+	if (!idp) {
+		report_build(stdout, GT_(" <empty>"));
+	} else while (idp) {
+	    char *t = sdump(idp->id, strlen(idp->id));
+	    report_build(stdout, " %s = %s%s", t, str_uidmark(idp->val.status.mark), idp->next ? "," : "");
+	    free(t);
+	    idp = idp->next;
+	}
+}
+
 /* finish a query */
 void uid_swap_lists(struct query *ctl) 
 {
     /* debugging code */
-    if (ctl->server.uidl && outlevel >= O_DEBUG)
+    if (outlevel >= O_DEBUG)
     {
-	struct idlist *idp;
-
-	if (dofastuidl)
+	if (dofastuidl) {
 	    report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
-	else
+	    dump_list(ctl->oldsaved);
+	} else {
 	    report_build(stdout, GT_("New UID list from %s:"), ctl->server.pollname);
-	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next) {
-	    char *t = sdump(idp->id, strlen(idp->id));
-	    report_build(stdout, " %s = %d", t, idp->val.status.mark);
-	    free(t);
-        }
-	if (!idp)
-	    report_build(stdout, GT_(" <empty>"));
+	    dump_list(ctl->newsaved);
+	}
 	report_complete(stdout, "\n");
     }
 
@@ -345,20 +367,12 @@ void uid_swap_lists(struct query *ctl)
 void uid_discard_new_list(struct query *ctl)
 {
     /* debugging code */
-    if (ctl->server.uidl && outlevel >= O_DEBUG)
+    if (outlevel >= O_DEBUG)
     {
-	struct idlist *idp;
-
 	/* this is now a merged list! the mails which were seen in this
 	 * poll are marked here. */
 	report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
-	for (idp = ctl->oldsaved; idp; idp = idp->next) {
-	    char *t = sdump(idp->id, strlen(idp->id));
-	    report_build(stdout, " %s = %d", t, idp->val.status.mark);
-	    free(t);
-	}
-	if (!idp)
-	    report_build(stdout, GT_(" <empty>"));
+	dump_list(ctl->oldsaved);
 	report_complete(stdout, "\n");
     }
 
