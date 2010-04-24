@@ -156,11 +156,15 @@ void str_set_mark( struct idlist **idl, const char *str, const flag val)
 
 /** Count the number of elements in the idlist \a idl. 
  * \return number of elements */
-int count_list( struct idlist **idl)
+int count_list(struct idlist **idl)
 {
-  if( !*idl )
-    return 0;
-  return 1 + count_list( &(*idl)->next );
+	int i = 0;
+	struct idlist *it;
+
+	for (it = *idl ; it ; it = it->next)
+		++i;
+
+	return i;
 }
 
 /** return the \a number'th id string on idlist \a idl */
