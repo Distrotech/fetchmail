@@ -812,6 +812,7 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
     int ok;
     unsigned int first_nr, last_nr, try_nr;
     char id [IDLEN+1];
+    struct idlist *savep = NULL; /** pointer to cache save_str result, speeds up saves */
 
     first_nr = 0;
     last_nr = count + 1;
@@ -853,8 +854,8 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
 	    last_nr = try_nr;
 
 	    /* save it */
-	    newl = save_str(&ctl->oldsaved, id, UID_UNSEEN);
-	    newl->val.status.num = try_nr;
+	    savep = save_str(savep ? &savep : &ctl->oldsaved, id, UID_UNSEEN);
+	    savep->val.status.num = try_nr;
 	}
     }
     if (outlevel >= O_DEBUG && last_nr <= count)
