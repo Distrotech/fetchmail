@@ -66,6 +66,8 @@ questionable:
   (silently allowing g+x).
 - make UID code more efficient, parsing is O(n^2), should be no worse
   than O(n log n), lookup is O(n), should be O(log n).
+  * Idea for C: use <search.h> tfind/tsearch. Need to split idlist up
+    so it only keeps the ids, and use an array to track status.
 - help systematic debugging
     - by making logging more strict (Postfix's msg_* as example??)
     - by adding a --loggingtest or something that emits 
