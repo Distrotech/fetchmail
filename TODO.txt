@@ -1,9 +1,7 @@
 Note that there is a separate todo.html with different content than this.
 
-- Add --sslcertfile option to use a bundled certs file instead. This
-  circumvents c_rehash issues ;)
-
 soon - MUST:
+- audit if there are further untrusted data report_*() calls.
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - put bare IP addresses in brackets for SMTP (check if there are RFC
   1123/5321/5322 differences)
