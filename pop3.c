@@ -1054,6 +1054,7 @@ static int pop3_getrange(int sock,
 	    {
 		/* UIDL worked - parse reply */
 		unsigned long unum;
+		struct idlist *newl = NULL;
 
 		*newp = 0;
 		while (gen_recv(sock, buf, sizeof(buf)) == PS_SUCCESS)
@@ -1063,9 +1064,9 @@ static int pop3_getrange(int sock,
 
 		    if (parseuid(buf, &unum, id, sizeof(id)) == PS_SUCCESS)
 		    {
-			struct idlist	*old, *newl;
+			struct idlist	*old;
 
-			newl = save_str(&ctl->newsaved, id, UID_UNSEEN);
+			newl = save_str(newl ? &newl : &ctl->newsaved, id, UID_UNSEEN);
 			newl->val.status.num = unum;
 
 			if ((old = str_in_list(&ctl->oldsaved, id, FALSE)))
