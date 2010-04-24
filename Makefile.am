@@ -66,7 +66,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
-		uid.c mxget.c md5ify.c cram.c gssapi.c \
+		idlist.c uid.c mxget.c md5ify.c cram.c gssapi.c \
 		opie.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c \
 		lock.h lock.c \

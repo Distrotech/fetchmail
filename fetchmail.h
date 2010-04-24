@@ -591,29 +591,29 @@ char *nxtaddr(const char *);
 
 /* uid.c: UID support */
 extern int dofastuidl;
-
-void initialize_saved_lists(struct query *, const char *);
-struct idlist *save_str(struct idlist **, const char *, flag);
-void free_str_list(struct idlist **);
-struct idlist *copy_str_list(struct idlist *idl);
-void save_str_pair(struct idlist **, const char *, const char *);
-void free_str_pair_list(struct idlist **);
-int delete_str(struct idlist **, long);
-struct idlist *str_in_list(struct idlist **, const char *, const flag);
-int str_nr_in_list(struct idlist **, const char *);
-int str_nr_last_in_list(struct idlist **, const char *);
-void str_set_mark( struct idlist **, const char *, const flag);
-int count_list( struct idlist **idl );
-char *str_from_nr_list( struct idlist **idl, long number );
-char *str_find(struct idlist **, long);
-struct idlist *id_find(struct idlist **idl, long);
-char *idpair_find(struct idlist **, const char *);
-void append_str_list(struct idlist **, struct idlist **);
-void expunge_uids(struct query *);
-void uid_swap_lists(struct query *);
+void initialize_saved_lists(struct query *hostlist, const char *idfile);
+void expunge_uids(struct query *ctl);
+void uid_swap_lists(struct query *ctl);
 void uid_discard_new_list(struct query *ctl);
 void uid_reset_num(struct query *ctl);
-void write_saved_lists(struct query *, const char *);
+void write_saved_lists(struct query *hostlist, const char *idfile);
+
+/* idlist.c */
+struct idlist *save_str(struct idlist **idl, const char *str, flag status);
+void free_str_list(struct idlist **idl);
+void save_str_pair(struct idlist **idl, const char *str1, const char *str2);
+struct idlist *str_in_list(struct idlist **idl, const char *str, const flag caseblind);
+int str_nr_in_list(struct idlist **idl, const char *str);
+int str_nr_last_in_list(struct idlist **idl, const char *str);
+void str_set_mark(struct idlist **idl, const char *str, const flag val);
+int count_list(struct idlist **idl);
+char *str_from_nr_list(struct idlist **idl, long number);
+char *str_find(struct idlist **idl, long number);
+struct idlist *id_find(struct idlist **idl, long number);
+char *idpair_find(struct idlist **idl, const char *id);
+int delete_str(struct idlist **idl, long num);
+struct idlist *copy_str_list(struct idlist *idl);
+void append_str_list(struct idlist **idl, struct idlist **nidl);
 
 /* rcfile_y.y */
 int prc_parse_file(const char *, const flag);
