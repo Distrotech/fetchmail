@@ -730,39 +730,6 @@ static void trim(char *s) {
     s[0] = '\0';
 }
 
-/* XXX FIXME: using the Message-ID is unsafe, some messages (spam,
- * broken messages) do not have Message-ID headers, and messages without
- * those appear to break this code and cause fetchmail (at least version
- * 6.2.3) to not delete such messages properly after retrieval.
- * See Sourceforge Bug #780933.
- *
- * The other problem is that the TOP command itself is optional, too... */
-static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
-{
-    int ok;
-    int got_it;
-    char buf [POPBUFSIZE+1];
-    snprintf(buf, sizeof(buf), "TOP %d 1", num);
-    if ((ok = gen_transact(sock, "%s", buf)) != 0)
-       return ok;
-    got_it = 0;
-    while (gen_recv(sock, buf, sizeof(buf)) == 0)
-    {
-	if (DOTLINE(buf))
-	    break;
-	if (!got_it && 0 == strncasecmp("Message-Id:", buf, 11)) {
-	    char *p = buf + 11;
-	    got_it = 1;
-	    p += strspn(p, POSIX_space);
-	    strlcpy(id, p, idsize);
-	    trim(id);
-	}
-    }
-    /* XXX FIXME: do not return success here if no Message-ID header was
-     * found. */
-    return 0;
-}
-
 /** Parse the UID response (leading +OK must have been
  * stripped off) in buf, store the number in gotnum, and store the ID
  * into the caller-provided buffer "id" of size "idsize".
@@ -867,98 +834,6 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
     return 0;
 }
 
-static int pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
-{
-    /* XXX FIXME: this code is severely broken. A Cc:d mailing list
-     * message will arrive twice with the same Message-ID, so this
-     * slowuidl code will break. Same goes for messages without
-     * Message-ID headers at all. This code would best be removed. */
-    /* This approach tries to get the message headers from the
-     * remote hosts and compares the message-id to the already known
-     * ones:
-     *  + if the first message containes a new id, all messages on
-     *    the server will be new
-     *  + if the first is known, try to estimate the last known message
-     *    on the server and check. If this works you know the total number
-     *    of messages to get.
-     *  + Otherwise run a binary search to determine the last known message
-     */
-    int ok, nolinear = 0;
-    int first_nr, list_len, try_id, try_nr, add_id;
-    int num;
-    char id [IDLEN+1];
-
-    if ((ok = pop3_gettopid(sock, 1, id, sizeof(id))) != 0)
-	return ok;
-
-    if( ( first_nr = str_nr_in_list(&ctl->oldsaved, id) ) == -1 ) {
-	/* the first message is unknown -> all messages are new */
-	*newp = *countp;	
-	return 0;
-    }
-
-    /* check where we expect the latest known message */
-    list_len = count_list( &ctl->oldsaved );
-    try_id = list_len  - first_nr; /* -1 + 1 */
-    if( try_id > 1 ) {
-	if( try_id <= *countp ) {
-	    if ((ok = pop3_gettopid(sock, try_id, id, sizeof(id))) != 0)
-		return ok;
-    
-	    try_nr = str_nr_last_in_list(&ctl->oldsaved, id);
-	} else {
-	    try_id = *countp+1;
-	    try_nr = -1;
-	}
-	if( try_nr != list_len -1 ) {
-	    /* some messages inbetween have been deleted... */
-	    if( try_nr == -1 ) {
-		nolinear = 1;
-
-		for( add_id = 1<<30; add_id > try_id-1; add_id >>= 1 )
-		    ;
-		for( ; add_id; add_id >>= 1 ) {
-		    if( try_nr == -1 ) {
-			if( try_id - add_id <= 1 ) {
-			    continue;
-			}
-			try_id -= add_id;
-		    } else 
-			try_id += add_id;
-		    
-		    if ((ok = pop3_gettopid(sock, try_id, id, sizeof(id))) != 0)
-			return ok;
-		    try_nr = str_nr_in_list(&ctl->oldsaved, id);
-		}
-		if( try_nr == -1 ) {
-		    try_id--;
-		}
-	    } else {
-		report(stderr, 
-		       GT_("Messages inserted into list on server. Cannot handle this.\n"));
-		return -1;
-	    }
-	} 
-    }
-    /* the first try_id messages are known -> copy them to the newsaved list */
-    for( num = first_nr; num < list_len; num++ )
-    {
-	struct idlist	*newl = save_str(&ctl->newsaved, 
-				str_from_nr_list(&ctl->oldsaved, num),
-				UID_UNSEEN);
-	newl->val.status.num = num - first_nr + 1;
-    }
-
-    if( nolinear ) {
-	free_str_list(&ctl->oldsaved);
-	ctl->oldsaved = 0;
-	last = try_id;
-    }
-
-    *newp = *countp - try_id;
-    return 0;
-}
-
 static int pop3_getrange(int sock, 
 			 struct query *ctl,
 			 const char *folder,
@@ -1044,12 +919,8 @@ static int pop3_getrange(int sock,
 	    /* grab the mailbox's UID list */
 	    if (gen_transact(sock, "UIDL") != 0)
 	    {
-		/* don't worry, yet! do it the slow way */
-		if (pop3_slowuidl(sock, ctl, countp, newp))
-		{
 		    report(stderr, GT_("protocol error while fetching UIDLs\n"));
 		    return(PS_ERROR);
-		}
 	    }
 	    else
 	    {
