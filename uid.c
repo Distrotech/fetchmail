@@ -250,8 +250,11 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	    {
 		report_build(stdout, GT_("Old UID list from %s:"), 
 			     ctl->server.pollname);
-		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    report_build(stdout, " %s", idp->id);
+		for (idp = ctl->oldsaved; idp; idp = idp->next) {
+		    char *t = sdump(idp->id, strlen(idp->id));
+		    report_build(stdout, " %s", t);
+		    free(t);
+		}
 		if (!idp)
 		    report_build(stdout, GT_(" <empty>"));
 		report_complete(stdout, "\n");

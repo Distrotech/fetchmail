@@ -5,7 +5,7 @@ fetchmail-SA-2010-02: Denial of service in debug mode w/ multichar locales
 Topics:		Denial of service in debug output.
 
 Author:		Matthias Andree
-Version:	0.1 XXX
+Version:	0.4 XXX
 Announced:	XXX
 Type:		Unbounded allocation of memory until exhaustion.
 Impact:		Denial of service.
@@ -20,13 +20,16 @@ Affects:	fetchmail releases 4.6.3 up to and including 6.3.16
 
 Not affected:	fetchmail release 6.3.17 and newer
 
-Corrected:	2010-04-18 Git (XXX)
+Corrected:	2010-04-24 Git (XXX)
 
 
 0. Release history
 ==================
 
 2010-04-18 0.1	first draft (visible in SVN and through oss-security)
+2010-04-19 0.2	add note announcements may appear before releases
+2010-04-20 0.3  add CVE name, fix Type:
+2010-04-24 0.4  revise patch
 XXX
 
 
@@ -156,7 +159,7 @@ index 6f2dbf3..dbcda32 100644
      *length = strlen(buf);
      return(buf);
 diff --git a/uid.c b/uid.c
-index fdc6f5d..d813bee 100644
+index fdc6f5d..9a62ee2 100644
 --- a/uid.c
 +++ b/uid.c
 @@ -20,6 +20,7 @@
@@ -167,7 +170,21 @@ index fdc6f5d..d813bee 100644
  
  /*
   * Machinery for handling UID lists live here.  This is mainly to support
-@@ -260,8 +261,11 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
+@@ -249,8 +250,11 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
+ 	    {
+ 		report_build(stdout, GT_("Old UID list from %s:"), 
+ 			     ctl->server.pollname);
+-		for (idp = ctl->oldsaved; idp; idp = idp->next)
+-		    report_build(stdout, " %s", idp->id);
++		for (idp = ctl->oldsaved; idp; idp = idp->next) {
++		    char *t = sdump(idp->id, strlen(idp->id));
++		    report_build(stdout, " %s", t);
++		    free(t);
++		}
+ 		if (!idp)
+ 		    report_build(stdout, GT_(" <empty>"));
+ 		report_complete(stdout, "\n");
+@@ -260,8 +264,11 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
  	if (uidlcount)
  	{
  	    report_build(stdout, GT_("Scratch list of UIDs:"));
@@ -181,7 +198,7 @@ index fdc6f5d..d813bee 100644
  	    if (!idp)
  		report_build(stdout, GT_(" <empty>"));
  	    report_complete(stdout, "\n");
-@@ -517,8 +521,11 @@ void uid_swap_lists(struct query *ctl)
+@@ -517,8 +524,11 @@ void uid_swap_lists(struct query *ctl)
  	    report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
  	else
  	    report_build(stdout, GT_("New UID list from %s:"), ctl->server.pollname);
@@ -195,7 +212,7 @@ index fdc6f5d..d813bee 100644
  	if (!idp)
  	    report_build(stdout, GT_(" <empty>"));
  	report_complete(stdout, "\n");
-@@ -567,8 +574,11 @@ void uid_discard_new_list(struct query *ctl)
+@@ -567,8 +577,11 @@ void uid_discard_new_list(struct query *ctl)
  	/* this is now a merged list! the mails which were seen in this
  	 * poll are marked here. */
  	report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
