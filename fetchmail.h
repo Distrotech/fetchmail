@@ -187,25 +187,34 @@ struct runctl
     flag	showdots;
 };
 
+/** \name idlist */
+/** Dual-use entry of singly-linked list for storing id/status or id/id2
+ * pairs. */
 struct idlist
 {
-    char *id;
+    char *id;	/**< key */
     union
     {
 	struct
 	{
 	    int		num;
-	    flag	mark;		/* UID-index information */
-#define UID_UNSEEN	0		/* hasn't been seen */
-#define UID_SEEN	1		/* seen, but not deleted */
-#define UID_DELETED	2		/* this message has been marked deleted */
-#define UID_EXPUNGED	3		/* this message has been expunged */
+	    flag	mark;		/**< UID-index information */
         }
-	status;
-	char *id2;
-    } val;
-    struct idlist *next;
+	status;				/**< value for id/status pairs */
+	char *id2;			/**< value for id/id2 pairs */
+    } val;				/**< union to store value for key \a id */
+    struct idlist *next;		/**< pointer to next list element */
 };
+
+/** List of possible values for idlist::mark */
+enum {
+UID_UNSEEN=	0,		/**< id hasn't been seen */
+UID_SEEN=	1,		/**< id was seen, but not deleted */
+UID_DELETED=	2,		/**< this message has been marked deleted */
+UID_EXPUNGED=	3		/**< this message has been expunged */
+};
+/*@}*/
+
 
 struct query;
 

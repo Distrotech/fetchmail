@@ -107,8 +107,8 @@ int dofastuidl = 0;
 static struct idlist *scratchlist;
 
 #ifdef POP3_ENABLE
+/** Read saved IDs from \a idfile and attach to each host in \a hostlist. */
 void initialize_saved_lists(struct query *hostlist, const char *idfile)
-/* read file of saved IDs and attach to each host */
 {
     struct stat statbuf;
     FILE	*tmpfp;
@@ -277,11 +277,12 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 }
 #endif /* POP3_ENABLE */
 
-/* return a pointer to the last element of the list to help the quick,
- * constant-time addition to the list, NOTE: this function does not dup
- * the string, the caller must do that. */
-/*@shared@*/ static struct idlist **save_str_quick(/*@shared@*/ struct idlist **idl,
-			       /*@only@*/ char *str, flag status)
+/** Save string \a str to idlist \a idl with status \a status.
+ * \return Pointer to the last element of the list to help the quick,
+ * constant-time addition to the list. */
+/*@shared@*/ static
+struct idlist **save_str_quick(/*@shared@*/ struct idlist **idl,
+			       /*@only@*/ char *str /** caller-allocated string */, flag status)
 /* save a number/UID pair on the given UID list */
 {
     struct idlist **end;
@@ -299,14 +300,15 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     return end;
 }
 
-/* return the end list element for direct modification */
-struct idlist *save_str(struct idlist **idl, const char *str, flag st)
+/** Save string \a str to idlist \a idl with status \a status.
+ * \return the end list element for direct modification. */
+struct idlist *save_str(struct idlist **idl, const char *str /** implicitly strdup()ed */, flag status)
 {
-    return *save_str_quick(idl, str ? xstrdup(str) : NULL, st);
+    return *save_str_quick(idl, str ? xstrdup(str) : NULL, status);
 }
 
+/** Free string list \a idl and free each of the id members. */
 void free_str_list(struct idlist **idl)
-/* free the given UID list */
 {
     struct idlist *i = *idl;
 
@@ -319,8 +321,8 @@ void free_str_list(struct idlist **idl)
     *idl = 0;
 }
 
+/** Save an ID pair made of \a str1 and \a str2 on the given idlist \a idl. */
 void save_str_pair(struct idlist **idl, const char *str1, const char *str2)
-/* save an ID pair on the given list */
 {
     struct idlist **end;
 
@@ -352,8 +354,10 @@ void free_str_pair_list(struct idlist **idl)
 }
 #endif
 
-struct idlist *str_in_list(struct idlist **idl, const char *str, const flag caseblind)
-/* is a given ID in the given list? (comparison may be caseblind) */
+/** Check if ID \a str is in idlist \a idl. \return idlist entry if found,
+ * NULL if not found. */
+struct idlist *str_in_list(struct idlist **idl, const char *str,
+const flag caseblind /** if true, use strcasecmp, if false, use strcmp */)
 {
     struct idlist *walk;
     if (caseblind) {
@@ -368,7 +372,7 @@ struct idlist *str_in_list(struct idlist **idl, const char *str, const flag case
     return NULL;
 }
 
-/** return the position of first occurrence of \a str in \a idl */
+/** \return position of first occurrence of \a str in idlist \a idl */
 int str_nr_in_list(struct idlist **idl, const char *str)
 {
     int nr;
@@ -382,8 +386,8 @@ int str_nr_in_list(struct idlist **idl, const char *str)
     return -1;
 }
 
+/** \return position of last occurrence of \a str in idlist \a idl */
 int str_nr_last_in_list( struct idlist **idl, const char *str)
-/* return the last position of str in idl */
 {
     int nr, ret = -1;
     struct idlist *walk;
@@ -395,8 +399,8 @@ int str_nr_last_in_list( struct idlist **idl, const char *str)
     return ret;
 }
 
+/** Update the mark of an id \a str in idlist \a idl to given value \a val. */
 void str_set_mark( struct idlist **idl, const char *str, const flag val)
-/* update the mark on an of an id to given value */
 {
     int nr;
     struct idlist *walk;
@@ -407,16 +411,17 @@ void str_set_mark( struct idlist **idl, const char *str, const flag val)
 	    walk->val.status.mark = val;
 }
 
+/** Count the number of elements in the idlist \a idl. 
+ * \return number of elements */
 int count_list( struct idlist **idl)
-/* count the number of elements in the list */
 {
   if( !*idl )
     return 0;
   return 1 + count_list( &(*idl)->next );
 }
 
+/** return the \a number'th id string on idlist \a idl */
 /*@null@*/ char *str_from_nr_list(struct idlist **idl, long number)
-/* return the number'th string in idl */
 {
     if( !*idl  || number < 0)
         return 0;
@@ -426,8 +431,9 @@ int count_list( struct idlist **idl)
 }
 
 
+/** Search idlist \a idl for entry with given \a number.
+ * \return id member of idlist entry. */
 char *str_find(struct idlist **idl, long number)
-/* return the id of the given number in the given list. */
 {
     if (*idl == (struct idlist *) 0)
 	return((char *) 0);
@@ -437,8 +443,9 @@ char *str_find(struct idlist **idl, long number)
 	return(str_find(&(*idl)->next, number));
 }
 
+/** Search idlist \a idl for entry with given \a number.
+ * \return idlist entry. */
 struct idlist *id_find(struct idlist **idl, long number)
-/* return the id of the given number in the given list. */
 {
     struct idlist	*idp;
     for (idp = *idl; idp; idp = idp->next)
@@ -447,8 +454,10 @@ struct idlist *id_find(struct idlist **idl, long number)
     return(0);
 }
 
+/** Return the id of the given \a id in the given idlist \a idl, comparing
+ * case insensitively. \returns the respective other \a idlist member (the one
+ * that was not searched for). */
 char *idpair_find(struct idlist **idl, const char *id)
-/* return the id of the given id in the given list (caseblind comparison) */
 {
     if (*idl == (struct idlist *) 0)
 	return((char *) 0);
@@ -458,8 +467,9 @@ char *idpair_find(struct idlist **idl, const char *id)
 	return(idpair_find(&(*idl)->next, id));
 }
 
+/** Mark message number \a num on given idlist \a idl as deleted.
+ * \return 1 if found, 0 if not found. */
 int delete_str(struct idlist **idl, long num)
-/* delete given message from given list */
 {
     struct idlist	*idp;
 
@@ -472,8 +482,8 @@ int delete_str(struct idlist **idl, long num)
     return(0);
 }
 
+/** Copy the given UID list \a idl. \return A newly malloc()ed copy of the list. */
 struct idlist *copy_str_list(struct idlist *idl)
-/* copy the given UID list */
 {
     struct idlist *newnode ;
 
@@ -488,8 +498,8 @@ struct idlist *copy_str_list(struct idlist *idl)
     }
 }
 
+/** Append \a nidl to \a idl (does not copy *) */
 void append_str_list(struct idlist **idl, struct idlist **nidl)
-/* append nidl to idl (does not copy *) */
 {
     if ((*nidl) == (struct idlist *)NULL || *nidl == *idl)
 	return;
@@ -502,8 +512,9 @@ void append_str_list(struct idlist **idl, struct idlist **nidl)
 }
 
 #ifdef POP3_ENABLE
+/** Assert that all UIDs marked deleted in query \a ctl have actually been
+expunged. */
 void expunge_uids(struct query *ctl)
-/* assert that all UIDs marked deleted have actually been expunged */
 {
     struct idlist *idl;
 
@@ -512,8 +523,8 @@ void expunge_uids(struct query *ctl)
 	    idl->val.status.mark = UID_EXPUNGED;
 }
 
-void uid_swap_lists(struct query *ctl) 
 /* finish a query */
+void uid_swap_lists(struct query *ctl) 
 {
     /* debugging code */
     if (ctl->server.uidl && outlevel >= O_DEBUG)
@@ -566,8 +577,8 @@ void uid_swap_lists(struct query *ctl)
 	report(stdout, GT_("not swapping UID lists, no UIDs seen this query\n"));
 }
 
-void uid_discard_new_list(struct query *ctl)
 /* finish a query which had errors */
+void uid_discard_new_list(struct query *ctl)
 {
     /* debugging code */
     if (ctl->server.uidl && outlevel >= O_DEBUG)
@@ -597,16 +608,16 @@ void uid_discard_new_list(struct query *ctl)
     }
 }
 
+/** Reset the number associated with each id */
 void uid_reset_num(struct query *ctl)
-/* reset the number associated with each id */
 {
     struct idlist *idp;
     for (idp = ctl->oldsaved; idp; idp = idp->next)
 	idp->val.status.num = 0;
 }
 
+/** Write list of seen messages, at end of run. */
 void write_saved_lists(struct query *hostlist, const char *idfile)
-/* perform end-of-run write of seen-messages list */
 {
     long	idcount;
     FILE	*tmpfp;
