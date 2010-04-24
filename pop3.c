@@ -1009,9 +1009,13 @@ static int pop3_getrange(int sock,
     /* get the total message count */
     gen_send(sock, "STAT");
     ok = pop3_ok(sock, buf);
-    if (ok == 0)
-	sscanf(buf,"%d %d", countp, bytes);
-    else
+    if (ok == 0) {
+	int asgn;
+
+	asgn = sscanf(buf,"%d %d", countp, bytes);
+	if (asgn != 2)
+		return PS_PROTOCOL;
+    } else
 	return(ok);
 
     /*
