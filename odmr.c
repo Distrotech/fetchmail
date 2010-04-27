@@ -152,7 +152,6 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 	{
 	    fd_set	readfds;
 	    struct timeval timeout;
-	    char	buf[MSGBUFSIZE];
 
 	    FD_ZERO(&readfds);
 	    FD_SET(sock, &readfds);

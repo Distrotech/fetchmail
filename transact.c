@@ -749,17 +749,17 @@ eoh:
 	 * turns on the dropstatus flag.
 	 */
 	{
-	    char	*cp;
+	    char	*tcp;
 
 	    if (!strncasecmp(line, "Status:", 7))
-		cp = line + 7;
+		tcp = line + 7;
 	    else if (!strncasecmp(line, "X-Mozilla-Status:", 17))
-		cp = line + 17;
+		tcp = line + 17;
 	    else
-		cp = NULL;
-	    if (cp) {
-		while (*cp && isspace((unsigned char)*cp)) cp++;
-		if (!*cp || ctl->dropstatus)
+		tcp = NULL;
+	    if (tcp) {
+		while (*tcp && isspace((unsigned char)*tcp)) tcp++;
+		if (!*tcp || ctl->dropstatus)
 		{
 		    free(line);
 		    continue;

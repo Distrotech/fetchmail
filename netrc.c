@@ -331,7 +331,7 @@ free_netrc(netrc_entry *a) {
 int main (int argc, char **argv)
 {
     struct stat sb;
-    char *program_name, *file, *host, *login;
+    char *file, *host, *login;
     netrc_entry *head, *a;
 
     program_name = argv[0];

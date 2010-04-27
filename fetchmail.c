@@ -1900,17 +1900,14 @@ static void dump_params (struct runctl *runp,
 
 			if (ctl->server.akalist)
 			{
-			    struct idlist *idp;
-
 			    printf(GT_("  Predeclared mailserver aliases:"));
 			    for (idp = ctl->server.akalist; idp; idp = idp->next)
 				printf(" %s", idp->id);
 			    putchar('\n');
 			}
+
 			if (ctl->server.localdomains)
 			{
-			    struct idlist *idp;
-
 			    printf(GT_("  Local domains:"));
 			    for (idp = ctl->server.localdomains; idp; idp = idp->next)
 				printf(" %s", idp->id);

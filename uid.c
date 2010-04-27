@@ -282,7 +282,7 @@ void expunge_uids(struct query *ctl)
 	    idl->val.status.mark = UID_EXPUNGED;
 }
 
-const char *str_uidmark(int mark)
+static const char *str_uidmark(int mark)
 {
 	static char buf[20];
 

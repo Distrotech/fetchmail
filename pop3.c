@@ -693,7 +693,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	strcpy((char *)ctl->digest, MD5Digest((unsigned char *)msg));
 	free(msg);
 
-	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, ctl->digest);
+	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, (char *)ctl->digest);
 	break;
 
     case P_RPOP:
@@ -856,7 +856,7 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
 	    if (mark == UID_DELETED || mark == UID_EXPUNGED)
 	    {
 		if (outlevel >= O_VERBOSE)
-		    report(stderr, GT_("id=%s (num=%d) was deleted, but is still present!\n"), id, try_nr);
+		    report(stderr, GT_("id=%s (num=%u) was deleted, but is still present!\n"), id, try_nr);
 		/* just mark it as seen now! */
 		newl->val.status.mark = mark = UID_SEEN;
 	    }
