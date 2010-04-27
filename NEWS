@@ -447,7 +447,8 @@ fetchmail 6.3.9 (released 2008-11-16):
   res_search() and dn_skipname() are only used together and scheduled for
   removal in future versions, so this is probably fine.
 * No longer complain about invalid sslproto "" when POP3 CAPA probe fails.
-  Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+  Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson),
+  Red Hat Bug#503881.
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
 * Allow .fetchmailrc and .fetchids to be symlinks, as the manpage does not
   document they aren't allowed - fixes Debian Bug #452907 (Roger Leigh).
