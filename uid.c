@@ -162,7 +162,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	     * the rightmost '@'.  This is not correct, as InterMail puts an 
 	     * '@' in the UIDL.
 	     */
-	  
+
 	    /* first, skip leading spaces */
 	    user = buf + strspn(buf, " \t");
 
@@ -177,7 +177,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	     * may contain ' ' in the user part, at least in
 	     * the lotus notes case.
 	     * So we start looking for the '@' after which the
-	     * host will follow with the ' ' seperator finaly id.
+	     * host will follow with the ' ' separator with the id.
 	     *
 	     * XXX FIXME: There is a case this code cannot handle:
 	     * the user name cannot have blanks after a '@'.
@@ -428,18 +428,30 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	    report(stdout, GT_("Writing fetchids file.\n"));
 	(void)unlink(newnam); /* remove file/link first */
 	if ((tmpfp = fopen(newnam, "w")) != (FILE *)NULL) {
-	    int errflg;
+	    int errflg = 0;
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    if (idp->val.status.mark == UID_SEEN
 				|| idp->val.status.mark == UID_DELETED)
-			fprintf(tmpfp, "%s@%s %s\n", 
-			    ctl->remotename, ctl->server.queryname, idp->id);
+			if (fprintf(tmpfp, "%s@%s %s\n",
+			    ctl->remotename, ctl->server.queryname, idp->id) < 0) {
+			    int e = errno;
+			    report(stderr, GT_("Write error on fetchids file %s: %s\n"), newnam, strerror(e));
+			    errflg = 1;
+			    goto bailout;
+			}
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)
-		fputs(idp->id, tmpfp);
-	    fflush(tmpfp);
-	    errflg = ferror(tmpfp);
+		if (EOF == fputs(idp->id, tmpfp)) {
+			    int e = errno;
+			    report(stderr, GT_("Write error on fetchids file %s: %s\n"), newnam, strerror(e));
+			    errflg = 1;
+			    goto bailout;
+		}
+
+bailout:
+	    (void)fflush(tmpfp); /* return code ignored, we check ferror instead */
+	    errflg |= ferror(tmpfp);
 	    fclose(tmpfp);
 	    /* if we could write successfully, move into place;
 	     * otherwise, drop */
