@@ -1069,17 +1069,17 @@ int SockClose(int sock)
 static ssize_t cygwin_read(int sock, void *buf, size_t count)
 {
     char *bp = buf;
-    int n = 0;
+    size_t n = 0;
 
-    if ((n = read(sock, bp, count)) == -1)
+    if ((n = read(sock, bp, count)) == (size_t)-1)
 	return(-1);
 
     if (n != count) {
-	int n2 = 0;
+	size_t n2 = 0;
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, GT_("Cygwin socket read retry\n"));
 	n2 = read(sock, bp + n, count - n);
-	if (n2 == -1 || n + n2 != count) {
+	if (n2 == (size_t)-1 || n + n2 != count) {
 	    report(stderr, GT_("Cygwin socket read retry failed!\n"));
 	    return(-1);
 	}
