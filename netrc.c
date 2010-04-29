@@ -10,12 +10,13 @@
    (Makefile.am should have a rule so you can just type "make netrc")
 */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "fetchmail.h"
 #include "netrc.h"
 #include "i18n.h"

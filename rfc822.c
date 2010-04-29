@@ -19,6 +19,9 @@ is part of fetchmail and the Unix Cookbook, and are released under the
 MIT license.  Compile with -DMAIN to build the demonstrator.
 
 ******************************************************************************/
+
+#include "config.h"
+
 #include  <stdio.h>
 #include  <ctype.h>
 #include  <string.h>
