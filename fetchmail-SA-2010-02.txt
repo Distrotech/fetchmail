@@ -30,6 +30,7 @@ Corrected:	2010-04-24 Git (XXX)
 2010-04-19 0.2	add note announcements may appear before releases
 2010-04-20 0.3  add CVE name, fix Type:
 2010-04-24 0.4  revise patch
+2010-04-29 0.5  add info on contributing/mitigating factors
 XXX
 
 
@@ -53,6 +54,12 @@ multibyte character sequences in this information (message headers), fetchmail
 will misinterpret this condition, and believe that the buffer was too small,
 and reallocate a bigger one (with linearly increasing buffer size), and repeat,
 until the allocation fails. At that point, fetchmail will abort.
+
+The exact combination of contributing and mitigating factors is not
+fully understood; GNU glibc 2.7 and 2.10.1 on i586 report EILSEQ when
+printing invalid sequences through a %.*s format string in multibyte
+locales such as de_DE.UTF-8; NetBSD 5, FreeBSD 8 and Solaris 10 do not.
+However, the issue is a genuine fetchmail bug that deserves a fix.
 
 Note that the "Affects:" line above may be inaccurate, and it may be that
 versions before 5.6.6 are actually unaffected.  The author was unable to
