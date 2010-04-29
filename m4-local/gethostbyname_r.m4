@@ -13,6 +13,7 @@ dnl @author Brian Stafford <brian@stafford.uklinux.net>
 dnl
 dnl based on version by Caolan McNamara <caolan@skynet.ie>
 dnl based on David Arnold's autoconf suggestion in the threads faq
+dnl with fixes and updates by Matthias Andree
 dnl
 AC_DEFUN([ACX_WHICH_GETHOSTBYNAME_R],
 [AC_CACHE_CHECK(number of arguments to gethostbyname_r,
@@ -30,6 +31,7 @@ AC_DEFUN([ACX_WHICH_GETHOSTBYNAME_R],
 			[
 dnl			acx_cv_which_gethostbyname_r=0
   AC_TRY_LINK([
+#include <stdlib.h>
 #   include <netdb.h>
   ], [
 	char *name;
@@ -43,6 +45,7 @@ dnl			acx_cv_which_gethostbyname_r=0
   [
 dnl  acx_cv_which_gethostbyname_r=0
   AC_TRY_LINK([
+#include <stdlib.h>
 #   include <netdb.h>
   ], [
 			char *name;
