@@ -53,6 +53,8 @@
 #include "getaddrinfo.h"
 #include "tunable.h"
 
+#include "sdump.h"
+
 /* throw types for runtime errors */
 #define THROW_TIMEOUT	1		/* server timed out */
 
@@ -246,15 +248,17 @@ const char *canonical;  /* server name */
     if (retval) {
 #ifdef HEIMDAL
       if (err_ret && err_ret->e_text) {
+	  char *t = err_ret->e_text;
+	  char *tt = sdump(t, strlen(t));
           report(stderr, GT_("krb5_sendauth: %s [server says '%s']\n"),
-                 error_message(retval),
-                 err_ret->e_text);
+                 error_message(retval), tt);
+	  free(tt);
 #else
       if (err_ret && err_ret->text.length) {
-          report(stderr, GT_("krb5_sendauth: %s [server says '%*s']\n"),
-		 error_message(retval),
-		 err_ret->text.length,
-		 err_ret->text.data);
+	  char *tt = sdump(err_ret->text.data, err_ret->text.length);
+          report(stderr, GT_("krb5_sendauth: %s [server says '%s']\n"),
+		 error_message(retval), tt);
+	  free(tt);
 #endif
 	  krb5_free_error(context, err_ret);
       } else
