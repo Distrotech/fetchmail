@@ -89,6 +89,8 @@ fetchmail-6.3.17 (not yet released):
   local issuer certificate" and self-signed certificates -- these usually hint
   to missing root signing CAs in the certs directory.
 * Several fixes for compiler (GCC, Intel C++, CLang) and autotools warnings
+* Memory allocation failures will now cause abnormal program abort (SIGABRT),
+  not exit with unspecified code.
 
 # DOCUMENTATION
 * Fix table of global option to read "set softbounce" where there used to be a

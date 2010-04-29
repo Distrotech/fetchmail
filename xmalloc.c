@@ -31,7 +31,7 @@ xmalloc (size_t n)
     if (p == (XMALLOCTYPE *) 0)
     {
 	report(stderr, GT_("malloc failed\n"));
-	exit(PS_UNDEFINED);
+	abort();
     }
     return(p);
 }
@@ -45,7 +45,7 @@ xrealloc (XMALLOCTYPE *p, size_t n)
     if (p == (XMALLOCTYPE *) 0)
     {
 	report(stderr, GT_("realloc failed\n"));
-	exit(PS_UNDEFINED);
+	abort();
     }
     return p;
 }
