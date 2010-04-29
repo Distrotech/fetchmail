@@ -88,6 +88,7 @@ fetchmail-6.3.17 (not yet released):
   are now helpful pointers to --sslcertpath and c_rehash for "unable to get
   local issuer certificate" and self-signed certificates -- these usually hint
   to missing root signing CAs in the certs directory.
+* Several fixes for compiler (GCC, Intel C++, CLang) and autotools warnings
 
 # DOCUMENTATION
 * Fix table of global option to read "set softbounce" where there used to be a

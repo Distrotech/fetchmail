@@ -26,7 +26,7 @@ char versionString[] ="libntlm version 0.21";
 
 #define AddBytes(ptr, header, buf, count) \
 { \
-if (buf && count) \
+if (buf != NULL && count != 0) \
   { \
   SSVAL(&ptr->header.len,0,count); \
   SSVAL(&ptr->header.maxlen,0,count); \
