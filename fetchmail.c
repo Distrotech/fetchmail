@@ -446,8 +446,8 @@ int main(int argc, char **argv)
 	}
 	else if (kill(pid, SIGTERM) < 0)
 	{
-	    fprintf(stderr,GT_("fetchmail: error killing %s fetchmail at %d; bailing out.\n"),
-		    bkgd ? GT_("background") : GT_("foreground"), pid);
+	    fprintf(stderr,GT_("fetchmail: error killing %s fetchmail at %ld; bailing out.\n"),
+		    bkgd ? GT_("background") : GT_("foreground"), (long)pid);
 	    exit(PS_EXCLUDE);
 	}
 	else
@@ -455,8 +455,8 @@ int main(int argc, char **argv)
 	    int maxwait;
 
 	    if (outlevel > O_SILENT)
-		fprintf(stderr,GT_("fetchmail: %s fetchmail at %d killed.\n"),
-			bkgd ? GT_("background") : GT_("foreground"), pid);
+		fprintf(stderr,GT_("fetchmail: %s fetchmail at %ld killed.\n"),
+			bkgd ? GT_("background") : GT_("foreground"), (long)pid);
 	    /* We used to nuke the other process's lock here, with
 	     * fm_lock_release(), which is broken. The other process
 	     * needs to clear its lock by itself. */
@@ -484,15 +484,15 @@ int main(int argc, char **argv)
 	else if (!implicitmode)
 	{
 	    fprintf(stderr,
-		 GT_("fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"),
-		 pid);
+		 GT_("fetchmail: can't poll specified hosts with another fetchmail running at %ld.\n"),
+		 (long)pid);
 		return(PS_EXCLUDE);
 	}
 	else if (!bkgd)
 	{
 	    fprintf(stderr,
-		 GT_("fetchmail: another foreground fetchmail is running at %d.\n"),
-		 pid);
+		 GT_("fetchmail: another foreground fetchmail is running at %ld.\n"),
+		 (long)pid);
 		return(PS_EXCLUDE);
 	}
 	else if (getpid() == pid)
@@ -507,8 +507,8 @@ int main(int argc, char **argv)
 	else if (kill(pid, SIGUSR1) == 0)
 	{
 	    fprintf(stderr,
-		    GT_("fetchmail: background fetchmail at %d awakened.\n"),
-		    pid);
+		    GT_("fetchmail: background fetchmail at %ld awakened.\n"),
+		    (long)pid);
 	    return(0);
 	}
 	else
@@ -519,8 +519,8 @@ int main(int argc, char **argv)
 	     * SIGUSR1/SIGHUP transmission.
 	     */
 	    fprintf(stderr,
-		    GT_("fetchmail: elder sibling at %d died mysteriously.\n"),
-		    pid);
+		    GT_("fetchmail: elder sibling at %ld died mysteriously.\n"),
+		    (long)pid);
 	    return(PS_UNDEFINED);
 	}
     }
