@@ -657,7 +657,7 @@ int outlevel = 0;
 #define BUFSIZE_INCREMENT 4096
 
 #ifdef DEBUG
-#define DBG_FWRITE(B,L,BS,FD) ((void)fwrite((B), (L), (BS), (FD)))
+#define DBG_FWRITE(B,L,BS,FD) do { if (fwrite((B), (L), (BS), (FD))) { } } while(0)
 #else
 #define DBG_FWRITE(B,L,BS,FD)
 #endif
@@ -720,8 +720,11 @@ int main(int argc, char *argv[])
   bodytype = MimeBodyType(buffer, 1);
 
   i = strlen(buffer);
-  fwrite(buffer, i, 1, stdout);
   DBG_FWRITE(buffer, i, 1, fd_conv);
+  if (fwrite(buffer, i, 1, stdout) < 1) {
+      perror("fwrite");
+      goto barf;
+  }
   
   do {
      buf_p = (buffer - 1);
@@ -738,13 +741,17 @@ int main(int argc, char *argv[])
            buf_p = buffer;
            UnMimeBodyline(&buf_p, 0, 0);
         }
-        fwrite(buffer, (buf_p - buffer), 1, stdout);
         DBG_FWRITE(buffer, (buf_p - buffer), 1, fd_conv);
+        if (fwrite(buffer, (buf_p - buffer), 1, stdout) < 1) {
+	    perror("fwrite");
+	    goto barf;
+	}
      }
   } while (buf_p > buffer);
 
+barf:
   free(buffer);
-  fflush(stdout);
+  if (EOF == fflush(stdout)) perror("fflush");
 
 #ifdef DEBUG
   fclose(fd_orig);
@@ -754,4 +761,3 @@ int main(int argc, char *argv[])
   return 0;
 }
 #endif
-
