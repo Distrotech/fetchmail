@@ -22,6 +22,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #include  <stdio.h>
 #include  <ctype.h>
 #include  <string.h>
+#include  <strings.h>
 #include  <stdlib.h>
 
 #include "fetchmail.h"
