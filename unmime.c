@@ -657,7 +657,7 @@ int outlevel = 0;
 #define BUFSIZE_INCREMENT 4096
 
 #ifdef DEBUG
-#define DBG_FWRITE(B,L,BS,FD) fwrite(B, L, BS, FD)
+#define DBG_FWRITE(B,L,BS,FD) ((void)fwrite((B), (L), (BS), (FD)))
 #else
 #define DBG_FWRITE(B,L,BS,FD)
 #endif
