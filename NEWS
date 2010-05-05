@@ -98,6 +98,19 @@ fetchmail-6.3.17 (not yet released):
 * In the --sslcertpath description, mention that OpenSSL upgrade (and a 0.9.X
   to 1.0.0 upgrade in particular) may require running c_rehash.
 
+# TRANSLATION UPDATES
+  [zh_CN] Chinese/simplified (Ji ZhengYu)
+  [cs]    Czech (Petr Pisar)
+  [nl]    Dutch (Erwin Poeze)
+  [fr]    French (Frédéric Marchal)
+  [de]    German
+  [id]    Indonesian (Andhika Padmawan)
+  [it]    Italian (Vincenzo Campanella)
+  [ja]    Japanese (Takeshi Hamasaki)
+  [pl]    Polish (Jakub Bogusz)
+  [sk]    Slovak (Marcel Telka)
+  [vi]    Vietnamese (Clytie Siddall)
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information - however, it was stuck with 6.3.8 for a while)
