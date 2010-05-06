@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 fetchmail-SA-2010-02: Denial of service in debug mode w/ multichar locales
 
 Topics:		Denial of service in debug output
@@ -131,7 +134,7 @@ so try this if the patch does not apply.
 
 diff --git a/rfc822.c b/rfc822.c
 index 6f2dbf3..dbcda32 100644
---- a/rfc822.c
+- --- a/rfc822.c
 +++ b/rfc822.c
 @@ -25,6 +25,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
  #include  <stdlib.h>
@@ -145,9 +148,9 @@ index 6f2dbf3..dbcda32 100644
      }
  
  #ifndef MAIN
--    if (outlevel >= O_DEBUG)
--	report_build(stdout, GT_("About to rewrite %.*s...\n"),
--			(int)BEFORE_EOL(buf), buf);
+- -    if (outlevel >= O_DEBUG)
+- -	report_build(stdout, GT_("About to rewrite %.*s...\n"),
+- -			(int)BEFORE_EOL(buf), buf);
 +    if (outlevel >= O_DEBUG) {
 +	report_build(stdout, GT_("About to rewrite %s...\n"), (cp = sdump(buf, BEFORE_EOL(buf))));
 +	xfree(cp);
@@ -159,9 +162,9 @@ index 6f2dbf3..dbcda32 100644
      }
  
  #ifndef MAIN
--    if (outlevel >= O_DEBUG)
--	report_complete(stdout, GT_("...rewritten version is %.*s.\n"),
--			(int)BEFORE_EOL(buf), buf);
+- -    if (outlevel >= O_DEBUG)
+- -	report_complete(stdout, GT_("...rewritten version is %.*s.\n"),
+- -			(int)BEFORE_EOL(buf), buf);
 +    if (outlevel >= O_DEBUG) {
 +	report_complete(stdout, GT_("...rewritten version is %s.\n"),
 +			(cp = sdump(buf, BEFORE_EOL(buf))));
@@ -173,7 +176,7 @@ index 6f2dbf3..dbcda32 100644
      return(buf);
 diff --git a/uid.c b/uid.c
 index fdc6f5d..9a62ee2 100644
---- a/uid.c
+- --- a/uid.c
 +++ b/uid.c
 @@ -20,6 +20,7 @@
  
@@ -187,8 +190,8 @@ index fdc6f5d..9a62ee2 100644
  	    {
  		report_build(stdout, GT_("Old UID list from %s:"), 
  			     ctl->server.pollname);
--		for (idp = ctl->oldsaved; idp; idp = idp->next)
--		    report_build(stdout, " %s", idp->id);
+- -		for (idp = ctl->oldsaved; idp; idp = idp->next)
+- -		    report_build(stdout, " %s", idp->id);
 +		for (idp = ctl->oldsaved; idp; idp = idp->next) {
 +		    char *t = sdump(idp->id, strlen(idp->id));
 +		    report_build(stdout, " %s", t);
@@ -201,8 +204,8 @@ index fdc6f5d..9a62ee2 100644
  	if (uidlcount)
  	{
  	    report_build(stdout, GT_("Scratch list of UIDs:"));
--	    for (idp = scratchlist; idp; idp = idp->next)
--		report_build(stdout, " %s", idp->id);
+- -	    for (idp = scratchlist; idp; idp = idp->next)
+- -		report_build(stdout, " %s", idp->id);
 +	    for (idp = scratchlist; idp; idp = idp->next) {
 +		char *t = sdump(idp->id, strlen(idp->id));
 +		report_build(stdout, " %s", t);
@@ -215,8 +218,8 @@ index fdc6f5d..9a62ee2 100644
  	    report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
  	else
  	    report_build(stdout, GT_("New UID list from %s:"), ctl->server.pollname);
--	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next)
--	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
+- -	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next)
+- -	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
 +	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next) {
 +	    char *t = sdump(idp->id, strlen(idp->id));
 +	    report_build(stdout, " %s = %d", t, idp->val.status.mark);
@@ -229,8 +232,8 @@ index fdc6f5d..9a62ee2 100644
  	/* this is now a merged list! the mails which were seen in this
  	 * poll are marked here. */
  	report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
--	for (idp = ctl->oldsaved; idp; idp = idp->next)
--	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
+- -	for (idp = ctl->oldsaved; idp; idp = idp->next)
+- -	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
 +	for (idp = ctl->oldsaved; idp; idp = idp->next) {
 +	    char *t = sdump(idp->id, strlen(idp->id));
 +	    report_build(stdout, " %s = %d", t, idp->val.status.mark);
@@ -239,3 +242,10 @@ index fdc6f5d..9a62ee2 100644
  	if (!idp)
  	    report_build(stdout, GT_(" <empty>"));
  	report_complete(stdout, "\n");
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.12 (GNU/Linux)
+
+iEYEARECAAYFAkviiHoACgkQvmGDOQUufZUfiQCeIl/RlnUEciNLxY3ykQSgFzDF
+/BMAoKMiJoD4cjGcaN/5CvdIgktKExYB
+=dC/g
+-----END PGP SIGNATURE-----
