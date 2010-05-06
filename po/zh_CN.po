@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.16\n"
+"Project-Id-Version: fetchmail 6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
-"PO-Revision-Date: 2010-04-20 16:09中国标准时间\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
+"PO-Revision-Date: 2010-05-06 11:27+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -680,9 +680,9 @@ msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: 无其它 fetchmail 正在运行\n"
 
 #: fetchmail.c:449
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error killing %s fetchmail at %ld; bailing out.\n"
-msgstr "fetchmail: 终止 %s fetchmail 进程号 %d 时出错；退出\n"
+msgstr "fetchmail: 终止 %s fetchmail 进程号 %ld 时出错；退出。\n"
 
 #: fetchmail.c:450 fetchmail.c:459
 msgid "background"
@@ -693,9 +693,9 @@ msgid "foreground"
 msgstr "前台"
 
 #: fetchmail.c:458
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: %s fetchmail at %ld killed.\n"
-msgstr "fetchmail: %s fetchmail 进程号 %d 终止\n"
+msgstr "fetchmail: %s fetchmail 进程号 %ld 终止。\n"
 
 #: fetchmail.c:481
 msgid ""
@@ -704,17 +704,17 @@ msgid ""
 msgstr "fetchmail: 有另一个 fetchmail 在同一主机上运行时无法检查邮件。\n"
 
 #: fetchmail.c:487
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at %"
 "ld.\n"
 msgstr ""
-"fetchmail: 有另一个 fetchmail 进程号 %d 在指定主机上运行时无法收邮件。\n"
+"fetchmail: 有另一个 fetchmail 进程号 %ld 在指定主机上运行时无法收邮件。\n"
 
 #: fetchmail.c:494
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: another foreground fetchmail is running at %ld.\n"
-msgstr "fetchmail: 另一个前台 fetchmail 进程号 %d 正在运行。\n"
+msgstr "fetchmail: 另一个前台 fetchmail 进程号 %ld 正在运行。\n"
 
 #: fetchmail.c:504
 msgid ""
@@ -722,14 +722,14 @@ msgid ""
 msgstr "fetchmail: 有后台 fetchmail 正在运行时无法接受选项\n"
 
 #: fetchmail.c:510
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: background fetchmail at %ld awakened.\n"
-msgstr "fetchmail: 后台 fetchmail 进程号 %d 被唤醒\n"
+msgstr "fetchmail: 后台 fetchmail 进程号 %ld 被唤醒\n"
 
 #: fetchmail.c:522
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: elder sibling at %ld died mysteriously.\n"
-msgstr "fetchmail: 上次 fetchmail 进程号 %d 不明原因的终止\n"
+msgstr "fetchmail: 上次 fetchmail 进程号 %ld 不明原因的终止\n"
 
 #: fetchmail.c:537
 #, c-format
@@ -1164,9 +1164,9 @@ msgid "  SSL server certificate checking enabled.\n"
 msgstr " 启用 SSL 服务器证书检查\n"
 
 #: fetchmail.c:1673
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL trusted certificate file: %s\n"
-msgstr " SSL 受信证书目录: %s\n"
+msgstr " SSL 受信证书文件: %s\n"
 
 #: fetchmail.c:1675
 #, c-format
@@ -1675,9 +1675,9 @@ msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: 升级至 TLS 协议失败。\n"
 
 #: imap.c:520
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
-msgstr "%s: 升级至 TLS 失败，继续尝试\n"
+msgstr "%s: 即时升级至 TLS 协议失败，继续尝试\n"
 
 #: imap.c:640
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -1701,7 +1701,7 @@ msgstr "邮件删除数不相等 (实际删除 %d 封!= 已删除 %d 封)\n"
 msgid "%lu is unseen\n"
 msgstr "%lu 封未读\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u 未读\n"
@@ -1740,7 +1740,7 @@ msgstr[0] "删除操作后有 %d 封邮件等待收取\n"
 msgid "search for unseen messages failed\n"
 msgstr "查找未读邮件失败\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u 是首个未读邮件\n"
@@ -1908,9 +1908,9 @@ msgid "Authentication required.\n"
 msgstr "要求验证\n"
 
 #: odmr.c:132
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown ODMR error \"%s\"\n"
-msgstr "未知的 ODMR 错误 %d\n"
+msgstr "未知的 ODMR 错误 \"%s\"\n"
 
 #: odmr.c:192
 msgid "receiving message data\n"
@@ -2087,14 +2087,12 @@ msgid "      --sslcertck   do strict server certificate check (recommended)\n"
 msgstr " --sslcertck\t进行严格的服务器证书检查(推荐)\n"
 
 #: options.c:650
-#, fuzzy
 msgid "      --sslcertfile path to trusted-CA ssl certificate file\n"
-msgstr " --sslcertpath\tssl 证书目录\n"
+msgstr "      --sslcertfile     受信 CA ssl 证书文件名\n"
 
 #: options.c:651
-#, fuzzy
 msgid "      --sslcertpath path to trusted-CA ssl certificate directory\n"
-msgstr " --sslcertpath\tssl 证书目录\n"
+msgstr "      --sslcertpath     受信 CA ssl 证书文件的目录\n"
 
 #: options.c:652
 msgid ""
@@ -2315,29 +2313,29 @@ msgstr "无法操作来自上游服务器的 UIDL 响应。\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "响应的服务器带有错误消息的 UID。\n"
 
-#: pop3.c:860
-#, fuzzy, c-format
+#: pop3.c:859
+#, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
-msgstr "id = %s (数量 = %d 封) 已被删除，但仍然存在！\n"
+msgstr "id=%s (数量=%u 封)已被删除，但仍然存在！\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "邮件被插入服务器列表。无法处理。\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "协议错\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "正在读取 UIDLs 时协议出错\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id = %s (数量 = %d 封) 已被删除，但仍然存在！\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "POP3 不支持 --folder 选项\n"
 
@@ -2394,14 +2392,14 @@ msgid "%s (log message incomplete)\n"
 msgstr "%s (日志信息不完整)\n"
 
 #: rfc822.c:83
-#, fuzzy, c-format
+#, c-format
 msgid "About to rewrite %s...\n"
-msgstr "正要重写 %.*s...\n"
+msgstr "正要重写 %s...\n"
 
 #: rfc822.c:221
-#, fuzzy, c-format
+#, c-format
 msgid "...rewritten version is %s.\n"
-msgstr "...重写版本为 %.*s。\n"
+msgstr "...重写版本为 %s。\n"
 
 #: rpa.c:118
 msgid "Success"
@@ -2824,19 +2822,18 @@ msgid "connected.\n"
 msgstr "已连接。\n"
 
 #: socket.c:611
-#, fuzzy
 msgid "Server certificate:\n"
-msgstr "服务器证书验证错误: %s\n"
+msgstr "服务器认证:\n"
 
 #: socket.c:616
 #, c-format
 msgid "Certificate chain, from root to peer, starting at depth %d:\n"
-msgstr ""
+msgstr "验证链从根到节点，在 %d 开始:\n"
 
 #: socket.c:619
 #, c-format
 msgid "Certificate at depth %d:\n"
-msgstr ""
+msgstr "验证处于 %d 层:\n"
 
 #: socket.c:625
 #, c-format
@@ -2865,9 +2862,9 @@ msgid "Unknown Issuer CommonName\n"
 msgstr "未知的发行者名称\n"
 
 #: socket.c:643
-#, fuzzy, c-format
+#, c-format
 msgid "Subject CommonName: %s\n"
-msgstr "发行者: %s\n"
+msgstr "邮件标题: %s\n"
 
 #: socket.c:649
 msgid "Bad certificate: Subject CommonName too long!\n"
@@ -2947,6 +2944,8 @@ msgid ""
 "details, please see the README.SSL-SERVER document that comes with "
 "fetchmail.\n"
 msgstr ""
+"此错误通常出现在服务器提供了一个不完整的验证链，fetchmain 对此无能为力。详细"
+"信息请查看随同 fetchmail 发行的 README.SSL-SERVER 文档。\n"
 
 #: socket.c:796
 #, c-format
@@ -2956,6 +2955,8 @@ msgid ""
 "certificate directory. For details, please see the documentation of --"
 "sslcertpath and --sslcertfile in the manual page.\n"
 msgstr ""
+"这意味着根证书(为 %s 而颁发)不在 CA 证书受信路径处，或是 c_rehash 需要在证书"
+"目录下运行。详细信息请查看手册页中的 --sslcertpath 和 --sslcertfile 部分。\n"
 
 #: socket.c:888
 msgid "File descriptor out of range for SSL"
@@ -2974,7 +2975,7 @@ msgstr "证书(指纹)验证被不明原因地跳过！\n"
 msgid ""
 "Warning: the connection is insecure, continuing anyways. (Better use --"
 "sslcertck!)\n"
-msgstr ""
+msgstr "警告:此连接不安全，但会继续运行。(最好使用 --sslcertck！)\n"
 
 #: socket.c:1080
 msgid "Cygwin socket read retry\n"
@@ -3119,9 +3120,9 @@ msgid "Writing fetchids file.\n"
 msgstr "正在写入 fetchids 文件。\n"
 
 #: uid.c:439 uid.c:447
-#, fuzzy, c-format
+#, c-format
 msgid "Write error on fetchids file %s: %s\n"
-msgstr "正在写入 fetchids 文件。\n"
+msgstr "将错误写入 fetchids 文件 %s: %s\n"
 
 #: uid.c:459
 #, c-format
