@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2003-05-06 01:03+0300\n"
 "Last-Translator: Dokianakis Theofanis <madf@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -1808,7 +1808,7 @@ msgstr ""
 msgid "%lu is unseen\n"
 msgstr "%u δεν έχει ειδωθεί\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u δεν έχει ειδωθεί\n"
@@ -1850,7 +1850,7 @@ msgstr[1] "%d μηνύματα αναμένουν μετά την εξάλειψη\n"
 msgid "search for unseen messages failed\n"
 msgstr "αναζήτηση για μη ιδωμένα μηνύματα απέτυχε\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u είναι το πρώτο μη ιδωμένο\n"
@@ -2448,30 +2448,30 @@ msgstr ""
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Τα μηνύματα εισέρχονται σε λίστα στο διαχειριστή. Αδυναμία χειρισμού αυτού.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "σφάλμα πρωτοκόλλου\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "σφάλμα πρωτοκόλλου κατά τη λήψη UIDL\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:1449
+#: pop3.c:1447
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Η επιλογή --remote δεν υποστηρίζεται με το POP3\n"

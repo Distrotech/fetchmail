@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2010-05-05 23:55+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -726,7 +726,9 @@ msgstr "fetchmail: kein weiteres fetchmail läuft\n"
 #: fetchmail.c:449
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %ld; bailing out.\n"
-msgstr "fetchmail: Fehler beim Abschießen von %s-fetchmail mit Kennung %ld; Abbruch.\n"
+msgstr ""
+"fetchmail: Fehler beim Abschießen von %s-fetchmail mit Kennung %ld; "
+"Abbruch.\n"
 
 #: fetchmail.c:450 fetchmail.c:459
 msgid "background"
@@ -754,7 +756,9 @@ msgstr ""
 msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at %"
 "ld.\n"
-msgstr "fetchmail: kann spezifizierte Hosts nicht abfragen, solange ein weiteres fetchmail mit Kennung %ld läuft.\n"
+msgstr ""
+"fetchmail: kann spezifizierte Hosts nicht abfragen, solange ein weiteres "
+"fetchmail mit Kennung %ld läuft.\n"
 
 #: fetchmail.c:494
 #, c-format
@@ -776,7 +780,9 @@ msgstr "fetchmail: Hintergrund-fetchmail mit Kennung %ld aufgeweckt.\n"
 #: fetchmail.c:522
 #, c-format
 msgid "fetchmail: elder sibling at %ld died mysteriously.\n"
-msgstr "fetchmail: älterer Prozess mit Kennung %ld ist auf mysteriöse Weise gestorben.\n"
+msgstr ""
+"fetchmail: älterer Prozess mit Kennung %ld ist auf mysteriöse Weise "
+"gestorben.\n"
 
 #: fetchmail.c:537
 #, c-format
@@ -1799,7 +1805,7 @@ msgstr "unerwartete Expunge-Bestätigung (%d tatsächlich != %d erwartet)\n"
 msgid "%lu is unseen\n"
 msgstr "%lu ist ungesehen\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u ist ungesehen\n"
@@ -1841,7 +1847,7 @@ msgstr[1] "%d Nachrichten warten nach dem Löschen\n"
 msgid "search for unseen messages failed\n"
 msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
@@ -2200,11 +2206,14 @@ msgstr ""
 
 #: options.c:650
 msgid "      --sslcertfile path to trusted-CA ssl certificate file\n"
-msgstr "      --sslcertfile Pfad zur Datei mit SSL-Zertifikaten vertrauenswürdiger CAs\n"
+msgstr ""
+"      --sslcertfile Pfad zur Datei mit SSL-Zertifikaten vertrauenswürdiger "
+"CAs\n"
 
 #: options.c:651
 msgid "      --sslcertpath path to trusted-CA ssl certificate directory\n"
-msgstr "      --sslcertpath Verzeichnis mit vertrauenswürdigen CA-SSL-Zertifikaten\n"
+msgstr ""
+"      --sslcertpath Verzeichnis mit vertrauenswürdigen CA-SSL-Zertifikaten\n"
 
 #: options.c:652
 msgid ""
@@ -2441,29 +2450,29 @@ msgstr "Kann die UIDL-Antwort des Servers nicht verarbeiten.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%u) wurde gelöscht, ist aber immer noch da!\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Nachrichten in Liste auf Server eingefügt. Kann damit nicht umgehen.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "Protokollfehler\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "Protokollfehler beim Holen der UIDL\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) wurde gelöscht, ist aber immer noch da!\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Option --folder wird mit POP3 nicht unterstützt\n"
 
@@ -3095,7 +3104,11 @@ msgid ""
 "trusted CA certificate locations, or that c_rehash needs to be run on the "
 "certificate directory. For details, please see the documentation of --"
 "sslcertpath and --sslcertfile in the manual page.\n"
-msgstr "Das heißt, dass das Wurzelzertifikat (ausgestellt für %s) nicht unter den vertrauenswürdigen CA-Zertifikaten ist, oder dass c_rehash auf dem Verzeichnis ausgeführt werden muss. Details sind in der fetchmail-Handbuchseite im bei --sslcertpath beschrieben.\n"
+msgstr ""
+"Das heißt, dass das Wurzelzertifikat (ausgestellt für %s) nicht unter den "
+"vertrauenswürdigen CA-Zertifikaten ist, oder dass c_rehash auf dem "
+"Verzeichnis ausgeführt werden muss. Details sind in der fetchmail-"
+"Handbuchseite im bei --sslcertpath beschrieben.\n"
 
 #: socket.c:888
 msgid "File descriptor out of range for SSL"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2006-11-02 06:58-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -1739,7 +1739,7 @@ msgstr "mail expunge mismatch (%d actual != %d expected)\n"
 msgid "%lu is unseen\n"
 msgstr "%lu is unseen\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u is unseen\n"
@@ -1781,7 +1781,7 @@ msgstr[1] "%d messages waiting after expunge\n"
 msgid "search for unseen messages failed\n"
 msgstr "search for unseen messages failed\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u is first unseen\n"
@@ -2362,29 +2362,29 @@ msgstr "Cannot handle UIDL response from upstream server.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server responded with UID for wrong message.\n"
 
-#: pop3.c:860
+#: pop3.c:859
 #, fuzzy, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) was deleted, but is still present!\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Messages inserted into list on server. Cannot handle this.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "protocol error\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "protocol error while fetching UIDLs\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) was deleted, but is still present!\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Option --folder is not supported with POP3\n"
 

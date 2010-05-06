@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.16\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2010-04-10 21:32+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -1836,7 +1836,7 @@ msgstr "správa %s@%s:%d nemala očakávanú dĺžku (%d aktuálne != %d očaká
 msgid "%lu is unseen\n"
 msgstr "%u je neprečítaných\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, fuzzy, c-format
 msgid "%u is unseen\n"
 msgstr "%u je neprečítaných\n"
@@ -1881,7 +1881,7 @@ msgstr[1] "%d správ čaká po prvom vymazaní\n"
 msgid "search for unseen messages failed\n"
 msgstr "vyhľadávanie neprečítaných správ zlyhalo\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, fuzzy, c-format
 msgid "%u is first unseen\n"
 msgstr "%u je prvá neprečítaná\n"
@@ -2467,29 +2467,29 @@ msgstr ""
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "chyba protokolu\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr ""
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Voľba --folder nie je podporovaná s POP3\n"
 

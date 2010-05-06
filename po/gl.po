@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 5.3.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2000-04-10 01:26+0200\n"
 "Last-Translator: Jesús Bravo Álvarez <jba@pobox.com>\n"
 "Language-Team: Galician <gpul-traduccion@ceu.fi.udc.es>\n"
@@ -1808,7 +1808,7 @@ msgstr "a mensaxe %d non tiña o tamaño agardado (%d real != %d agardado)\n"
 msgid "%lu is unseen\n"
 msgstr "a %u aínda foi lida\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "a %u aínda foi lida\n"
@@ -1851,7 +1851,7 @@ msgstr[1] "Non hai mensaxes agardando para %s\n"
 msgid "search for unseen messages failed\n"
 msgstr "fallou a busca de mensaxes non lidas\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, fuzzy, c-format
 msgid "%u is first unseen\n"
 msgstr "a %u aínda foi lida\n"
@@ -2463,30 +2463,30 @@ msgstr ""
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mensaxes inseridas nunha lista no servidor. Non se pode manexar isto.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "erro de protocolo\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "erro de protocolo ó obter os UIDLs\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:1449
+#: pop3.c:1447
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "A opción --remote non está soportada con POP3\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2010-05-03 18:18+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -1761,7 +1761,7 @@ msgstr "không khớp được khi xoá hẳn thư (%d thật != %d ngờ)\n"
 msgid "%lu is unseen\n"
 msgstr "%lu chưa xem\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u chưa xem\n"
@@ -1800,7 +1800,7 @@ msgstr[0] "%d thư đợi sau khi xoá hẳn\n"
 msgid "search for unseen messages failed\n"
 msgstr "việc tìm kiếm các thư chưa xem bị lỗi\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u là thư đầu chưa xem\n"
@@ -2425,31 +2425,31 @@ msgstr "Không thể xử lý đáp ứng UIDL từ máy phục vụ nguồn.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Máy phục vụ đã đáp ứng UID cho thư không đúng.\n"
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (số=%u) đã được xoá bỏ, nhưng còn có !\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Gặp thư được chèn vào danh sách trên máy phục vụ. Không thể xử lý trường hợp "
 "này.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "lỗi giao thức\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gặp lỗi giao thức khi lấy các UIDL\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (số=%d) đã được xoá bỏ, nhưng còn có.\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Không hỗ trợ tùy chọn « --folder » (thư mục) với POP3\n"
 

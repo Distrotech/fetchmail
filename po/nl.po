@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2010-04-30 14:07+0200\n"
 "Last-Translator: Erwin Poeze <erwin.poeze@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -1778,7 +1778,7 @@ msgstr "bericht-expunge komt niet overeen (is %d, waar %d verwacht)\n"
 msgid "%lu is unseen\n"
 msgstr "%lu is nog niet gelezen\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u is nog niet gelezen\n"
@@ -1820,7 +1820,7 @@ msgstr[1] "%d berichten in wachtrij na expunge\n"
 msgid "search for unseen messages failed\n"
 msgstr "zoeken naar ongelezen berichten is mislukt\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u is als eerste nog niet gelezen\n"
@@ -2419,30 +2419,30 @@ msgstr "UIDL-respons van upstreamserver kan niet worden verwerkt.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server reageerde met UID voor verkeerd bericht.\n"
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%u) is al verwijderd, maar bestaat nog steeds!\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Berichten ingevoegd in de lijst op de server. Kan hier niet mee omgaan.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "protocolfout\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "protocolfout tijdens het ophalen van UIDLs\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) is al verwijderd, maar bestaat nog steeds!\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Optie '--folder' is niet mogelijk met POP3\n"
 

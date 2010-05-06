@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2010-05-04 06:05+0200\n"
 "Last-Translator: Vincenzo Campanella <vinz65@gmail.com>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -1845,7 +1845,7 @@ msgstr ""
 msgid "%lu is unseen\n"
 msgstr "%lu non è stato visto\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u non è stato visto\n"
@@ -1887,7 +1887,7 @@ msgstr[1] "%d messaggi in attesa dopo la ripulitura\n"
 msgid "search for unseen messages failed\n"
 msgstr "ricerca di messaggi non visti fallita\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u è il primo non visto\n"
@@ -2521,31 +2521,31 @@ msgstr "Impossibile gestire la risposta UIDL dal server upstream.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Il server ha risposto con UID per messaggio errato.\n"
 
-#: pop3.c:860
+#: pop3.c:859
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%u) è stato eliminato, ma è sempre presente.\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Messaggi inseriti nell'elenco sul server. Impossibile gestire questa "
 "situazione.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "errore di protocollo\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "errore di protocollo durante lo scaricamento degli UIDL\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) è stato eliminato, ma è sempre presente.\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "L'opzione «--folder» non è supportata con POP3\n"
 

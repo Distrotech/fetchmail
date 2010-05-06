@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.12\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-05-05 23:49+0200\n"
+"POT-Creation-Date: 2010-05-06 09:05+0200\n"
 "PO-Revision-Date: 2009-10-06 19:04+0200\n"
 "Last-Translator: Francisco Molinero <paco@byasl.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -1821,7 +1821,7 @@ msgstr "la eliminación de correo no coincide (%d actual != %d esperado)\n"
 msgid "%lu is unseen\n"
 msgstr "%lu no fue visto\n"
 
-#: imap.c:937 pop3.c:869 pop3.c:881 pop3.c:1120 pop3.c:1127
+#: imap.c:937 pop3.c:868 pop3.c:880 pop3.c:1118 pop3.c:1125
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u no fue visto\n"
@@ -1863,7 +1863,7 @@ msgstr[1] "Quedan %d mensajes esperando tras la eliminación\n"
 msgid "search for unseen messages failed\n"
 msgstr "la búsqueda de mensajes no vistos falló\n"
 
-#: imap.c:1063 pop3.c:890
+#: imap.c:1063 pop3.c:889
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u es el primero que no fue visto\n"
@@ -2483,30 +2483,30 @@ msgstr "No se puede manejar la respuesta UIDL proveniente del servidor.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor devolvió el UID de un mensaje incorrecto.\n"
 
-#: pop3.c:860
+#: pop3.c:859
 #, fuzzy, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) fue borrado, ¡pero aún se encuentra presente!\n"
 
-#: pop3.c:966
+#: pop3.c:965
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mensajes insertados en una lista en el servidor. No se puede manejar esto.\n"
 
-#: pop3.c:1062
+#: pop3.c:1061
 msgid "protocol error\n"
 msgstr "error de protocolo\n"
 
-#: pop3.c:1078
+#: pop3.c:1077
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocolo durante la recepción de UIDL\n"
 
-#: pop3.c:1111
+#: pop3.c:1109
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) fue borrado, ¡pero aún se encuentra presente!\n"
 
-#: pop3.c:1449
+#: pop3.c:1447
 msgid "Option --folder is not supported with POP3\n"
 msgstr "La opción --folder no está permitida con POP3\n"
 
