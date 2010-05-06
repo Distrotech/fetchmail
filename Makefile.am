@@ -225,6 +225,11 @@ lsm: genlsm.sh dist
 rsync:  distdir $(srcdir)/.rsyncs
 	@( cat $(srcdir)/.rsyncs | sed -e 's}^}rsync -aH --delete-after $(PACKAGE)-$(VERSION)/ }; s/\($$\)/ \&/;' ; echo "wait" ) | $(SHELL) -x
 
+.PHONY: import-translations
+import-translations:
+	rsync -Lrtvz translationproject.org::tp/latest/fetchmail/  $(top_srcdir)/po
+	cd $(top_builddir)/po && $(MAKE) update-po
+
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
 # compile-command:"configure"
