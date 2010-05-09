@@ -1009,8 +1009,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 		}
 	}
 
-	if (!certck && (SSL_get_verify_result(_ssl_context[sock]) != X509_V_OK
-|| !_verify_ok)) {
+	if (!certck && !fingerprint &&
+		(SSL_get_verify_result(_ssl_context[sock]) != X509_V_OK || !_verify_ok)) {
 		report(stderr, GT_("Warning: the connection is insecure, continuing anyways. (Better use --sslcertck!)\n"));
 	}
 
