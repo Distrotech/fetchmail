@@ -171,9 +171,15 @@ dnl 		[LIBS="$LIBS -lintl"])
 
 AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
 
-AC_SEARCH_LIBS(MD5Init, [md5 md], [],
-	      [AC_LIBSOURCE(md5c.c)
-               EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"])
+have_md5=no
+if test "$ac_cv_header_md5_h" != no ; then
+    AC_SEARCH_LIBS(MD5Init, [md], [have_md5=yes])
+fi
+
+if test "$have_md5" != yes ; then
+    AC_LIBSOURCE(md5c.c)
+    EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"
+fi
 
 AC_CHECK_FUNC(getopt_long, [],
               [AC_LIBSOURCES([getopt.c, getopt1.c])
