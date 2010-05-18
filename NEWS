@@ -56,12 +56,14 @@ fetchmail-6.3.18 (not yet released):
 
 # BUG FIXES
 * Fetchmail would warn about insecure SSL/TLS connections even if a matching
-  --sslfingerprint was specified. This is an omission from a SSL usability
+  --sslfingerprint was specified. This is an omission from an SSL usability
   change made in 6.3.17.  Fixes Debian Bug#580796 reported by Roland Stigge.
 * Fetchmail 6.3.15, 6.3.16, and 6.3.17 would pick up libmd5 to obtain MD5*
-  functions. This fails if, for instance, libmd5.so was installed as part of
-  libwww on machines where long isn't 32-bits. Fixes Gentoo Bug #319283,
-  reported - including the crucial hint to libwww - by Karl Hakimian.
+  functions, as an effect of an undocumented Solaris MD5 fix.
+  This fails if, for instance, libmd5.so was installed on other operating
+  systems as part of libwww on machines where long isn't 32-bits. Fixes Gentoo
+  Bug #319283, reported - including the hint to libwww - by Karl Hakimian.
+  Side effect: fetchmail will now use -lmd on Solaris rather than -lmd5.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
