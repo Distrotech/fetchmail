@@ -64,6 +64,13 @@ fetchmail-6.3.18 (not yet released):
   systems as part of libwww on machines where long isn't 32-bits. Fixes Gentoo
   Bug #319283, reported - including the hint to libwww - by Karl Hakimian.
   Side effect: fetchmail will now use -lmd on Solaris rather than -lmd5.
+* Fetchmail will no longer print connection attempts and errors for one host
+  in "silent" and "normal" logging modes, unless all connections fail. This
+  should reduce irritation around refused-connection logging if services are
+  only on an IPv4 socket if the host also supports IPv6. Often observed as
+  connections refused to ::1/25 when the subsequent connection to 127.0.0.1/25
+  then - silently - succeeds.  Fetchmail, unless in verbose mode, will collect
+  all connect errors and only report them if all of them fail.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
@@ -78,6 +85,9 @@ fetchmail-6.3.18 (not yet released):
 * fetchmail does not track pending deletes over crashes
 * the command line interface is sometimes a bit stubborn, for instance,
   fetchmail -s doesn't work with a daemon running
+* Linux may return duplicates of an IP address in some circumstances if no or
+  no global IPv6 addresses are configured. (No workaround. Ubuntu Bug#582585,
+  Novell Bug#606980.)
 
 
 fetchmail-6.3.17 (released 2010-05-06, 25767 LoC):

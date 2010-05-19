@@ -264,6 +264,8 @@ int SockOpen(const char *host, const char *service,
 {
     struct addrinfo *ai, req;
     int i, acterr = 0;
+    int ord;
+    char errbuf[8192] = "";
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin)
@@ -285,10 +287,13 @@ int SockOpen(const char *host, const char *service,
 	return -1;
     }
 
+    /* NOTE a Linux bug here - getaddrinfo will happily return 127.0.0.1
+     * twice if no IPv6 is configured */
     i = -1;
-    for (ai = *ai0; ai; ai = ai->ai_next) {
-	char buf[80],pb[80];
-	int gnie;
+    for (ord = 0, ai = *ai0; ai; ord++, ai = ai->ai_next) {
+	char buf[256]; /* hostname */
+	char pb[256];  /* service name */
+	int gnie;      /* getnameinfo result code */
 
 	gnie = getnameinfo(ai->ai_addr, ai->ai_addrlen, buf, sizeof(buf), NULL, 0, NI_NUMERICHOST);
 	if (gnie)
@@ -299,14 +304,17 @@ int SockOpen(const char *host, const char *service,
 
 	if (outlevel >= O_VERBOSE)
 	    report_build(stdout, GT_("Trying to connect to %s/%s..."), buf, pb);
-	i = socket(ai->ai_family, ai->ai_socktype, 0);
+	i = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
 	if (i < 0) {
+	    int e = errno;
 	    /* mask EAFNOSUPPORT errors, they confuse users for
 	     * multihomed hosts */
 	    if (errno != EAFNOSUPPORT)
 		acterr = errno;
 	    if (outlevel >= O_VERBOSE)
-		report_complete(stdout, GT_("cannot create socket: %s\n"), strerror(errno));
+		report_complete(stdout, GT_("cannot create socket: %s\n"), strerror(e));
+	    snprintf(errbuf+strlen(errbuf), sizeof(errbuf)-strlen(errbuf),\
+		     GT_("name %d: cannot create socket family %d type %d: %s\n"), ord, ai->ai_family, ai->ai_socktype, strerror(e));
 	    continue;
 	}
 
@@ -323,8 +331,9 @@ int SockOpen(const char *host, const char *service,
 
 	    if (outlevel >= O_VERBOSE)
 		report_complete(stdout, GT_("connection failed.\n"));
-	    if (outlevel > O_SILENT)
+	    if (outlevel >= O_VERBOSE)
 		report(stderr, GT_("connection to %s:%s [%s/%s] failed: %s.\n"), host, service, buf, pb, strerror(e));
+	    snprintf(errbuf+strlen(errbuf), sizeof(errbuf)-strlen(errbuf), GT_("name %d: connection to %s:%s [%s/%s] failed: %s.\n"), ord, host, service, buf, pb, strerror(e));
 	    fm_close(i);
 	    i = -1;
 	    continue;
@@ -342,8 +351,10 @@ int SockOpen(const char *host, const char *service,
     fm_freeaddrinfo(*ai0);
     *ai0 = NULL;
 
-    if (i == -1)
+    if (i == -1) {
+	report(stderr, GT_("Connection errors for this poll:\n%s"), errbuf);
 	errno = acterr;
+    }
 
     return i;
 }
