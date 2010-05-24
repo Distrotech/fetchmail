@@ -114,7 +114,7 @@ int smtp_setup(struct query *ctl)
 	 */
 	struct idlist	*idp;
 	const char *id_me = run.invisible ? ctl->server.truename : fetchmailhost;
-	int oldphase = phase;
+	int oldphase;
 	char *parsed_host = NULL;
 
 	errno = 0;
@@ -131,7 +131,7 @@ int smtp_setup(struct query *ctl)
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp;
-	    char	*portnum = SMTP_PORT;
+	    const char	*portnum = SMTP_PORT;
 
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 	    if (ctl->smtphost[0]=='/')
@@ -262,12 +262,13 @@ char *rcpt_address(struct query *ctl, const char *id,
 }
 
 static int send_bouncemail(struct query *ctl, struct msgblk *msg,
-			   int userclass, char *message /* should have \r\n at the end */,
+			   int userclass, const char *message /* should have \r\n at the end */,
 			   int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
     char daemon_name[15 + HOSTLEN] = "MAILER-DAEMON@";
-    char boundary[BUFSIZ], *bounce_to;
+    char boundary[BUFSIZ];
+    const char *bounce_to;
     int sock;
     static char *fqdn_of_host = NULL;
     const char *md1 = "MAILER-DAEMON", *md2 = "MAILER-DAEMON@";
@@ -784,7 +785,7 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 
     if (fflush(sinkfp) || ferror(sinkfp))
     {
-	report(stderr, GT_("BSMTP preamble write failed.\n"));
+	report(stderr, GT_("BSMTP preamble write failed: %s.\n"), strerror(errno));
 	return(PS_BSMTP);
     }
 
@@ -1235,7 +1236,10 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
      * under all BSDs and Linux)
      */
     orig_uid = getuid();
-    seteuid(ctl->uid);
+    if (seteuid(ctl->uid)) {
+	report(stderr, GT_("Cannot switch effective user id to %ld: %s\n"), (long)ctl->uid, strerror(errno));
+	return PS_IOERR;
+    }
 #endif /* HAVE_SETEUID */
 
     sinkfp = popen(before, "w");
@@ -1244,7 +1248,10 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 
 #ifdef HAVE_SETEUID
     /* this will fail quietly if we didn't start as root */
-    seteuid(orig_uid);
+    if (seteuid(orig_uid)) {
+	report(stderr, GT_("Cannot switch effective user id back to original %ld: %s\n"), (long)orig_uid, strerror(errno));
+	return PS_IOERR;
+    }
 #endif /* HAVE_SETEUID */
 
     if (!sinkfp)
@@ -1268,6 +1275,8 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 /* set up sinkfp to be an input sink we can ship a message to */
 {
     *bad_addresses = *good_addresses = 0;
+
+    if (want_progress() && outlevel >= O_VERBOSE && !ctl->mda && !ctl->bsmtp) puts("");
 
     if (ctl->bsmtp)		/* dump to a BSMTP batch file */
 	return(open_bsmtp_sink(ctl, msg, good_addresses, bad_addresses));
@@ -1347,8 +1356,31 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 /* perform end-of-message actions on the current output sink */
 {
     int smtp_err;
-    if (ctl->mda)
-    {
+
+    if (want_progress() && outlevel >= O_VERBOSE && !ctl->mda && !ctl->bsmtp) puts("");
+
+    if (ctl->bsmtp && sinkfp) {
+	int error, oerrno;
+
+	/* implicit disk-full check here... */
+	fputs(".\r\n", sinkfp);
+	error = ferror(sinkfp);
+	oerrno = errno;
+	if (strcmp(ctl->bsmtp, "-"))
+	{
+	    if (fclose(sinkfp) == EOF) {
+		error = 1;
+		oerrno = errno;
+	    }
+	    sinkfp = (FILE *)NULL;
+	}
+	if (error)
+	{
+	    report(stderr, 
+		   GT_("Message termination or close of BSMTP file failed: %s\n"), strerror(oerrno));
+	    return(FALSE);
+	}
+    } else if (ctl->mda) {
 	int rc = 0, e = 0, e2 = 0, err = 0;
 
 	/* close the delivery pipe, we'll reopen before next message */
@@ -1385,25 +1417,6 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 			rc, e, strerror(e), __FILE__, __LINE__);
 	    }
 
-	    return(FALSE);
-	}
-    }
-    else if (ctl->bsmtp && sinkfp)
-    {
-	int error;
-
-	/* implicit disk-full check here... */
-	fputs(".\r\n", sinkfp);
-	error = ferror(sinkfp);
-	if (strcmp(ctl->bsmtp, "-"))
-	{
-	    if (fclose(sinkfp) == EOF) error = 1;
-	    sinkfp = (FILE *)NULL;
-	}
-	if (error)
-	{
-	    report(stderr, 
-		   GT_("Message termination or close of BSMTP file failed\n"));
 	    return(FALSE);
 	}
     }

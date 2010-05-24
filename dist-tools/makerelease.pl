@@ -1,93 +1,108 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl -w
 #
 # Make a fetchmail release.
 # Dumps a release notice and diffs as a MIME multipart message 
 # in RELEASE_NOTES
 #
+
+my $project = "fetchmail";
+my $website = "http://developer.berlios.de/projects/$project";
+my $mailfrom = "<$project-devel\@lists.berlios.de> (Fetchmail Development Team)";
+my $distsufx = '.tar.bz2';
+
+# ---------------------------------------------------------------------
+
 use POSIX qw(strftime);
-$tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
+use Getopt::Long;
+use strict vars;
 
-die "This script ($0) needs to be updated for the Git-orious repo.";
-
-$project = "fetchmail";
-$svnrepos = "http://mknod.org/svn/$project";
-$website = "http://developer.berlios.de/projects/$project";
-$mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
-
+# check environment
+(-r "NEWS" and -r "fetchmail.c" and -r "configure.ac") or die "Please cd to the top-level source directory!";
 die "Need GNU sort!" unless `sort --version | head -n1` =~ /GNU/;
+system("lftp --version >/dev/null 2>&1") and die "lftp not found!";
 
 # parse options
-$diffs = 0;
-$verbose = 0;
-$null = ">/dev/null";
-$errnull = "2>/dev/null";
-while ($i = shift @ARGV)
-{
-	if ($i =~ /^(--diffs|-d)$/i)
-	{
-		$diffs = 1;
-		next;
-	}
+my $diffs = 0;
+my $verbose = 0;
+my $help = 0;
+my $null = ">/dev/null";
+my $errnull = "2>/dev/null";
 
-	if ($i =~ /^(--verbose|-v)$/i)
-	{
-		$verbose = 1;
-		$null = "";
-		next;
-	}
+sub usage($$) {
+    my ($own, $rc) = @_;
 
-	die "Error: Unknown option: $i\n";
+    print STDERR "Usage: $_[0] [--verbose,-v] [--help,-h,-?]\n";
+    exit($_[1]);
 }
 
+GetOptions("diffs|d" => \$diffs, "verbose|v" => \$verbose, "help|h|?" => \$help)
+    or usage($0, 1);
+
+usage($0, 0) if $help;
+
+die "$0 does not yet work with --diffs - needs to be updated for Git first!" if $diffs;
+
+if ($verbose) {
+    $null = "";
+}
+
+my $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
+
 # extract version from source
-$version=`grep 'AC_INIT' configure.ac`;
+my $version =`grep 'AC_INIT' configure.ac`;
 $version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\,.*\)/;
 $version = $1;
 die "cannot determine version" unless defined $1;
-$tag = "RELEASE_$version";
+my $tag = "RELEASE_$version";
 $tag =~ tr/./-/;
 
 # extract existing tags
-open(ID, "svn ls \"$svnrepos/tags\" | sort -t- -k1,1 -k2,2n -k3,3n |") || die "cannot run svn ls: $!\naborting";
+my @versions;
+open(ID, "git tag | sort -t- -k1,1 -k2,2n -k3,3n |") || die "cannot run git tag: $!\naborting";
 while (<ID>) {
-    if (m{^(RELEASE_.*)/}) {
-	unshift(@versions, $1);
-    }
+	chomp;
+	if (m{^(RELEASE_.*)$}) {
+		unshift(@versions, $1);
+	}
 }
-close ID || die "svn ls  failed, aborting";
+close ID || die "git tag   failed, aborting";
 
+my $oldtag; my $oldver;
 if ($versions[0] eq $tag) {
-    $tag = $versions[0];
-    $oldtag = $versions[1];
+	$tag = $versions[0];
+	$oldtag = $versions[1];
 } else {
-    $tag = '<workfile>';
-    $oldtag = $versions[0];
+	$tag = '<workfile>';
+	$oldtag = $versions[0];
 }
 
-$pwd = `pwd`; chomp $pwd;
+my $pwd = `pwd`; chomp $pwd;
 
 $ENV{PATH} .= ":$pwd/dist-tools:$pwd/dist-tools/shipper";
 
 print "Building $version release, tag $tag, previous tag $oldtag\n";
 
 if (-d "autom4te.cache") {
-    system("rm -rf autom4te.cache")
-	and die "Failure in removing autom4te.cache";
+	system("rm -rf autom4te.cache")
+		and die "Failure in removing autom4te.cache";
 }
 
-if (system("autoreconf -isv")) {
+printf "### autoreconf\n";
+
+if (system("autoreconf -ifs" . ($verbose ? 'v' : ''))) {
 	die("Failure in regenerating autoconf files\n");
 }
 
+print "### configure\n";
+
+if (system("mkdir -p autobuild && cd autobuild " 
+	. " && ../configure -C --silent ")) { die("Configuration failure\n"); }
+
 print "### Test-building the software...\n";
-if (system("mkdir -p autobuild && cd autobuild && ../configure -C --silent && make -s clean && make check distcheck")) {
+if (system("cd autobuild && make -s clean"
+	. " && make " . ($verbose ? '' : '-s') . " check distcheck lsm")) {
 	die("Compilation failure\n");
 }
-
-# print "### Building the RPMs...\n";
-# if (system("cd autobuild && cp ../fetchmail.xpm . && buildrpms $project-${version}.tar.bz2 $null")) {
-# 	die("RPM-build failure\n");
-# }
 
 open(REPORT, ">$tmp/$project.PREAMBLE.$$");
 
@@ -99,7 +114,7 @@ The $version release of $project is now available at the usual locations,
 including <$website>.
 
 The source archive is available at:
-<$website/$project-${version}.tar.gz>
+<$website/$project-$version$distsufx>
 
 Here are the release notes:
 
@@ -108,16 +123,16 @@ EOF
 # Extract the current notes
 open(NEWS, "NEWS");
 while (<NEWS>) {
-    if (/^$project/) {
-	print REPORT $_;
-	last;
-    }
+	if (/^$project/) {
+		print REPORT $_;
+		last;
+	}
 }
 while (<NEWS>) {
-    if (/^$project/) {
-	last;
-    }
-    print REPORT $_;
+	if (/^$project/) {
+		last;
+	}
+	print REPORT $_;
 }
 
 $oldver = $oldtag;
@@ -127,26 +142,26 @@ $oldver =~ s/^RELEASE_//;
 if ($diffs) {
 	print REPORT "Diffs from the previous ($oldver) release follow as a MIME attachment."
 } else {
-        print REPORT "By popular demand, diffs from the previous release have been omitted."
+	print REPORT "By popular demand, diffs from the previous release have been omitted."
 }
 
 close(NEWS);
 
 close(REPORT);
 
-if ($tag eq '<workfile>') {
-    system("svn diff -r$oldtag        $errnull >$tmp/$project.DIFFS.$$");
-} else {
-    system("svn diff -r$oldtag -r$tag $errnull >$tmp/$project.DIFFS.$$");
-}
-print "Diff size:";
-system("wc <$tmp/$project.DIFFS.$$");
-
 if ($diffs) {
+	if ($tag eq '<workfile>') {
+		system("svn diff -r$oldtag        $errnull >$tmp/$project.DIFFS.$$");
+	} else {
+		system("svn diff -r$oldtag -r$tag $errnull >$tmp/$project.DIFFS.$$");
+	}
+	print "Diff size:";
+	system("wc <$tmp/$project.DIFFS.$$");
+
 	system "metasend -b"
-	    ." -D '$project-$tag announcement' -m 'text/plain' -e 7bit -f $tmp/$project.PREAMBLE.$$"
-	    ." -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$"
-	    ." -o ANNOUNCE.EMAIL";
+	." -D '$project-$tag announcement' -m 'text/plain' -e 7bit -f $tmp/$project.PREAMBLE.$$"
+	." -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$"
+	." -o ANNOUNCE.EMAIL";
 } else {
 	system("mv", "$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
 }
@@ -154,6 +169,24 @@ if ($diffs) {
 #unlink("$tmp/$project.PREAMBLE.$$");
 unlink("$tmp/$project.DIFFS.$$");
 
-print "Done\n";
+print "### Signing tarballs...\n";
+system("cd autobuild && gpg -ba --sign $project-$version$distsufx");
+
+print "### Uploading\n";
+print "=== local\n";
+
+system("cp", "autobuild/$project-$version$distsufx", "autobuild/$project-$version$distsufx.asc", "$ENV{HOME}/public_html/fetchmail/") and die "Cannot upload to \$HOME/public_html/fetchmail/: $!";
+
+print "=== ibiblio\n";
+
+system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc $project-$version.lsm ; quit\" ibiblio.org:/incoming/linux/") and warn "Upload to ibiblio failed: $!";
+
+print "=== berlios\n";
+
+system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc ; quit\" ftp.berlios.de:/incoming/") and warn "Upload to berlios failed: $!";
+
+print "Done - please review final tasks\n";
+
+system("cat RELEASE-INSTRUCTIONS");
 
 # makerelease ends here

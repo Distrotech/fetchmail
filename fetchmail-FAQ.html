@@ -186,7 +186,8 @@ messages but before deleting them</a><br/>
 <a href="#R11">R11. My server is hanging or emitting errors on CAPA.</a><br/>
 <a href="#R12">R12. Fetchmail isn't working and reports getaddrinfo
     errors.</a><br />
-<a href="#R13">R13. What does "Interrupted system call" mean?</a>
+<a href="#R13">R13. What does "Interrupted system call" mean?</a><br />
+<a href="#R14">R14. Since upgrading fetchmail/OpenSSL, I can no longer connect!</a><br />
 
 <h2 id="C_H">Hangs and lockups</h2>
 
@@ -2105,7 +2106,7 @@ SSL?</a></h2>
 
 <p>You'll need to have the <a
 href="http://www.openssl.org/">OpenSSL</a> libraries installed, and they
-should at least be version 0.9.6.
+should at least be version 0.9.7.
 Configure with --with-ssl. If you have the OpenSSL libraries
 installed in commonly-used default locations, this will
 suffice. If you have them installed in a non-default location,
@@ -2473,6 +2474,32 @@ declaration <tt>auth password</tt> in your .fetchmailrc.</p>
 <p>Non-fatal signals (such as timers set by fetchmail itself) can
 interrupt long-running functions and will then be reported as
 "Interrupted system call". These can sometimes be timeouts.</p>
+
+<h2><a id="R14" name="R14">R14. Since upgrading fetchmail/OpenSSL, I can no longer connect!</a></h2>
+
+<p>If the upgrade you did encompassed an upgrade to OpenSSL 1.0.0 or newer, you
+may need to run <code>c_rehash</code> on your certificate directories,
+particularly if you are using local certs directories (f. i. through fetchmail's <code>--sslcertpath</code> option).</p>
+
+<p>Reason: OpenSSL 1.0.0, relative to earlier versions, uses a different hash
+for the symbolic links (symlinks) in its <code>certs/</code> directory, so you
+need to recreate the symlinks by running <kbd>c_rehash
+	/etc/ssl/certs</kbd> (adjust this to where your installation keeps its
+certificates), and you cannot easily share this certs directory with
+applications linked against older OpenSSL versions.</p>
+
+<p>Note: OpenSSL's <code>c_rehash</code> script is broken in several versions,
+which can cause malfunction if several OpenSSL tools versions are installed in
+parallel in separate directories. In such cases, you may need a workaround to
+get things going. Assuming your OpenSSL 1.0.0 is installed in
+<code>/opt/openssl1.0.0</code> and your certificates are in
+<code>/home/hans/certs</code>, you'd do this (the corresponding fetchmail
+option is <kbd>--sslcertpath /home/hans/certs</kbd> on the commandline and
+<kbd>sslcertpath /home/hans/cert</kbd> in the rcfile):</p>
+
+<pre>
+env PATH=/opt/openssl1.0.0/bin /opt/openssl1.0.0/bin/c_rehash /home/hans/certs
+</pre>
 
 <hr/>
 <h1>Hangs and lockups</h1>

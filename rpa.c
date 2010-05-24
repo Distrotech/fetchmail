@@ -21,10 +21,11 @@
 #include  <unistd.h>
 #include  <ctype.h>
 #include  <string.h>
+#include  <sys/types.h>
 
 #include  "socket.h"
 #include  "fetchmail.h"
-#include  "md5.h"
+#include  "fm_md5.h"
 #include  "i18n.h"
 
 #ifdef TESTMODE
@@ -114,7 +115,7 @@ int POP3_auth_rpa (char *userid, char *passphrase, int socket)
     char buf [POPBUFSIZE];
     char *bufp;
     int      status,aulin,kuslin;
-    char* stdec[4] = { N_("Success") ,
+    const char* stdec[4] = { N_("Success") ,
 		       N_("Restricted user (something wrong with account)") ,
 		       N_("Invalid userid or passphrase") ,
 		       N_("Deity error") };

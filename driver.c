@@ -53,6 +53,8 @@
 #include "getaddrinfo.h"
 #include "tunable.h"
 
+#include "sdump.h"
+
 /* throw types for runtime errors */
 #define THROW_TIMEOUT	1		/* server timed out */
 
@@ -246,15 +248,17 @@ const char *canonical;  /* server name */
     if (retval) {
 #ifdef HEIMDAL
       if (err_ret && err_ret->e_text) {
+	  char *t = err_ret->e_text;
+	  char *tt = sdump(t, strlen(t));
           report(stderr, GT_("krb5_sendauth: %s [server says '%s']\n"),
-                 error_message(retval),
-                 err_ret->e_text);
+                 error_message(retval), tt);
+	  free(tt);
 #else
       if (err_ret && err_ret->text.length) {
-          report(stderr, GT_("krb5_sendauth: %s [server says '%*s']\n"),
-		 error_message(retval),
-		 err_ret->text.length,
-		 err_ret->text.data);
+	  char *tt = sdump(err_ret->text.data, err_ret->text.length);
+          report(stderr, GT_("krb5_sendauth: %s [server says '%s']\n"),
+		 error_message(retval), tt);
+	  free(tt);
 #endif
 	  krb5_free_error(context, err_ret);
       } else
@@ -492,10 +496,13 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	/* check if the message is old
 	 * Note: the size of the message may not be known here */
-	if (ctl->fetchall || force_retrieval)
-	    ;
-	else if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num))
-	    msgcode = MSGLEN_OLD;
+	if (ctl->fetchall || force_retrieval) {
+	    /* empty */
+	} else { 
+	    if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num)) {
+		    msgcode = MSGLEN_OLD;
+	    }
+        }
 	if (msgcode == MSGLEN_OLD)
 	{
   		/* To avoid flooding the syslog when using --keep,
@@ -1106,7 +1113,8 @@ static int do_session(
 	/* perform initial SSL handshake on open connection */
 	if (ctl->use_ssl &&
 		SSLOpen(mailserver_socket, ctl->sslcert, ctl->sslkey,
-		    ctl->sslproto, ctl->sslcertck, ctl->sslcertpath,
+		    ctl->sslproto, ctl->sslcertck,
+		    ctl->sslcertfile, ctl->sslcertpath,
 		    ctl->sslfingerprint, ctl->sslcommonname ?
 		    ctl->sslcommonname : realhost, ctl->server.pollname,
 		    &ctl->remotename) == -1)
@@ -1518,7 +1526,6 @@ is restored."));
 	smtp_close(ctl, 0);
 	if (mailserver_socket != -1) {
 	    cleanupSockClose(mailserver_socket);
-	    mailserver_socket = -1;
 	}
 	/* If there was a connect timeout, the socket should be closed.
 	 * mailserver_socket_temp contains the socket to close.

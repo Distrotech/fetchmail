@@ -491,7 +491,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		* (see below). */
 	       if (gen_transact(sock, "STLS") == PS_SUCCESS
 		       && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
-			   ctl->sslcertpath, ctl->sslfingerprint, commonname,
+			   ctl->sslcertfile, ctl->sslcertpath, ctl->sslfingerprint, commonname,
 			   ctl->server.pollname, &ctl->remotename) != -1)
 	       {
 		   /*
@@ -690,10 +690,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
 	strcpy(msg,start);
 	strcat(msg,ctl->password);
-	strcpy(ctl->digest, MD5Digest((unsigned char *)msg));
+	strcpy((char *)ctl->digest, MD5Digest((unsigned char *)msg));
 	free(msg);
 
-	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, ctl->digest);
+	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, (char *)ctl->digest);
 	break;
 
     case P_RPOP:
@@ -774,7 +774,7 @@ static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
     if ((ok = gen_transact(sock, "%s", buf)) != 0)
        return ok;
     got_it = 0;
-    while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0) 
+    while (gen_recv(sock, buf, sizeof(buf)) == 0)
     {
 	if (DOTLINE(buf))
 	    break;
@@ -856,7 +856,7 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
 	    if (mark == UID_DELETED || mark == UID_EXPUNGED)
 	    {
 		if (outlevel >= O_VERBOSE)
-		    report(stderr, GT_("id=%s (num=%d) was deleted, but is still present!\n"), id, try_nr);
+		    report(stderr, GT_("id=%s (num=%u) was deleted, but is still present!\n"), id, try_nr);
 		/* just mark it as seen now! */
 		newl->val.status.mark = mark = UID_SEEN;
 	    }
@@ -1009,9 +1009,13 @@ static int pop3_getrange(int sock,
     /* get the total message count */
     gen_send(sock, "STAT");
     ok = pop3_ok(sock, buf);
-    if (ok == 0)
-	sscanf(buf,"%d %d", countp, bytes);
-    else
+    if (ok == 0) {
+	int asgn;
+
+	asgn = sscanf(buf,"%d %d", countp, bytes);
+	if (asgn != 2)
+		return PS_PROTOCOL;
+    } else
 	return(ok);
 
     /*
@@ -1065,10 +1069,10 @@ static int pop3_getrange(int sock,
 	    if (dofastuidl)
 		return(pop3_fastuidl( sock, ctl, *countp, newp));
 	    /* grab the mailbox's UID list */
-	    if ((ok = gen_transact(sock, "UIDL")) != 0)
+	    if (gen_transact(sock, "UIDL") != 0)
 	    {
 		/* don't worry, yet! do it the slow way */
-		if ((ok = pop3_slowuidl(sock, ctl, countp, newp)))
+		if (pop3_slowuidl(sock, ctl, countp, newp))
 		{
 		    report(stderr, GT_("protocol error while fetching UIDLs\n"));
 		    return(PS_ERROR);
@@ -1080,7 +1084,7 @@ static int pop3_getrange(int sock,
 		unsigned long unum;
 
 		*newp = 0;
-		while ((ok = gen_recv(sock, buf, sizeof(buf))) == PS_SUCCESS)
+		while (gen_recv(sock, buf, sizeof(buf)) == PS_SUCCESS)
 		{
 		    if (DOTLINE(buf))
 			break;
@@ -1289,12 +1293,12 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 		 * as a workaround. */
 		if (strspn(buf, " \t") == strlen(buf))
 		    strcpy(buf, "<>");
-		sdps_envfrom = xmalloc(strlen(buf)+1);
+		sdps_envfrom = (char *)xmalloc(strlen(buf)+1);
 		strcpy(sdps_envfrom,buf);
 		break;
 	    case 5:
                 /* Wrap address with To: <> so nxtaddr() likes it */
-                sdps_envto = xmalloc(strlen(buf)+7);
+                sdps_envto = (char *)xmalloc(strlen(buf)+7);
                 sprintf(sdps_envto,"To: <%s>",buf);
 		break;
             }

@@ -19,6 +19,8 @@ removed from a 6.4.0 or newer release.)
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not reasonably portable across operating systems.
 * POP2 is obsolete, support will be removed from a future fetchmail version.
+* IMAP2 and IMAP4 (not IMAP4r1) are obsolete, support may be removed from a
+  future fetchmail version.
 * RPOP is obsolete, support will be removed from a future fetchmail release.
 * --sslcertck will become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
@@ -44,10 +46,148 @@ removed from a 6.4.0 or newer release.)
 * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
   requirements (dependencies), such as Boost or other class libraries.
 * The softbounce option default will change to "false" in the next release.
+* The --bsmtp - mode of operation may be removed in a future release.
+* Given that OpenSSL is severely underdocumented, and needs license exceptions,
+  fetchmail may switch to a different SSL library.
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.15 (not yet released):
+fetchmail-6.3.18 (not yet released):
+
+# BUG FIXES
+* Fetchmail would warn about insecure SSL/TLS connections even if a matching
+  --sslfingerprint was specified. This is an omission from an SSL usability
+  change made in 6.3.17.  Fixes Debian Bug#580796 reported by Roland Stigge.
+* Fetchmail 6.3.15, 6.3.16, and 6.3.17 would pick up libmd5 to obtain MD5*
+  functions, as an effect of an undocumented Solaris MD5 fix.
+  This fails if, for instance, libmd5.so was installed on other operating
+  systems as part of libwww on machines where long isn't 32-bits. Fixes Gentoo
+  Bug #319283, reported - including the hint to libwww - by Karl Hakimian.
+  Side effect: fetchmail will now use -lmd on Solaris rather than -lmd5.
+* Fetchmail will no longer print connection attempts and errors for one host
+  in "silent" and "normal" logging modes, unless all connections fail. This
+  should reduce irritation around refused-connection logging if services are
+  only on an IPv4 socket if the host also supports IPv6. Often observed as
+  connections refused to ::1/25 when the subsequent connection to 127.0.0.1/25
+  then - silently - succeeds.  Fetchmail, unless in verbose mode, will collect
+  all connect errors and only report them if all of them fail.
+
+# KNOWN BUGS AND WORKAROUNDS:
+  (this section floats upwards through the NEWS file so it stays with the
+  current release information - however, it was stuck with 6.3.8 for a while)
+* fetchmail does not handle messages without Message-ID header well
+  (See sourceforge.net bug #780933)
+* BSMTP is mostly untested and errors can cause corrupt output.
+* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
+  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
+  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
+  so compiling 32-bit SPARC code should not cause any difficulties.
+* fetchmail does not track pending deletes over crashes
+* the command line interface is sometimes a bit stubborn, for instance,
+  fetchmail -s doesn't work with a daemon running
+* Linux may return duplicates of an IP address in some circumstances if no or
+  no global IPv6 addresses are configured. (No workaround. Ubuntu Bug#582585,
+  Novell Bug#606980.)
+
+
+fetchmail-6.3.17 (released 2010-05-06, 25767 LoC):
+
+# SECURITY FIX
+* CVE-2010-1167: Fetchmail before release 6.3.17 did not properly sanitize
+  external input (mail headers and UID). When a multi-character locale (such as
+  UTF-8) was in use, this could cause memory exhaustion and thus a denial of
+  service, because fetchmail's report.c functions assumed that non-success of
+  [v]snprintf was due to insufficient buffer size allocation. It would then
+  repeatedly reallocate a larger buffer and fail formatting again.
+  See fetchmail-SA-2010-02.txt.
+
+# FEATURES
+* Fetchmail now supports a --sslcertfile <file> option to specify a "CA bundle"
+  file (a file that contains trusted CA certificates). Since these bundled CA
+  files do not require c_rehash to be run, they are easier to use and immune to
+  OpenSSL library updates that affect the hash function.
+* Fetchmail now supports a FETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS
+  environment variable to force loading the default SSL CA certificate
+  locations even if --sslcertfile or --sslcertpath is used.
+  If neither option is in effect, fetchmail loads the default locations.
+
+# REGRESSION FIX
+* Fix string handling in rcfile scanner, which caused fetchmail to misparse a
+  run control file in certain circumstances.  Fixes BerliOS bug #14257.
+  Patch by Michael Banack.  This fixes a regression introduced before 6.3.0.
+
+# BUG FIXES
+* Plug memory leak when using a "defaults" entry in the run control file.
+* Do not print SSL certificate mismatches unless verbose or --sslcertck is
+  enabled.
+* Do not lose "set invisible" in fetchmailconf. (Michael Barnack)
+
+# CHANGES
+* Usability: SSL certificate chains are fully printed in -v -v mode, and there
+  are now helpful pointers to --sslcertpath and c_rehash for "unable to get
+  local issuer certificate" and self-signed certificates -- these usually hint
+  to missing root signing CAs in the certs directory.
+* Several fixes for compiler (GCC, Intel C++, CLang) and autotools warnings
+* Memory allocation failures will now cause abnormal program abort (SIGABRT),
+  no longer an exit with unspecified code.
+* Print a warning if certificate verification failed and the user did not
+  specify --sslcertck.
+
+# DOCUMENTATION
+* Fix table of global option to read "set softbounce" where there used to be a
+  2nd copy of "set spambounce".  Patch by Michael Banack, BerliOS Bug #17067.
+* In the --sslcertpath description, mention that OpenSSL upgrade (and a 0.9.X
+  to 1.0.0 upgrade in particular) may require running c_rehash.
+
+# TRANSLATION UPDATES
+  [zh_CN] Chinese/simplified (Ji Zheng-Yu)
+  [cs]    Czech (Petr Pisar)
+  [nl]    Dutch (Erwin Poeze)
+  [fr]    French (Frédéric Marchal)
+  [de]    German
+  [id]    Indonesian (Andhika Padmawan)
+  [it]    Italian (Vincenzo Campanella)
+  [ja]    Japanese (Takeshi Hamasaki)
+  [pl]    Polish (Jakub Bogusz)
+  [sk]    Slovak (Marcel Telka)
+  [vi]    Vietnamese (Clytie Siddall)
+
+
+fetchmail-6.3.16 (released 2010-04-06, 25574 LoC):
+
+# BUG FIX
+* Fix --interface option, broken in 6.3.15. Reported by Vladmimir Stavrinov.
+  Fixes Debian Bug #576717.
+
+# CHANGE
+* Call OpenSSL_add_all_algorithms(). This is needed to support non-mandatory
+  and non-standard algorithms in certificates.
+  Sjoerd Simons, to fix Debian Bug #576430.
+  OpenSSL 0.9.8* does not load - for instance - the SHA256 digest by default.
+  Reported as OpenSSL RT#2224.
+
+
+fetchmail-6.3.15 (released 2010-03-28, 25572 LoC):
+
+# FEATURE
+* Fetchmail now supports a bad-header command line or rcfile option that takes
+  exactly one argument, accept or reject (default).  This specifies how messages
+  with bad headers retrieved from the current server are to be treated.
+
+# BUG FIXES
+* In the rcfile, recognize "local" as abbreviation for "localdomains", as
+  documented. The short form has not ever worked since this feature was added in
+  January 1997. Reported by Frédéric Marchal.
+* Do not close stdout when using mda and "bsmtp -" at the same time.
+* Log operating system errors when BSMTP writes fail.
+* Fix verbose mode progress formatting regression from 6.3.10; SMTP trace lines
+  were no longer on a line of their own. Reported by Melchior Franz.
+* Check seteuid() return value and abort running MDA if switch fails.
+* Set global flags in a consistent manner. Make --nosoftbounce and
+  --nobounce work from command line (these used to work in rcfiles).
+  Reported and fix confirmed working by N.J. Mann. (Sunil Shetye)
+* Properly import h_errno declarations, even on systems where h_errno isn't a
+  macro. (Adds ./configure check, fixes Cygwin dllimport warnings.)
 
 # CHANGES
 * The repository has been converted and moved from the Subversion (SVN) format
@@ -58,12 +198,27 @@ fetchmail 6.3.15 (not yet released):
   GnuPG-signed tags, as a sign that these are now closed.
 * The outdated SVN trunk is now called "oldtrunk" in Git just to save the work
   for future reference. All development in the past few years was on BRANCH_6-3.
-* master was branched from BRANCH_6-3 for user convenience.
+* master was branched from BRANCH_6-3.  BRANCH_6-3 is now obsolete (and in fact
+  was also converted to a tag to record where the conversion from SVN to Git
+  took place).
+* "make check" now skips HTML validation if xmllint or XHTML DTD are missing.
 
 # DOCUMENTATION
 * Web site and documentation were adjusted to reflect the SVN->Git move.
 * The fetchmail manual page is now much clearer on the user id switching
   (seteuid) when using --mda while running as the super user.
+
+# TRANSLATION UPDATES, by language name
+* [zh_CN] Chinese (Simplified), by Ji Zheng-Yu
+* [cs]    Czech, by Petr Pisar
+* [nl]    Dutch, by Erwin Poeze
+* [fr]    French, by Frédéric Marchal
+* [de]    German
+* [id]    Indonesian, by Andhika Padmawan
+* [it]    Italian, by Vincenzo Campanella
+* [ja]    Japanese, by Takeshi Hamasaki
+* [pl]    Polish, by Jakub Bogusz
+* [vi]    Vietnamese, by Clytie Siddall
 
 
 fetchmail 6.3.14 (released 2010-02-05, 25487 LoC):
@@ -336,7 +491,8 @@ fetchmail 6.3.9 (released 2008-11-16):
   res_search() and dn_skipname() are only used together and scheduled for
   removal in future versions, so this is probably fine.
 * No longer complain about invalid sslproto "" when POP3 CAPA probe fails.
-  Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+  Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson),
+  Red Hat Bug#503881.
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
 * Allow .fetchmailrc and .fetchids to be symlinks, as the manpage does not
   document they aren't allowed - fixes Debian Bug #452907 (Roger Leigh).
@@ -485,23 +641,6 @@ fetchmail 6.3.8 (released 2007-04-06):
 * Add delete-later and delete-later.README, a script and documentation for
   a MySQL/Tcl-based client-side "delete-after" feature.
   Kindly donated by Yoo GmbH, Großvoigtsberg, Germany (Carsten Ralle).
-
-# KNOWN BUGS AND WORKAROUNDS:
-  (this section floats upwards through the NEWS file so it stays with the
-  current release information)
-* fetchmail does not handle messages without Message-ID header well
-  (See sourceforge.net bug #780933)
-* BSMTP is mostly untested and errors can cause corrupt output.
-* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
-  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
-  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
-  so compiling 32-bit SPARC code should not cause any difficulties.
-* fetchmail does not track pending deletes over crashes
-* the command line interface is a bit narrow-minded sometimes, for instance,
-  fetchmail -s doesn't work with a running daemon
-* some of the logging output is not very helpful
-* some of the documentation is still not up to date
-
 
 
 fetchmail 6.3.7 (released 2007-02-18):

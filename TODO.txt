@@ -1,6 +1,7 @@
 Note that there is a separate todo.html with different content than this.
 
 soon - MUST:
+- audit if there are further untrusted data report_*() calls.
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - put bare IP addresses in brackets for SMTP (check if there are RFC
   1123/5321/5322 differences)
@@ -16,7 +17,6 @@ soon - MUST:
   Postfix virtual users" around 2009-09-23 on fetchmail-users@).
 
 soon - SHOULD:
-- update trio
 - make sure the man page completely lists all options (f. i. sslcertpath) in
   the tables.
 - allow \Deleted without \Seen, rf. 
@@ -24,18 +24,15 @@ soon - SHOULD:
 - document IMAP4 ACL requirements
 - CRYPTO: log configured server name on certificate mismatch (perhaps pay
   attention to via entries and stuff like that)
-- CRYPTO: BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
-  Philip Susi, SSL negotiation does not use ERR_error_string(3ssl) to report
-  errors in a readable way, we just report socket errors with no good reason.
 - CRYPTO: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
   * write a table of combinations of TLS/SSL options
 - add To: header to warning mails (authfail for instance)
 - Fix TOCTOU race around prc_filecheck*
 - Read CAPABILITY from greeting if present, saves one round trip.
 - Check if LAST argument is properly validated against message count.
-- find a solution for the "invalid header" discards message problem
-  (escape headers and stuff reminder into body)
 - add Message-ID: header and other SHOULD headers to warning mails?
+- report actual SMTP error with "SMTP listener refused delivery", sugg.
+  Richard Brooksby, fetchmail-users 2010-04-06.
 
 soon - MAY:
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
@@ -54,6 +51,7 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- Properly free host/user entries (through C++ class instantiation and destructors...)
 - Remove stupid options, such as spambounce, or deferred bounces for anything
   but wrong addresses
 - Do not ever guess envelope from content headers such as To:/Cc:/Resent-To: or
@@ -68,6 +66,8 @@ questionable:
   (silently allowing g+x).
 - make UID code more efficient, parsing is O(n^2), should be no worse
   than O(n log n), lookup is O(n), should be O(log n).
+  * Idea for C: use <search.h> tfind/tsearch. Need to split idlist up
+    so it only keeps the ids, and use an array to track status.
 - help systematic debugging
     - by making logging more strict (Postfix's msg_* as example??)
     - by adding a --loggingtest or something that emits 

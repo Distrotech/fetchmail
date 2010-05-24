@@ -418,7 +418,7 @@ static void capa_probe(int sock, struct query *ctl)
     peek_capable = (imap_version >= IMAP4);
 }
 
-static int do_authcert (int sock, char *command, const char *name)
+static int do_authcert (int sock, const char *command, const char *name)
 /* do authentication "external" (authentication provided by client cert) */
 {
     char buf[256];
@@ -484,7 +484,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	     * (see below). */
 	    if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
 		    && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
-			ctl->sslcertpath, ctl->sslfingerprint, commonname,
+			ctl->sslcertfile, ctl->sslcertpath, ctl->sslfingerprint, commonname,
 			ctl->server.pollname, &ctl->remotename) != -1)
 	    {
 		/*

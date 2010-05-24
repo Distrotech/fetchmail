@@ -180,7 +180,7 @@ struct runctl
     char	*logfile;	/** where to write log information */
     char	*idfile;	/** where to store UID data */
     char	*pidfile;	/** where to record the PID of daemon mode processes */
-    char	*postmaster;
+    const char	*postmaster;
     char	*properties;
 #ifdef HAVE_LIBPWMD
     int		pinentry_timeout;
@@ -194,25 +194,34 @@ struct runctl
     flag	showdots;
 };
 
+/** \name idlist */
+/** Dual-use entry of singly-linked list for storing id/status or id/id2
+ * pairs. */
 struct idlist
 {
-    char *id;
+    char *id;	/**< key */
     union
     {
 	struct
 	{
 	    int		num;
-	    flag	mark;		/* UID-index information */
-#define UID_UNSEEN	0		/* hasn't been seen */
-#define UID_SEEN	1		/* seen, but not deleted */
-#define UID_DELETED	2		/* this message has been marked deleted */
-#define UID_EXPUNGED	3		/* this message has been expunged */
+	    flag	mark;		/**< UID-index information */
         }
-	status;
-	char *id2;
-    } val;
-    struct idlist *next;
+	status;				/**< value for id/status pairs */
+	char *id2;			/**< value for id/id2 pairs */
+    } val;				/**< union to store value for key \a id */
+    struct idlist *next;		/**< pointer to next list element */
 };
+
+/** List of possible values for idlist::mark */
+enum {
+UID_UNSEEN=	0,		/**< id hasn't been seen */
+UID_SEEN=	1,		/**< id was seen, but not deleted */
+UID_DELETED=	2,		/**< this message has been marked deleted */
+UID_EXPUNGED=	3		/**< this message has been expunged */
+};
+/*@}*/
+
 
 struct query;
 
@@ -252,6 +261,8 @@ struct method		/* describe methods for protocol state machine */
     flag retry;			/* can getrange poll for new messages? */
 };
 
+enum badheader { BHREJECT = 0, BHACCEPT };
+
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
@@ -260,7 +271,7 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
-    char *service;			/* service name */
+    const char *service;		/* service name */
     int interval;			/* # cycles to skip between polls */
     int authenticate;			/* authentication mode to try */
     int timeout;			/* inactivity timout in seconds */
@@ -277,6 +288,7 @@ struct hostdata		/* shared among all user connections to given server */
     flag tracepolls;			/* if TRUE, add poll trace info to Received */
     char *principal;			/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
+    enum badheader badheader;		/* bad-header {pass|reject} */
 
 #if defined(linux) || defined(__FreeBSD__)
 #define CAN_MONITOR
@@ -333,7 +345,7 @@ struct query
     char *smtpaddress;		/* address to force in RCPT TO */ 
     char *smtpname;             /* full RCPT TO name, including domain */
     struct idlist *antispam;	/* list of listener's antispam response */
-    char *mda;			/* local MDA to pass mail to */
+    const char *mda;		/* local MDA to pass mail to */
     char *bsmtp;		/* BSMTP output file */
     char listener;		/* what's the listener's wire protocol? */
 #define SMTP_MODE	'S'
@@ -367,6 +379,7 @@ struct query
     char *sslcert;		/* optional SSL certificate file */
     char *sslproto;		/** force transport protocol (ssl2|ssl3|ssl23|tls1) - if NULL,
 				  use ssl23 for SSL and opportunistic tls1 for non-SSL connections. */
+    char *sslcertfile;		/* Trusted certificate file for checking the server cert */
     char *sslcertpath;		/* Trusted certificate directory for checking the server cert */
     flag sslcertck;		/* Strictly check the server cert. */
     char *sslcommonname;	/* CommonName to expect from server */
@@ -393,7 +406,7 @@ struct query
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
-    char digest[DIGESTLEN];	/* md5 digest buffer */
+    unsigned char digest[DIGESTLEN];	/* md5 digest buffer */
 
     /* internal use -- housekeeping */
     struct query *next;		/* next query control block in chain */
@@ -463,7 +476,7 @@ extern char *home;		/* home directory of invoking user */
 extern char *fmhome;		/* fetchmail home directory */
 extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
-extern char *fetchmailhost;	/* either "localhost" or an FQDN */
+extern const char *fetchmailhost; /* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
 extern char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE
@@ -590,29 +603,29 @@ char *nxtaddr(const char *);
 
 /* uid.c: UID support */
 extern int dofastuidl;
-
-void initialize_saved_lists(struct query *, const char *);
-struct idlist *save_str(struct idlist **, const char *, flag);
-void free_str_list(struct idlist **);
-struct idlist *copy_str_list(struct idlist *idl);
-void save_str_pair(struct idlist **, const char *, const char *);
-void free_str_pair_list(struct idlist **);
-int delete_str(struct idlist **, long);
-struct idlist *str_in_list(struct idlist **, const char *, const flag);
-int str_nr_in_list(struct idlist **, const char *);
-int str_nr_last_in_list(struct idlist **, const char *);
-void str_set_mark( struct idlist **, const char *, const flag);
-int count_list( struct idlist **idl );
-char *str_from_nr_list( struct idlist **idl, long number );
-char *str_find(struct idlist **, long);
-struct idlist *id_find(struct idlist **idl, long);
-char *idpair_find(struct idlist **, const char *);
-void append_str_list(struct idlist **, struct idlist **);
-void expunge_uids(struct query *);
-void uid_swap_lists(struct query *);
+void initialize_saved_lists(struct query *hostlist, const char *idfile);
+void expunge_uids(struct query *ctl);
+void uid_swap_lists(struct query *ctl);
 void uid_discard_new_list(struct query *ctl);
 void uid_reset_num(struct query *ctl);
-void write_saved_lists(struct query *, const char *);
+void write_saved_lists(struct query *hostlist, const char *idfile);
+
+/* idlist.c */
+struct idlist *save_str(struct idlist **idl, const char *str, flag status);
+void free_str_list(struct idlist **idl);
+void save_str_pair(struct idlist **idl, const char *str1, const char *str2);
+struct idlist *str_in_list(struct idlist **idl, const char *str, const flag caseblind);
+int str_nr_in_list(struct idlist **idl, const char *str);
+int str_nr_last_in_list(struct idlist **idl, const char *str);
+void str_set_mark(struct idlist **idl, const char *str, const flag val);
+int count_list(struct idlist **idl);
+char *str_from_nr_list(struct idlist **idl, long number);
+char *str_find(struct idlist **idl, long number);
+struct idlist *id_find(struct idlist **idl, long number);
+char *idpair_find(struct idlist **idl, const char *id);
+int delete_str(struct idlist **idl, long num);
+struct idlist *copy_str_list(struct idlist *idl);
+void append_str_list(struct idlist **idl, struct idlist **nidl);
 
 /* rcfile_y.y */
 int prc_parse_file(const char *, const flag);
@@ -647,10 +660,10 @@ int doETRN (struct query *);
 int doODMR (struct query *);
 
 /* authentication functions */
-int do_cram_md5(int sock, char *command, struct query *ctl, char *strip);
-int do_rfc1731(int sock, char *command, char *truename);
-int do_gssauth(int sock, char *command, char *service, char *hostname, char *username);
-int do_otp(int sock, char *command, struct query *ctl);
+int do_cram_md5(int sock, const char *command, struct query *ctl, const char *strip);
+int do_rfc1731(int sock, const char *command, const char *truename);
+int do_gssauth(int sock, const char *command, const char *service, const char *hostname, const char *username);
+int do_otp(int sock, const char *command, struct query *ctl);
 
 /* miscellanea */
 
@@ -661,7 +674,7 @@ struct query *hostalloc(struct query *);
 int parsecmdline (int, char **, struct runctl *, struct query *);
 char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned const char *);
-void hmac_md5 (char *, size_t, char *, size_t, unsigned char *, size_t);
+void hmac_md5 (const unsigned char *, size_t, const unsigned char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(char *, char *, int socket);
 typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
@@ -732,7 +745,7 @@ char *stpcpy(char *, const char*);
 #endif /* __CYGWIN__ */
 
 extern int mailserver_socket_temp;
-extern char *program_name;
+extern const char *program_name;
 
 /* POSIX space characters,
  * <tab>;<newline>;<vertical-tab>;<form-feed>;<carriage-return>;<space> */

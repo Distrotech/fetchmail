@@ -15,7 +15,7 @@
 #include  "socket.h"
 
 #include  "i18n.h"
-#include "md5.h"
+#include "fm_md5.h"
 
 #include <sys/types.h>
 #include <netinet/in.h>  /* for htonl/ntohl */
@@ -42,7 +42,8 @@
 #define GSSAUTH_P_INTEGRITY 2
 #define GSSAUTH_P_PRIVACY   4
 
-int do_gssauth(int sock, char *command, char *service, char *hostname, char *username)
+int do_gssauth(int sock, const char *command, const char *service,
+		const char *hostname, const char *username)
 {
     gss_buffer_desc request_buf, send_token;
     gss_buffer_t sec_token;
@@ -67,11 +68,10 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
         return PS_AUTHFAIL;
     }
     else if (outlevel >= O_DEBUG) {
-        maj_stat = gss_display_name(&min_stat, target_name, &request_buf,
-            &mech_name);
+        gss_display_name(&min_stat, target_name, &request_buf, &mech_name);
         report(stderr, GT_("Using service name [%s]\n"),
 	       (char *)request_buf.value);
-        maj_stat = gss_release_buffer(&min_stat, &request_buf);
+        gss_release_buffer(&min_stat, &request_buf);
     }
 
     gen_send(sock, "%s GSSAPI", command);

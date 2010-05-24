@@ -61,17 +61,17 @@ libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
 			trio/trionan.h trio/triostr.h
 check_PROGRAMS+=	regression
 regression_SOURCES=	trio/regression.c
-LDADD +=		libtrio.a -lm
-TESTS+=			regression
+LDADD+=			libtrio.a -lm
+TESTS+=			t.regression
 endif
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		i18n.h kerberos.h md5.h mx.h netrc.h smtp.h \
+		i18n.h kerberos.h fm_md5.h mx.h netrc.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
-		uid.c mxget.c md5ify.c cram.c gssapi.c \
+		idlist.c uid.c mxget.c md5ify.c cram.c gssapi.c \
 		opie.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c \
 		lock.h lock.c \
@@ -131,6 +131,7 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-features.html README.SSL README.NTLM \
 		README.packaging README.SSL-SERVER \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
+		fetchmail-SA-2010-02.txt \
 		fetchmail-SA-2010-01.txt \
 		fetchmail-SA-2009-01.txt \
 		fetchmail-SA-2008-01.txt \
@@ -180,7 +181,7 @@ EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
 		m4/xsize.m4 \
 		m4-local/ac-archive-license.txt \
 		m4-local/ac_ma_search_package.m4 \
-		$(TESTS) t.rc \
+		$(TESTS) t.rc t.regression \
 		dist-tools/html2txt \
 		dist-tools/manServer.pl \
 		Doxyfile
@@ -228,6 +229,11 @@ lsm: genlsm.sh dist
 # each of them, running them in parallel
 rsync:  distdir $(srcdir)/.rsyncs
 	@( cat $(srcdir)/.rsyncs | sed -e 's}^}rsync -aH --delete-after $(PACKAGE)-$(VERSION)/ }; s/\($$\)/ \&/;' ; echo "wait" ) | $(SHELL) -x
+
+.PHONY: import-translations
+import-translations:
+	rsync -Lrtvz translationproject.org::tp/latest/fetchmail/  $(top_srcdir)/po
+	cd $(top_builddir)/po && $(MAKE) update-po
 
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
