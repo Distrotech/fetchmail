@@ -39,6 +39,8 @@ struct addrinfo;
 #  include "trio/trio.h"
 #endif
 
+#include "uid_db.h"
+
 /* We need this for strstr */
 #if !defined(HAVE_STRSTR) && !defined(strstr)
 char *strstr(const char *, const char *);
@@ -389,8 +391,7 @@ struct query
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
-    struct idlist *oldsaved, *newsaved;
-    struct idlist **oldsavedend;
+    struct uid_db oldsaved, newsaved;
     char lastdigest[DIGESTLEN];	/* last MD5 hash seen on this connection */
     char *folder;		/* folder currently being polled */
 

@@ -72,7 +72,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		driver.c transact.c sink.c smtp.c \
 		idlist.c uid.c mxget.c md5ify.c cram.c gssapi.c \
 		opie.c interface.c netrc.c \
-		unmime.c conf.c checkalias.c \
+		unmime.c conf.c checkalias.c uid_db.h uid_db.c\
 		lock.h lock.c \
 		rcfile_l.l rcfile_y.y \
 		ucs/norm_charmap.c ucs/norm_charmap.h
