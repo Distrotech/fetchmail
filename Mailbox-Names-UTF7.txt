@@ -3,7 +3,7 @@ IMAP4r1 Mailbox Names vs. Unicode
 :author: Matthias_Andree_(ed.)_and_Mark_Crispin
 :email: matthias.andree@gmx.de
 :author initials: MA and MC
-:revision: 0.2
+:revision: 1.000
 :revdate: 2010-05-26
 :toc:
 :data-uri:
