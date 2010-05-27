@@ -4,6 +4,7 @@
 # (C) 2008 - 2010 by Matthias Andree. GNU GPL v3.
 
 : ${BERLIOS_LOGIN=m-a}
+: ${SOURCEFORGE_LOGIN=m-a}
 
 # abort on error
 set -eu
@@ -30,6 +31,17 @@ rsync \
     --exclude .git --exclude '*~' --exclude '#*#' \
     * \
     "$BERLIOS_LOGIN@shell.berlios.de:/home/groups/fetchmail/htdocs/" &
+pids="$pids $!"
+
+echo "==>  Uploading website (rsync) to SourceForge"
+# upload
+rsync \
+    --chmod=ug=rwX,o=rX,Dg=s --perms \
+    --copy-links --times --checksum --verbose \
+    --exclude host-scripts \
+    --exclude .git --exclude '*~' --exclude '#*#' \
+    * \
+    "${SOURCEFORGE_LOGIN},fetchmail@web.sourceforge.net:htdocs/" &
 pids="$pids $!"
 
 echo "==>  Uploading website (rsync) to local"
