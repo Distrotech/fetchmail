@@ -126,6 +126,7 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-features.html README.SSL README.NTLM \
 		README.packaging README.SSL-SERVER \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
+		Mailbox-Names-UTF7.txt Mailbox-Names-UTF7.html \
 		fetchmail-SA-2010-02.txt \
 		fetchmail-SA-2010-01.txt \
 		fetchmail-SA-2009-01.txt \
@@ -229,6 +230,9 @@ rsync:  distdir $(srcdir)/.rsyncs
 import-translations:
 	rsync -Lrtvz translationproject.org::tp/latest/fetchmail/  $(top_srcdir)/po
 	cd $(top_builddir)/po && $(MAKE) update-po
+
+Mailbox-Names-UTF7.html: Mailbox-Names-UTF7.txt
+	asciidoc --unsafe -a toc -o $@ $<
 
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
