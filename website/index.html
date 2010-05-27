@@ -42,6 +42,16 @@
 <h1>Fetchmail</h1>
 
 <div style="background-color:#c0ffc0;color:#000000;">
+    <h1>NEWS: IMAP7 in mailbox names (developer document)</h1>
+    <p>There is a <a href="Mailbox-Names-UTF7.html">new document about
+	mailbox name encoding in IMAP,</a>
+    an invited contribution by Mark Crispin. It applies to all IMAP
+    clients and servers and is not limited to fetchmail, and arose after
+    a discussion on the getmail mailing list. Note that as of
+    2010-05-25, neither fetchmail nor getmail currently supports this
+    directly; for the nonce, you need to manually encode the mailbox
+    name in UTF-7 for both applications.</p>
+
     <h1>SSL issues after upgrade to 6.3.16/6.3.17 or OpenSSL 1.0.0?</h1>
     <p>If your fetchmail upgrade entails an upgrade of the OpenSSL
     library to 1.0.0, remember to re-run <kbd>c_rehash
