@@ -3,8 +3,8 @@ IMAP4r1 Mailbox Names vs. Unicode
 :author: Matthias_Andree_(ed.)_and_Mark_Crispin
 :email: matthias.andree@gmx.de
 :author initials: MA and MC
-:revision: 1.000
-:revdate: 2010-05-26
+:revision: 1.001
+:revdate: 2010-05-28
 :toc:
 :data-uri:
 :icons:
@@ -222,7 +222,8 @@ This works similar to UTF-7, but mandates that printable ASCII characters
 0x20...0x7E except 0x26 (the ampersand "&") represent themselves, and uses yet
 another BASE64 alphabet consisting of the upper- and lowercase letters, the
 digits, and the characters "+" and ",", with some further rules specified in
-RFC-3501.
+RFC-3501. The leading shift character is replaced by the ampersand "&",
+the trailing remains "-", and the "&" can be encoded as "&-".
 
 == Conclusions
 
