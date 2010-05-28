@@ -232,7 +232,7 @@ import-translations:
 	cd $(top_builddir)/po && $(MAKE) update-po
 
 Mailbox-Names-UTF7.html: Mailbox-Names-UTF7.txt
-	asciidoc --unsafe -a toc -o $@ $<
+	asciidoc --unsafe -a toc -a data-uri -o $@ $< || { rm -f $@ ; exit 1 ; }
 
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
