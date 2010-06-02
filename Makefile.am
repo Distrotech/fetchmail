@@ -231,7 +231,8 @@ import-translations:
 	rsync -Lrtvz translationproject.org::tp/latest/fetchmail/  $(top_srcdir)/po
 	cd $(top_builddir)/po && $(MAKE) update-po
 
-Mailbox-Names-UTF7.html: Mailbox-Names-UTF7.txt
+SUFFIXES = .html .txt
+.txt.html:
 	asciidoc --unsafe -a toc -a data-uri -o $@ $< || { rm -f $@ ; exit 1 ; }
 
 # The following sets edit modes for GNU EMACS.
