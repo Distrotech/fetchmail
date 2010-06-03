@@ -514,7 +514,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	    }
 
 	    sin = (struct sockaddr_in *)info.rti_info[RTAX_NETMASK];
-	    if (!sin)
+	    if (sin)
 	    {
 		ifinfo->netmask = sin->sin_addr;
 	    }
@@ -524,7 +524,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	     * of non point-to-point link
 	     */
 	    sin = (struct sockaddr_in *)info.rti_info[RTAX_BRD];
-	    if (!sin)
+	    if (sin)
 	    {
 		ifinfo->dstaddr = sin->sin_addr;
 	    }

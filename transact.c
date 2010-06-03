@@ -1238,8 +1238,9 @@ process_headers:
 		    for (idp = msgblk.recipients; idp; idp = idp->next)
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
-		    snprintf(buf+1, sizeof(buf)-1,
-			    "for <%s>", rcpt_address (ctl, idp->id, 1));
+		    if (idp)
+			snprintf(buf+1, sizeof(buf)-1,
+				"for <%s>", rcpt_address (ctl, idp->id, 1));
 		    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf)-1,
 			    " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");

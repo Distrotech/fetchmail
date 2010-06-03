@@ -649,6 +649,9 @@ int stuffline(struct query *ctl, char *buf)
     int	n, oldphase;
     char *last;
 
+    if (!buf)
+	return -1;
+
     /* The line may contain NUL characters. Find the last char to use
      * -- the real line termination is the sequence "\n\0".
      */

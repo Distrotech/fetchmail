@@ -422,8 +422,8 @@ struct msgblk			/* message header parsed for open_sink() */
 #define NUM_ZERO(n)		((n) < 0)
 #define NUM_SPECIFIED(n)	((n) != 0)
 
-#define MULTIDROP(ctl)	(ctl->wildcard || \
-				((ctl)->localnames && (ctl)->localnames->next))
+#define MULTIDROP(ctl)		((ctl)->wildcard || \
+				 ((ctl)->localnames && (ctl)->localnames->next))
 
 /*
  * Note: tags are generated with an a%04d format from a 1-origin
