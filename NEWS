@@ -72,6 +72,10 @@ fetchmail-6.3.18 (not yet released):
   then - silently - succeeds.  Fetchmail, unless in verbose mode, will collect
   all connect errors and only report them if all of them fail.
 
+# CHANGES
+* When encountering incorrect headers, fetchmail will refer to the bad-header
+  option in the manpage. BerliOS Bug #17272, change suggested by Björn Voigt.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information - however, it was stuck with 6.3.8 for a while)

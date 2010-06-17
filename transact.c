@@ -592,7 +592,7 @@ eoh:
 		    has_nuls = TRUE;
 		if (outlevel > O_SILENT)
 		    report(stdout,
-			   GT_("incorrect header line found while scanning headers\n"));
+			   GT_("incorrect header line found - see manpage for bad-header option\n"));
 		if (outlevel >= O_VERBOSE)
 		    report (stdout, GT_("line: %s"), line);
 		refuse_mail = 1;
