@@ -5,6 +5,10 @@ Copyright (C) 2004 Matthias Andree, Eric S. Raymond,
 Copyright (C) 2005 - 2006, 2010 Sunil Shetye
 Copyright (C) 2005 - 2010 Matthias Andree
 
+If enabled at configure/compile time, the following clause applies:
+| This product includes software developed by the OpenSSL Project
+| for use in the OpenSSL Toolkit. (http://www.openssl.org/)
+
 Some older portions not explicitly mentioned above are copyrighted by
 Carl E. Harris, George M. Sipe, Graham Wilson, Matthias Andree and Sunil Shetye.
 

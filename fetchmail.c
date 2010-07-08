@@ -143,6 +143,10 @@ static void printcopyright(FILE *fp) {
 	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 		   "are welcome to redistribute it under certain conditions. For details,\n"
 		   "please see the file COPYING in the source or documentation directory.\n"));
+#ifdef SSL_ENABLE
+	/* Do not translate this */
+	fprintf(fp, "This product includes software developed by the OpenSSL Project\nfor use in the OpenSSL Toolkit. (http://www.openssl.org/)\n");
+#endif
 }
 
 const char *iana_charset;
