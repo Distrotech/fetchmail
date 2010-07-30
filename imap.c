@@ -1126,16 +1126,16 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
     {
 	unsigned int size;
 	int num;
+	char *ptr;
 
-	if (sscanf(buf, "* %d FETCH (RFC822.SIZE %u)", &num, &size) == 2
-	/* some servers (like mail.internode.on.net bld-mail04) return UID information here
-	 *
+	/* expected response formats:
 	 * IMAP> A0005 FETCH 1 RFC822.SIZE
+	 * IMAP< * 1 FETCH (RFC822.SIZE 1187)
 	 * IMAP< * 1 FETCH (UID 16 RFC822.SIZE 1447)
-	 * IMAP< A0005 OK FETCH completed
-	 *
 	 */
-		|| sscanf(buf, "* %d FETCH (UID %*s RFC822.SIZE %u)", &num, &size) == 2)
+	if (sscanf(buf, "* %d FETCH ", &num) == 1
+		&& (ptr = strstr(buf, "RFC822.SIZE "))
+		&& sscanf(ptr, "RFC822.SIZE %u", &size) == 1)
 	{
 	    if (num >= first && num <= last)
 		sizes[num - first] = size;
@@ -1178,6 +1178,7 @@ static int imap_is_old(int sock, struct query *ctl, int number)
     return(seen);
 }
 
+#if 0
 static char *skip_token(char *ptr)
 {
     while(isspace((unsigned char)*ptr)) ptr++;
@@ -1185,12 +1186,15 @@ static char *skip_token(char *ptr)
     while(isspace((unsigned char)*ptr)) ptr++;
     return(ptr);
 }
+#endif
 
 static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 /* request headers of nth message */
 {
     char buf [MSGBUFSIZE+1];
     int	num;
+    int ok;
+    char *ptr;
 
     (void)ctl;
     /* expunges change the fetch numbers */
@@ -1203,47 +1207,45 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     gen_send(sock, "FETCH %d RFC822.HEADER", number);
 
     /* looking for FETCH response */
-    for (;;) 
+    if ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
     {
-	int	ok;
-	char	*ptr;
-
-	if ((ok = gen_recv(sock, buf, sizeof(buf))))
-	    return(ok);
- 	ptr = skip_token(buf);	/* either "* " or "AXXXX " */
-	if (sscanf(ptr, "%d FETCH (RFC822.HEADER {%d}", &num, lenp) == 2
-	/* some servers (like mail.internode.on.net bld-mail04) return UID information here
-	 *
+	/* expected response formats:
 	 * IMAP> A0006 FETCH 1 RFC822.HEADER
+	 * IMAP< * 1 FETCH (RFC822.HEADER {1360}
 	 * IMAP< * 1 FETCH (UID 16 RFC822.HEADER {1360}
-	 * ...
-	 * IMAP< )
-	 * IMAP< A0006 OK FETCH completed
-	 *
+	 * IMAP< * 1 FETCH (UID 16 RFC822.SIZE 4029 RFC822.HEADER {1360}
 	 */
-		|| sscanf(ptr, "%d FETCH (UID %*s RFC822.HEADER {%d}", &num, lenp) == 2)
-	    break;
-	/* try to recover from chronically fucked-up M$ Exchange servers */
- 	else if (!strncmp(ptr, "NO", 2))
+	if (sscanf(buf, "* %d FETCH ", &num) == 1
+		&& num == number
+		&& (ptr = strstr(buf, "RFC822.HEADER "))
+		&& sscanf(ptr, "RFC822.HEADER {%d}", lenp) == 1)
 	{
-	    /* wait for a tagged response */
-	    if (strstr (buf, "* NO"))
-		imap_ok (sock, 0);
- 	    return(PS_TRANSIENT);
+	    return(PS_SUCCESS);
 	}
- 	else if (!strncmp(ptr, "BAD", 3))
-	{
-	    /* wait for a tagged response */
-	    if (strstr (buf, "* BAD"))
-		imap_ok (sock, 0);
- 	    return(PS_TRANSIENT);
-	}
-    }
 
-    if (num != number)
+	/* wait for a tagged response */
+	imap_ok (sock, 0);
+
+	/* try to recover for some responses */
+	if (!strncmp(buf, "* NO", 4) ||
+		!strncmp(buf, "* BAD", 5))
+	{
+	    return(PS_TRANSIENT);
+	}
+
+	/* a response which does not match any of the above */
+	if (outlevel > O_SILENT)
+	    report(stderr, GT_("Incorrect FETCH response: %s.\n"), buf);
 	return(PS_ERROR);
-    else
-	return(PS_SUCCESS);
+    }
+    else if (ok == PS_SUCCESS)
+    {
+	/* an unexpected tagged response */
+	if (outlevel > O_SILENT)
+	    report(stderr, GT_("Incorrect FETCH response: %s.\n"), buf);
+	return(PS_ERROR);
+    }
+    return(ok);
 }
 
 static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
