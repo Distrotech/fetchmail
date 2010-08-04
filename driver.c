@@ -1167,7 +1167,9 @@ static int do_session(
 	stage = STAGE_GETAUTH;
 	if (ctl->server.base_protocol->getauth)
 	{
+	    set_timeout(mytimeout);
 	    err = (ctl->server.base_protocol->getauth)(mailserver_socket, ctl, buf);
+	    set_timeout(0);
 
 	    if (err != 0)
 	    {
