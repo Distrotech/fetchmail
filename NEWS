@@ -71,6 +71,9 @@ fetchmail-6.3.18 (not yet released):
   connections refused to ::1/25 when the subsequent connection to 127.0.0.1/25
   then - silently - succeeds.  Fetchmail, unless in verbose mode, will collect
   all connect errors and only report them if all of them fail.
+* Fetchmail will now apply timeouts to the authentication stage. This stage
+  encompasses STARTTLS/STLS negotiation in IMAP/POP3.
+  Reported missing by Thomas Jarosch.
 
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header
