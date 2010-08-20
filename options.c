@@ -55,7 +55,8 @@ enum {
     LA_IDLE,
     LA_NOSOFTBOUNCE,
     LA_SOFTBOUNCE,
-    LA_BADHEADER
+    LA_BADHEADER,
+    LA_RETRIEVEERROR
 };
 
 /* options still left: CgGhHjJoORTWxXYz */
@@ -109,6 +110,7 @@ static const struct option longoptions[] = {
   {"norewrite",	no_argument,	   (int *) 0, 'n' },
   {"limit",	required_argument, (int *) 0, 'l' },
   {"warnings",	required_argument, (int *) 0, 'w' },
+  {"retrieve-error",	required_argument, (int *) 0, LA_RETRIEVEERROR },
 
   {"folder",	required_argument, (int *) 0, 'r' },
   {"smtphost",	required_argument, (int *) 0, 'S' },
@@ -608,6 +610,25 @@ int parsecmdline (int argc /** argument count */,
 	    ctl->server.tracepolls = FLAG_TRUE;
 	    break;
 
+	case LA_RETRIEVEERROR:
+	    buf = xstrdup(optarg);
+	    cp = strtok(buf, ",");
+	    do {
+		if (strcmp(cp, "abort") == 0)
+		    ctl->retrieveerrormode = RE_ABORT;
+		else if (strcmp(cp, "skip") == 0)
+		    ctl->retrieveerrormode |= RE_SKIP_MASK;
+		else if (strcmp(cp, "markseen") == 0)
+		    ctl->retrieveerrormode |= RE_MARK_SEEN_MASK;
+		else {
+		    fprintf(stderr,GT_("Invalid retrieve-error mode `%s' specified.\n"), cp);
+		    errflag++;
+		}
+	    } while
+		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
+	    break;
+
 	case '?':
 	default:
 	    helpflag++;
@@ -678,6 +699,7 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("  -n, --norewrite   don't rewrite header addresses\n"));
 	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));
+	P(GT_("      --retrieve-error set behaviour when a server error occurs while retrieving a message\n"));
 
 	P(GT_("  -S, --smtphost    set SMTP forwarding host\n"));
 	P(GT_("      --fetchdomains fetch mail for specified domains\n"));

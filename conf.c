@@ -394,6 +394,18 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("smtpaddress", ctl->smtpaddress);
 	stringdump("smtpname", ctl->smtpname);
 
+        if (ctl->retrieveerrormode == RE_ABORT)
+            stringdump("retrieve-error", "abort");
+        else {
+            indent('\0');
+            fprintf(stdout, "'retrieve-error':'");
+            if (ctl->retrieveerrormode & RE_SKIP_MASK)
+                fputs("skip,", stdout);
+            if (ctl->retrieveerrormode & RE_MARK_SEEN_MASK)
+                fputs("markseen", stdout);
+            fputs("',\n", stdout);
+        }
+
 	indent('\0');
 	fprintf(stdout, "'antispam':'");
 	for (idp = ctl->antispam; idp; idp = idp->next)

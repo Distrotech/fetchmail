@@ -154,6 +154,11 @@ char *strstr(const char *, const char *);
 #define		O_DEBUG		3	/* prolix */
 #define		O_MONITOR	O_VERBOSE
 
+/* Message retrieval error mode */
+#define		RE_ABORT	0	/* abort session */
+#define		RE_SKIP_MASK	1	/* skip the message, continue session */
+#define		RE_MARK_SEEN_MASK	2	/* mark the message as seen */
+
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
 /*
@@ -362,6 +367,8 @@ struct query
     int fastuidlcount;		/* internal count for frequency of binary search */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
+    flag retrieveerrormode;	/** behaviour when a server error is encountered while reading a message
+				  (abort|skip|markseen) -default behaviour is abort */
     flag use_ssl;		/* use SSL encrypted session */
     char *sslkey;		/* optional SSL private key file */
     char *sslcert;		/* optional SSL certificate file */

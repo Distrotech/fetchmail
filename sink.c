@@ -1633,4 +1633,18 @@ void close_warning_by_mail(struct query *ctl, struct msgblk *msg)
     close_sink(ctl, msg, TRUE);
 }
 
+void abort_message_sink(struct query *ctl)
+/*
+ * Forcibly close the SMTP connection and re-open.
+ *
+ * Used to abort message delivery once the DATA command has been issued.
+ * Required because all text after the DATA command is considered to be
+ * part of the message body (it is impossible to issue an SMTP command
+ * to abort message delivery once the DATA command has been issued).
+ */
+{
+  smtp_close(ctl, 0);
+  smtp_setup(ctl);
+}
+
 /* sink.c ends here */
