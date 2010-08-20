@@ -78,6 +78,7 @@ fetchmail-6.3.18 (not yet released):
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header
   option in the manpage. BerliOS Bug #17272, change suggested by Björn Voigt.
+* Fetchmail now decodes and reports GSSAPI status codes upon errors.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the

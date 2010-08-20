@@ -38,6 +38,33 @@
 #  endif
 #  endif
 
+static void decode_subr(const char *m, uint32_t code, int type)
+{
+    uint32_t maj, min, context;
+    gss_buffer_desc msg = GSS_C_EMPTY_BUFFER;
+
+    context = 0;
+    do {
+	maj = gss_display_status(&min, code, type, GSS_C_NO_OID,
+		&context, &msg);
+
+	if (maj != GSS_S_COMPLETE) {
+	    report(stderr, GT_("GSSAPI error in gss_display_status called from <%s>\n"), m);
+	    break;
+	}
+	report(stderr, GT_("GSSAPI error %s: %s\n"), m,
+		msg.value ? (char *)msg.value : GT_("(null)"));
+	if (msg.length)
+	    (void)gss_release_buffer(&min, &msg);
+    } while(context);
+}
+
+static void decode_status(const char *m, uint32_t major, uint32_t minor)
+{
+    decode_subr(m, major, GSS_C_GSS_CODE);
+    decode_subr(m, minor, GSS_C_MECH_CODE);
+}
+
 #define GSSAUTH_P_NONE      1
 #define GSSAUTH_P_INTEGRITY 2
 #define GSSAUTH_P_PRIVACY   4
@@ -64,6 +91,7 @@ int do_gssauth(int sock, const char *command, const char *service,
     maj_stat = gss_import_name(&min_stat, &request_buf, GSS_C_NT_HOSTBASED_SERVICE,
         &target_name);
     if (maj_stat != GSS_S_COMPLETE) {
+	decode_status("gss_import_name", maj_stat, min_stat);
         report(stderr, GT_("Couldn't get service name for [%s]\n"), buf1);
         return PS_AUTHFAIL;
     }
@@ -104,8 +132,10 @@ int do_gssauth(int sock, const char *command, const char *service,
 					NULL, 
 					NULL);
 	if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
-	    report(stderr, GT_("Error exchanging credentials\n"));
+	    decode_status("gss_init_sec_context", maj_stat, min_stat);
 	    gss_release_name(&min_stat, &target_name);
+	    report(stderr, GT_("Error exchanging credentials\n"));
+
 	    /* wake up server and await NO response */
 	    SockWrite(sock, "\r\n", 2);
 	    result = gen_recv(sock, buf1, sizeof buf1);
@@ -149,6 +179,7 @@ int do_gssauth(int sock, const char *command, const char *service,
     maj_stat = gss_unwrap(&min_stat, context, 
 			  &request_buf, &send_token, &cflags, &quality);
     if (maj_stat != GSS_S_COMPLETE) {
+	decode_status("gss_unwrap", maj_stat, min_stat);
         report(stderr, GT_("Couldn't unwrap security level data\n"));
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
@@ -198,6 +229,7 @@ int do_gssauth(int sock, const char *command, const char *service,
 	report(stdout, GT_("Releasing GSS credentials\n"));
     maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
     if (maj_stat != GSS_S_COMPLETE) {
+	decode_status("gss_delete_sec_context", maj_stat, min_stat);
 	report(stderr, GT_("Error releasing credentials\n"));
 	return PS_AUTHFAIL;
     }
