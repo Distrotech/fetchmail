@@ -650,6 +650,7 @@ int doODMR (struct query *);
 /* authentication functions */
 int do_cram_md5(int sock, const char *command, struct query *ctl, const char *strip);
 int do_rfc1731(int sock, const char *command, const char *truename);
+int check_gss_creds(const char *service, const char *hostname);
 int do_gssauth(int sock, const char *command, const char *service, const char *hostname, const char *username);
 int do_otp(int sock, const char *command, struct query *ctl);
 

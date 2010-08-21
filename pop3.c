@@ -565,7 +565,8 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #if defined(GSSAPI)
 	if (has_gssapi &&
 	    (ctl->server.authenticate == A_GSSAPI ||
-	     ctl->server.authenticate == A_ANY))
+	    (ctl->server.authenticate == A_ANY
+	     && check_gss_creds("pop", ctl->server.truename) == PS_SUCCESS)))
 	{
 	    ok = do_gssauth(sock,"AUTH","pop",ctl->server.truename,ctl->remotename);
 	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)

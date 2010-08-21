@@ -565,7 +565,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
 #ifdef GSSAPI
-    if ((ctl->server.authenticate == A_ANY 
+    if (((ctl->server.authenticate == A_ANY && check_gss_creds("imap", ctl->server.truename) == PS_SUCCESS)
 	 || ctl->server.authenticate == A_GSSAPI)
 	&& strstr(capabilities, "AUTH=GSSAPI"))
     {

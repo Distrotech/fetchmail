@@ -74,6 +74,10 @@ fetchmail-6.3.18 (not yet released):
 * Fetchmail will now apply timeouts to the authentication stage. This stage
   encompasses STARTTLS/STLS negotiation in IMAP/POP3.
   Reported missing by Thomas Jarosch.
+* Fetchmail will not try GSSAPI authentication automatically unless it has GSS
+  credentials. This avoids getting servers such as Exchange 2007 wedged if
+  GSSAPI authentication fails.  Reported by Patrick Rynhart, Debian Bug #568455,
+  and Alan Murrell, to the fetchmail-users list.
 
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header
