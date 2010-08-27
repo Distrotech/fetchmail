@@ -689,13 +689,13 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			     * This can be used to see which messages we've attempted
 			     * to download, but failed.
 			     */
-			    if (ctl->server.retrieveerror == REMARKSEEN) {
+			    if (ctl->server.retrieveerror == RE_MARKSEEN) {
 				if ((ctl->server.base_protocol->mark_seen)(mailserver_socket,ctl,num)) {
 				    return(err);
 				}
 			    }
 
-			    if (ctl->server.retrieveerror != REABORT) {
+			    if (ctl->server.retrieveerror != RE_ABORT) {
 				/*
 				 * Do not abort download session.  Continue with the next message.
 				 *

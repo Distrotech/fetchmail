@@ -321,9 +321,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    }
 
 	    switch (ctl->server.retrieveerror) {
-		case REABORT: stringdump("retrieve-error", "abort"); break;
-		case RECONTINUE: stringdump("retrieve-error", "continue"); break;
-		case REMARKSEEN: stringdump("retrieve-error", "markseen"); break;
+		case RE_ABORT: stringdump("retrieve-error", "abort"); break;
+		case RE_CONTINUE: stringdump("retrieve-error", "continue"); break;
+		case RE_MARKSEEN: stringdump("retrieve-error", "markseen"); break;
 	    }
 
 	    indent(0);

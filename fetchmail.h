@@ -257,7 +257,7 @@ struct method		/* describe methods for protocol state machine */
 enum badheader { BHREJECT = 0, BHACCEPT };
 
 /* Message retrieval error mode */
-enum retrieveerror { REABORT = 0, RECONTINUE, REMARKSEEN };
+enum retrieveerror { RE_ABORT = 0, RE_CONTINUE, RE_MARKSEEN };
 
 struct hostdata		/* shared among all user connections to given server */
 {

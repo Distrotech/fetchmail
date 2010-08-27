@@ -612,11 +612,11 @@ int parsecmdline (int argc /** argument count */,
 
 	case LA_RETRIEVEERROR:
 	    if (strcasecmp(optarg,"abort") == 0) {
-		ctl->server.retrieveerror = REABORT;
+		ctl->server.retrieveerror = RE_ABORT;
 	    } else if (strcasecmp(optarg,"continue") == 0) {
-		ctl->server.retrieveerror = RECONTINUE;
+		ctl->server.retrieveerror = RE_CONTINUE;
 	    } else if (strcasecmp(optarg,"markseen") == 0) {
-		ctl->server.retrieveerror = REMARKSEEN;
+		ctl->server.retrieveerror = RE_MARKSEEN;
 	    } else {
 		fprintf(stderr,GT_("Invalid retrieve-error policy `%s' specified.\n"), optarg);
 		errflag++;
