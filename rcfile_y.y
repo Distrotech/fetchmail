@@ -71,6 +71,7 @@ extern char * yytext;
 %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
 %token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
 %token BADHEADER ACCEPT REJECT_
+%token RETRIEVEERROR ABORT CONTINUE MARKSEEN
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
@@ -371,6 +372,9 @@ user_option	: TO localnames HERE
 		| FASTUIDL NUMBER	{current.fastuidl    = NUM_VALUE_IN($2);}
 		| BATCHLIMIT NUMBER	{current.batchlimit  = NUM_VALUE_IN($2);}
 		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE_IN($2);}
+		| RETRIEVEERROR ABORT	{current.retrieveerror = REABORT;}
+		| RETRIEVEERROR CONTINUE {current.retrieveerror = RECONTINUE;}
+		| RETRIEVEERROR MARKSEEN {current.retrieveerror = REMARKSEEN;}
 
 		| PROPERTIES STRING	{current.properties  = $2;}
 		;

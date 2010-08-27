@@ -126,6 +126,10 @@ fetchlimit	{ return FETCHLIMIT; }
 fetchsizelimit	{ return FETCHSIZELIMIT; }
 fastuidl	{ return FASTUIDL; }
 expunge		{ return EXPUNGE; }
+retrieve-error	{ return RETRIEVEERROR; }
+abort		{ return ABORT; }
+continue	{ return CONTINUE; }
+markseen	{ return MARKSEEN; }
 properties	{ return PROPERTIES; }
 
 is		{ SETSTATE(NAME); return IS; }

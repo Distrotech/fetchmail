@@ -683,19 +683,19 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		{
 		    len = -1;
 		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len))) {
-			if (err == PS_ERROR && ctl->retrieveerrormode) {
+			if (err == PS_ERROR && ctl->retrieveerror) {
 			    /*
 			     * Mark a message with a protocol error as seen.
 			     * This can be used to see which messages we've attempted
 			     * to download, but failed.
 			     */
-			    if (ctl->retrieveerrormode & RE_MARK_SEEN_MASK) {
+			    if (ctl->retrieveerror == REMARKSEEN) {
 				if ((ctl->server.base_protocol->mark_seen)(mailserver_socket,ctl,num)) {
 				    return(err);
 				}
 			    }
 
-			    if (ctl->retrieveerrormode & RE_SKIP_MASK) {
+			    if (ctl->retrieveerror != REABORT) {
 				/*
 				 * Do not abort download session.  Continue with the next message.
 				 *
