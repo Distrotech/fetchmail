@@ -256,6 +256,9 @@ struct method		/* describe methods for protocol state machine */
 
 enum badheader { BHREJECT = 0, BHACCEPT };
 
+/* Message retrieval error mode */
+enum retrieveerror { REABORT = 0, RECONTINUE, REMARKSEEN };
+
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
@@ -282,6 +285,7 @@ struct hostdata		/* shared among all user connections to given server */
     char *principal;			/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
     enum badheader badheader;		/* bad-header {pass|reject} */
+    enum retrieveerror retrieveerror;	/* retrieve-error (abort|continue|markseen) */
 
 #if defined(linux) || defined(__FreeBSD__)
 #define CAN_MONITOR
@@ -314,9 +318,6 @@ struct hostdata		/* shared among all user connections to given server */
  * so we don't spam our users in daemon mode.
  */
 #define WKA_TOP (1L << 0)		/* Maillennium TOP -> RETR override warning */
-
-/* Message retrieval error mode */
-enum retrieveerror { REABORT = 0, RECONTINUE, REMARKSEEN };
 
 struct query
 {
@@ -365,7 +366,6 @@ struct query
     int fastuidlcount;		/* internal count for frequency of binary search */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
-    enum retrieveerror retrieveerror; /* retrieve-error (abort|continue|markseen) */
     flag use_ssl;		/* use SSL encrypted session */
     char *sslkey;		/* optional SSL private key file */
     char *sslcert;		/* optional SSL certificate file */

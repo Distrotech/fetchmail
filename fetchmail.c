@@ -949,6 +949,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.plugout);
     FLAG_MERGE(server.tracepolls);
     FLAG_MERGE(server.badheader);
+    FLAG_MERGE(server.retrieveerror);
 
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
@@ -979,7 +980,6 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(fetchsizelimit);
     FLAG_MERGE(fastuidl);
     FLAG_MERGE(batchlimit);
-    FLAG_MERGE(retrieveerror);
 #ifdef	SSL_ENABLE
     FLAG_MERGE(use_ssl);
     FLAG_MERGE(sslkey);

@@ -237,6 +237,9 @@ serv_option	: AKA alias_list
 		| NO TRACEPOLLS		{current.server.tracepolls = FLAG_FALSE;}
 		| BADHEADER ACCEPT	{current.server.badheader = BHACCEPT;}
 		| BADHEADER REJECT_	{current.server.badheader = BHREJECT;}
+		| RETRIEVEERROR ABORT	{current.server.retrieveerror = REABORT;}
+		| RETRIEVEERROR CONTINUE {current.server.retrieveerror = RECONTINUE;}
+		| RETRIEVEERROR MARKSEEN {current.server.retrieveerror = REMARKSEEN;}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}
@@ -372,9 +375,6 @@ user_option	: TO localnames HERE
 		| FASTUIDL NUMBER	{current.fastuidl    = NUM_VALUE_IN($2);}
 		| BATCHLIMIT NUMBER	{current.batchlimit  = NUM_VALUE_IN($2);}
 		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE_IN($2);}
-		| RETRIEVEERROR ABORT	{current.retrieveerror = REABORT;}
-		| RETRIEVEERROR CONTINUE {current.retrieveerror = RECONTINUE;}
-		| RETRIEVEERROR MARKSEEN {current.retrieveerror = REMARKSEEN;}
 
 		| PROPERTIES STRING	{current.properties  = $2;}
 		;

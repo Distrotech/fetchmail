@@ -612,11 +612,11 @@ int parsecmdline (int argc /** argument count */,
 
 	case LA_RETRIEVEERROR:
 	    if (strcasecmp(optarg,"abort") == 0) {
-		ctl->retrieveerror = REABORT;
+		ctl->server.retrieveerror = REABORT;
 	    } else if (strcasecmp(optarg,"continue") == 0) {
-		ctl->retrieveerror = RECONTINUE;
+		ctl->server.retrieveerror = RECONTINUE;
 	    } else if (strcasecmp(optarg,"markseen") == 0) {
-		ctl->retrieveerror = REMARKSEEN;
+		ctl->server.retrieveerror = REMARKSEEN;
 	    } else {
 		fprintf(stderr,GT_("Invalid retrieve-error policy `%s' specified.\n"), optarg);
 		errflag++;
@@ -672,6 +672,8 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
 	P(GT_("      --bad-header {reject|accept}\n"
 	      "                    specify policy for handling messages with bad headers\n"));
+	P(GT_("      --retrieve-error {abort|continue|markseen}\n"
+              "                        specify policy for processing messages with retrieve errors\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
@@ -693,8 +695,6 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("  -n, --norewrite   don't rewrite header addresses\n"));
 	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));
-	P(GT_("      --retrieve-error {abort|continue|markseen}\n"
-              "                        specify policy for processing messages with retrieve errors\n"));
 
 	P(GT_("  -S, --smtphost    set SMTP forwarding host\n"));
 	P(GT_("      --fetchdomains fetch mail for specified domains\n"));

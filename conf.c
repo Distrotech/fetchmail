@@ -320,6 +320,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		case BHACCEPT: puts("'badheader': TRUE,"); break;
 	    }
 
+	    switch (ctl->server.retrieveerror) {
+		case REABORT: stringdump("retrieve-error", "abort"); break;
+		case RECONTINUE: stringdump("retrieve-error", "continue"); break;
+		case REMARKSEEN: stringdump("retrieve-error", "markseen"); break;
+	    }
+
 	    indent(0);
 	    fputs("'users': ", stdout);
 	    indent('[');
@@ -393,15 +399,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	listdump("fetchdomains", ctl->domainlist);
 	stringdump("smtpaddress", ctl->smtpaddress);
 	stringdump("smtpname", ctl->smtpname);
-
-	switch (ctl->retrieveerror) {
-	    case REABORT:
-		stringdump("retrieve-error", "abort"); break;
-	    case RECONTINUE:
-		stringdump("retrieve-error", "continue"); break;
-	    case REMARKSEEN:
-		stringdump("retrieve-error", "markseen"); break;
-	}
 
 	indent('\0');
 	fprintf(stdout, "'antispam':'");
