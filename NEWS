@@ -54,6 +54,16 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.18 (not yet released):
 
+# SECURITY IMPROVEMENTS TO DEFANG X.509 CERTIFICATE ABUSE
+* Fetchmail now only accepts wildcard certificate common names and subject
+  alternative names if they start with "*.". Previous versions would accept
+  wildcards even if no period followed immediately.
+* Fetchmail now disallows wildcards in certificates to match domain literals
+  (such as 10.9.8.7), or wildcards in domain literals ("*.168.23.23").
+  The test is overly picky and triggers if the pattern (after skipping the
+  initial wildcard "*") or domain consist solely of digits and dots and matches
+  more than needed.
+
 # BUG FIXES
 * Fetchmail would warn about insecure SSL/TLS connections even if a matching
   --sslfingerprint was specified. This is an omission from an SSL usability
@@ -78,9 +88,6 @@ fetchmail-6.3.18 (not yet released):
   credentials. This avoids getting servers such as Exchange 2007 wedged if
   GSSAPI authentication fails.  Reported by Patrick Rynhart, Debian Bug #568455,
   and Alan Murrell, to the fetchmail-users list.
-* Fetchmail now only accepts wildcard certificate common names and subject
-  alternative names if they start with "*.". Previous versions would accept
-  wildcards even if no period followed immediately.
 
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header

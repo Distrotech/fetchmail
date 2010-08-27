@@ -600,7 +600,23 @@ SSL *SSLGetContext( int sock )
  * The only place where a wildcard is allowed is in the leftmost
  * position of p1. */
 static int name_match(const char *p1, const char *p2) {
-    if (p1[0] == '*' && p1[1] == '.') {
+    const char *const dom = "0123456789.";
+    int wildcard_ok = 1;
+
+    /* blank patterns never match */
+    if (p1[0] == '\0')
+	return 0;
+
+    /* disallow wildcards in certificates for domain literals
+     * (10.9.8.7-like) */
+    if (strspn(p1+(*p1 == '*' ? 1 : 0), dom) == strlen(p1))
+	wildcard_ok = 0;
+
+    /* disallow wildcards for domain literals */
+    if (strspn(p2, dom) == strlen(p2))
+	wildcard_ok = 0;
+
+    if (wildcard_ok && p1[0] == '*' && p1[1] == '.') {
 	size_t l1, l2;
 
 	++p1;
