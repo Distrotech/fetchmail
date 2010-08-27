@@ -593,6 +593,25 @@ SSL *SSLGetContext( int sock )
 	return _ssl_context[sock];
 }
 
+/** A picky certificate name check:
+ * check if the pattern or string in s1 (from a certificate) matches the
+ * hostname (in s2), returns true if matched.
+ *
+ * The only place where a wildcard is allowed is in the leftmost
+ * position of p1. */
+static int name_match(const char *p1, const char *p2) {
+    if (p1[0] == '*') {
+	size_t l1, l2;
+
+	++p1;
+	l1 = strlen(p1);
+	l2 = strlen(p2);
+	if (l2 > l1)
+	    p2 += l2 - l1;
+    }
+
+    return (0 == strcasecmp(p1, p2));
+}
 
 /* ok_return (preverify_ok) is 1 if this stage of certificate verification
    passed, or 0 if it failed. This callback lets us display informative
@@ -677,10 +696,9 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			if (_ssl_server_cname != NULL) {
 				char *p1 = buf;
 				char *p2 = _ssl_server_cname;
-				int n;
 				int matched = 0;
 				STACK_OF(GENERAL_NAME) *gens;
-				
+
 				/* RFC 2595 section 2.4: find a matching name
 				 * first find a match among alternative names */
 				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
@@ -702,26 +720,14 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 								sk_GENERAL_NAME_free(gens);
 								return 0;
 							}
-							if (*p1 == '*') {
-								++p1;
-								n = strlen(p2) - strlen(p1);
-								if (n >= 0)
-									p2 += n;
-							}
-							if (0 == strcasecmp(p1, p2)) {
-								matched = 1;
+							if (name_match(p1, p2)) {
+							    matched = 1;
 							}
 						}
 					}
 					sk_GENERAL_NAME_free(gens);
 				}
-				if (*p1 == '*') {
-					++p1;
-					n = strlen(p2) - strlen(p1);
-					if (n >= 0)
-						p2 += n;
-				}
-				if (0 == strcasecmp(p1, p2)) {
+				if (name_match(p1, p2)) {
 					matched = 1;
 				}
 				if (!matched) {
