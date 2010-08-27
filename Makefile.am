@@ -46,7 +46,7 @@ DEPENDENCIES=		libfm.a $(LIBOBJS)
 
 check_PROGRAMS=
 
-TESTS=			t.smoke t.validate-xhtml
+TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 if NEED_TRIO
@@ -99,13 +99,16 @@ if NEED_GETADDRINFO
 fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
-check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget rfc822valid
+check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget rfc822valid \
+			x509_name_match
 
 rfc2047e_CFLAGS=	-DTEST
 
 rfc822valid_CFLAGS=	-DTEST
 
 rfc822_CFLAGS=		-DMAIN
+
+x509_name_match_CFLAGS=	-DTEST
 
 unmime_SOURCES=	unmime.c
 unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
