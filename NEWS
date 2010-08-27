@@ -63,6 +63,7 @@ fetchmail-6.3.18 (not yet released):
   The test is overly picky and triggers if the pattern (after skipping the
   initial wildcard "*") or domain consist solely of digits and dots and matches
   more than needed.
+* Fetchmail now disallows wildcarding top-level domains.
 
 # BUG FIXES
 * Fetchmail would warn about insecure SSL/TLS connections even if a matching

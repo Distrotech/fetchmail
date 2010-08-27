@@ -772,6 +772,9 @@ int must_tls(struct query *ctl);
 /* prototype from rfc822valid.c */
 int rfc822_valid_msgid(const unsigned char *);
 
+/* prototype from x509_name_match.c */
+int name_match(const char *p1, const char *p2);
+
 /* macro to determine if we want to spam progress to stdout */
 #define want_progress() \
 	((outlevel >= O_VERBOSE || (outlevel > O_SILENT && run.showdots)) \
