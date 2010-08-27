@@ -600,7 +600,7 @@ SSL *SSLGetContext( int sock )
  * The only place where a wildcard is allowed is in the leftmost
  * position of p1. */
 static int name_match(const char *p1, const char *p2) {
-    if (p1[0] == '*') {
+    if (p1[0] == '*' && p1[1] == '.') {
 	size_t l1, l2;
 
 	++p1;
