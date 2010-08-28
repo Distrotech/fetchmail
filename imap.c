@@ -8,6 +8,7 @@
 #include  "config.h"
 #include  <stdio.h>
 #include  <string.h>
+#include  <strings.h>
 #include  <ctype.h>
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
@@ -917,6 +918,7 @@ fetchflags:
     while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
     {
 	unsigned int num;
+	int consumed;
 
 	/* expected response format:
 	 * IMAP< * 1 FETCH (FLAGS (\Seen))
@@ -926,7 +928,9 @@ fetchflags:
 	 * IMAP< * 5 FETCH (UID 10 FLAGS (\Recent))
 	 */
 	if (unseen < count
-		&& sscanf(buf, "* %u FETCH ", &num) == 1
+		&& sscanf(buf, "* %u %n", &num, &consumed) == 1
+		&& 0 == strncasecmp(buf+consumed, "FETCH", 5)
+		&& isspace((unsigned char)buf[consumed+5])
 		&& num >= 1 && num <= (unsigned)count
 		&& strstr(buf, "FLAGS ")
 		&& !strstr(buf, "\\SEEN")
@@ -1126,6 +1130,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
     {
 	unsigned int size;
 	int num;
+	int consumed;
 	char *ptr;
 
 	/* expected response formats:
@@ -1133,7 +1138,9 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	 * IMAP< * 1 FETCH (RFC822.SIZE 1187)
 	 * IMAP< * 1 FETCH (UID 16 RFC822.SIZE 1447)
 	 */
-	if (sscanf(buf, "* %d FETCH ", &num) == 1
+	if (sscanf(buf, "* %d %n", &num, &consumed) == 1
+	    && 0 == strncasecmp(buf + consumed, "FETCH", 5)
+	    && isspace((unsigned char)buf[consumed + 5])
 		&& (ptr = strstr(buf, "RFC822.SIZE "))
 		&& sscanf(ptr, "RFC822.SIZE %u", &size) == 1)
 	{
@@ -1209,16 +1216,20 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     /* looking for FETCH response */
     if ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
     {
+		int consumed;
 	/* expected response formats:
 	 * IMAP> A0006 FETCH 1 RFC822.HEADER
 	 * IMAP< * 1 FETCH (RFC822.HEADER {1360}
 	 * IMAP< * 1 FETCH (UID 16 RFC822.HEADER {1360}
 	 * IMAP< * 1 FETCH (UID 16 RFC822.SIZE 4029 RFC822.HEADER {1360}
 	 */
-	if (sscanf(buf, "* %d FETCH ", &num) == 1
+	if (sscanf(buf, "* %d %n", &num, &consumed) == 1
+	    && 0 == strncasecmp(buf + consumed, "FETCH", 5)
+	    && isspace((unsigned char)buf[5+consumed])
 		&& num == number
-		&& (ptr = strstr(buf, "RFC822.HEADER "))
-		&& sscanf(ptr, "RFC822.HEADER {%d}", lenp) == 1)
+		&& (ptr = strstr(buf, "RFC822.HEADER"))
+		&& sscanf(ptr, "RFC822.HEADER {%d}%n", lenp, &consumed) == 1
+		&& ptr[consumed-1] == '}')
 	{
 	    return(PS_SUCCESS);
 	}

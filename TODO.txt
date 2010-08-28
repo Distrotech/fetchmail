@@ -37,6 +37,9 @@ soon - SHOULD:
   Richard Brooksby, fetchmail-users 2010-04-06.
 
 soon - MAY:
+- find a better replacement for sscanf parsing - we don't usually
+  detect errors in format strings such as "* %d FETCH " because we don't
+  check if the FETCH is (a) present, (b) consumed.
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
   => fetchmail: support utf-8 encoding in log file
   Revisit http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=400719
