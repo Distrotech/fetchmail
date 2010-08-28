@@ -109,9 +109,8 @@ int check_gss_creds(const char *service, const char *hostname)
     OM_uint32 maj_stat, min_stat;
     gss_cred_usage_t cu;
     gss_name_t target_name;
-    int result;
 
-    result = import_name(service, hostname, &target_name, FALSE);
+    (void)import_name(service, hostname, &target_name, FALSE);
     (void)gss_release_name(&min_stat, &target_name);
 
     maj_stat = gss_inquire_cred(&min_stat, GSS_C_NO_CREDENTIAL,
