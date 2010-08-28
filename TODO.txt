@@ -17,6 +17,8 @@ soon - MUST:
   Postfix virtual users" around 2009-09-23 on fetchmail-users@).
 
 soon - SHOULD:
+- SockOpen sometimes exits with errno == 0, confusing users (found with
+  Google RealTime on Twitter)
 - make sure the man page completely lists all options (f. i. sslcertpath) in
   the tables.
 - allow \Deleted without \Seen, rf. 
