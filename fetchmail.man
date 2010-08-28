@@ -738,6 +738,17 @@ Specify how fetchmail is supposed to treat messages with bad headers,
 i. e. headers with bad syntax. Traditionally, fetchmail has rejected such
 messages, but some distributors modified fetchmail to accept them. You can now
 configure fetchmail's behaviour per server.
+.TP
+.B \-\-retrieve\-error {abort|continue|markseen}
+(Keyword: retrieve\-error; since v6.4)
+.br
+Specify how fetchmail is supposed to treat messages which fail to be
+retrieved due to server errors, i. e. fetching the message body fails with
+a server error. Traditionally, fetchmail has aborted the session leaving
+both the message with the error and any subsequent messages on the server.
+Both the continue and markseen options will allow the session to continue
+enabling subsequent messages on the server to be retrieved.  You can now
+configure fetchmail's behaviour per server.
 
 .SS Resource Limit Control Options
 .TP
@@ -1800,6 +1811,10 @@ Set password for RFC2554 authentication to the ESMTP server.
 T}
 bad-header	\&	\&	T{
 How to treat messages with a bad header. Can be reject (default) or accept.
+T}
+retrieve-error	\&	\&	T{
+How to behave when messages that cannot be retrieved due to a server error
+are encountered. Can be abort (default), continue or markseen.
 T}
 .TE
 

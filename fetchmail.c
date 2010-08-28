@@ -1975,6 +1975,19 @@ static void dump_params (struct runctl *runp,
 		break;
 	}
 
+	switch (ctl->server.retrieveerror) {
+	    case RE_ABORT:
+		if (outlevel >= O_VERBOSE)
+		    printf(GT_("  Messages with fetch body errors will cause the session to abort.\n"));
+		break;
+	    case RE_CONTINUE:
+		printf(GT_("  Messages with fetch body errors will be skipped, the session will continue.\n"));
+		break;
+	    case RE_MARKSEEN:
+		printf(GT_("  Messages with fetch body errors will be marked seen, the session will continue.\n"));
+		break;
+	}
+
 	if (ctl->properties)
 	    printf(GT_("  Pass-through properties \"%s\".\n"),
 		   visbuf(ctl->properties));
