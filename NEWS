@@ -89,6 +89,8 @@ fetchmail-6.3.18 (not yet released):
   credentials. This avoids getting servers such as Exchange 2007 wedged if
   GSSAPI authentication fails.  Reported by Patrick Rynhart, Debian Bug #568455,
   and Alan Murrell, to the fetchmail-users list.
+  Note that if GSSAPI fails for other reasons, you can use the --auth option to
+  work around that.
 * Fetchmail now parses response to "FETCH n:m RFC822.SIZE" and "FETCH n
   RFC822.HEADER" in a more flexible manner. (Sunil Shetye)
 
