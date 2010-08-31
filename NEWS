@@ -99,6 +99,14 @@ fetchmail-6.3.18 (not yet released):
   option in the manpage. BerliOS Bug #17272, change suggested by Björn Voigt.
 * Fetchmail now decodes and reports GSSAPI status codes upon errors.
 
+# TRANSLATION UPDATES
+  [cs]    Czech (Petr Pisar)
+  [fr]    French (Frédéric Marchal)
+  [de]    German
+  [it]    Italian (Vincenzo Campanella)
+  [ja]    Japanese (Takeshi Hamasaki)
+  [pl]    Polish (Jakub Bogusz)
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information - however, it was stuck with 6.3.8 for a while)
