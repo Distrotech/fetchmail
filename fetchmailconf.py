@@ -202,13 +202,17 @@ class Server:
 	    res = res + " esmtppassword " + `self.esmtppassword`
 	if self.interface or self.monitor or self.principal or self.plugin or self.plugout:
 	    if folded:
-		res = res + "\n"
+		res = res + "\n    "
+
 	if self.badheader:
 		res = res + "bad-header accept "
 	if self.retrieveerror == 'continue':
 		res = res + "retrieve-error continue "
 	if self.retrieveerror == 'markseen':
 		res = res + "retrieve-error markseen "
+	if self.badheader or self.retrieveerror != ServerDefaults.retrieveerror:
+	    if folded:
+		res = res + "\n"
 
 	if res[-1] == " ": res = res[0:-1]
 
