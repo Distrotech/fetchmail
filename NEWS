@@ -61,8 +61,8 @@ fetchmail-6.3.18 (not yet released):
 * Fetchmail now disallows wildcards in certificates to match domain literals
   (such as 10.9.8.7), or wildcards in domain literals ("*.168.23.23").
   The test is overly picky and triggers if the pattern (after skipping the
-  initial wildcard "*") or domain consist solely of digits and dots and matches
-  more than needed.
+  initial wildcard "*") or domain consists solely of digits and dots, and thus
+  matches more than needed.
 * Fetchmail now disallows wildcarding top-level domains.
 
 # BUG FIXES
