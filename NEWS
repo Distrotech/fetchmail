@@ -100,6 +100,7 @@ fetchmail-6.3.18 (not yet released):
 * Fetchmail now decodes and reports GSSAPI status codes upon errors.
 
 # TRANSLATION UPDATES
+  [zh_CN] Chinese/simplified (Ji Zheng-Yu)
   [cs]    Czech (Petr Pisar)
   [fr]    French (Frédéric Marchal)
   [de]    German
