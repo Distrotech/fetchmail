@@ -573,7 +573,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if ((ok = do_gssauth(sock, "AUTHENTICATE", "imap",
 			ctl->server.truename, ctl->remotename)))
 	{
-	    /* SASL cancellation of authentication */
 	    if (ctl->server.authenticate != A_ANY)
                 return ok;
 	} else  {
@@ -610,8 +609,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
 	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl, NULL)))
 	{
-	    /* SASL cancellation of authentication */
-	    gen_send(sock, "*");
 	    if(ctl->server.authenticate != A_ANY)
                 return ok;
 	}
@@ -647,8 +644,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	&& strstr (capabilities, "AUTH=NTLM")) {
 	if ((ok = do_imap_ntlm(sock, ctl)))
 	{
-	    /* SASL cancellation of authentication */
-	    gen_send(sock, "*");
 	    if(ctl->server.authenticate != A_ANY)
                 return ok;
 	}
@@ -702,8 +697,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	free(remotename);
 	if (ok)
 	{
-	    /* SASL cancellation of authentication */
-	    gen_send(sock, "*");
 	    if(ctl->server.authenticate != A_ANY)
                 return ok;
 	}
