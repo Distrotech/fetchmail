@@ -179,9 +179,9 @@ int do_gssauth(int sock, const char *command, const char *service,
 	    decode_status("gss_init_sec_context", maj_stat, min_stat);
 	    (void)gss_release_name(&min_stat, &target_name);
 
-	    /* wake up server and await NO response */
+	    /* wake up server and cancel authentication */
 	    suppress_tags = TRUE;
-	    gen_send(sock, "");
+	    gen_send(sock, "*");
 	    suppress_tags = FALSE;
 
 	    result = gen_recv(sock, buf1, sizeof buf1);
