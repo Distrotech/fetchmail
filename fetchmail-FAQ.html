@@ -188,6 +188,7 @@ messages but before deleting them</a><br/>
     errors.</a><br />
 <a href="#R13">R13. What does "Interrupted system call" mean?</a><br />
 <a href="#R14">R14. Since upgrading fetchmail/OpenSSL, I can no longer connect!</a><br />
+<a href="#R15">R15. Help, I'm getting Authorization failure!</a><br />
 
 <h2 id="C_H">Hangs and lockups</h2>
 
@@ -2504,6 +2505,26 @@ option is <kbd>--sslcertpath /home/hans/certs</kbd> on the commandline and
 <pre>
 env PATH=/opt/openssl1.0.0/bin /opt/openssl1.0.0/bin/c_rehash /home/hans/certs
 </pre>
+
+<h2><a id="R15" name="R15">R15. Help, I'm getting Authorization failure!</a></h2>
+
+<p>Fetchmail by default attempts to authenticate using various schemes.
+Fetchmail tries these schemes in order of descending security, meaning
+the most secure schemes are tried first.</p>
+
+<p>However, sometimes the server offers a secure authentication scheme
+that is not properly configured, or an authentication scheme such as
+GSSAPI does requires credentials to be acquired externally. In some
+situations, fetchmail cannot know the scheme will fail without trying.</p>
+
+<p><strong>Solution:</strong> Configure the right authentication scheme
+explicitly, for instance, with <kbd>--auth cram-md5</kbd> or <kbd>--auth
+    password</kbd> on the command line or <code>auth "cram-md5"</code> or
+	<code>auth "password"</code> in the rcfile. Details can be found
+	in the manual page.<br />
+	<strong>Note</strong> that auth password should only be used
+	across secure links (see the sslcertck and ssl/sslproto options).
+	</p>
 
 <hr/>
 <h1>Hangs and lockups</h1>
