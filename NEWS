@@ -93,6 +93,11 @@ fetchmail-6.3.18 (not yet released):
   work around that.
 * Fetchmail now parses response to "FETCH n:m RFC822.SIZE" and "FETCH n
   RFC822.HEADER" in a more flexible manner. (Sunil Shetye)
+* Fetchmail now cancels GSSAPI authentication properly when encountering GSS
+  errors. It now sends an asterisk on a line by its own, as required in SASL.
+    This should fix protocol synchronization issues that cause Authentication
+  failure, particularly with Exchange 2007 and Exchange 2010 servers, when
+  Kerberos authentication was offered by the server and attempted by fetchmail.
 
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header
