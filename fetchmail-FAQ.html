@@ -2074,13 +2074,15 @@ IMAP-GSS protocol?</a></h2>
 <p>Fetchmail can use RFC1731 GSSAPI authorization to safely
 identify you to your IMAP server, as long as you can share
 Kerberos&nbsp;V credentials with your mail host and you have a GSSAPI-capable
-IMAP server - those are few.</p>
+IMAP server.</p>
 
 <p>fetchmail does not compile in support for GSS by
-default, since it requires libraries from the Kerberos V
-distribution (available via FTP at <a
-href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a>).
-If you have these, compiling in GSS support is simple: add a
+default, since it requires libraries from a Kerberos V
+distribution, such as <a href="http://web.mit.edu/Kerberos/">MIT
+    Kerberos</a> or <a href="http://www.h5l.org/">Heimdal
+    Kerberos</a>.</p>
+
+<p>If you have these, compiling in GSS support is simple: add a
 <code>--with-gssapi=[/path/to/krb5/root]</code> option to
 configure. For instance, I have all of my Kerberos V libraries
 installed under /usr/krb5 so I run <code>configure
