@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.18-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-09-25 14:08+0200\n"
+"POT-Creation-Date: 2010-09-25 18:03+0200\n"
 "PO-Revision-Date: 2010-09-25 14:15+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -290,7 +290,9 @@ msgstr " (vormals autorisiert)"
 
 #: driver.c:1192
 msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
-msgstr "Hilfe (auf Englisch): siehe http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
+msgstr ""
+"Hilfe (auf Englisch): siehe http://www.fetchmail.info/fetchmail-FAQ."
+"html#R15\n"
 
 #: driver.c:1213
 #, c-format
@@ -1690,75 +1692,71 @@ msgstr "GSSAPI-Fehler in gss_display_status, aufgerufen von <%s>\n"
 
 #: gssapi.c:55
 #, c-format
-msgid "GSSAPI error %s: %s\n"
-msgstr "GSSAPI-Fehler %s: %s\n"
+msgid "GSSAPI error %s: %.*s\n"
+msgstr "GSSAPI-Fehler %s: %.*s\n"
 
-#: gssapi.c:56
-msgid "(null)"
-msgstr "(Null)"
-
-#: gssapi.c:90
+#: gssapi.c:89
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "Konnte Servicenamen für [%s] nicht bestimmen\n"
 
-#: gssapi.c:95
+#: gssapi.c:94
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "Benutze Servicenamen [%s]\n"
 
-#: gssapi.c:122
+#: gssapi.c:121
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
 "Keine geeignete GSSAPI-Beglaubigung gefunden. Überspringe GSSAPI-"
 "Authentifizierung.\n"
 
-#: gssapi.c:123
+#: gssapi.c:122
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
 "Wenn Sie GSSAPI benutzen möchten, brauchen Sie Beglaubigungen, ggf. von "
 "kinit.\n"
 
-#: gssapi.c:161
+#: gssapi.c:160
 msgid "Sending credentials\n"
 msgstr "Schicke Beglaubigungen\n"
 
-#: gssapi.c:181
+#: gssapi.c:188
 msgid "Error exchanging credentials\n"
 msgstr "Fehler beim Austausch der Beglaubigungen\n"
 
-#: gssapi.c:227
+#: gssapi.c:230
 msgid "Couldn't unwrap security level data\n"
 msgstr "Konnte Sicherheitsstufendaten nicht ermitteln\n"
 
-#: gssapi.c:232
+#: gssapi.c:235
 msgid "Credential exchange complete\n"
 msgstr "Beglaubigungsaustausch vollzogen\n"
 
-#: gssapi.c:236
+#: gssapi.c:239
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Server erfordert Integrität und/oder Privatsphäre\n"
 
-#: gssapi.c:245
+#: gssapi.c:248
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Ermittelte Sicherheitsstufen-Flags: %s%s%s\n"
 
-#: gssapi.c:249
+#: gssapi.c:252
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "Maximale GSS-Tokengröße ist %ld\n"
 
-#: gssapi.c:262
+#: gssapi.c:265
 msgid "Error creating security level request\n"
 msgstr "Fehler beim Erstellen der Sicherheitsstufenanfrage\n"
 
-#: gssapi.c:273
+#: gssapi.c:276
 msgid "Releasing GSS credentials\n"
 msgstr "Gebe GSS-Beglaubigungen frei\n"
 
-#: gssapi.c:277
+#: gssapi.c:280
 msgid "Error releasing credentials\n"
 msgstr "Fehler beim Freigeben der Beglaubigungen\n"
 
@@ -1814,81 +1812,81 @@ msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 "%s: opportunistisches Upgrade auf TLS fehlgeschlagen, versuche Fortsetzung.\n"
 
-#: imap.c:641
+#: imap.c:637
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Benötigte OTP-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:663 pop3.c:385
+#: imap.c:657 pop3.c:385
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Benötigte NTLM-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:672
+#: imap.c:666
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Benötigte LOGIN-Fähigkeit nicht vom Server unterstützt\n"
 
-#: imap.c:738
+#: imap.c:730
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "unerwartete Expunge-Bestätigung (%d tatsächlich != %d erwartet)\n"
 
-#: imap.c:877
+#: imap.c:869
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu ist ungesehen\n"
 
-#: imap.c:941 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
+#: imap.c:933 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u ist ungesehen\n"
 
-#: imap.c:976 imap.c:1035
+#: imap.c:968 imap.c:1027
 msgid "re-poll failed\n"
 msgstr "erneute Abfrage fehlgeschlagen\n"
 
-#: imap.c:984 imap.c:1040
+#: imap.c:976 imap.c:1032
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d Nachricht wartet nach erneuter Abfrage\n"
 msgstr[1] "%d Nachrichten warten nach erneuter Abfrage\n"
 
-#: imap.c:1001
+#: imap.c:993
 msgid "mailbox selection failed\n"
 msgstr "Postfach-Auswahl fehlgeschlagen\n"
 
-#: imap.c:1005
+#: imap.c:997
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d Nachricht wartet nach der ersten Abfrage\n"
 msgstr[1] "%d Nachrichten warten nach der ersten Abfrage\n"
 
-#: imap.c:1019
+#: imap.c:1011
 msgid "expunge failed\n"
 msgstr "Säubern fehlgeschlagen\n"
 
-#: imap.c:1023
+#: imap.c:1015
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d Nachricht wartet nach dem Löschen\n"
 msgstr[1] "%d Nachrichten warten nach dem Löschen\n"
 
-#: imap.c:1062
+#: imap.c:1054
 msgid "search for unseen messages failed\n"
 msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 
-#: imap.c:1067 pop3.c:890
+#: imap.c:1059 pop3.c:890
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
 
-#: imap.c:1151
+#: imap.c:1143
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr "Warnung: ignoriere falsche Größendaten vom Server.\n"
 
-#: imap.c:1249 imap.c:1256
+#: imap.c:1241 imap.c:1248
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr "Unpassende Antwort auf FETCH: %s.\n"
@@ -3357,3 +3355,6 @@ msgstr "malloc fehlgeschlagen\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc fehlgeschlagen\n"
+
+#~ msgid "(null)"
+#~ msgstr "(Null)"
