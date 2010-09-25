@@ -1188,6 +1188,9 @@ static int do_session(
 			   ctl->server.truename,
 			   (ctl->wehaveauthed ? GT_(" (previously authorized)") : "")
 			);
+		    if (ctl->server.authenticate == A_ANY && !ctl->wehaveauthed) {
+			report(stderr, GT_("For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"));
+		    }
 
 		    /*
 		     * If we're running in background, try to mail the
