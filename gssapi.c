@@ -52,10 +52,9 @@ static void decode_subr(const char *m, uint32_t code, int type)
 	    report(stderr, GT_("GSSAPI error in gss_display_status called from <%s>\n"), m);
 	    break;
 	}
-	report(stderr, GT_("GSSAPI error %s: %s\n"), m,
-		msg.value ? (char *)msg.value : GT_("(null)"));
-	if (msg.length)
-	    (void)gss_release_buffer(&min, &msg);
+	report(stderr, GT_("GSSAPI error %s: %.*s\n"), m,
+		(int)msg.length, (char *)msg.value);
+	(void)gss_release_buffer(&min, &msg);
     } while(context);
 }
 
