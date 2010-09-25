@@ -160,21 +160,22 @@ int do_gssauth(int sock, const char *command, const char *service,
     if (outlevel >= O_VERBOSE)
         report(stdout, GT_("Sending credentials\n"));
     do {
-        send_token.length = 0;
+	send_token.length = 0;
 	send_token.value = NULL;
-        maj_stat = gss_init_sec_context(&min_stat, 
-				        GSS_C_NO_CREDENTIAL,
-            				&context, 
-					target_name, 
-					GSS_C_NO_OID, 
-					GSS_C_MUTUAL_FLAG | GSS_C_SEQUENCE_FLAG, 
-					0, 
-					GSS_C_NO_CHANNEL_BINDINGS, 
-					sec_token, 
-					NULL, 
-					&send_token, 
-					NULL, 
+	maj_stat = gss_init_sec_context(&min_stat,
+					GSS_C_NO_CREDENTIAL,
+					&context,
+					target_name,
+					GSS_C_NO_OID,
+					GSS_C_MUTUAL_FLAG | GSS_C_SEQUENCE_FLAG,
+					0,
+					GSS_C_NO_CHANNEL_BINDINGS,
+					sec_token,
+					NULL,
+					&send_token,
+					NULL,
 					NULL);
+
 	if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
 	    decode_status("gss_init_sec_context", maj_stat, min_stat);
 	    (void)gss_release_name(&min_stat, &target_name);
@@ -220,7 +221,7 @@ int do_gssauth(int sock, const char *command, const char *service,
 	request_buf.length = 0;
     request_buf.value = buf2;
 
-    maj_stat = gss_unwrap(&min_stat, context, 
+    maj_stat = gss_unwrap(&min_stat, context,
 			  &request_buf, &send_token, &cflags, &quality);
     if (maj_stat != GSS_S_COMPLETE) {
 	decode_status("gss_unwrap", maj_stat, min_stat);
