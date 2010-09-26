@@ -1,8 +1,6 @@
 Note that there is a separate todo.html with different content than this.
 
 soon - MUST:
-- add FAQ entry and error emssage pointers to auth failures in automatic
-  auth
 - audit if there are further untrusted data report_*() calls.
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - put bare IP addresses in brackets for SMTP (check if there are RFC
