@@ -153,6 +153,13 @@ int do_gssauth(int sock, const char *command, const char *service,
     if (result)
 	return result;
 
+    if (strcmp(buf1, "+ ")) {
+	if (outlevel >= O_VERBOSE) {
+	    report(stdout, GT_("Warning: received malformed challenge to \"%s GSSAPI\"!"), command);
+	}
+    }
+
+
     /* now start the security context initialisation loop... */
     sec_token = GSS_C_NO_BUFFER;
     context = GSS_C_NO_CONTEXT;
