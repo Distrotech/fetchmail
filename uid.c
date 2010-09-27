@@ -252,8 +252,8 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		if (!idp)
 		    report_build(stdout, GT_(" <empty>"));
 		else for (idp = ctl->oldsaved; idp; idp = idp->next) {
-		    char *t = sdump(idp->id, strlen(idp->id));
-		    report_build(stdout, " %s", t);
+		    char *t = sdump(idp->id, strlen(idp->id)-1);
+		    report_build(stdout, " %s\n", t);
 		    free(t);
 		}
 		report_complete(stdout, "\n");
@@ -263,8 +263,8 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	if (!scratchlist)
 		report_build(stdout, GT_(" <empty>"));
 	else for (idp = scratchlist; idp; idp = idp->next) {
-		char *t = sdump(idp->id, strlen(idp->id));
-		report_build(stdout, " %s", t);
+		char *t = sdump(idp->id, strlen(idp->id)-1);
+		report_build(stdout, " %s\n", t);
 		free(t);
 	}
 	report_complete(stdout, "\n");
