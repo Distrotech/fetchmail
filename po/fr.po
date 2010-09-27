@@ -9,10 +9,10 @@
 # mise à jour par Frédéric Marchal <fmarchal@perso.be>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail-6.3.18-pre1\n"
+"Project-Id-Version: fetchmail-6.3.18-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-09-25 18:03+0200\n"
-"PO-Revision-Date: 2010-08-30 07:56+0200\n"
+"POT-Creation-Date: 2010-09-27 13:36+0200\n"
+"PO-Revision-Date: 2010-09-27 09:40+0200\n"
 "Last-Translator: Frédéric Marchal <fmarchal@perso.be>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -293,6 +293,8 @@ msgstr " (précédemment autorisée)"
 #: driver.c:1192
 msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
 msgstr ""
+"Si vous avez besoin d'aide, consultez http://www.fetchmail.info/fetchmail-"
+"FAQ.html#R15\n"
 
 #: driver.c:1213
 #, c-format
@@ -1726,45 +1728,50 @@ msgstr ""
 "Si vous voulez utiliser GSSAPI, vous avez besoin d'un justificatif "
 "d'identité, probablement de kinit.\n"
 
-#: gssapi.c:160
+#: gssapi.c:158
+#, c-format
+msgid "Warning: received malformed challenge to \"%s GSSAPI\"!\n"
+msgstr ""
+
+#: gssapi.c:167
 msgid "Sending credentials\n"
 msgstr "Envoi des références d'identification\n"
 
-#: gssapi.c:188
+#: gssapi.c:197
 msgid "Error exchanging credentials\n"
 msgstr "Erreur durant l'échange des références d'identification\n"
 
-#: gssapi.c:230
+#: gssapi.c:239
 msgid "Couldn't unwrap security level data\n"
 msgstr "Impossible d'extraire les données du niveau de sécurité\n"
 
-#: gssapi.c:235
+#: gssapi.c:244
 msgid "Credential exchange complete\n"
 msgstr "Échange des références d'identification terminé\n"
 
-#: gssapi.c:239
+#: gssapi.c:248
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Le serveur requiert des échanges intègres ou privés\n"
 
-#: gssapi.c:248
+#: gssapi.c:257
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Options du niveau de sécurité extraites : %s%s%s\n"
 
-#: gssapi.c:252
+#: gssapi.c:261
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "La taille maximale du composant GSS est %ld\n"
 
-#: gssapi.c:265
+#: gssapi.c:274
 msgid "Error creating security level request\n"
 msgstr "Erreur à la création de la requête de niveau de sécurité\n"
 
-#: gssapi.c:276
+#: gssapi.c:285
 msgid "Releasing GSS credentials\n"
 msgstr "Libère les références d'identification GSS\n"
 
-#: gssapi.c:280
+#: gssapi.c:289
 msgid "Error releasing credentials\n"
 msgstr "Erreur de libération des références d'identification\n"
 

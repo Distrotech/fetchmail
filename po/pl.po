@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.18-pre1\n"
+"Project-Id-Version: fetchmail 6.3.18-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-08-28 19:21+0200\n"
-"PO-Revision-Date: 2010-08-29 21:38+0200\n"
+"POT-Creation-Date: 2010-09-27 13:36+0200\n"
+"PO-Revision-Date: 2010-09-26 19:20+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -286,17 +286,23 @@ msgstr "B³±d autoryzacji dla %s@%s%s\n"
 msgid " (previously authorized)"
 msgstr " (poprzednio zautoryzowano)"
 
-#: driver.c:1210
+#: driver.c:1192
+msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
+msgstr ""
+"Wskazówki mo¿na znale¼æ pod http://www.fetchmail.info/fetchmail-FAQ."
+"html#R15\n"
+
+#: driver.c:1213
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subject: b³±d uwierzytelnienia fetchmaila dla %s@%s"
 
-#: driver.c:1214
+#: driver.c:1217
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail nie móg³ pobraæ poczty z %s@%s.\n"
 
-#: driver.c:1218
+#: driver.c:1221
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -310,7 +316,7 @@ msgstr ""
 "którego fetchmail nie mo¿e rozró¿niæ, poniewa¿ serwer nie wys³a³\n"
 "przydatnego komunikatu o b³êdzie."
 
-#: driver.c:1224
+#: driver.c:1227
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -329,7 +335,7 @@ msgstr ""
 "Demon fetchmaila bêdzie nadal próbowa³ siê po³±czyæ w ka¿dym cyklu.\n"
 "Dalsze powiadomienia do czasu odzyskania us³ugi nie bêd± wysy³ane."
 
-#: driver.c:1234
+#: driver.c:1237
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -348,60 +354,60 @@ msgstr ""
 "Demon fetchmaila bêdzie nadal próbowa³ siê po³±czyæ w ka¿dym cyklu.\n"
 "Dalsze powiadomienia do czasu wznowienia us³ugi nie bêd± wysy³ane."
 
-#: driver.c:1250
+#: driver.c:1253
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Natychmiastowe ponowne ¶ci±ganie z %s@%s\n"
 
-#: driver.c:1255
+#: driver.c:1258
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Nieznany login lub b³±d uwierzytelniania dla %s@%s\n"
 
-#: driver.c:1279
+#: driver.c:1282
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Autoryzacja powiod³a siê dla %s@%s\n"
 
-#: driver.c:1285
+#: driver.c:1288
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subject: uwierzytelnienie fetchmaila powiod³o siê dla %s@%s"
 
-#: driver.c:1289
+#: driver.c:1292
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail móg³ zalogowaæ siê na %s@%s.\n"
 
-#: driver.c:1293
+#: driver.c:1296
 msgid "Service has been restored.\n"
 msgstr "Us³uga zosta³a wznowiona.\n"
 
-#: driver.c:1325
+#: driver.c:1328
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "ponowna próba po³±czenia z folderem %s\n"
 
-#: driver.c:1327
+#: driver.c:1330
 msgid "selecting or re-polling default folder\n"
 msgstr "ponowna próba po³±czenia z domy¶lnym folderem\n"
 
-#: driver.c:1339
+#: driver.c:1342
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s na %s (folder %s)"
 
-#: driver.c:1342 rcfile_y.y:390
+#: driver.c:1345 rcfile_y.y:390
 #, c-format
 msgid "%s at %s"
 msgstr "%s na %s"
 
-#: driver.c:1347
+#: driver.c:1350
 #, c-format
 msgid "Polling %s\n"
 msgstr "Próba po³±czenia z %s\n"
 
-#: driver.c:1351
+#: driver.c:1354
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
@@ -409,14 +415,14 @@ msgstr[0] "%d list (%d %s) dla %s"
 msgstr[1] "%d listy (%d %s) dla %s"
 msgstr[2] "%d listów (%d %s) dla %s"
 
-#: driver.c:1354
+#: driver.c:1357
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "widziany"
 msgstr[1] "widziane"
 msgstr[2] "widzianych"
 
-#: driver.c:1357
+#: driver.c:1360
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
@@ -424,99 +430,99 @@ msgstr[0] "%d list dla %s"
 msgstr[1] "%d listy dla %s"
 msgstr[2] "%d listów dla %s"
 
-#: driver.c:1364
+#: driver.c:1367
 #, c-format
 msgid " (%d octets).\n"
 msgstr "(%d bajtów).\n"
 
-#: driver.c:1370
+#: driver.c:1373
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Nie ma poczty dla %s\n"
 
-#: driver.c:1403
+#: driver.c:1406
 msgid "bogus message count!"
 msgstr "b³êdna liczba listów!"
 
-#: driver.c:1546
+#: driver.c:1549
 msgid "socket"
 msgstr "gniazda"
 
-#: driver.c:1549
+#: driver.c:1552
 msgid "missing or bad RFC822 header"
 msgstr "w nag³ówkach RFC822 (brak lub b³êdne)"
 
-#: driver.c:1552
+#: driver.c:1555
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1555
+#: driver.c:1558
 msgid "client/server synchronization"
 msgstr "synchronizacji miêdzy serwerem i klientem"
 
-#: driver.c:1558
+#: driver.c:1561
 msgid "client/server protocol"
 msgstr "protoko³u miêdzy serwerem i klientem"
 
-#: driver.c:1561
+#: driver.c:1564
 msgid "lock busy on server"
 msgstr "plik zablokowany na serwerze"
 
-#: driver.c:1564
+#: driver.c:1567
 msgid "SMTP transaction"
 msgstr "transakcji SMTP"
 
-#: driver.c:1567
+#: driver.c:1570
 msgid "DNS lookup"
 msgstr "DNS-u"
 
-#: driver.c:1570
+#: driver.c:1573
 msgid "undefined"
 msgstr "nieokre¶lony"
 
-#: driver.c:1576
+#: driver.c:1579
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr "b³±d %s podczas pobierania z %s@%s i dostarczania po SMTP do %s\n"
 
-#: driver.c:1578
+#: driver.c:1581
 msgid "unknown"
 msgstr "nieznany"
 
-#: driver.c:1580
+#: driver.c:1583
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "b³±d %s podczas pobierania listów z %s@%s\n"
 
-#: driver.c:1592
+#: driver.c:1595
 #, c-format
 msgid "post-connection command terminated with signal %d\n"
 msgstr "polecenie wykonane po pobraniu poczty zakoñczone sygna³em %d\n"
 
-#: driver.c:1594
+#: driver.c:1597
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "polecenie wykonane po pobraniu poczty zwróci³o b³±d %d\n"
 
-#: driver.c:1613
+#: driver.c:1616
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Obs³uga Kerberosa V4 nie zosta³a do³±czona do programu.\n"
 
-#: driver.c:1621
+#: driver.c:1624
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Obs³uga Kerberosa V5 nie zosta³a do³±czona do programu.\n"
 
-#: driver.c:1632
+#: driver.c:1635
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Opcja --flush nie dzia³a z %s\n"
 
-#: driver.c:1638
+#: driver.c:1641
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Opcja --all nie dzia³a za %s\n"
 
-#: driver.c:1647
+#: driver.c:1650
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Opcja --limit nie dzia³a z %s\n"
@@ -1681,75 +1687,76 @@ msgstr "B³±d GSSAPI w gss_display_status, wywo³ano z <%s>\n"
 
 #: gssapi.c:55
 #, c-format
-msgid "GSSAPI error %s: %s\n"
-msgstr "B³±d GSSAPI %s: %s\n"
+msgid "GSSAPI error %s: %.*s\n"
+msgstr "B³±d GSSAPI %s: %.*s\n"
 
-#: gssapi.c:56
-msgid "(null)"
-msgstr "(null)"
-
-#: gssapi.c:90
+#: gssapi.c:89
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "Uzyskanie nazwy us³ugi dla [%s] jest niemo¿liwe\n"
 
-#: gssapi.c:95
+#: gssapi.c:94
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "U¿ywam nazwy us³ugi [%s]\n"
 
-#: gssapi.c:122
+#: gssapi.c:121
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
 "Nie znaleziono odpowiednich danych uwierzytelniaj±cych GSSAPI. Pominiêto "
 "uwierzytelnienie GSSAPI.\n"
 
-#: gssapi.c:123
+#: gssapi.c:122
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
 "Aby u¿yæ GSSAPI, potrzebne s± dane uwierzytelniaj±ce - prawdopodobnie z "
 "kinit.\n"
 
-#: gssapi.c:161
+#: gssapi.c:158
+#, c-format
+msgid "Warning: received malformed challenge to \"%s GSSAPI\"!\n"
+msgstr ""
+
+#: gssapi.c:167
 msgid "Sending credentials\n"
 msgstr "Wysy³am dane uwierzytelniaj±ce\n"
 
-#: gssapi.c:181
+#: gssapi.c:197
 msgid "Error exchanging credentials\n"
 msgstr "Wyst±pi³ b³±d podczas wymiany danych uwierzytelniaj±cych\n"
 
-#: gssapi.c:227
+#: gssapi.c:239
 msgid "Couldn't unwrap security level data\n"
 msgstr "Nie mogê rozwin±æ danych poziomu bezpieczeñstwa\n"
 
-#: gssapi.c:232
+#: gssapi.c:244
 msgid "Credential exchange complete\n"
 msgstr "Wymiana danych uwierzytelniaj±cych zosta³a zakoñczona\n"
 
-#: gssapi.c:236
+#: gssapi.c:248
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Serwer wymaga zapewnionej integralno¶ci i/lub prywatno¶ci\n"
 
-#: gssapi.c:245
+#: gssapi.c:257
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Rozwiniête flagi poziomu bezpieczeñstwa: %s%s%s\n"
 
-#: gssapi.c:249
+#: gssapi.c:261
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "Maksymalny rozmiar symbolu GSS to %ld\n"
 
-#: gssapi.c:262
+#: gssapi.c:274
 msgid "Error creating security level request\n"
 msgstr "Wyst±pi³ b³±d podczas budowania zapytania o poziom bezpieczeñstwa\n"
 
-#: gssapi.c:273
+#: gssapi.c:285
 msgid "Releasing GSS credentials\n"
 msgstr "Zwalniam dane uwierzytelniaj±ce GSS\n"
 
-#: gssapi.c:277
+#: gssapi.c:289
 msgid "Error releasing credentials\n"
 msgstr "Wyst±pi³ b³±d podczas zwalniania danych uwierzytelniaj±cych\n"
 
@@ -1804,38 +1811,38 @@ msgstr "%s: przej¶cie na TLS nie powiod³o siê.\n"
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: zgodne przej¶cie na TLS nie powiod³o siê, próba kontynuacji\n"
 
-#: imap.c:641
+#: imap.c:637
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Wymagana metoda uwierzytelnienia OTP nie wkompilowana w fetchmaila\n"
 
-#: imap.c:663 pop3.c:385
+#: imap.c:657 pop3.c:385
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Wymagana metoda uwierzytelnienia NTLM nie wkompilowana w fetchmaila\n"
 
-#: imap.c:672
+#: imap.c:666
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Serwer nie obs³uguje wymaganej metody uwierzytelnienia LOGIN\n"
 
-#: imap.c:738
+#: imap.c:730
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "niezgodno¶æ przy usuwaniu poczty (faktyczna %d != oczekiwana %d)\n"
 
-#: imap.c:877
+#: imap.c:869
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu jest nieprzeczytany\n"
 
-#: imap.c:941 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
+#: imap.c:933 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nieprzeczytany\n"
 
-#: imap.c:976 imap.c:1035
+#: imap.c:968 imap.c:1027
 msgid "re-poll failed\n"
 msgstr "ponowne po³±czenie nie powiod³o siê\n"
 
-#: imap.c:984 imap.c:1040
+#: imap.c:976 imap.c:1032
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
@@ -1843,11 +1850,11 @@ msgstr[0] "%d list oczekuj±cy po ponownym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po ponownym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po ponownym pobraniu\n"
 
-#: imap.c:1001
+#: imap.c:993
 msgid "mailbox selection failed\n"
 msgstr "wybór skrzynki zakoñczy³ siê niepowodzeniem\n"
 
-#: imap.c:1005
+#: imap.c:997
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
@@ -1855,11 +1862,11 @@ msgstr[0] "%d list oczekuj±cy po pierwszym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po pierwszym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po pierwszym pobraniu\n"
 
-#: imap.c:1019
+#: imap.c:1011
 msgid "expunge failed\n"
 msgstr "usuwanie nie powiod³o siê\n"
 
-#: imap.c:1023
+#: imap.c:1015
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
@@ -1867,23 +1874,23 @@ msgstr[0] "%d list oczekuj±cy po usuwaniu\n"
 msgstr[1] "%d listy oczekuj±ce po usuwaniu\n"
 msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 
-#: imap.c:1062
+#: imap.c:1054
 msgid "search for unseen messages failed\n"
 msgstr "poszukiwanie nieprzeczytanych listów nie powiod³o siê\n"
 
-#: imap.c:1067 pop3.c:890
+#: imap.c:1059 pop3.c:890
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nieprzeczytanym\n"
 
-#: imap.c:1151
+#: imap.c:1143
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 "Uwaga: zignorowano nieprawdziwe dane o rozmiarze wiadomo¶ci zwrócone przez "
 "serwer.\n"
 
-#: imap.c:1249 imap.c:1256
+#: imap.c:1241 imap.c:1248
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr "Niepoprawna odpowied¼ na FETCH: %s.\n"

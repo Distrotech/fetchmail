@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.18-pre1\n"
+"Project-Id-Version: fetchmail 6.3.18-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-09-25 18:03+0200\n"
-"PO-Revision-Date: 2010-09-25 14:15+0200\n"
+"POT-Creation-Date: 2010-09-27 13:36+0200\n"
+"PO-Revision-Date: 2010-09-27 13:38+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1718,45 +1718,50 @@ msgstr ""
 "Wenn Sie GSSAPI benutzen möchten, brauchen Sie Beglaubigungen, ggf. von "
 "kinit.\n"
 
-#: gssapi.c:160
+#: gssapi.c:158
+#, c-format
+msgid "Warning: received malformed challenge to \"%s GSSAPI\"!\n"
+msgstr "Warnung: unpassende Challenge nach \"%s GSSAPI\" empfangen!\n"
+
+#: gssapi.c:167
 msgid "Sending credentials\n"
 msgstr "Schicke Beglaubigungen\n"
 
-#: gssapi.c:188
+#: gssapi.c:197
 msgid "Error exchanging credentials\n"
 msgstr "Fehler beim Austausch der Beglaubigungen\n"
 
-#: gssapi.c:230
+#: gssapi.c:239
 msgid "Couldn't unwrap security level data\n"
 msgstr "Konnte Sicherheitsstufendaten nicht ermitteln\n"
 
-#: gssapi.c:235
+#: gssapi.c:244
 msgid "Credential exchange complete\n"
 msgstr "Beglaubigungsaustausch vollzogen\n"
 
-#: gssapi.c:239
+#: gssapi.c:248
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Server erfordert Integrität und/oder Privatsphäre\n"
 
-#: gssapi.c:248
+#: gssapi.c:257
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Ermittelte Sicherheitsstufen-Flags: %s%s%s\n"
 
-#: gssapi.c:252
+#: gssapi.c:261
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "Maximale GSS-Tokengröße ist %ld\n"
 
-#: gssapi.c:265
+#: gssapi.c:274
 msgid "Error creating security level request\n"
 msgstr "Fehler beim Erstellen der Sicherheitsstufenanfrage\n"
 
-#: gssapi.c:276
+#: gssapi.c:285
 msgid "Releasing GSS credentials\n"
 msgstr "Gebe GSS-Beglaubigungen frei\n"
 
-#: gssapi.c:280
+#: gssapi.c:289
 msgid "Error releasing credentials\n"
 msgstr "Fehler beim Freigeben der Beglaubigungen\n"
 

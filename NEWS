@@ -110,11 +110,13 @@ fetchmail-6.3.18 (not yet released):
 # TRANSLATION UPDATES
   [zh_CN] Chinese/simplified (Ji Zheng-Yu)
   [cs]    Czech (Petr Pisar)
+  [nl]    Dutch (Erwin Poeze)
   [fr]    French (Frédéric Marchal)
   [de]    German
   [it]    Italian (Vincenzo Campanella)
   [ja]    Japanese (Takeshi Hamasaki)
   [pl]    Polish (Jakub Bogusz)
+  [sk]    Slovak (Marcel Telka)
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.18-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-08-28 19:21+0200\n"
+"POT-Creation-Date: 2010-09-27 13:36+0200\n"
 "PO-Revision-Date: 2010-09-19 14:34+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -265,17 +265,21 @@ msgstr "%s@%s%s 出现授权失败错误\n"
 msgid " (previously authorized)"
 msgstr "(事先已授权)"
 
-#: driver.c:1210
+#: driver.c:1192
+msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
+msgstr ""
+
+#: driver.c:1213
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "主题: fetchmail 在 %s@%s 上验证失败"
 
-#: driver.c:1214
+#: driver.c:1217
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail 无法从 %s@%s 中获取邮件。\n"
 
-#: driver.c:1218
+#: driver.c:1221
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -288,7 +292,7 @@ msgstr ""
 "提示信息，因此这可能是另一种错误情况(比如服务器忙)，从而导致\n"
 " fetchmail 无法区分这些错误。"
 
-#: driver.c:1224
+#: driver.c:1227
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -306,7 +310,7 @@ msgstr ""
 "fetchmail 后台服务会继续运行并在每次被唤醒时尝试进行连接。除非\n"
 "服务重置，否则它不会再发送任何提示信息了。"
 
-#: driver.c:1234
+#: driver.c:1237
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -324,169 +328,169 @@ msgstr ""
 "fetchmail 后台服务会继续运行并在每次被唤醒时尝试进行连接。除非服务\n"
 "重置，否则它不会再发送任何提示信息了。"
 
-#: driver.c:1250
+#: driver.c:1253
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "立即从 %s@%s 中重新收件\n"
 
-#: driver.c:1255
+#: driver.c:1258
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "%s@%s 有未知的登录或验证错误\n"
 
-#: driver.c:1279
+#: driver.c:1282
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "验证正确 %s@%s\n"
 
-#: driver.c:1285
+#: driver.c:1288
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "主题: fetchmail 验证正确 %s@%s"
 
-#: driver.c:1289
+#: driver.c:1292
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail 可登录 %s@%s。\n"
 
-#: driver.c:1293
+#: driver.c:1296
 msgid "Service has been restored.\n"
 msgstr "服务已经被重置。\n"
 
-#: driver.c:1325
+#: driver.c:1328
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "正在选择或重新检索邮箱 %s\n"
 
-#: driver.c:1327
+#: driver.c:1330
 msgid "selecting or re-polling default folder\n"
 msgstr "正在选择或重检默认邮箱\n"
 
-#: driver.c:1339
+#: driver.c:1342
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s 在 %s (邮箱 %s)"
 
-#: driver.c:1342 rcfile_y.y:390
+#: driver.c:1345 rcfile_y.y:390
 #, c-format
 msgid "%s at %s"
 msgstr "%s 在 %s"
 
-#: driver.c:1347
+#: driver.c:1350
 #, c-format
 msgid "Polling %s\n"
 msgstr "正在检取 %s\n"
 
-#: driver.c:1351
+#: driver.c:1354
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%4$s 有 %1$d 封邮件 (%2$d %3$s)"
 
-#: driver.c:1354
+#: driver.c:1357
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "已读"
 
-#: driver.c:1357
+#: driver.c:1360
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%2$s 有 %1$d 封邮件"
 
-#: driver.c:1364
+#: driver.c:1367
 #, c-format
 msgid " (%d octets).\n"
 msgstr "(%d 字节)。\n"
 
-#: driver.c:1370
+#: driver.c:1373
 #, c-format
 msgid "No mail for %s\n"
 msgstr "%s 无邮件\n"
 
-#: driver.c:1403
+#: driver.c:1406
 msgid "bogus message count!"
 msgstr "发现无效邮件！"
 
-#: driver.c:1546
+#: driver.c:1549
 msgid "socket"
 msgstr "套接口"
 
-#: driver.c:1549
+#: driver.c:1552
 msgid "missing or bad RFC822 header"
 msgstr "未找到或错误的 RFC822 协议头"
 
-#: driver.c:1552
+#: driver.c:1555
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1555
+#: driver.c:1558
 msgid "client/server synchronization"
 msgstr "客户端/服务器同步"
 
-#: driver.c:1558
+#: driver.c:1561
 msgid "client/server protocol"
 msgstr "客户端/服务器协议"
 
-#: driver.c:1561
+#: driver.c:1564
 msgid "lock busy on server"
 msgstr "服务器死锁"
 
-#: driver.c:1564
+#: driver.c:1567
 msgid "SMTP transaction"
 msgstr "处理 SMTP"
 
-#: driver.c:1567
+#: driver.c:1570
 msgid "DNS lookup"
 msgstr "查询 DNS"
 
-#: driver.c:1570
+#: driver.c:1573
 msgid "undefined"
 msgstr "未定义"
 
-#: driver.c:1576
+#: driver.c:1579
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr "从 %2$s@%3$s 收邮件并投递至 SMTP 主机 %4$s 时出现错误 %1$s\n"
 
-#: driver.c:1578
+#: driver.c:1581
 msgid "unknown"
 msgstr "未知"
 
-#: driver.c:1580
+#: driver.c:1583
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "从 %2$s@%3$s 收件时产生错误 %1$s\n"
 
-#: driver.c:1592
+#: driver.c:1595
 #, c-format
 msgid "post-connection command terminated with signal %d\n"
 msgstr "执行后续程序失败，返回信号 %d\n"
 
-#: driver.c:1594
+#: driver.c:1597
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "执行后续程序失败，状态码 %d\n"
 
-#: driver.c:1613
+#: driver.c:1616
 msgid "Kerberos V4 support not linked.\n"
 msgstr "未连接 Kerberos V4 支持\n"
 
-#: driver.c:1621
+#: driver.c:1624
 msgid "Kerberos V5 support not linked.\n"
 msgstr "未连接 Kerberos V5 支持\n"
 
-#: driver.c:1632
+#: driver.c:1635
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "%s 不支持 --flush 选项\n"
 
-#: driver.c:1638
+#: driver.c:1641
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "%s 不支持 --all 选项\n"
 
-#: driver.c:1647
+#: driver.c:1650
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "%s 不支持 --limit 选项\n"
@@ -1582,72 +1586,73 @@ msgid "GSSAPI error in gss_display_status called from <%s>\n"
 msgstr "来自 <%s> 的 gss_display_status 调用中有 GSSAPI 错误\n"
 
 #: gssapi.c:55
-#, c-format
-msgid "GSSAPI error %s: %s\n"
+#, fuzzy, c-format
+msgid "GSSAPI error %s: %.*s\n"
 msgstr "GSSAPI 出错: %s: %s\n"
 
-#: gssapi.c:56
-msgid "(null)"
-msgstr "(null)"
-
-#: gssapi.c:90
+#: gssapi.c:89
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "无法获得服务 [%s]\n"
 
-#: gssapi.c:95
+#: gssapi.c:94
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "正在使用服务 [%s]\n"
 
-#: gssapi.c:122
+#: gssapi.c:121
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr "未找到合适的 GSSAPI 证书。忽略 GSSAPI 认证。\n"
 
-#: gssapi.c:123
+#: gssapi.c:122
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr "如您想使用 GSSAPI，您首先需要证书，也许来自 kinit。\n"
 
-#: gssapi.c:161
+#: gssapi.c:158
+#, c-format
+msgid "Warning: received malformed challenge to \"%s GSSAPI\"!\n"
+msgstr ""
+
+#: gssapi.c:167
 msgid "Sending credentials\n"
 msgstr "正在发送证书\n"
 
-#: gssapi.c:181
+#: gssapi.c:197
 msgid "Error exchanging credentials\n"
 msgstr "交换证书时出错\n"
 
-#: gssapi.c:227
+#: gssapi.c:239
 msgid "Couldn't unwrap security level data\n"
 msgstr "无法解开加密数据\n"
 
-#: gssapi.c:232
+#: gssapi.c:244
 msgid "Credential exchange complete\n"
 msgstr "证书交换完成\n"
 
-#: gssapi.c:236
+#: gssapi.c:248
 msgid "Server requires integrity and/or privacy\n"
 msgstr "服务器要求完整性和(或)隐私检查\n"
 
-#: gssapi.c:245
+#: gssapi.c:257
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "解开的加密标识: %s%s%s\n"
 
-#: gssapi.c:249
+#: gssapi.c:261
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "最大 GSS 标识大小为 %ld\n"
 
-#: gssapi.c:262
+#: gssapi.c:274
 msgid "Error creating security level request\n"
 msgstr "创建加密请求时出错\n"
 
-#: gssapi.c:273
+#: gssapi.c:285
 msgid "Releasing GSS credentials\n"
 msgstr "正在清空 GSS 证书\n"
 
-#: gssapi.c:277
+#: gssapi.c:289
 msgid "Error releasing credentials\n"
 msgstr "清空证书时出错\n"
 
@@ -1702,78 +1707,78 @@ msgstr "%s: 升级至 TLS 协议失败。\n"
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: 即时升级至 TLS 协议失败，继续尝试\n"
 
-#: imap.c:641
+#: imap.c:637
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "需要的 OTP 功能未被编译进 fetchmail\n"
 
-#: imap.c:663 pop3.c:385
+#: imap.c:657 pop3.c:385
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "需要的 NTLM 功能未被编译进 fetchmail\n"
 
-#: imap.c:672
+#: imap.c:666
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "需要的 LOGIN 功能未被编译进 fetchmail\n"
 
-#: imap.c:738
+#: imap.c:730
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "邮件删除数不相等 (实际删除 %d 封!= 已删除 %d 封)\n"
 
-#: imap.c:877
+#: imap.c:869
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu 封未读\n"
 
-#: imap.c:941 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
+#: imap.c:933 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u 未读\n"
 
-#: imap.c:976 imap.c:1035
+#: imap.c:968 imap.c:1027
 msgid "re-poll failed\n"
 msgstr "重新收件失败\n"
 
-#: imap.c:984 imap.c:1040
+#: imap.c:976 imap.c:1032
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "重新收件后又有 %d 封邮件等待收取\n"
 
-#: imap.c:1001
+#: imap.c:993
 msgid "mailbox selection failed\n"
 msgstr "邮箱选择失败\n"
 
-#: imap.c:1005
+#: imap.c:997
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "首次收件后又有 %d 封邮件等待收取\n"
 
-#: imap.c:1019
+#: imap.c:1011
 msgid "expunge failed\n"
 msgstr "删除操作失败\n"
 
-#: imap.c:1023
+#: imap.c:1015
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "删除操作后有 %d 封邮件等待收取\n"
 
-#: imap.c:1062
+#: imap.c:1054
 msgid "search for unseen messages failed\n"
 msgstr "查找未读邮件失败\n"
 
-#: imap.c:1067 pop3.c:890
+#: imap.c:1059 pop3.c:890
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u 是首个未读邮件\n"
 
-#: imap.c:1151
+#: imap.c:1143
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr "警告: 忽略服务器返回的邮件大小的无效数据。\n"
 
-#: imap.c:1249 imap.c:1256
+#: imap.c:1241 imap.c:1248
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr "FETCH 响应不正确: %s。\n"
@@ -3193,6 +3198,9 @@ msgstr "malloc 失败\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc 失败\n"
+
+#~ msgid "(null)"
+#~ msgstr "(null)"
 
 #~ msgid "krb5_sendauth: %s [server says '%*s']\n"
 #~ msgstr "krb5_sendauth: %s [ 服务器响应 \"%*s\"]\n"
