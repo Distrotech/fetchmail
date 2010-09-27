@@ -148,7 +148,7 @@ int do_gssauth(int sock, const char *command, const char *service,
     gen_send(sock, "%s GSSAPI", command);
 
     /* upon receipt of the GSSAPI authentication request, server returns
-     * null data ready response. */
+     * a null data ready challenge to us. */
     result = gen_recv(sock, buf1, sizeof buf1);
     if (result)
 	return result;
