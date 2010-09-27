@@ -155,7 +155,7 @@ int do_gssauth(int sock, const char *command, const char *service,
 
     if (strcmp(buf1, "+ ")) {
 	if (outlevel >= O_VERBOSE) {
-	    report(stdout, GT_("Warning: received malformed challenge to \"%s GSSAPI\"!"), command);
+	    report(stdout, GT_("Warning: received malformed challenge to \"%s GSSAPI\"!\n"), command);
 	}
     }
 
