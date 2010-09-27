@@ -6,6 +6,10 @@ soon - MUST:
 - put bare IP addresses in brackets for SMTP (check if there are RFC
   1123/5321/5322 differences)
 - Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
+  seems non-trivial to fix: in imap_idle(), we wait for untagged
+  responses, and may be deep in SSL_peek -- and that restarts the
+  underlying blocking read() from the socket, so we never break out of
+  the SSL_peek() with SIGUSR1.
 - Fix further occurrences of SMTP reply code handling:
    - for proper smtp_reponse caching of multiline codes (there are some)
    - for stomping over control characters.
