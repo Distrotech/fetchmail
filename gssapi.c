@@ -183,7 +183,8 @@ int do_gssauth(int sock, const char *command, const char *service,
 					NULL);
 
 	if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
-	    decode_status("gss_init_sec_context", maj_stat, min_stat);
+	    if (outlevel >= O_VERBOSE)
+		decode_status("gss_init_sec_context", maj_stat, min_stat);
 	    (void)gss_release_name(&min_stat, &target_name);
 
 	    /* wake up server and cancel authentication */
@@ -192,7 +193,8 @@ int do_gssauth(int sock, const char *command, const char *service,
 	    suppress_tags = FALSE;
 
 	    result = gen_recv(sock, buf1, sizeof buf1);
-	    report(stderr, GT_("Error exchanging credentials\n"));
+	    if (outlevel >= O_VERBOSE)
+		report(stderr, GT_("Error exchanging credentials\n"));
 	    if (result)
 		return result;
 	    return PS_AUTHFAIL;
