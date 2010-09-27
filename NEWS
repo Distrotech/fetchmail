@@ -37,6 +37,7 @@ removed from a 6.4.0 or newer release.)
 * The "protocol auto" default inside fetchmail may be removed from a future
   fetchmail release. Explicit configuration of the protocol is recommended.
 * Kerberos IV support may be removed from a future fetchmail release.
+* The --principal option may be removed from a future fetchmail release.
 * SIGHUP wakeup support may be removed from a future fetchmail release and
   cause fetchmail to terminate - it was broken for many years.
 * Support for operating systems that are not sufficiently POSIX compliant may be
@@ -98,6 +99,8 @@ fetchmail-6.3.18 (not yet released):
     This should fix protocol synchronization issues that cause Authentication
   failure, particularly with Exchange 2007 and Exchange 2010 servers, when
   Kerberos authentication was offered by the server and attempted by fetchmail.
+* The manual page clearly states that --principal is for Kerberos 4 only, not
+  for Kerberos 5 or GSSAPI. Found by Thomas Voigtmann.
 
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header

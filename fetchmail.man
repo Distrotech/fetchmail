@@ -10,7 +10,7 @@
 .\" Load www macros to process .URL requests, this requires groff:
 .mso www.tmac
 .\"
-.TH fetchmail 1 "fetchmail 6.3.17" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 6.3.18-pre2" "fetchmail" "fetchmail reference manual"
 
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
@@ -345,7 +345,8 @@ Obsolete version of \-\-service that does not take service names.
 .br
 The principal option permits you to specify a service principal for
 mutual authentication.  This is applicable to POP3 or IMAP with Kerberos
-authentication.
+4 authentication only.  It does not apply to Kerberos 5 or GSSAPI.  This
+option may be removed in a future fetchmail version.
 .TP
 .B \-t <seconds> | \-\-timeout <seconds>
 (Keyword: timeout)
