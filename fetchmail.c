@@ -1648,7 +1648,7 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  OTP authentication will be forced.\n"));
 	    break;
 	case A_CRAM_MD5:
-	    printf(GT_("  CRAM-Md5 authentication will be forced.\n"));
+	    printf(GT_("  CRAM-MD5 authentication will be forced.\n"));
 	    break;
 	case A_GSSAPI:
 	    printf(GT_("  GSSAPI authentication will be forced.\n"));

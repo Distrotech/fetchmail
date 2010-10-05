@@ -1207,8 +1207,8 @@ msgid "  OTP authentication will be forced.\n"
 msgstr "  OTP-Authentifikation wird erzwungen.\n"
 
 #: fetchmail.c:1651
-msgid "  CRAM-Md5 authentication will be forced.\n"
-msgstr "  CRAM-Md5-Authentifikation wird erzwungen.\n"
+msgid "  CRAM-MD5 authentication will be forced.\n"
+msgstr "  CRAM-MD5-Authentifikation wird erzwungen.\n"
 
 #: fetchmail.c:1654
 msgid "  GSSAPI authentication will be forced.\n"
