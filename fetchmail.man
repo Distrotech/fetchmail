@@ -1239,7 +1239,7 @@ certificate. If the \-\-sslcertck command line option or sslcertck run
 control file option is used, fetchmail will instead abort if any of
 these checks fail, because it must assume that there is a
 man-in-the-middle attack in this scenario, hence fetchmail must not
-expose cleartest passwords. Use of the sslcertck or \-\-sslcertck option
+expose cleartext passwords. Use of the sslcertck or \-\-sslcertck option
 is therefore advised.
 .PP
 Some SSL encrypted servers may request a client side certificate.  A client
