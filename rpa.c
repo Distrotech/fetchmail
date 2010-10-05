@@ -49,8 +49,8 @@ extern int linecount;
   static void GenChallenge(unsigned char* buf, int len);
   static int  DigestPassphrase(char* passphrase,
 			       unsigned char* rbuf, int unicodeit);
-  static void CompUserResp();
-  static int  CheckUserAuth();
+  static void CompUserResp(void);
+  static int  CheckUserAuth(void);
   static void md5(const void* in, int len, unsigned char* out);
 #endif
 
