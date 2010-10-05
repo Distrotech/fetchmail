@@ -1226,7 +1226,8 @@ protocol and negotiate TLS via special command. The \-\-sslcertck
 command line or sslcertck run control file option should be used to
 force strict certificate checking - see below.
 .PP
-.B \-\-sslcertck is recommended: When connecting to an SSL or TLS encrypted server, the 
+.B \-\-sslcertck is recommended:
+When connecting to an SSL or TLS encrypted server, the
 server presents a certificate to the client for validation.  The
 certificate is checked to verify that the common name in the certificate
 matches the name of the server being contacted and that the effective
