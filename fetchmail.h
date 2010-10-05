@@ -44,6 +44,8 @@ struct addrinfo;
 char *strstr(const char *, const char *);
 #endif
 
+#include "fm_strl.h"
+
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP2		2
@@ -739,16 +741,6 @@ extern const char *program_name;
 /* POSIX space characters,
  * <tab>;<newline>;<vertical-tab>;<form-feed>;<carriage-return>;<space> */
 #define POSIX_space "\t\n\v\f\r "
-
-/* strlcpy/strlcat prototypes */
-#ifndef HAVE_STRLCAT
-size_t
-strlcat(char *dst, const char *src, size_t siz);
-#endif
-#ifndef HAVE_STRLCPY
-size_t
-strlcpy(char *dst, const char *src, size_t siz);
-#endif
 
 /** Resolve the a TCP service name or a string containing only a decimal
  * positive integer to a port number. Returns -1 for error. */
