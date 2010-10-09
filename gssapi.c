@@ -153,10 +153,11 @@ int do_gssauth(int sock, const char *command, const char *service,
     if (result)
 	return result;
 
-    if (strcmp(buf1, "+ ")) {
+    if (buf1[0] != '+' || strspn(buf1 + 1, " \t") < strlen(buf1 + 1)) {
 	if (outlevel >= O_VERBOSE) {
-	    report(stdout, GT_("Warning: received malformed challenge to \"%s GSSAPI\"!\n"), command);
+	    report(stdout, GT_("Received malformed challenge to \"%s GSSAPI\"!\n"), command);
 	}
+	goto cancelfail;
     }
 
 
@@ -187,6 +188,7 @@ int do_gssauth(int sock, const char *command, const char *service,
 		decode_status("gss_init_sec_context", maj_stat, min_stat);
 	    (void)gss_release_name(&min_stat, &target_name);
 
+cancelfail:
 	    /* wake up server and cancel authentication */
 	    suppress_tags = TRUE;
 	    gen_send(sock, "*");
