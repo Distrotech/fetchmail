@@ -114,7 +114,7 @@ static int do_pop3_ntlm(int sock, struct query *ctl,
     if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
 	return result;
   
-    len = from64tobits (&challenge, msgbuf, sizeof(msgbuf));
+    (void)from64tobits (&challenge, msgbuf, sizeof(msgbuf));
     
     if (outlevel >= O_DEBUG)
 	dumpSmbNtlmAuthChallenge(stdout, &challenge);
