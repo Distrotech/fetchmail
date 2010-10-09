@@ -687,20 +687,20 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					for (j = 0, r = sk_GENERAL_NAME_num(gens); j < r; ++j) {
 						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, j);
 						if (gn->type == GEN_DNS) {
-							char *p1 = (char *)gn->d.ia5->data;
-							char *p2 = _ssl_server_cname;
+							char *pp1 = (char *)gn->d.ia5->data;
+							char *pp2 = _ssl_server_cname;
 							if (outlevel >= O_VERBOSE) {
-								report(stdout, GT_("Subject Alternative Name: %s\n"), (tt = sdump(p1, (size_t)gn->d.ia5->length)));
+								report(stdout, GT_("Subject Alternative Name: %s\n"), (tt = sdump(pp1, (size_t)gn->d.ia5->length)));
 								xfree(tt);
 							}
 							/* Name contains embedded NUL characters, so we complain. This
 							 * is likely a certificate spoofing attack. */
-							if ((size_t)gn->d.ia5->length != strlen(p1)) {
+							if ((size_t)gn->d.ia5->length != strlen(pp1)) {
 								report(stderr, GT_("Bad certificate: Subject Alternative Name contains NUL, aborting!\n"));
 								sk_GENERAL_NAME_free(gens);
 								return 0;
 							}
-							if (name_match(p1, p2)) {
+							if (name_match(pp1, pp2)) {
 							    matched = 1;
 							}
 						}
