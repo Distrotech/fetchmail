@@ -767,6 +767,11 @@ int rfc822_valid_msgid(const unsigned char *);
 /* prototype from x509_name_match.c */
 int name_match(const char *p1, const char *p2);
 
+/* prototype from ntlmsubr.c */
+#ifdef NTLM_ENABLE
+int ntlm_helper(int sock, struct query *ctl, const char *protocol);
+#endif
+
 /* macro to determine if we want to spam progress to stdout */
 #define want_progress() \
 	((outlevel >= O_VERBOSE || (outlevel > O_SILENT && run.showdots)) \
