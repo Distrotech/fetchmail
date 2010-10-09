@@ -439,6 +439,8 @@ int main(int argc, char *argv[])
 	    break;
 	}
 
+    longbuf[0] = '\0';
+
     while (fgets(buf, sizeof(buf)-1, stdin))
     {
 	if (buf[0] == ' ' || buf[0] == '\t')
