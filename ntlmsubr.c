@@ -2,6 +2,7 @@
 
 #ifdef NTLM_ENABLE
 #include "fetchmail.h"
+#include "i18n.h"
 #include "ntlm.h"
 #include "socket.h"
 
@@ -29,8 +30,12 @@ int ntlm_helper(int sock, struct query *ctl, const char *proto)
     if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
 	return result;
 
-    if (0 != strcmp(msgbuf, "+ "))
-	return PS_AUTHFAIL;
+    if (msgbuf[0] != '+' && strspn(msgbuf+1, " \t") < strlen(msgbuf+1)) {
+	if (outlevel >= O_VERBOSE) {
+	    report(stdout, GT_("Warning: received malformed challenge to \"AUTH(ENTICATE) NTLM\"!\n"));
+	}
+	goto cancelfail;
+    }
 
     buildSmbNtlmAuthRequest(&request,ctl->remotename,NULL);
 
@@ -46,8 +51,8 @@ int ntlm_helper(int sock, struct query *ctl, const char *proto)
     strcat(msgbuf,"\r\n");
     SockWrite (sock, msgbuf, strlen (msgbuf));
 
-    if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
-	return result;
+    if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
+	goto cancelfail;
 
     (void)from64tobits (&challenge, msgbuf, sizeof(challenge));
 
@@ -69,6 +74,14 @@ int ntlm_helper(int sock, struct query *ctl, const char *proto)
     SockWrite (sock, msgbuf, strlen (msgbuf));
 
     return PS_SUCCESS;
+
+cancelfail: /* cancel authentication and return failure */
+    {
+	if (outlevel >= O_MONITOR)
+	    report(stdout, "%s> *\n", proto);
+	SockWrite(sock, "*\r\n", 3);
+	return result;
+    }
 }
 
 #endif /* NTLM_ENABLE */
