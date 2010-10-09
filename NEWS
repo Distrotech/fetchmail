@@ -66,16 +66,30 @@ fetchmail-6.3.18 (not yet released):
   matches more than needed.
 * Fetchmail now disallows wildcarding top-level domains.
 
-# BUG FIXES
-* Fetchmail would warn about insecure SSL/TLS connections even if a matching
-  --sslfingerprint was specified. This is an omission from an SSL usability
-  change made in 6.3.17.  Fixes Debian Bug#580796 reported by Roland Stigge.
+# CRITICAL BUG FIXES AND REGRESSION FIXES
 * Fetchmail 6.3.15, 6.3.16, and 6.3.17 would pick up libmd5 to obtain MD5*
   functions, as an effect of an undocumented Solaris MD5 fix.
-  This fails if, for instance, libmd5.so was installed on other operating
-  systems as part of libwww on machines where long isn't 32-bits. Fixes Gentoo
-  Bug #319283, reported - including the hint to libwww - by Karl Hakimian.
+  This caused all MD5-related functions to malfunction if, for instance,
+  libmd5.so was installed on other operating systems as part of libwww on
+  machines where long isn't 32-bits, i. e. usually on 64-bit computers.
+  Fixes Gentoo Bug #319283, reported, including libwww hint, by Karl Hakimian.
   Side effect: fetchmail will now use -lmd on Solaris rather than -lmd5.
+* Fetchmail 6.3.17 warned about insecure SSL/TLS connections even if a matching
+  --sslfingerprint was specified. This is an omission from an SSL usability
+  change made in 6.3.17.
+  Fixes Debian Bug#580796 reported by Roland Stigge.
+* Fetchmail will now apply timeouts to the authentication stage.
+  This stage encompasses STARTTLS/STLS negotiation in IMAP/POP3.
+  Reported missing by Thomas Jarosch.
+* Fetchmail now cancels GSSAPI authentication properly when encountering GSS
+  errors, such as no or unsuitable credentials.
+  It now sends an asterisk on a line by its own, as required in SASL.
+    This fixes protocol synchronization issues that cause Authentication
+  failures, often observed with kerberized MS Exchange servers.
+  Fixes Debian Bug #568455 reported by Patrick Rynhart, and Alan Murrell, to the
+  fetchmail-users list. Fix verified by Thomas Voigtmann.
+
+# BUG FIXES
 * Fetchmail will no longer print connection attempts and errors for one host
   in "silent" and "normal" logging modes, unless all connections fail. This
   should reduce irritation around refused-connection logging if services are
@@ -83,30 +97,24 @@ fetchmail-6.3.18 (not yet released):
   connections refused to ::1/25 when the subsequent connection to 127.0.0.1/25
   then - silently - succeeds.  Fetchmail, unless in verbose mode, will collect
   all connect errors and only report them if all of them fail.
-* Fetchmail will now apply timeouts to the authentication stage. This stage
-  encompasses STARTTLS/STLS negotiation in IMAP/POP3.
-  Reported missing by Thomas Jarosch.
-* Fetchmail will not try GSSAPI authentication automatically unless it has GSS
-  credentials. This avoids getting servers such as Exchange 2007 wedged if
-  GSSAPI authentication fails.  Reported by Patrick Rynhart, Debian Bug #568455,
-  and Alan Murrell, to the fetchmail-users list.
-  Note that if GSSAPI fails for other reasons, you can use the --auth option to
-  work around that.
+* Fetchmail will not try GSSAPI authentication automatically, unless it has GSS
+  credentials. However, if GSSAPI authentication is requested explicitly,
+  fetchmail will always try it.
 * Fetchmail now parses response to "FETCH n:m RFC822.SIZE" and "FETCH n
   RFC822.HEADER" in a more flexible manner. (Sunil Shetye)
-* Fetchmail now cancels GSSAPI authentication properly when encountering GSS
-  errors. It now sends an asterisk on a line by its own, as required in SASL.
-    This should fix protocol synchronization issues that cause Authentication
-  failure, particularly with Exchange 2007 and Exchange 2010 servers, when
-  Kerberos authentication was offered by the server and attempted by fetchmail.
 * The manual page clearly states that --principal is for Kerberos 4 only, not
   for Kerberos 5 or GSSAPI. Found by Thomas Voigtmann.
 
 # CHANGES
 * When encountering incorrect headers, fetchmail will refer to the bad-header
-  option in the manpage. BerliOS Bug #17272, change suggested by Björn Voigt.
+  option in the manpage.
+  Fixes BerliOS Bug #17272, change suggested by Björn Voigt.
 * Fetchmail now decodes and reports GSSAPI status codes upon errors.
-* Fetchmail now autoprobes NTLM for POP3.
+* Fetchmail now autoprobes NTLM also for POP3.
+* The Fetchmail FAQ has a new item #R15 on authentication failures.
+
+# INTERNAL CHANGES
+* The common NTLM authentication code was factored out from pop3.c and imap.c.
 
 # TRANSLATION UPDATES
   [zh_CN] Chinese/simplified (Ji Zheng-Yu)
@@ -129,12 +137,12 @@ fetchmail-6.3.18 (not yet released):
   64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
   fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
   so compiling 32-bit SPARC code should not cause any difficulties.
-* fetchmail does not track pending deletes over crashes
+* fetchmail does not track pending deletes over crashes.
 * the command line interface is sometimes a bit stubborn, for instance,
-  fetchmail -s doesn't work with a daemon running
-* Linux may return duplicates of an IP address in some circumstances if no or
-  no global IPv6 addresses are configured. (No workaround. Ubuntu Bug#582585,
-  Novell Bug#606980.)
+  fetchmail -s doesn't work with a daemon running.
+* Linux systems may return duplicates of an IP address in some circumstances if
+  no or no global IPv6 addresses are configured.
+  (No workaround. Ubuntu Bug#582585, Novell Bug#606980.)
 
 
 fetchmail-6.3.17 (released 2010-05-06, 25767 LoC):
