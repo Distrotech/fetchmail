@@ -34,6 +34,7 @@ int ntlm_helper(int sock, struct query *ctl, const char *proto)
 	if (outlevel >= O_VERBOSE) {
 	    report(stdout, GT_("Warning: received malformed challenge to \"AUTH(ENTICATE) NTLM\"!\n"));
 	}
+	result = PS_AUTHFAIL;
 	goto cancelfail;
     }
 
