@@ -443,6 +443,7 @@ AC_ARG_ENABLE(NTLM,
 	[with_NTLM=$enableval],
 	[with_NTLM=no])
 test "$with_NTLM" = "yes" && AC_DEFINE(NTLM_ENABLE,1,Define if you want NTLM authentication)
+AM_CONDITIONAL(NTLM_ENABLE, test "$with_NTLM" = yes)
 
 ###	use option --enable-SDPS to compile in the SDPS support
 AC_ARG_ENABLE(SDPS,
