@@ -37,6 +37,7 @@ removed from a 6.4.0 or newer release.)
 * The "protocol auto" default inside fetchmail may be removed from a future
   fetchmail release. Explicit configuration of the protocol is recommended.
 * Kerberos IV support may be removed from a future fetchmail release.
+* Kerberos 5 support may be removed from a future fetchmail release.
 * The --principal option may be removed from a future fetchmail release.
 * SIGHUP wakeup support may be removed from a future fetchmail release and
   cause fetchmail to terminate - it was broken for many years.
@@ -143,6 +144,9 @@ fetchmail-6.3.18 (not yet released):
 * Linux systems may return duplicates of an IP address in some circumstances if
   no or no global IPv6 addresses are configured.
   (No workaround. Ubuntu Bug#582585, Novell Bug#606980.)
+* Kerberos 5 may be broken, particularly on Heimdal, and provide bogus error
+  messages. This will not be fixed, because the maintainer has no Kerberos 5
+  server to test against. Use GSSAPI.
 
 
 fetchmail-6.3.17 (released 2010-05-06, 25767 LoC):
