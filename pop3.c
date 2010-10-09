@@ -82,60 +82,17 @@ char *sdps_envto;
 static int do_pop3_ntlm(int sock, struct query *ctl,
 	int msn_instead /** if true, send AUTH MSN, else send AUTH NTLM */)
 {
-    tSmbNtlmAuthRequest request;
-    tSmbNtlmAuthChallenge challenge;
-    tSmbNtlmAuthResponse response;
+    char msgbuf[POPBUFSIZE+1];
+    int result;
 
-    char msgbuf[2048];
-    int result,len;
-  
     gen_send(sock, msn_instead ? "AUTH MSN" : "AUTH NTLM");
 
-    if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
+    if ((result = ntlm_helper(sock, ctl, "POP3")))
 	return result;
-  
-    if (msgbuf[0] != '+')
-	return PS_AUTHFAIL;
-  
-    buildSmbNtlmAuthRequest(&request,ctl->remotename,NULL);
 
-    if (outlevel >= O_DEBUG)
-	dumpSmbNtlmAuthRequest(stdout, &request);
-
-    memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, &request, SmbLength(&request));
-  
-    if (outlevel >= O_MONITOR)
-	report(stdout, "POP3> %s\n", msgbuf);
-  
-    strcat(msgbuf,"\r\n");
-    SockWrite (sock, msgbuf, strlen (msgbuf));
-
-    if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
-	return result;
-  
-    len = from64tobits (&challenge, msgbuf, sizeof(msgbuf));
-    
-    if (outlevel >= O_DEBUG)
-	dumpSmbNtlmAuthChallenge(stdout, &challenge);
-    
-    buildSmbNtlmAuthResponse(&challenge, &response,ctl->remotename,ctl->password);
-  
-    if (outlevel >= O_DEBUG)
-	dumpSmbNtlmAuthResponse(stdout, &response);
-  
-    memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, &response, SmbLength(&response));
-
-    if (outlevel >= O_MONITOR)
-	report(stdout, "POP3> %s\n", msgbuf);
-      
-    strcat(msgbuf,"\r\n");
-    SockWrite (sock, msgbuf, strlen (msgbuf));
-  
     if ((result = gen_recv (sock, msgbuf, sizeof msgbuf)))
 	return result;
-  
+
     if (strstr (msgbuf, "OK"))
 	return PS_SUCCESS;
     else

@@ -476,8 +476,8 @@ extern char *sdps_envto;
 
 extern const char *iana_charset;	/* IANA assigned charset name */
 
-/* from ucs/norm_charmap.c */
-const char *norm_charmap(const char *name);
+/* from/for ucs/norm_charmap.c */
+#include "ucs/norm_charmap.h"
 
 /* prototypes for globally callable functions */
 
@@ -766,6 +766,11 @@ int rfc822_valid_msgid(const unsigned char *);
 
 /* prototype from x509_name_match.c */
 int name_match(const char *p1, const char *p2);
+
+/* prototype from ntlmsubr.c */
+#ifdef NTLM_ENABLE
+int ntlm_helper(int sock, struct query *ctl, const char *protocol);
+#endif
 
 /* macro to determine if we want to spam progress to stdout */
 #define want_progress() \

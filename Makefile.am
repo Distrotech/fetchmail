@@ -39,7 +39,7 @@ libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c \
 			libesmtp/gethostbyname.h libesmtp/gethostbyname.c \
 			smbtypes.h fm_getaddrinfo.c tls.c rfc822valid.c \
 			xmalloc.h sdump.h sdump.c x509_name_match.c \
-			fm_strl.h
+			fm_strl.h ntlmsubr.c
 libfm_a_LIBADD=		$(EXTRAOBJ)
 libfm_a_DEPENDENCIES=	$(EXTRAOBJ)
 LDADD	=		libfm.a @LIBINTL@ $(LIBOBJS)
@@ -71,7 +71,8 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		opie.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c \
 		lock.h lock.c \
-		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
+		rcfile_l.l rcfile_y.y \
+		ucs/norm_charmap.c ucs/norm_charmap.h
 if POP2_ENABLE
 fetchmail_SOURCES += pop2.c
 endif

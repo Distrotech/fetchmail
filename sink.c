@@ -1399,8 +1399,6 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	    e = errno;
 	    sinkfp = (FILE *)NULL;
 	}
-	else
-	    rc = e = 0;
 
 	deal_with_sigchld(); /* Restore SIGCHLD handling to reap zombies */
 

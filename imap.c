@@ -290,57 +290,13 @@ static int imap_ok(int sock, char *argbuf)
 
 static int do_imap_ntlm(int sock, struct query *ctl)
 {
-    tSmbNtlmAuthRequest request;
-    tSmbNtlmAuthChallenge challenge;
-    tSmbNtlmAuthResponse response;
-
-    char msgbuf[2048];
-    int result,len;
+    int result;
 
     gen_send(sock, "AUTHENTICATE NTLM");
 
-    if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
+    if ((result = ntlm_helper(sock, ctl, "IMAP")))
 	return result;
-  
-    if (msgbuf[0] != '+')
-	return PS_AUTHFAIL;
-  
-    buildSmbNtlmAuthRequest(&request,ctl->remotename,NULL);
 
-    if (outlevel >= O_DEBUG)
-	dumpSmbNtlmAuthRequest(stdout, &request);
-
-    memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, &request, SmbLength(&request));
-  
-    if (outlevel >= O_MONITOR)
-	report(stdout, "IMAP> %s\n", msgbuf);
-  
-    strcat(msgbuf,"\r\n");
-    SockWrite (sock, msgbuf, strlen (msgbuf));
-
-    if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
-	return result;
-  
-    len = from64tobits (&challenge, msgbuf, sizeof(challenge));
-    
-    if (outlevel >= O_DEBUG)
-	dumpSmbNtlmAuthChallenge(stdout, &challenge);
-    
-    buildSmbNtlmAuthResponse(&challenge, &response,ctl->remotename,ctl->password);
-  
-    if (outlevel >= O_DEBUG)
-	dumpSmbNtlmAuthResponse(stdout, &response);
-  
-    memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, &response, SmbLength(&response));
-
-    if (outlevel >= O_MONITOR)
-	report(stdout, "IMAP> %s\n", msgbuf);
-      
-    strcat(msgbuf,"\r\n");
-    SockWrite (sock, msgbuf, strlen (msgbuf));
-  
     result = imap_ok (sock, NULL);
     if (result == PS_SUCCESS)
 	return PS_SUCCESS;
