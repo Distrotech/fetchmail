@@ -106,6 +106,7 @@ fetchmail-6.3.18 (not yet released):
 * When encountering incorrect headers, fetchmail will refer to the bad-header
   option in the manpage. BerliOS Bug #17272, change suggested by Björn Voigt.
 * Fetchmail now decodes and reports GSSAPI status codes upon errors.
+* Fetchmail now autoprobes NTLM for POP3.
 
 # TRANSLATION UPDATES
   [zh_CN] Chinese/simplified (Ji Zheng-Yu)

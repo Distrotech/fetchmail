@@ -52,6 +52,9 @@ static flag has_cram = FALSE;
 #ifdef OPIE_ENABLE
 flag has_otp = FALSE;
 #endif /* OPIE_ENABLE */
+#ifdef NTLM_ENABLE
+flag has_ntlm = FALSE;
+#endif /* NTLM_ENABLE */
 #ifdef SSL_ENABLE
 static flag has_stls = FALSE;
 #endif /* SSL_ENABLE */
@@ -209,6 +212,9 @@ static int capa_probe(int sock)
 #ifdef OPIE_ENABLE
     has_otp = FALSE;
 #endif /* OPIE_ENABLE */
+#ifdef NTLM_ENABLE
+    has_ntlm = FALSE;
+#endif /* NTLM_ENABLE */
 
     ok = gen_transact(sock, "CAPA");
     if (ok == PS_SUCCESS)
@@ -220,22 +226,32 @@ static int capa_probe(int sock)
 	{
 	    if (DOTLINE(buffer))
 		break;
+
 #ifdef SSL_ENABLE
 	    if (strstr(buffer, "STLS"))
 		has_stls = TRUE;
 #endif /* SSL_ENABLE */
+
 #if defined(GSSAPI)
 	    if (strstr(buffer, "GSSAPI"))
 		has_gssapi = TRUE;
 #endif /* defined(GSSAPI) */
+
 #if defined(KERBEROS_V4)
 	    if (strstr(buffer, "KERBEROS_V4"))
 		has_kerberos = TRUE;
 #endif /* defined(KERBEROS_V4)  */
+
 #ifdef OPIE_ENABLE
 	    if (strstr(buffer, "X-OTP"))
 		has_otp = TRUE;
 #endif /* OPIE_ENABLE */
+
+#ifdef NTLM_ENABLE
+	    if (strstr(buffer, "NTLM"))
+		has_ntlm = TRUE;
+#endif /* NTLM_ENABLE */
+
 	    if (strstr(buffer, "CRAM-MD5"))
 		has_cram = TRUE;
 	}
@@ -328,22 +344,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
         ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
 
-#ifdef NTLM_ENABLE
-    /* MSN servers require the use of NTLM (MSN) authentication */
-    if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
-	    ctl->server.authenticate == A_MSN)
-	return (do_pop3_ntlm(sock, ctl, 1) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
-    if (ctl->server.authenticate == A_NTLM)
-	return (do_pop3_ntlm(sock, ctl, 0) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
-#else
-    if (ctl->server.authenticate == A_NTLM || ctl->server.authenticate == A_MSN)
-    {
-	report(stderr,
-	   GT_("Required NTLM capability not compiled into fetchmail\n"));
-    }
-#endif
-
-    switch (ctl->server.protocol) {
+   switch (ctl->server.protocol) {
     case P_POP3:
 #ifdef RPA_ENABLE
 	/* XXX FIXME: AUTH probing (RFC1734) should become global */
@@ -542,7 +543,25 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* OPIE_ENABLE */
 
-	if (ctl->server.authenticate == A_CRAM_MD5 || 
+#ifdef NTLM_ENABLE
+    /* MSN servers require the use of NTLM (MSN) authentication */
+    if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
+	    ctl->server.authenticate == A_MSN)
+	return (do_pop3_ntlm(sock, ctl, 1) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
+    if (ctl->server.authenticate == A_NTLM || (has_ntlm && ctl->server.authenticate == A_ANY)) {
+	ok = do_pop3_ntlm(sock, ctl, 0);
+        if (ok == 0 || ctl->server.authenticate != A_ANY)
+	    break;
+    }
+#else
+    if (ctl->server.authenticate == A_NTLM || ctl->server.authenticate == A_MSN)
+    {
+	report(stderr,
+	   GT_("Required NTLM capability not compiled into fetchmail\n"));
+    }
+#endif
+
+ 	if (ctl->server.authenticate == A_CRAM_MD5 || 
 	    (has_cram && ctl->server.authenticate == A_ANY))
 	{
 	    ok = do_cram_md5(sock, "AUTH", ctl, NULL);

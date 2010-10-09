@@ -918,8 +918,8 @@ excruciating exactness, \fBkerberos_v4\fP), \fBgssapi\fP,
 When \fBany\fP (the default) is specified, fetchmail tries
 first methods that don't require a password (EXTERNAL, GSSAPI, KERBEROS\ IV,
 KERBEROS\ 5); then it looks for methods that mask your password
-(CRAM-MD5, X\-OTP - note that NTLM and MSN are not autoprobed for POP3
-and MSN is only supported for POP3); and only if the server doesn't
+(CRAM-MD5, NTLM, X\-OTP - note that MSN is only supported for POP3, but not
+autoprobed); and only if the server doesn't
 support any of those will it ship your password en clair.  Other values
 may be used to force various authentication methods
 (\fBssh\fP suppresses authentication and is thus useful for IMAP PREAUTH).
