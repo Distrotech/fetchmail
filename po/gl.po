@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 5.3.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-09-27 13:36+0200\n"
+"POT-Creation-Date: 2010-10-09 13:33+0200\n"
 "PO-Revision-Date: 2000-04-10 01:26+0200\n"
 "Last-Translator: Jesús Bravo Álvarez <jba@pobox.com>\n"
 "Language-Team: Galician <gpul-traduccion@ceu.fi.udc.es>\n"
@@ -1177,7 +1177,7 @@ msgstr "Autenticación OTP soportada\n"
 
 #: fetchmail.c:1651
 #, fuzzy
-msgid "  CRAM-Md5 authentication will be forced.\n"
+msgid "  CRAM-MD5 authentication will be forced.\n"
 msgstr "Autenticación CRAM-MD5 soportada\n"
 
 #: fetchmail.c:1654
@@ -1716,48 +1716,48 @@ msgstr ""
 
 #: gssapi.c:158
 #, c-format
-msgid "Warning: received malformed challenge to \"%s GSSAPI\"!\n"
+msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
 msgstr ""
 
-#: gssapi.c:167
+#: gssapi.c:168
 msgid "Sending credentials\n"
 msgstr "Enviando credenciais\n"
 
-#: gssapi.c:197
+#: gssapi.c:199
 msgid "Error exchanging credentials\n"
 msgstr "Erro no troco de credenciais\n"
 
-#: gssapi.c:239
+#: gssapi.c:241
 msgid "Couldn't unwrap security level data\n"
 msgstr "Non foi posible desempaquetar os datos do nivel de seguridade\n"
 
-#: gssapi.c:244
+#: gssapi.c:246
 msgid "Credential exchange complete\n"
 msgstr "Troco de credenciais completo\n"
 
-#: gssapi.c:248
+#: gssapi.c:250
 msgid "Server requires integrity and/or privacy\n"
 msgstr "O servidor require integridade e/ou privacidade\n"
 
-#: gssapi.c:257
+#: gssapi.c:259
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Desempaquetadas as marcas do nivel de seguridade: %s%s%s\n"
 
-#: gssapi.c:261
+#: gssapi.c:263
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "O tamaño máximo do símbolo GSS é %ld\n"
 
-#: gssapi.c:274
+#: gssapi.c:276
 msgid "Error creating security level request\n"
 msgstr "Erro ó crear a petición de nivel de seguridade\n"
 
-#: gssapi.c:285
+#: gssapi.c:287
 msgid "Releasing GSS credentials\n"
 msgstr "Liberando as credenciais GSS\n"
 
-#: gssapi.c:289
+#: gssapi.c:291
 msgid "Error releasing credentials\n"
 msgstr "Erro liberando as credenciais\n"
 
@@ -1781,115 +1781,115 @@ msgstr ""
 msgid "bogus EXPUNGE count in \"%s\"!"
 msgstr ""
 
-#: imap.c:388
+#: imap.c:344
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Protocolo identificado como IMAP4 rev 1\n"
 
-#: imap.c:394
+#: imap.c:350
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Protocolo identificado como IMAP4 rev 0\n"
 
-#: imap.c:401
+#: imap.c:357
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Protocolo identificabo como IMAP2 ou IMAP2BIS\n"
 
-#: imap.c:416
+#: imap.c:372
 msgid "will idle after poll\n"
 msgstr ""
 
-#: imap.c:508 pop3.c:518
+#: imap.c:464 pop3.c:476
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr ""
 
-#: imap.c:517 pop3.c:527
+#: imap.c:473 pop3.c:485
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr ""
 
-#: imap.c:521
+#: imap.c:477
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 
-#: imap.c:637
+#: imap.c:593
 #, fuzzy
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Capacidade LOGIN requirida non soportada polo servidor\n"
 
-#: imap.c:657 pop3.c:385
+#: imap.c:613 pop3.c:560
 #, fuzzy
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Capacidade LOGIN requirida non soportada polo servidor\n"
 
-#: imap.c:666
+#: imap.c:622
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Capacidade LOGIN requirida non soportada polo servidor\n"
 
-#: imap.c:730
+#: imap.c:686
 #, fuzzy, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "a mensaxe %d non tiña o tamaño agardado (%d real != %d agardado)\n"
 
-#: imap.c:869
+#: imap.c:825
 #, fuzzy, c-format
 msgid "%lu is unseen\n"
 msgstr "a %u aínda foi lida\n"
 
-#: imap.c:933 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
+#: imap.c:889 pop3.c:845 pop3.c:857 pop3.c:1095 pop3.c:1102
 #, c-format
 msgid "%u is unseen\n"
 msgstr "a %u aínda foi lida\n"
 
-#: imap.c:968 imap.c:1027
+#: imap.c:924 imap.c:983
 msgid "re-poll failed\n"
 msgstr "fallou a nova tentativa de baixar mensaxes\n"
 
-#: imap.c:976 imap.c:1032
+#: imap.c:932 imap.c:988
 #, fuzzy, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "Non hai mensaxes agardando para %s\n"
 msgstr[1] "Non hai mensaxes agardando para %s\n"
 
-#: imap.c:993
+#: imap.c:949
 msgid "mailbox selection failed\n"
 msgstr "fallou a selección de caixa de correo\n"
 
-#: imap.c:997
+#: imap.c:953
 #, fuzzy, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "Non hai mensaxes agardando para %s\n"
 msgstr[1] "Non hai mensaxes agardando para %s\n"
 
-#: imap.c:1011
+#: imap.c:967
 #, fuzzy
 msgid "expunge failed\n"
 msgstr "fallou o execl(%s)\n"
 
-#: imap.c:1015
+#: imap.c:971
 #, fuzzy, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "Non hai mensaxes agardando para %s\n"
 msgstr[1] "Non hai mensaxes agardando para %s\n"
 
-#: imap.c:1054
+#: imap.c:1010
 msgid "search for unseen messages failed\n"
 msgstr "fallou a busca de mensaxes non lidas\n"
 
-#: imap.c:1059 pop3.c:890
+#: imap.c:1015 pop3.c:866
 #, fuzzy, c-format
 msgid "%u is first unseen\n"
 msgstr "a %u aínda foi lida\n"
 
-#: imap.c:1143
+#: imap.c:1099
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 
-#: imap.c:1241 imap.c:1248
+#: imap.c:1197 imap.c:1204
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr ""
@@ -2093,7 +2093,7 @@ msgstr ""
 msgid "Could not decode OTP challenge\n"
 msgstr "Non se puido decodificar o challenge OTP\n"
 
-#: opie.c:64 pop3.c:611
+#: opie.c:64 pop3.c:587
 msgid "Secret pass phrase: "
 msgstr "Contrasinal segreda: "
 
@@ -2445,81 +2445,81 @@ msgstr "  -r, --folder      indicar o nome da carpeta remota\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 
-#: pop3.c:355
+#: pop3.c:328
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
 
-#: pop3.c:454
+#: pop3.c:412
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr ""
 
-#: pop3.c:455
+#: pop3.c:413
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr ""
 
-#: pop3.c:538
+#: pop3.c:496
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
 
-#: pop3.c:647
+#: pop3.c:623
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 
-#: pop3.c:661
+#: pop3.c:637
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Mostra da data de APOP requirida non atopada no saúdo\n"
 
-#: pop3.c:670
+#: pop3.c:646
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Erro de sintaxe na mostra da data no saúdo\n"
 
-#: pop3.c:686
+#: pop3.c:662
 msgid "Invalid APOP timestamp.\n"
 msgstr ""
 
-#: pop3.c:710
+#: pop3.c:686
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Petición de protocolo indefinida en POP3_auth\n"
 
-#: pop3.c:731
+#: pop3.c:707
 msgid "lock busy!  Is another session active?\n"
 msgstr "¡bloqueo activado!  ¿Hai outra sesión activa?\n"
 
-#: pop3.c:810
+#: pop3.c:786
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:833
+#: pop3.c:809
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:860
+#: pop3.c:836
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:966
+#: pop3.c:942
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mensaxes inseridas nunha lista no servidor. Non se pode manexar isto.\n"
 
-#: pop3.c:1062
+#: pop3.c:1038
 msgid "protocol error\n"
 msgstr "erro de protocolo\n"
 
-#: pop3.c:1078
+#: pop3.c:1054
 msgid "protocol error while fetching UIDLs\n"
 msgstr "erro de protocolo ó obter os UIDLs\n"
 
-#: pop3.c:1110
+#: pop3.c:1086
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:1448
+#: pop3.c:1424
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "A opción --remote non está soportada con POP3\n"
@@ -2874,41 +2874,41 @@ msgstr ""
 msgid "Message termination or close of BSMTP file failed: %s\n"
 msgstr "Fallou o remate da mensaxe ou o pechamento do ficheiro BSMTP\n"
 
-#: sink.c:1410
+#: sink.c:1408
 #, fuzzy, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Erro liberando as credenciais\n"
 
-#: sink.c:1413
+#: sink.c:1411
 #, fuzzy, c-format
 msgid "MDA died of signal %d\n"
 msgstr "espertado por sinal %d\n"
 
-#: sink.c:1416
+#: sink.c:1414
 #, fuzzy, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "O MDA saiu anormalmente ou devolveu estado non cero\n"
 
-#: sink.c:1419
+#: sink.c:1417
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr ""
 
-#: sink.c:1444
+#: sink.c:1442
 msgid "SMTP listener refused delivery\n"
 msgstr "O receptor SMTP rexeitou a entrega\n"
 
-#: sink.c:1474
+#: sink.c:1472
 msgid "LMTP delivery error on EOM\n"
 msgstr "Erro na entrega LMTP no EOM\n"
 
-#: sink.c:1477
+#: sink.c:1475
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Resposta distinta de 503 non agardada ó LMTP EOM: %s\n"
 
-#: sink.c:1632
+#: sink.c:1630
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"

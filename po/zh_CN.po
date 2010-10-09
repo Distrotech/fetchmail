@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.18-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-09-27 13:36+0200\n"
+"POT-Creation-Date: 2010-10-09 13:33+0200\n"
 "PO-Revision-Date: 2010-09-19 14:34+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -1130,7 +1130,8 @@ msgid "  OTP authentication will be forced.\n"
 msgstr " 强制 OTP 验证\n"
 
 #: fetchmail.c:1651
-msgid "  CRAM-Md5 authentication will be forced.\n"
+#, fuzzy
+msgid "  CRAM-MD5 authentication will be forced.\n"
 msgstr " 强制 CRAM-Md5 验证\n"
 
 #: fetchmail.c:1654
@@ -1611,48 +1612,48 @@ msgstr "如您想使用 GSSAPI，您首先需要证书，也许来自 kinit。\n
 
 #: gssapi.c:158
 #, c-format
-msgid "Warning: received malformed challenge to \"%s GSSAPI\"!\n"
+msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
 msgstr ""
 
-#: gssapi.c:167
+#: gssapi.c:168
 msgid "Sending credentials\n"
 msgstr "正在发送证书\n"
 
-#: gssapi.c:197
+#: gssapi.c:199
 msgid "Error exchanging credentials\n"
 msgstr "交换证书时出错\n"
 
-#: gssapi.c:239
+#: gssapi.c:241
 msgid "Couldn't unwrap security level data\n"
 msgstr "无法解开加密数据\n"
 
-#: gssapi.c:244
+#: gssapi.c:246
 msgid "Credential exchange complete\n"
 msgstr "证书交换完成\n"
 
-#: gssapi.c:248
+#: gssapi.c:250
 msgid "Server requires integrity and/or privacy\n"
 msgstr "服务器要求完整性和(或)隐私检查\n"
 
-#: gssapi.c:257
+#: gssapi.c:259
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "解开的加密标识: %s%s%s\n"
 
-#: gssapi.c:261
+#: gssapi.c:263
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "最大 GSS 标识大小为 %ld\n"
 
-#: gssapi.c:274
+#: gssapi.c:276
 msgid "Error creating security level request\n"
 msgstr "创建加密请求时出错\n"
 
-#: gssapi.c:285
+#: gssapi.c:287
 msgid "Releasing GSS credentials\n"
 msgstr "正在清空 GSS 证书\n"
 
-#: gssapi.c:289
+#: gssapi.c:291
 msgid "Error releasing credentials\n"
 msgstr "清空证书时出错\n"
 
@@ -1676,109 +1677,109 @@ msgstr "发现伪造邮件\"%s\"！"
 msgid "bogus EXPUNGE count in \"%s\"!"
 msgstr "发现伪造的EXPUNGE \"%s\"！"
 
-#: imap.c:388
+#: imap.c:344
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "协议被识别为 IMAP4 版本 1\n"
 
-#: imap.c:394
+#: imap.c:350
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "协议被识别为 IMAP4 版本 0\n"
 
-#: imap.c:401
+#: imap.c:357
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "协议被识别为 IMAP2 或 IMAP2BIS\n"
 
-#: imap.c:416
+#: imap.c:372
 msgid "will idle after poll\n"
 msgstr "收件后恢复至 idle 模式\n"
 
-#: imap.c:508 pop3.c:518
+#: imap.c:464 pop3.c:476
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: 成功升级至 TLS 协议。\n"
 
-#: imap.c:517 pop3.c:527
+#: imap.c:473 pop3.c:485
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: 升级至 TLS 协议失败。\n"
 
-#: imap.c:521
+#: imap.c:477
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: 即时升级至 TLS 协议失败，继续尝试\n"
 
-#: imap.c:637
+#: imap.c:593
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "需要的 OTP 功能未被编译进 fetchmail\n"
 
-#: imap.c:657 pop3.c:385
+#: imap.c:613 pop3.c:560
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "需要的 NTLM 功能未被编译进 fetchmail\n"
 
-#: imap.c:666
+#: imap.c:622
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "需要的 LOGIN 功能未被编译进 fetchmail\n"
 
-#: imap.c:730
+#: imap.c:686
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "邮件删除数不相等 (实际删除 %d 封!= 已删除 %d 封)\n"
 
-#: imap.c:869
+#: imap.c:825
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu 封未读\n"
 
-#: imap.c:933 pop3.c:869 pop3.c:881 pop3.c:1119 pop3.c:1126
+#: imap.c:889 pop3.c:845 pop3.c:857 pop3.c:1095 pop3.c:1102
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u 未读\n"
 
-#: imap.c:968 imap.c:1027
+#: imap.c:924 imap.c:983
 msgid "re-poll failed\n"
 msgstr "重新收件失败\n"
 
-#: imap.c:976 imap.c:1032
+#: imap.c:932 imap.c:988
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "重新收件后又有 %d 封邮件等待收取\n"
 
-#: imap.c:993
+#: imap.c:949
 msgid "mailbox selection failed\n"
 msgstr "邮箱选择失败\n"
 
-#: imap.c:997
+#: imap.c:953
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "首次收件后又有 %d 封邮件等待收取\n"
 
-#: imap.c:1011
+#: imap.c:967
 msgid "expunge failed\n"
 msgstr "删除操作失败\n"
 
-#: imap.c:1015
+#: imap.c:971
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "删除操作后有 %d 封邮件等待收取\n"
 
-#: imap.c:1054
+#: imap.c:1010
 msgid "search for unseen messages failed\n"
 msgstr "查找未读邮件失败\n"
 
-#: imap.c:1059 pop3.c:890
+#: imap.c:1015 pop3.c:866
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u 是首个未读邮件\n"
 
-#: imap.c:1143
+#: imap.c:1099
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr "警告: 忽略服务器返回的邮件大小的无效数据。\n"
 
-#: imap.c:1241 imap.c:1248
+#: imap.c:1197 imap.c:1204
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr "FETCH 响应不正确: %s。\n"
@@ -1973,7 +1974,7 @@ msgstr "服务器 recv 错\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "无法解码 OTP 请求\n"
 
-#: opie.c:64 pop3.c:611
+#: opie.c:64 pop3.c:587
 msgid "Secret pass phrase: "
 msgstr "密码短语:"
 
@@ -2295,80 +2296,80 @@ msgstr " -r, --folder\t指定远程邮箱名\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr " --showdots\t即使在日志文件中也要显示进度条(以点的形式)\n"
 
-#: pop3.c:355
+#: pop3.c:328
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr "警告: 发现“ POP3 代理服务器”，用 RETR 命令代替 TOP。\n"
 
-#: pop3.c:454
+#: pop3.c:412
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr "强制使用 TLS 会话，但服务器拒绝 CAPA 命令。\n"
 
-#: pop3.c:455
+#: pop3.c:413
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr "而 CPAC 命令对于 TLS 协议来说是必须要有的。\n"
 
-#: pop3.c:538
+#: pop3.c:496
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: 升级到 TLS 协议失败了，继续尝试。\n"
 
-#: pop3.c:647
+#: pop3.c:623
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr "我们已经用完了可用的验证方式，无法继续\n"
 
-#: pop3.c:661
+#: pop3.c:637
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "在 greeting 中未发现所需的 APOP 时间戳\n"
 
-#: pop3.c:670
+#: pop3.c:646
 msgid "Timestamp syntax error in greeting\n"
 msgstr "greeting 中时间戳语法错误\n"
 
-#: pop3.c:686
+#: pop3.c:662
 msgid "Invalid APOP timestamp.\n"
 msgstr "无效的 APOP 时间戳\n"
 
-#: pop3.c:710
+#: pop3.c:686
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "POP3_auth 中有未定义的协议请求\n"
 
-#: pop3.c:731
+#: pop3.c:707
 msgid "lock busy!  Is another session active?\n"
 msgstr "死锁！是否有另一个会话在运行？\n"
 
-#: pop3.c:810
+#: pop3.c:786
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "无法操作来自上游服务器的 UIDL 响应。\n"
 
-#: pop3.c:833
+#: pop3.c:809
 msgid "Server responded with UID for wrong message.\n"
 msgstr "响应的服务器带有错误消息的 UID。\n"
 
-#: pop3.c:860
+#: pop3.c:836
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (数量=%u 封)已被删除，但仍然存在！\n"
 
-#: pop3.c:966
+#: pop3.c:942
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "邮件被插入服务器列表。无法处理。\n"
 
-#: pop3.c:1062
+#: pop3.c:1038
 msgid "protocol error\n"
 msgstr "协议错\n"
 
-#: pop3.c:1078
+#: pop3.c:1054
 msgid "protocol error while fetching UIDLs\n"
 msgstr "正在读取 UIDLs 时协议出错\n"
 
-#: pop3.c:1110
+#: pop3.c:1086
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id = %s (数量 = %d 封) 已被删除，但仍然存在！\n"
 
-#: pop3.c:1448
+#: pop3.c:1424
 msgid "Option --folder is not supported with POP3\n"
 msgstr "POP3 不支持 --folder 选项\n"
 
@@ -2720,41 +2721,41 @@ msgstr "无法启动 MDA 代理；正在转到 MDA 代理 %s"
 msgid "Message termination or close of BSMTP file failed: %s\n"
 msgstr "邮件终止或 BSMTP 文件关闭失败: %s\n"
 
-#: sink.c:1410
+#: sink.c:1408
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "写入 MDA 时出错: %s\n"
 
-#: sink.c:1413
+#: sink.c:1411
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA 被信号 %d 终止\n"
 
-#: sink.c:1416
+#: sink.c:1414
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA 返回非零值 %d\n"
 
-#: sink.c:1419
+#: sink.c:1417
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr "奇怪: MDA pclose 返回 %d 且 errno 为 %d/%s，在 %s:%d 无法处理\n"
 
-#: sink.c:1444
+#: sink.c:1442
 msgid "SMTP listener refused delivery\n"
 msgstr "SMTP 端拒绝投递\n"
 
-#: sink.c:1474
+#: sink.c:1472
 msgid "LMTP delivery error on EOM\n"
 msgstr "邮件结尾时用 LTMP 协议投递错误\n"
 
-#: sink.c:1477
+#: sink.c:1475
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "邮件结尾时 LMTP 协议的未知的非 503 响应: %s\n"
 
-#: sink.c:1632
+#: sink.c:1630
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
