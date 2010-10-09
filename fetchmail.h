@@ -476,8 +476,8 @@ extern char *sdps_envto;
 
 extern const char *iana_charset;	/* IANA assigned charset name */
 
-/* from ucs/norm_charmap.c */
-const char *norm_charmap(const char *name);
+/* from/for ucs/norm_charmap.c */
+#include "ucs/norm_charmap.h"
 
 /* prototypes for globally callable functions */
 

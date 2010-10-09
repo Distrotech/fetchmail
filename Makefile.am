@@ -71,7 +71,8 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		opie.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c \
 		lock.h lock.c \
-		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
+		rcfile_l.l rcfile_y.y \
+		ucs/norm_charmap.c ucs/norm_charmap.h
 if POP2_ENABLE
 fetchmail_SOURCES += pop2.c
 endif
