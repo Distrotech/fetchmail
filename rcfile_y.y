@@ -66,7 +66,7 @@ extern char * yytext;
 %token USERNAME PASSWORD FOLDER SMTPHOST FETCHDOMAINS MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
 %token INTERFACE MONITOR PLUGIN PLUGOUT
-%token IS HERE THERE TO MAP WILDCARD
+%token IS HERE THERE TO MAP
 %token BATCHLIMIT FETCHLIMIT FETCHSIZELIMIT FASTUIDL EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
 %token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
@@ -262,16 +262,16 @@ user1opts	: user_option
 		| user1opts user_option
 		;
 
-localnames	: WILDCARD		{current.wildcard =  TRUE;}
-		| mapping_list		{current.wildcard =  FALSE;}
-		| mapping_list WILDCARD	{current.wildcard =  TRUE;}
-		;
-
 mapping_list	: mapping		
 		| mapping_list mapping
 		;
 
-mapping		: STRING		{save_str_pair(&current.localnames, $1, NULL); free($1);}
+mapping		: STRING		{if (0 == strcmp($1, "*")) {
+					      current.wildcard = TRUE;
+					  } else {
+					    save_str_pair(&current.localnames, $1, NULL);
+					  }
+					 free($1);}
 		| STRING MAP STRING	{save_str_pair(&current.localnames, $1, $3); free($1); free($3);}
 		;
 
@@ -301,10 +301,10 @@ num_list	: NUMBER
 			}
 		;
 
-user_option	: TO localnames HERE
-		| TO localnames
-		| IS localnames HERE
-		| IS localnames
+user_option	: TO mapping_list HERE
+		| TO mapping_list
+		| IS mapping_list HERE
+		| IS mapping_list
 
 		| IS STRING THERE	{current.remotename  = $2;}
 		| PASSWORD STRING	{current.password    = $2;}

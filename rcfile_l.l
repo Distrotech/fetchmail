@@ -41,11 +41,6 @@ int prc_lineno = 1;
 			return STRING;
 		}
 
-"*"		{
-		 	SETSTATE(0);
-			return WILDCARD;
-		}
-
 <NAME>[^=;:, \t\r\n]+	{
 			char *in = xstrdup(yytext);
 			escapes(in, in);
