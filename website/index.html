@@ -15,7 +15,7 @@
 <table width="100%" cellpadding="0" summary="Canned page header">
 <tr>
 <td>Fetchmail</td>
-<td align="right"><!-- update date -->2010-05-06</td>
+<td align="right"><!-- update date -->2010-10-09</td>
 </tr>
 </table>
 </div>
@@ -42,7 +42,18 @@
 <h1>Fetchmail</h1>
 
 <div style="background-color:#c0ffc0;color:#000000;">
-    <h1>NEWS: UTF7 in mailbox names (developer document)</h1>
+    <h1>NEWS: FETCHMAIL 6.3.18 RELEASE</h1>
+    <p>On 2010-10-09, <a
+	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.18
+	has been released (this is the download link),</a> fixing a
+    regression of the rcfile parser from 6.3.0, a security bug in debug
+    output that can cause memory exhaustion and abort, and improves SSL
+    usability.    It is a recommended update for all users. <a
+	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=17957">Click
+	here to see the change details.</a>
+    </p>
+
+    <h1>UTF7 in mailbox names (developer document)</h1>
     <p>There is a <a href="Mailbox-Names-UTF7.html">new document about
 	mailbox name encoding in IMAP,</a>
     an invited contribution by Mark Crispin. It applies to all IMAP
@@ -52,7 +63,7 @@
     directly; for the nonce, you need to manually encode the mailbox
     name in UTF-7 for both applications.</p>
 
-    <h1>SSL issues after upgrade to 6.3.16/6.3.17 or OpenSSL 1.0.0?</h1>
+    <h1>SSL issues after upgrade to OpenSSL 1.0.0?</h1>
     <p>If your fetchmail upgrade entails an upgrade of the OpenSSL
     library to 1.0.0, remember to re-run <kbd>c_rehash
 	/path/to/certs</kbd>, where the last part is whatever argument
@@ -61,16 +72,6 @@
 	href="fetchmail-FAQ.html#R14">see fetchmail's FAQ item
 	R14.</a>.</p>
 
-    <h1>NEWS: FETCHMAIL 6.3.17 RELEASE</h1>
-    <p>On 2010-05-06, <a
-	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.17
-	has been released (this is the download link),</a> fixing a
-    regression of the rcfile parser from 6.3.0, a security bug in debug
-    output that can cause memory exhaustion and abort, and improves SSL
-    usability.    It is a recommended update for all users. <a
-	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=17512">Click
-	here to see the change details.</a>
-    </p>
 </div>
 
 <div style="background-color:#ffe0c0;color:#000000;font-size:85%"> <h1>SECURITY ALERTS</h1>
