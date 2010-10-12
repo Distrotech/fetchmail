@@ -1087,10 +1087,12 @@ process_headers:
 	else if (delivered_to && ctl->server.envelope != STRING_DISABLED &&
       ctl->server.envelope && !strcasecmp(ctl->server.envelope, "Delivered-To"))
    {
+	   if (outlevel >= O_DEBUG)
+		   report(stdout, GT_("Parsing envelope \"%s\" names \"%-.*s\"\n"), ctl->server.envelope, strcspn(delivered_to+2+strlen(ctl->server.envelope), "\r\n"), delivered_to+2+strlen(ctl->server.envelope));
 	    find_server_names(delivered_to, ctl, &msgblk.recipients);
 	    xfree(delivered_to);
    }
-	else if (received_for)
+	else if (received_for) {
 	    /*
 	     * We have the Received for addressee.  
 	     * It has to be a mailserver address, or we
@@ -1098,9 +1100,10 @@ process_headers:
 	     * We use find_server_names() to let local 
 	     * hostnames go through.
 	     */
+	   if (outlevel >= O_DEBUG)
+		   report(stdout, GT_("Parsing Received names \"%-.*s\"\n"), strcspn(received_for+2, "\r\n"), received_for+2);
 	    find_server_names(received_for, ctl, &msgblk.recipients);
-	else
-	{
+	} else {
 	    /*
 	     * We haven't extracted the envelope address.
 	     * So check all the "Resent-To" header addresses if 
@@ -1108,6 +1111,8 @@ process_headers:
 	     * the "To" addresses.
 	     */
 	    register struct addrblk *nextptr;
+	   if (outlevel >= O_DEBUG)
+		   report(stdout, GT_("No envelope recipient found, resorting to header guessing.\n"));
 	    if (resent_to_addrchain) {
 		/* delete the "To" chain and substitute it 
 		 * with the "Resent-To" list 
@@ -1122,6 +1127,9 @@ process_headers:
 	    }
 	    /* now look for remaining adresses */
 	    while (to_addrchain) {
+		    if (outlevel >= O_DEBUG)
+			    report(stdout, GT_("Guessing from header \"%-.*s\".\n"), strcspn(msgblk.headers+to_addrchain->offset, "\r\n"), msgblk.headers+to_addrchain->offset);
+
 		find_server_names(msgblk.headers+to_addrchain->offset, ctl, &msgblk.recipients);
 		nextptr = to_addrchain->next;
 		free(to_addrchain);
