@@ -2476,6 +2476,7 @@ sub initialise
 		open(MACRO, "/usr/lib/groff/tmac/tmac.an") ||
 		open(MACRO, "/usr/lib/groff/tmac/an.tmac") ||
 		open(MACRO, "/usr/share/tmac/tmac.an") ||
+		open(MACRO, "/usr/share/tmac/an.tmac") ||
 		open(MACRO, "/usr/share/groff/tmac/tmac.an") ||
 		open(MACRO, "/usr/share/groff/tmac/an.tmac") ||
 		open(MACRO, "/usr/share/groff/$groffver/tmac/an.tmac") )
