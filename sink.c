@@ -441,8 +441,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 {
     int smtperr = atoi(smtp_response);
     char *responses[1];
-    struct idlist *walk;
-    int found = 0;
 
     responses[0] = xstrdup(smtp_response);
 
@@ -466,15 +464,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
      * messages, which are probably in English (none of the
      * MTAs I know about are internationalized).
      */
-    for( walk = ctl->antispam; walk; walk = walk->next )
-        if ( walk->val.status.num == smtperr ) 
-	{ 
-		found=1;
-		break;
-	}
-
-    /* if (str_find(&ctl->antispam, smtperr)) */
-    if ( found )
+    if (str_find(&ctl->antispam, smtperr))
     {
 	/*
 	 * SMTP listener explicitly refuses to deliver mail

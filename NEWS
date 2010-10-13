@@ -67,6 +67,8 @@ fetchmail-6.3.19 (not yet released):
   of local users, not just at the end.
 * In multidrop mode, header parsing is now more verbose in -vv mode, so that it
   becomes possible to see which header is used.
+* Make --antispam work from command line (these used to work in rcfiles).
+  Reported by Kees Bakker, BerliOS Bug #17599. (Sunil Shetye)
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the

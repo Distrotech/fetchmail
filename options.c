@@ -487,7 +487,7 @@ int parsecmdline (int argc /** argument count */,
 	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
-		struct idlist	*idp = save_str(&ctl->antispam, NULL, 0);;
+		struct idlist	*idp = save_str(&ctl->antispam, STRING_DUMMY, 0);
 
 		idp->val.status.num = xatoi(cp, &errflag);
 	    } while
