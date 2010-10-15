@@ -138,6 +138,7 @@ AC_CACHE_SAVE
 
 dnl i18n
 AM_GNU_GETTEXT([external], [need-ngettext])
+AM_GNU_GETTEXT_VERSION([0.17])
 dnl end i18n
 
 # Under sysV68, socket and friends are provided by the C library.
