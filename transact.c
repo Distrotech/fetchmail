@@ -23,6 +23,7 @@
 #else
 #include  <varargs.h>
 #endif
+#include <limits.h>
 
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
@@ -34,6 +35,11 @@
 #include "i18n.h"
 #include "socket.h"
 #include "fetchmail.h"
+
+#define _FIX_INT_MIN(x) ((x) < INT_MIN ? INT_MIN : (x))
+#define _FIX_INT_MAX(x) ((x) > INT_MAX ? INT_MAX : (x))
+#define CAST_TO_INT(x) ((int)(_FIX_INT_MIN(_FIX_INT_MAX(x))))
+#define UCAST_TO_INT(x) ((int)(_FIX_INT_MAX(x)))
 
 /* global variables: please reinitialize them explicitly for proper
  * working in daemon mode */
@@ -1087,8 +1093,11 @@ process_headers:
 	else if (delivered_to && ctl->server.envelope != STRING_DISABLED &&
       ctl->server.envelope && !strcasecmp(ctl->server.envelope, "Delivered-To"))
    {
-	   if (outlevel >= O_DEBUG)
-		   report(stdout, GT_("Parsing envelope \"%s\" names \"%-.*s\"\n"), ctl->server.envelope, (int)strcspn(delivered_to+2+strlen(ctl->server.envelope), "\r\n"), delivered_to+2+strlen(ctl->server.envelope));
+       if (outlevel >= O_DEBUG) {
+	   const char *tmps = delivered_to + 2 + strlen(ctl->server.envelope);
+	   size_t l = strcspn(tmps, "\r\n");
+	   report(stdout, GT_("Parsing envelope \"%s\" names \"%-.*s\"\n"), ctl->server.envelope, UCAST_TO_INT(l), tmps);
+       }
 	    find_server_names(delivered_to, ctl, &msgblk.recipients);
 	    xfree(delivered_to);
    }
@@ -1100,8 +1109,11 @@ process_headers:
 	     * We use find_server_names() to let local 
 	     * hostnames go through.
 	     */
-	   if (outlevel >= O_DEBUG)
-		   report(stdout, GT_("Parsing Received names \"%-.*s\"\n"), (int)strcspn(received_for+2, "\r\n"), received_for+2);
+	    if (outlevel >= O_DEBUG) {
+		const char *tmps = received_for + 2;
+		size_t l = strcspn(tmps, "\r\n");
+		report(stdout, GT_("Parsing Received names \"%-.*s\"\n"), UCAST_TO_INT(l), tmps);
+	    }
 	    find_server_names(received_for, ctl, &msgblk.recipients);
 	} else {
 	    /*
@@ -1127,8 +1139,11 @@ process_headers:
 	    }
 	    /* now look for remaining adresses */
 	    while (to_addrchain) {
-		    if (outlevel >= O_DEBUG)
-			    report(stdout, GT_("Guessing from header \"%-.*s\".\n"), (int)strcspn(msgblk.headers+to_addrchain->offset, "\r\n"), msgblk.headers+to_addrchain->offset);
+		if (outlevel >= O_DEBUG) {
+		    const char *tmps = msgblk.headers+to_addrchain->offset;
+		    size_t l = strcspn(tmps, "\r\n");
+		    report(stdout, GT_("Guessing from header \"%-.*s\".\n"), UCAST_TO_INT(l), tmps);
+		}
 
 		find_server_names(msgblk.headers+to_addrchain->offset, ctl, &msgblk.recipients);
 		nextptr = to_addrchain->next;
