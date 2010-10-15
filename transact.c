@@ -1088,20 +1088,25 @@ process_headers:
 	    free(sdps_envto);
 	} else
 #endif /* SDPS_ENABLE */ 
-	if (env_offs > -1)	    /* We have the actual envelope addressee */
-	    find_server_names(msgblk.headers + env_offs, ctl, &msgblk.recipients);
+	    if (env_offs > -1) {	    /* We have the actual envelope addressee */
+		if (outlevel >= O_DEBUG) {
+		    const char *tmps = msgblk.headers + env_offs;
+		    size_t l = strcspn(tmps, "\r\n");
+		    report(stdout, GT_("Parsing envelope \"%s\" names \"%-.*s\"\n"), ctl->server.envelope, UCAST_TO_INT(l), tmps);
+		}
+		find_server_names(msgblk.headers + env_offs, ctl, &msgblk.recipients);
+	    }
 	else if (delivered_to && ctl->server.envelope != STRING_DISABLED &&
-      ctl->server.envelope && !strcasecmp(ctl->server.envelope, "Delivered-To"))
-   {
-       if (outlevel >= O_DEBUG) {
-	   const char *tmps = delivered_to + 2 + strlen(ctl->server.envelope);
-	   size_t l = strcspn(tmps, "\r\n");
-	   report(stdout, GT_("Parsing envelope \"%s\" names \"%-.*s\"\n"), ctl->server.envelope, UCAST_TO_INT(l), tmps);
-       }
+		ctl->server.envelope && !strcasecmp(ctl->server.envelope, "Delivered-To"))
+	{
+	    if (outlevel >= O_DEBUG) {
+		const char *tmps = delivered_to + 2 + strlen(ctl->server.envelope);
+		size_t l = strcspn(tmps, "\r\n");
+		report(stdout, GT_("Parsing envelope \"%s\" names \"%-.*s\"\n"), ctl->server.envelope, UCAST_TO_INT(l), tmps);
+	    }
 	    find_server_names(delivered_to, ctl, &msgblk.recipients);
 	    xfree(delivered_to);
-   }
-	else if (received_for) {
+	} else if (received_for) {
 	    /*
 	     * We have the Received for addressee.  
 	     * It has to be a mailserver address, or we
