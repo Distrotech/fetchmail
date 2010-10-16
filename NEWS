@@ -56,6 +56,10 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.19 (not yet released):
 
+# ERRATUM NOTICE ISSUED
+* fetchmail 6.3.18 contains several bug fixes that were considered sufficiently
+  grave to warrant the issue of an erratum notice, fetchmail-EN-2010-03.txt.
+
 # BUG FIXES:
 * When specifying multiple local multidrop lists, do not lose wildcard flag.
   (Affects "user foo is bar baz * is joe here")
