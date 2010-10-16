@@ -28,6 +28,7 @@
 	<a href="fetchmail-FAQ.pdf" title="Fetchmail FAQ as PDF">FAQ (PDF)</a><br>
 	<a href="design-notes.html">Design Notes</a><br>
 	<a href="http://developer.berlios.de/project/showfiles.php?group_id=1824">Download</a><br>
+	Security/Errata<br>
 	<a href="http://gitorious.org/fetchmail/fetchmail/">Development</a><br>
 	<a href="http://developer.berlios.de/projects/fetchmail/">Project Page</a><br>
 	<hr>
@@ -35,13 +36,19 @@
 
 <div id="Content">
 
-    <h1>Fetchmail Security Information</h1>
-    <p>These security issues (listed immediately below) have become
-    known to the fetchmail maintainer to the date mentioned above. Note
-    that fetchmail 6.2.X and older are no longer supported and contain
+    <h1>Fetchmail Security and Errata Information</h1>
+    <p>These security issues (listed immediately below) and critical
+    issues have become
+    known to the fetchmail maintainer to the date mentioned above.</p>
+
+    <p>Note that fetchmail 6.2.X and older are no longer supported and contain
     some of the problems mentioned below, even if they aren't mentioned
     in the security announcements:</p>
     <ul>
+	<li><a name="fetchmail-EN-2010-03">EN-2010-03</a>: Fetchmail <a href="fetchmail-EN-2010-03.txt">fails
+	    POP3/IMAP authentication by not performing SASL AUTH
+	    properly.</a> This was a long-standing bug fixed in release
+	6.3.18.</li>
 	<li><a name="cve-2010-1167"
 	    href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2010-1167">CVE-2010-1167:</a>
 	Fetchmail <a href="fetchmail-SA-2010-02.txt">could exhaust all
