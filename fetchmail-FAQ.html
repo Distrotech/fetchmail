@@ -2508,6 +2508,15 @@ env PATH=/opt/openssl1.0.0/bin /opt/openssl1.0.0/bin/c_rehash /home/hans/certs
 
 <h2><a id="R15" name="R15">R15. Help, I'm getting Authorization failure!</a></h2>
 
+<p>First, try upgrading to fetchmail 6.3.18 or newer. Release 6.3.18 has
+received a considerable number of bug fixes for the authentication
+feature (AUTH, AUTHENTICATE, SASL). Most notably, fetchmail aborts SASL
+authentication attempts properly with an asterisk if it detects that it
+cannot make progress with a particular authentication scheme. This fixes
+issues where GSSAPI-enabled fetchmail cannot authenticate against
+Microsoft Exchange 2007 and 2010. <strong>Note</strong> that this is a
+bug in old fetchmail versions!</p>
+
 <p>Fetchmail by default attempts to authenticate using various schemes.
 Fetchmail tries these schemes in order of descending security, meaning
 the most secure schemes are tried first.</p>
