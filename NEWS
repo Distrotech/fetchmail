@@ -123,7 +123,7 @@ fetchmail-6.3.18 (released 2010-10-09, 25936 LoC):
     This fixes protocol synchronization issues that cause Authentication
   failures, often observed with kerberized MS Exchange servers.
   Fixes Debian Bug #568455 reported by Patrick Rynhart, and Alan Murrell, to the
-  fetchmail-users list. Fix verified by Thomas Voigtmann.
+  fetchmail-users list. Fix verified by Thomas Voigtmann and Patrick Rynhart.
 
 # BUG FIXES
 * Fetchmail will no longer print connection attempts and errors for one host
