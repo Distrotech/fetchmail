@@ -931,7 +931,9 @@ connection such as an ssh tunnel; specify \fBexternal\fP when you use
 TLS with client authentication and specify \fBgssapi\fP or
 \&\fBkerberos_v4\fP if you are using a protocol variant that employs
 GSSAPI or K4.  Choosing KPOP protocol automatically selects Kerberos
-authentication.  This option does not work with ETRN.
+authentication.  This option does not work with ETRN.  GSSAPI service names are
+in line with RFC-2743 and IANA registrations, see
+.URL http://www.iana.org/assignments/gssapi-service-names/ "Generic Security Service Application Program Interface (GSSAPI)/Kerberos/Simple Authentication and Security Layer (SASL) Service Names" . 
 .SS Miscellaneous Options
 .TP
 .B \-f <pathname> | \-\-fetchmailrc <pathname>
@@ -2982,7 +2984,8 @@ LMTP:
 RFC 2033.
 .TP 5
 GSSAPI:
-RFC 1508.
+RFC 1508, RFC 1734,
+.URL http://www.iana.org/assignments/gssapi-service-names/ "Generic Security Service Application Program Interface (GSSAPI)/Kerberos/Simple Authentication and Security Layer (SASL) Service Names" . 
 .TP 5
 TLS:
 RFC 2595.

@@ -70,6 +70,9 @@ fetchmail-6.3.19 (not yet released):
 * Make --antispam work from command line (these used to work in rcfiles).
   Reported by Kees Bakker, BerliOS Bug #17599. (Sunil Shetye)
 
+# DOCUMENTATION:
+* The manual page now links to IANA for GSSAPI service names.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information - however, it was stuck with 6.3.8 for a while)
