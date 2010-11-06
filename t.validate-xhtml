@@ -14,14 +14,6 @@ cat - <<'_EOF'  | xmllint 2>/dev/null --nonet --postvalid --noout - || exit 77
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head><title /></head><body></body></html>
 _EOF
-# same, for XHTML 1.1
-cat - <<'_EOF'  | xmllint 2>/dev/null --nonet --postvalid --noout - || exit 77
-<?xml version="1.0" encoding="US-ASCII"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head><title /></head><body></body></html>
-_EOF
 
 for i in "${srcdir}"/*.html ; do
     case "$i" in */fetchmail-man.html) continue ;; esac
