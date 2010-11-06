@@ -16,7 +16,10 @@ cat - <<'_EOF'  | xmllint 2>/dev/null --nonet --postvalid --noout - || exit 77
 _EOF
 
 for i in "${srcdir}"/*.html ; do
-    case "$i" in */fetchmail-man.html) continue ;; esac
+    case "$i" in
+	*/fetchmail-man.html) continue ;;
+	*/Mailbox-Names-UTF7.html) continue ;;
+    esac
     xmllint --postvalid --noout "$i" || { e=1 ; fail="$i${fail:+" "}$fail" ; }
 done
 if [ $e != 0 ] ; then
