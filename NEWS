@@ -75,6 +75,7 @@ fetchmail-6.3.19 (not yet released):
   Reported by Mihail Nechkin against FreeBSD port.
   Workaround for 6.3.18: build in a separate directory, i. e:
   mkdir build && cd build && ../configure --options-go-here
+* Send a NOOP only after a failed STARTTLS in IMAP. (Sunil Shetye)
 
 # DOCUMENTATION:
 * The manual page now links to IANA for GSSAPI service names.

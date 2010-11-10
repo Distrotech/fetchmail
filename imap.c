@@ -397,9 +397,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;
-#ifdef SSL_ENABLE
-    int got_tls = 0;
-#endif
     (void)greeting;
 
     /*
@@ -457,17 +454,12 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		 * Now that we're confident in our TLS connection we can
 		 * guarantee a secure capability re-probe.
 		 */
-		got_tls = 1;
 		capa_probe(sock, ctl);
 		if (outlevel >= O_VERBOSE)
 		{
 		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
 		}
-	    }
-	}
-
-	if (!got_tls) {
-	    if (must_tls(ctl)) {
+	    } else if (must_tls(ctl)) {
 		/* Config required TLS but we couldn't guarantee it, so we must
 		 * stop. */
 		report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
@@ -486,6 +478,10 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		}
 		/* Usable.  Proceed with authenticating insecurely. */
 	    }
+	} else if (must_tls(ctl)) {
+	    /* Config required TLS but STARTTLS is not advertised. */
+	    report(stderr, GT_("%s: cannot upgrade to TLS: no STARTTLS in CAPABILITY response.\n"), commonname);
+	    return PS_SOCKET;
 	}
     }
 #endif /* SSL_ENABLE */

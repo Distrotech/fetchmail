@@ -281,7 +281,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
     flag connection_may_have_tls_errors = FALSE;
-    flag got_tls = FALSE;
 #endif /* SSL_ENABLE */
 
     done_capa = FALSE;
@@ -465,7 +464,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    * Now that we're confident in our TLS connection we can
 		    * guarantee a secure capability re-probe.
 		    */
-		   got_tls = TRUE;
 		   done_capa = FALSE;
 		   ok = capa_probe(sock);
 		   if (ok != PS_SUCCESS) {
@@ -475,11 +473,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		   {
 		       report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
 		   }
-	       }
-	   }
-
-	   if (!got_tls) {
-	       if (must_tls(ctl)) {
+	       } else if (must_tls(ctl)) {
 		   /* Config required TLS but we couldn't guarantee it, so we must
 		    * stop. */
 		   report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
@@ -496,6 +490,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		       report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), commonname);
 		   }
 	       }
+	   } else if (must_tls(ctl)) {
+	       /* Config required TLS but STLS is not advertised. */
+	       report(stderr, GT_("%s: cannot upgrade to TLS: no STLS in CAPA response.\n"), commonname);
+	       return PS_SOCKET;
 	   }
 	} /* maybe_tls() */
 #endif /* SSL_ENABLE */
