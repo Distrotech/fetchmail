@@ -440,7 +440,8 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    if (ctl->sslcommonname)
 		commonname = ctl->sslcommonname;
 
-	   if (has_stls)
+	   if (has_stls
+		   || must_tls(ctl)) /* if TLS is mandatory, ignore capabilities */
 	   {
 	       /* Use "tls1" rather than ctl->sslproto because tls1 is the only
 		* protocol that will work with STARTTLS.  Don't need to worry
@@ -490,10 +491,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		       report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), commonname);
 		   }
 	       }
-	   } else if (must_tls(ctl)) {
-	       /* Config required TLS but STLS is not advertised. */
-	       report(stderr, GT_("%s: cannot upgrade to TLS: no STLS in CAPA response.\n"), commonname);
-	       return PS_SOCKET;
 	   }
 	} /* maybe_tls() */
 #endif /* SSL_ENABLE */

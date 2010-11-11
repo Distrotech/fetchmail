@@ -78,6 +78,8 @@ fetchmail-6.3.19 (not yet released):
 * Send a NOOP only after a failed STARTTLS in IMAP. (Sunil Shetye)
 * Demote GSSAPI verbose/debug syslog to INFO severity. Requested by Carlos E. R.
   and Derek Simkowiak via the fetchmail-users@ mailing list.
+* Do STARTTLS/STLS negotiation in IMAP/POP3 if it is mandatory even if the
+  server capabilities do not show support for upgradation to TLS. (Sunil Shetye)
 
 # DOCUMENTATION:
 * The manual page now links to IANA for GSSAPI service names.

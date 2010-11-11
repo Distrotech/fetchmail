@@ -430,7 +430,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (ctl->sslcommonname)
 	    commonname = ctl->sslcommonname;
 
-	if (strstr(capabilities, "STARTTLS"))
+	if (strstr(capabilities, "STARTTLS")
+		|| must_tls(ctl)) /* if TLS is mandatory, ignore capabilities */
 	{
 	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
 	     * protocol that will work with STARTTLS.  Don't need to worry
@@ -478,10 +479,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		}
 		/* Usable.  Proceed with authenticating insecurely. */
 	    }
-	} else if (must_tls(ctl)) {
-	    /* Config required TLS but STARTTLS is not advertised. */
-	    report(stderr, GT_("%s: cannot upgrade to TLS: no STARTTLS in CAPABILITY response.\n"), commonname);
-	    return PS_SOCKET;
 	}
     }
 #endif /* SSL_ENABLE */
