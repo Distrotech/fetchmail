@@ -76,6 +76,8 @@ fetchmail-6.3.19 (not yet released):
   Workaround for 6.3.18: build in a separate directory, i. e:
   mkdir build && cd build && ../configure --options-go-here
 * Send a NOOP only after a failed STARTTLS in IMAP. (Sunil Shetye)
+* Demote GSSAPI verbose/debug syslog to INFO severity. Requested by Carlos E. R.
+  and Derek Simkowiak via the fetchmail-users@ mailing list.
 
 # DOCUMENTATION:
 * The manual page now links to IANA for GSSAPI service names.

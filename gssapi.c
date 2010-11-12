@@ -38,7 +38,7 @@
 #  endif
 #  endif
 
-static void decode_subr(const char *m, uint32_t code, int type)
+static void decode_subr(const char *m, uint32_t code, int type, FILE *ostrm)
 {
     uint32_t maj, min, context;
     gss_buffer_desc msg = GSS_C_EMPTY_BUFFER;
@@ -52,16 +52,17 @@ static void decode_subr(const char *m, uint32_t code, int type)
 	    report(stderr, GT_("GSSAPI error in gss_display_status called from <%s>\n"), m);
 	    break;
 	}
-	report(stderr, GT_("GSSAPI error %s: %.*s\n"), m,
+	report(ostrm, GT_("GSSAPI error %s: %.*s\n"), m,
 		(int)msg.length, (char *)msg.value);
 	(void)gss_release_buffer(&min, &msg);
     } while(context);
 }
 
-static void decode_status(const char *m, uint32_t major, uint32_t minor)
+static void decode_status(const char *m, uint32_t major, uint32_t minor,m
+		FILE *ostrm)
 {
-    decode_subr(m, major, GSS_C_GSS_CODE);
-    decode_subr(m, minor, GSS_C_MECH_CODE);
+    decode_subr(m, major, GSS_C_GSS_CODE,  ostrm);
+    decode_subr(m, minor, GSS_C_MECH_CODE, ostrm);
 }
 
 #define GSSAUTH_P_NONE      1
@@ -85,7 +86,7 @@ static int import_name(const char *service, const char *hostname,
     maj_stat = gss_import_name(&min_stat, &request_buf,
 	    GSS_C_NT_HOSTBASED_SERVICE, target_name);
     if (maj_stat != GSS_S_COMPLETE) {
-	decode_status("gss_import_name", maj_stat, min_stat);
+	decode_status("gss_import_name", maj_stat, min_stat, stderr);
         report(stderr, GT_("Couldn't get service name for [%s]\n"), buf1);
         return PS_AUTHFAIL;
     }
@@ -117,9 +118,9 @@ int check_gss_creds(const char *service, const char *hostname)
     if (maj_stat != GSS_S_COMPLETE
 	    || (cu != GSS_C_INITIATE && cu != GSS_C_BOTH)) {
 	if (outlevel >= O_DEBUG) {
-	    decode_status("gss_inquire_cred", maj_stat, min_stat);
-	    report(stderr, GT_("No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"));
-	    report(stderr, GT_("If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"));
+	    decode_status("gss_inquire_cred", maj_stat, min_stat, stdout);
+	    report(stdout, GT_("No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"));
+	    report(stdout, GT_("If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"));
 	}
 	return PS_AUTHFAIL;
     }
@@ -185,7 +186,7 @@ int do_gssauth(int sock, const char *command, const char *service,
 
 	if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
 	    if (outlevel >= O_VERBOSE)
-		decode_status("gss_init_sec_context", maj_stat, min_stat);
+		decode_status("gss_init_sec_context", maj_stat, min_stat, stdout);
 	    (void)gss_release_name(&min_stat, &target_name);
 
 cancelfail:
@@ -237,7 +238,7 @@ cancelfail:
     maj_stat = gss_unwrap(&min_stat, context,
 			  &request_buf, &send_token, &cflags, &quality);
     if (maj_stat != GSS_S_COMPLETE) {
-	decode_status("gss_unwrap", maj_stat, min_stat);
+	decode_status("gss_unwrap", maj_stat, min_stat, stderr);
         report(stderr, GT_("Couldn't unwrap security level data\n"));
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
@@ -287,7 +288,7 @@ cancelfail:
 	report(stdout, GT_("Releasing GSS credentials\n"));
     maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
     if (maj_stat != GSS_S_COMPLETE) {
-	decode_status("gss_delete_sec_context", maj_stat, min_stat);
+	decode_status("gss_delete_sec_context", maj_stat, min_stat, stderr);
 	report(stderr, GT_("Error releasing credentials\n"));
 	return PS_AUTHFAIL;
     }
