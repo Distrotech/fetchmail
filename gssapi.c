@@ -58,7 +58,7 @@ static void decode_subr(const char *m, uint32_t code, int type, FILE *ostrm)
     } while(context);
 }
 
-static void decode_status(const char *m, uint32_t major, uint32_t minor,m
+static void decode_status(const char *m, uint32_t major, uint32_t minor,
 		FILE *ostrm)
 {
     decode_subr(m, major, GSS_C_GSS_CODE,  ostrm);
