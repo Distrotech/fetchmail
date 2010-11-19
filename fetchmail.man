@@ -477,20 +477,22 @@ Forces an SSL/TLS protocol. Possible values are \fB''\fP,
 \&'\fBSSL2\fP', '\fBSSL23\fP', (use of these two values is discouraged
 and should only be used as a last resort) \&'\fBSSL3\fP', and
 \&'\fBTLS1\fP'.  The default behaviour if this option is unset is: for
-connections without \-\-ssl, use \&'\fBTLS1\fP' that fetchmail will
+connections without \-\-ssl, use \&'\fBTLS1\fP' so that fetchmail will
 opportunistically try STARTTLS negotiation with TLS1. You can configure
 this option explicitly if the default handshake (TLS1 if \-\-ssl is not
-used, does not work for your server.
+used) does not work for your server.
 .IP
 Use this option with '\fBTLS1\fP' value to enforce a STARTTLS
 connection. In this mode, it is highly recommended to also use
-\-\-sslcertck (see below).
+\-\-sslcertck (see below).  Note that this will then cause fetchmail
+v6.3.19 to force STARTTLS negotiation even if it is not advertised by
+the server.
 .IP
 To defeat opportunistic TLSv1 negotiation when the server advertises
-STARTTLS or STLS, use \fB''\fP.  This option, even if the argument is
-the empty string, will also suppress the diagnostic 'SERVER:
-opportunistic upgrade to TLS.' message in verbose mode. The default is
-to try appropriate protocols depending on context.
+STARTTLS or STLS, and use a cleartext connection use \fB''\fP.  This
+option, even if the argument is the empty string, will also suppress the
+diagnostic 'SERVER: opportunistic upgrade to TLS.' message in verbose
+mode. The default is to try appropriate protocols depending on context.
 .TP
 .B \-\-sslcertck
 (Keyword: sslcertck)
