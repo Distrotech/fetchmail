@@ -48,7 +48,7 @@ adding all of the options you'd normally use.\fP
 
 .IP
 .nf
-env LC_ALL=C fetchmail -V -v --nodetach --nosyslog
+env LC_ALL=C fetchmail \-V \-v \-\-nodetach \-\-nosyslog
 .fi
 .IP
 (This command line prints in English how fetchmail understands your
@@ -56,7 +56,7 @@ configuration.)
 
 .IP
 .nf
-env LC_ALL=C fetchmail -vvv  --nodetach --nosyslog
+env LC_ALL=C fetchmail \-vvv  \-\-nodetach \-\-nosyslog
 .fi
 .IP
 (This command line actually runs fetchmail with verbose English output.)
@@ -701,7 +701,7 @@ maildrop easier to understand.
 
 Finally, we strongly advise that you do \fBnot\fP use qmail-inject.  The
 command line interface is non-standard without providing benefits for
-typical use, and fetchmail makes no attempts to accomodate
+typical use, and fetchmail makes no attempts to accommodate
 qmail-inject's deviations from the standard. Some of qmail-inject's
 command-line and environment options are actually dangerous and can
 cause broken threads, non-detected duplicate messages and forwarding
@@ -2676,7 +2676,7 @@ mail" to be an error condition (for instance, for cron jobs), use a
 POSIX-compliant shell and add
 
 .nf
-|| [ $? -eq 1 ]
+|| [ $? \-eq 1 ]
 .fi
 
 to the end of the fetchmail command line, note that this leaves 0
