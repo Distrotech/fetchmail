@@ -60,7 +60,7 @@ fetchmail-6.3.19 (not yet released):
 * fetchmail 6.3.18 contains several bug fixes that were considered sufficiently
   grave to warrant the issue of an erratum notice, fetchmail-EN-2010-03.txt.
 
-# BUG FIXES:
+# BUG FIXES
 * When specifying multiple local multidrop lists, do not lose wildcard flag.
   (Affects "user foo is bar baz * is joe here")
 * In multidrop configurations, an asterisk can now appear anywhere in the list
@@ -82,10 +82,17 @@ fetchmail-6.3.19 (not yet released):
   server capabilities do not show support for upgradation to TLS.
   To use this, configure --sslproto tls1. (Sunil Shetye)
 
-# DOCUMENTATION:
+# DOCUMENTATION
 * The manual page now links to IANA for GSSAPI service names.
 
-# KNOWN BUGS AND WORKAROUNDS:
+# TRANSLATION UPDATES
+  [cs]    Czech (Petr Pisar)
+  [fr]    French (Frédéric Marchal)
+  [de]    German
+  [it]    Italian (Vincenzo Campanella)
+  [pl]    Polish (Jakub Bogusz)
+
+# KNOWN BUGS AND WORKAROUNDS
   (this section floats upwards through the NEWS file so it stays with the
   current release information - however, it was stuck with 6.3.8 for a while)
 * fetchmail does not handle messages without Message-ID header well

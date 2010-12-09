@@ -6,13 +6,13 @@
 # mise à jour par Thierry Vignaud <tvignaud@mandrakesoft.com>
 # mise à jour par Matthias Andree <matthias.andree@gmx.de>
 # Guy Brand <guybrand@chimie.u-strasbg.fr>, 1999-2000.
-# mise à jour par Frédéric Marchal <fmarchal@perso.be>, 2010.
+# Frédéric Marchal <fmarchal@perso.be>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail-6.3.18-pre2\n"
+"Project-Id-Version: fetchmail-6.3.19-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-10-09 13:33+0200\n"
-"PO-Revision-Date: 2010-09-27 09:40+0200\n"
+"POT-Creation-Date: 2010-12-05 01:17+0100\n"
+"PO-Revision-Date: 2010-12-06 10:28+0100\n"
 "Last-Translator: Frédéric Marchal <fmarchal@perso.be>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -1215,7 +1215,7 @@ msgstr "  Authentification OTP forcée.\n"
 
 #: fetchmail.c:1651
 msgid "  CRAM-MD5 authentication will be forced.\n"
-msgstr "  Authentification CRAM-MD5 forcée.\n"
+msgstr "  L'authentification CRAM-MD5 va être forcée.\n"
 
 #: fetchmail.c:1654
 msgid "  GSSAPI authentication will be forced.\n"
@@ -1705,73 +1705,73 @@ msgstr "Erreur GSSAPI dans gss_display_status appelé depuis <%s>\n"
 msgid "GSSAPI error %s: %.*s\n"
 msgstr "Erreur GSSAPI %s: %.*s\n"
 
-#: gssapi.c:89
+#: gssapi.c:90
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "Impossible d'obtenir le nom du service pour [%s]\n"
 
-#: gssapi.c:94
+#: gssapi.c:95
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "Utilise le nom de service [%s]\n"
 
-#: gssapi.c:121
+#: gssapi.c:122
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
 "Pas de justificatif d'identité GSSAPI valable. L'authentification GSSAPI est "
 "ignorée.\n"
 
-#: gssapi.c:122
+#: gssapi.c:123
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
 "Si vous voulez utiliser GSSAPI, vous avez besoin d'un justificatif "
 "d'identité, probablement de kinit.\n"
 
-#: gssapi.c:158
+#: gssapi.c:159
 #, c-format
 msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
-msgstr ""
+msgstr "Challenge malformé reçu pour la commande «GSSAPI %s» !\n"
 
-#: gssapi.c:168
+#: gssapi.c:169
 msgid "Sending credentials\n"
 msgstr "Envoi des références d'identification\n"
 
-#: gssapi.c:199
+#: gssapi.c:200
 msgid "Error exchanging credentials\n"
 msgstr "Erreur durant l'échange des références d'identification\n"
 
-#: gssapi.c:241
+#: gssapi.c:242
 msgid "Couldn't unwrap security level data\n"
 msgstr "Impossible d'extraire les données du niveau de sécurité\n"
 
-#: gssapi.c:246
+#: gssapi.c:247
 msgid "Credential exchange complete\n"
 msgstr "Échange des références d'identification terminé\n"
 
-#: gssapi.c:250
+#: gssapi.c:251
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Le serveur requiert des échanges intègres ou privés\n"
 
-#: gssapi.c:259
+#: gssapi.c:260
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Options du niveau de sécurité extraites : %s%s%s\n"
 
-#: gssapi.c:263
+#: gssapi.c:264
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "La taille maximale du composant GSS est %ld\n"
 
-#: gssapi.c:276
+#: gssapi.c:277
 msgid "Error creating security level request\n"
 msgstr "Erreur à la création de la requête de niveau de sécurité\n"
 
-#: gssapi.c:287
+#: gssapi.c:288
 msgid "Releasing GSS credentials\n"
 msgstr "Libère les références d'identification GSS\n"
 
-#: gssapi.c:291
+#: gssapi.c:292
 msgid "Error releasing credentials\n"
 msgstr "Erreur de libération des références d'identification\n"
 
@@ -1811,99 +1811,99 @@ msgstr "Protocole identifié comme étant IMAP2 ou IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "attendra après la réception\n"
 
-#: imap.c:464 pop3.c:476
+#: imap.c:461 pop3.c:475
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: passage au TLS réussi.\n"
 
-#: imap.c:473 pop3.c:485
+#: imap.c:466 pop3.c:480
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: passage au TLS raté.\n"
 
-#: imap.c:477
+#: imap.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: échec de la négociation TLS mais on continue quand-même\n"
 
-#: imap.c:593
+#: imap.c:586
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité OTP requise n'est pas compilée dans fetchmail\n"
 
-#: imap.c:613 pop3.c:560
+#: imap.c:606 pop3.c:555
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité NTLM requise n'est pas compilée dans fetchmail.\n"
 
-#: imap.c:622
+#: imap.c:615
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "La fonction LOGIN requise n'est pas supportée par le serveur\n"
 
-#: imap.c:686
+#: imap.c:679
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
 "pas de concordance de la purge des messages (%d effectifs != %d attendus)\n"
 
-#: imap.c:825
+#: imap.c:818
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu n'est pas vu\n"
 
-#: imap.c:889 pop3.c:845 pop3.c:857 pop3.c:1095 pop3.c:1102
+#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u n'est pas vu\n"
 
-#: imap.c:924 imap.c:983
+#: imap.c:917 imap.c:976
 msgid "re-poll failed\n"
 msgstr "échec durant la re-réception\n"
 
-#: imap.c:932 imap.c:988
+#: imap.c:925 imap.c:981
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d message en attente après la re-réception\n"
 msgstr[1] "%d messages en attente après la re-réception\n"
 
-#: imap.c:949
+#: imap.c:942
 msgid "mailbox selection failed\n"
 msgstr "échec de la sélection de la boîte aux lettres\n"
 
-#: imap.c:953
+#: imap.c:946
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d message en attente après la première réception\n"
 msgstr[1] "%d messages en attente après la première réception\n"
 
-#: imap.c:967
+#: imap.c:960
 msgid "expunge failed\n"
 msgstr "échec de la purge\n"
 
-#: imap.c:971
+#: imap.c:964
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d message en attente après la purge\n"
 msgstr[1] "%d messages en attente après la purge\n"
 
-#: imap.c:1010
+#: imap.c:1003
 msgid "search for unseen messages failed\n"
 msgstr "échec de la recherche des messages non-vus\n"
 
-#: imap.c:1015 pop3.c:866
+#: imap.c:1008 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
 
-#: imap.c:1099
+#: imap.c:1092
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 "Avertissement : des données farfelues retournées par le serveur pour la "
 "taille des messages sont ignorées.\n"
 
-#: imap.c:1197 imap.c:1204
+#: imap.c:1190 imap.c:1197
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr "Réponse FETCH incorrecte: %s.\n"
@@ -2100,7 +2100,7 @@ msgstr "erreur fatale de recv serveur\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Impossible de décoder le challenge OTP\n"
 
-#: opie.c:64 pop3.c:587
+#: opie.c:64 pop3.c:582
 msgid "Secret pass phrase: "
 msgstr "Mot de passe secret : "
 
@@ -2458,7 +2458,7 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    affiche des points de progression, même dans le journal\n"
 
-#: pop3.c:328
+#: pop3.c:327
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2466,77 +2466,77 @@ msgstr ""
 "Avertissement: découverte d'un «Maillennium POP3/PROXY server», la commande "
 "RETR est utilisé au lieu de TOP.\n"
 
-#: pop3.c:412
+#: pop3.c:411
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr ""
 "TLS est requis pour cette session mais le serveur refuse la commande CAPA.\n"
 
-#: pop3.c:413
+#: pop3.c:412
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr "La commande CAPA est absolument nécessaire pour le TLS.\n"
 
-#: pop3.c:496
+#: pop3.c:491
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: échec du passage en TLS mais on continue quand-même.\n"
 
-#: pop3.c:623
+#: pop3.c:618
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 "Nous avons épuisé toutes les techniques d'authentification permises et ne "
 "pouvons continuer.\n"
 
-#: pop3.c:637
+#: pop3.c:632
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "L'horodatage APOP requis est absent du message d'invitation\n"
 
-#: pop3.c:646
+#: pop3.c:641
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Erreur de syntaxe dans l'horodatage du message d'invitation\n"
 
-#: pop3.c:662
+#: pop3.c:657
 msgid "Invalid APOP timestamp.\n"
 msgstr "L'horodatage APOP n'est pas valable.\n"
 
-#: pop3.c:686
+#: pop3.c:681
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Requête de protocole non définie dans POP3_auth\n"
 
-#: pop3.c:707
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr "Fichier verrou en service. Y a-t-il une autre session active ?\n"
 
-#: pop3.c:786
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Ne peux pas manier la réponse UIDL du serveur.\n"
 
-#: pop3.c:809
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Serveur a répondu avec l'UID d'un mauvais message.\n"
 
-#: pop3.c:836
+#: pop3.c:831
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%u) a été effacé mais est toujours présent !\n"
 
-#: pop3.c:942
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Messages insérés dans une liste du serveur. Impossible de gérer ça.\n"
 
-#: pop3.c:1038
+#: pop3.c:1033
 msgid "protocol error\n"
 msgstr "erreur de protocole\n"
 
-#: pop3.c:1054
+#: pop3.c:1049
 msgid "protocol error while fetching UIDLs\n"
 msgstr "erreur de protocole durant la réception des UIDL\n"
 
-#: pop3.c:1086
+#: pop3.c:1081
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) a été effacé mais est toujours présent !\n"
 
-#: pop3.c:1424
+#: pop3.c:1419
 msgid "Option --folder is not supported with POP3\n"
 msgstr "L'option --folder n'est pas supportée avec POP3\n"
 
@@ -2812,106 +2812,106 @@ msgstr "SMTP: (corps du message ayant rebondi)\n"
 msgid "mail from %s bounced to %s\n"
 msgstr "message depuis %s ayant rebondi sur %s\n"
 
-#: sink.c:458
+#: sink.c:456
 #, c-format
 msgid "Saved error is still %d\n"
 msgstr "L'erreur mémorisée est toujours %d\n"
 
-#: sink.c:518 sink.c:617
+#: sink.c:508 sink.c:607
 #, c-format
 msgid "%cMTP error: %s\n"
 msgstr "Erreur %cMTP: %s\n"
 
-#: sink.c:562
+#: sink.c:552
 msgid "SMTP server requires STARTTLS, keeping message.\n"
 msgstr "Le serveur SMTP exige STARTTLS, on conserve le message.\n"
 
-#: sink.c:745
+#: sink.c:735
 #, c-format
 msgid "BSMTP file open failed: %s\n"
 msgstr "Échec d'ouverture du fichier BSMTP: %s\n"
 
-#: sink.c:791
+#: sink.c:781
 #, c-format
 msgid "BSMTP preamble write failed: %s.\n"
 msgstr "Échec d'écriture du préambule BSMTP: %s.\n"
 
-#: sink.c:1005
+#: sink.c:995
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "Le serveur %cMTP n'apprécie pas l'adresse de destinataire «%s»\n"
 
-#: sink.c:1012
+#: sink.c:1002
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr ""
 "Le serveur %cMTP n'apprécie vraiment pas l'adresse du destinataire «%s»\n"
 
-#: sink.c:1058
+#: sink.c:1048
 msgid "no address matches; no postmaster set.\n"
 msgstr "les adresses ne correspondent pas ; pas de postmaster\n"
 
-#: sink.c:1070
+#: sink.c:1060
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "il n'est même pas possible d'expédier vers %s\n"
 
-#: sink.c:1076
+#: sink.c:1066
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "aucune correspondance dans les adresses ; réexpédition vers %s.\n"
 
-#: sink.c:1232
+#: sink.c:1222
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "sur le point de délivrer le courrier à : %s\n"
 
-#: sink.c:1243
+#: sink.c:1233
 #, c-format
 msgid "Cannot switch effective user id to %ld: %s\n"
 msgstr "Impossible de changer de ID utilisateur vers %ld : %s\n"
 
-#: sink.c:1255
+#: sink.c:1245
 #, c-format
 msgid "Cannot switch effective user id back to original %ld: %s\n"
 msgstr "Impossible de revenir au ID utilisateur original %ld : %s\n"
 
-#: sink.c:1262
+#: sink.c:1252
 msgid "MDA open failed\n"
 msgstr "Échec d'ouverture MDA\n"
 
-#: sink.c:1301
+#: sink.c:1291
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "Échec de connexion %cMTP avec %s\n"
 
-#: sink.c:1325
+#: sink.c:1315
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "ne peut relever l'agent ; se replie sur %s"
 
-#: sink.c:1383
+#: sink.c:1373
 #, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
 msgstr ""
 "Échec à la terminaison du message ou à la fermeture du fichier BSMTP: %s\n"
 
-#: sink.c:1408
+#: sink.c:1398
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Erreur en envoyant au MDA : %s\n"
 
-#: sink.c:1411
+#: sink.c:1401
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "le programme de livraison du courrier a été tué par un signal %d\n"
 
-#: sink.c:1414
+#: sink.c:1404
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA a retourné un état non nul (%d)\n"
 
-#: sink.c:1417
+#: sink.c:1407
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
@@ -2919,20 +2919,20 @@ msgstr ""
 "Étrange : le MDA a retourné %d et errno %d/%s lors du pclose; cas impossible "
 "à gérer %s:%d\n"
 
-#: sink.c:1442
+#: sink.c:1432
 msgid "SMTP listener refused delivery\n"
 msgstr "Le serveur SMTP a refusé de délivrer le courrier\n"
 
-#: sink.c:1472
+#: sink.c:1462
 msgid "LMTP delivery error on EOM\n"
 msgstr "Erreur de délivrance LMTP en EOM\n"
 
-#: sink.c:1475
+#: sink.c:1465
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Réponse non-503 inattendue à un ordre LMTP EOM: %s\n"
 
-#: sink.c:1630
+#: sink.c:1620
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
@@ -3231,22 +3231,22 @@ msgstr "Nouvel essai de lecture sur la socket Cygwin\n"
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Le nouvel essai de lecture sur la socket Cygwin a échoué!\n"
 
-#: transact.c:65
+#: transact.c:71
 #, c-format
 msgid "mapped address %s to local %s\n"
 msgstr "correspondance d'adresse %s en local %s\n"
 
-#: transact.c:87
+#: transact.c:93
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "correspondance de %s en local %s\n"
 
-#: transact.c:154
+#: transact.c:160
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "passage au travers de %s et coïncidence avec %s\n"
 
-#: transact.c:224
+#: transact.c:230
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -3255,67 +3255,88 @@ msgstr ""
 "analyse de la ligne «Received»:\n"
 "%s"
 
-#: transact.c:263
+#: transact.c:269
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "ligne acceptée, %s est un alias du serveur de courrier\n"
 
-#: transact.c:269
+#: transact.c:275
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "ligne rejetée, %s n'est pas un alias du serveur de courrier\n"
 
-#: transact.c:343
+#: transact.c:349
 msgid "no Received address found\n"
 msgstr "aucune adresse trouvée dans «Received»\n"
 
-#: transact.c:352
+#: transact.c:358
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "adresse `%s' trouvée dans «Received»\n"
 
-#: transact.c:595
+#: transact.c:601
 msgid "incorrect header line found - see manpage for bad-header option\n"
 msgstr ""
 "ligne d'en-tête incorrecte trouvée - voyez la page man pour l'option «bad-"
 "header»\n"
 
-#: transact.c:597
+#: transact.c:603
 #, c-format
 msgid "line: %s"
 msgstr "ligne: %s"
 
-#: transact.c:1137
+#: transact.c:1095 transact.c:1105
+#, c-format
+msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
+msgstr "Décodage des noms de l'enveloppe «%s»: «%-.*s»\n"
+
+#: transact.c:1120
+#, c-format
+msgid "Parsing Received names \"%-.*s\"\n"
+msgstr "Décodage des noms de la ligne «Received» «%-.*s»\n"
+
+#: transact.c:1132
+msgid "No envelope recipient found, resorting to header guessing.\n"
+msgstr ""
+"Pas de destinataire trouvé dans l'enveloppe, on essaie de le deviner dans "
+"l'en-tête.\n"
+
+#: transact.c:1150
+#, c-format
+msgid "Guessing from header \"%-.*s\".\n"
+msgstr "Deviné sur base de l'en-tête «%-.*s».\n"
+
+#: transact.c:1165
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "aucune correspondance locale, réexpédition vers %s\n"
 
-#: transact.c:1152
+#: transact.c:1180
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "réexpédition et effacement supprimés suite à des erreurs de DNS\n"
 
-#: transact.c:1263
+#: transact.c:1291
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "écriture d'en-têtes RFC822\n"
 
-#: transact.c:1282
+#: transact.c:1310
 msgid "no recipient addresses matched declared local names"
 msgstr "aucune adresse de destination ne correspond aux noms locaux déclarés"
 
-#: transact.c:1289
+#: transact.c:1317
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "l'adresse de destination %s ne correspond à aucun nom local"
 
-#: transact.c:1298
+#: transact.c:1326
 msgid "message has embedded NULs"
 msgstr "le message contient des caractères NULs"
 
-#: transact.c:1306
+#: transact.c:1334
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Le serveur SMTP rejette les adresses locales de destination : "
 
-#: transact.c:1445
+#: transact.c:1473
 msgid "error writing message text\n"
 msgstr "échec écriture du texte du message\n"
 

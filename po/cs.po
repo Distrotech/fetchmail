@@ -7,14 +7,14 @@
 # Petr Pisar <petr.pisar@atlas.cz>, 2008, 2009, 2010.
 #
 # Subject Common Name → obecné jméno (CN) subjektu
-# Subject Alternative Name → alternatvivní jméno subjektu (× otherName)
+# Subject Alternative Name → alternativní jméno subjektu (× otherName)
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.18-pre2\n"
+"Project-Id-Version: fetchmail 6.3.19-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-10-09 13:33+0200\n"
-"PO-Revision-Date: 2010-09-26 19:52+0200\n"
+"POT-Creation-Date: 2010-12-05 01:17+0100\n"
+"PO-Revision-Date: 2010-12-06 21:07+0100\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1189,9 +1189,8 @@ msgid "  OTP authentication will be forced.\n"
 msgstr "  Bude vynucena autentizace OTP.\n"
 
 #: fetchmail.c:1651
-#, fuzzy
 msgid "  CRAM-MD5 authentication will be forced.\n"
-msgstr "  Bude vynucena autentizace CRAM-Md5.\n"
+msgstr "  Bude vynucena autentizace CRAM-MD5.\n"
 
 #: fetchmail.c:1654
 msgid "  GSSAPI authentication will be forced.\n"
@@ -1669,73 +1668,73 @@ msgstr "Chyba GSSAPI v gss_display_status volané z <%s>\n"
 msgid "GSSAPI error %s: %.*s\n"
 msgstr "Chyba GSSAPI: %s: %.*s\n"
 
-#: gssapi.c:89
+#: gssapi.c:90
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "Nemohu získat název služby pro [%s]\n"
 
-#: gssapi.c:94
+#: gssapi.c:95
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "Používám název služby [%s]\n"
 
-#: gssapi.c:121
+#: gssapi.c:122
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
 "Nenalezeny žádné vhodné autentizační údaje GSSAPI. Autentizace GSSAPI bude "
 "vynechána.\n"
 
-#: gssapi.c:122
+#: gssapi.c:123
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
 "Chcete-li používat GSSAPI, potřebujete nejprve autentizační údaje, obvykle "
 "z kinitu.\n"
 
-#: gssapi.c:158
+#: gssapi.c:159
 #, c-format
 msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
-msgstr ""
+msgstr "Přijata chybně utvořená výzva na „%s GSSAPI“!\n"
 
-#: gssapi.c:168
+#: gssapi.c:169
 msgid "Sending credentials\n"
 msgstr "Odesílám ověření\n"
 
-#: gssapi.c:199
+#: gssapi.c:200
 msgid "Error exchanging credentials\n"
 msgstr "Chyba při výměně ověření\n"
 
-#: gssapi.c:241
+#: gssapi.c:242
 msgid "Couldn't unwrap security level data\n"
 msgstr "Nemohu rozbalit zabezpečovací data\n"
 
-#: gssapi.c:246
+#: gssapi.c:247
 msgid "Credential exchange complete\n"
 msgstr "Výměna ověření dokončena\n"
 
-#: gssapi.c:250
+#: gssapi.c:251
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Server vyžaduje integritu a/nebo soukromí\n"
 
-#: gssapi.c:259
+#: gssapi.c:260
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Rozbalené příznaky úrovně zabezpečení: %s%s%s\n"
 
-#: gssapi.c:263
+#: gssapi.c:264
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "Maximální velikost tokenu GSS je %ld\n"
 
-#: gssapi.c:276
+#: gssapi.c:277
 msgid "Error creating security level request\n"
 msgstr "Chyba při vytváření požadavku na úroveň zabezpečení\n"
 
-#: gssapi.c:287
+#: gssapi.c:288
 msgid "Releasing GSS credentials\n"
 msgstr "Uvolňuji ověření GSS\n"
 
-#: gssapi.c:291
+#: gssapi.c:292
 msgid "Error releasing credentials\n"
 msgstr "Chyba při uvolňování ověření\n"
 
@@ -1775,53 +1774,53 @@ msgstr "Protokol rozpoznán jako IMAP2 nebo IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "po stahování budu nečinný\n"
 
-#: imap.c:464 pop3.c:476
+#: imap.c:461 pop3.c:475
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: přechod do TLS uspěl.\n"
 
-#: imap.c:473 pop3.c:485
+#: imap.c:466 pop3.c:480
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: přechod do TLS se nezdařil.\n"
 
-#: imap.c:477
+#: imap.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: dobrovolný přechod do TLS se nezdařil, zkouším pokračovat\n"
 
-#: imap.c:593
+#: imap.c:586
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Fetchmail byl přeložen bez podpory pro požadovanou schopnost OTP\n"
 
-#: imap.c:613 pop3.c:560
+#: imap.c:606 pop3.c:555
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Fetchmail byl přeložen bez podpory pro požadovanou schopnost NTLM\n"
 
-#: imap.c:622
+#: imap.c:615
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Server nepodporuje požadovanou schopnost LOGIN\n"
 
-#: imap.c:686
+#: imap.c:679
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "mazání zpráv se neshoduje (%d ve skutečnosti != %d očekáváno)\n"
 
-#: imap.c:825
+#: imap.c:818
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu nebyla přečtena\n"
 
-#: imap.c:889 pop3.c:845 pop3.c:857 pop3.c:1095 pop3.c:1102
+#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u nebyla přečtena\n"
 
-#: imap.c:924 imap.c:983
+#: imap.c:917 imap.c:976
 msgid "re-poll failed\n"
 msgstr "opakované stahování selhalo\n"
 
-#: imap.c:932 imap.c:988
+#: imap.c:925 imap.c:981
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
@@ -1829,11 +1828,11 @@ msgstr[0] "%d zpráva čeká po opětovném stahování\n"
 msgstr[1] "%d zprávy čekají po opětovném stahování\n"
 msgstr[2] "%d zpráv čeká po opětovném stahování\n"
 
-#: imap.c:949
+#: imap.c:942
 msgid "mailbox selection failed\n"
 msgstr "výběr poštovní schránky selhal\n"
 
-#: imap.c:953
+#: imap.c:946
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
@@ -1841,11 +1840,11 @@ msgstr[0] "%d zpráva čeká po prvním stahování\n"
 msgstr[1] "%d zprávy čekají po prvním stahování\n"
 msgstr[2] "%d zpráv čeká po prvním stahování\n"
 
-#: imap.c:967
+#: imap.c:960
 msgid "expunge failed\n"
 msgstr "čištění selhalo\n"
 
-#: imap.c:971
+#: imap.c:964
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
@@ -1853,22 +1852,22 @@ msgstr[0] "%d zpráva čeká po vyčištění\n"
 msgstr[1] "%d zprávy čekají po vyčištění\n"
 msgstr[2] "%d zpráv čeká po vyčištění\n"
 
-#: imap.c:1010
+#: imap.c:1003
 msgid "search for unseen messages failed\n"
 msgstr "hledání nepřečtených zpráv selhalo\n"
 
-#: imap.c:1015 pop3.c:866
+#: imap.c:1008 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u je první nepřečtená\n"
 
-#: imap.c:1099
+#: imap.c:1092
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 "Varování: ignoruji chybné informace o velikostech zpráv vrácené serverem.\n"
 
-#: imap.c:1197 imap.c:1204
+#: imap.c:1190 imap.c:1197
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr "Chybná odpověď FETCH: %s.\n"
@@ -2063,7 +2062,7 @@ msgstr "od serveru přijato fatální\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Nemohu dekódovat výzvu OTP\n"
 
-#: opie.c:64 pop3.c:587
+#: opie.c:64 pop3.c:582
 msgid "Secret pass phrase: "
 msgstr "Tajné heslo: "
 
@@ -2407,7 +2406,7 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    zobrazovat tečky průběhu i v souborech se záznamy\n"
 
-#: pop3.c:328
+#: pop3.c:327
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2415,75 +2414,75 @@ msgstr ""
 "VAROVÁNÍ: Nalezen „Maillennium POP3/PROXY server“, použiji příkaz RETR "
 "namísto TOP.\n"
 
-#: pop3.c:412
+#: pop3.c:411
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr "Pro tuto relaci je TLS povinné, ale server odmítl příkaz CAPA.\n"
 
-#: pop3.c:413
+#: pop3.c:412
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr "Avšak příkaz CAPA je pro TLS nutný.\n"
 
-#: pop3.c:496
+#: pop3.c:491
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: dobrovolný přechod do TLS se nezdařil, zkouším pokračovat.\n"
 
-#: pop3.c:623
+#: pop3.c:618
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 "Vyčerpali jsme všechny povolené autentikátory, a tak nemůžeme pokračovat.\n"
 
-#: pop3.c:637
+#: pop3.c:632
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Požadovaný časový údaj APOP nebyl v pozdravu nalezen\n"
 
-#: pop3.c:646
+#: pop3.c:641
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Syntaktická chyba v časovém údaji z pozdravu\n"
 
-#: pop3.c:662
+#: pop3.c:657
 msgid "Invalid APOP timestamp.\n"
 msgstr "Neplatné časové razítko APOPu.\n"
 
-#: pop3.c:686
+#: pop3.c:681
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Žádost o nedefinovaný protokol v POP3_auth\n"
 
-#: pop3.c:707
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr "zamčeno! Je aktivní jiné sezení?\n"
 
-#: pop3.c:786
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Odpověď UIDL ze nadřazeného serveru nelze obsloužit.\n"
 
-#: pop3.c:809
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server odpověděl s UID chybné zprávy.\n"
 
-#: pop3.c:836
+#: pop3.c:831
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%u) bylo odstraněno, ale je stále přítomno!\n"
 
-#: pop3.c:942
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Zprávy vloženy do seznamu na serveru. To neumím zpracovat.\n"
 
-#: pop3.c:1038
+#: pop3.c:1033
 msgid "protocol error\n"
 msgstr "chyba protokolu\n"
 
-#: pop3.c:1054
+#: pop3.c:1049
 msgid "protocol error while fetching UIDLs\n"
 msgstr "chyba protokolu při stahování UIDL\n"
 
-#: pop3.c:1086
+#: pop3.c:1081
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) bylo odstraněno, ale je stále přítomno!\n"
 
-#: pop3.c:1424
+#: pop3.c:1419
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Přepínač --folder není s POP3 podporován\n"
 
@@ -2756,123 +2755,123 @@ msgstr "SMTP: (tělo hlášení o chybě)\n"
 msgid "mail from %s bounced to %s\n"
 msgstr "o zprávě od %s posláno hlášení o chybě %s\n"
 
-#: sink.c:458
+#: sink.c:456
 #, c-format
 msgid "Saved error is still %d\n"
 msgstr "Uložená chyba je stále %d\n"
 
-#: sink.c:518 sink.c:617
+#: sink.c:508 sink.c:607
 #, c-format
 msgid "%cMTP error: %s\n"
 msgstr "Chyba %cMTP: %s\n"
 
-#: sink.c:562
+#: sink.c:552
 msgid "SMTP server requires STARTTLS, keeping message.\n"
 msgstr "SMTP server vyžaduje STARTTLS, zpráva zadržena.\n"
 
-#: sink.c:745
+#: sink.c:735
 #, c-format
 msgid "BSMTP file open failed: %s\n"
 msgstr "Otevírání BSMTP souboru selhalo: %s\n"
 
-#: sink.c:791
+#: sink.c:781
 #, c-format
 msgid "BSMTP preamble write failed: %s.\n"
 msgstr "Zápis BSMTP preambule selhal: %s.\n"
 
-#: sink.c:1005
+#: sink.c:995
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "démonovi %cMTP se nelíbí adresa příjemce „%s“\n"
 
-#: sink.c:1012
+#: sink.c:1002
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr "démonovi %cMTP se opravdu nelíbí adresa příjemce „%s“\n"
 
-#: sink.c:1058
+#: sink.c:1048
 msgid "no address matches; no postmaster set.\n"
 msgstr "neodpovídá žádná adresa; nenastaven postmaster.\n"
 
-#: sink.c:1070
+#: sink.c:1060
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "nelze odeslat ani na %s!\n"
 
-#: sink.c:1076
+#: sink.c:1066
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "neodpovídá žádná adresa; přeposílám na %s.\n"
 
-#: sink.c:1232
+#: sink.c:1222
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "chystám se doručit pomocí: %s\n"
 
-#: sink.c:1243
+#: sink.c:1233
 #, c-format
 msgid "Cannot switch effective user id to %ld: %s\n"
 msgstr "Nelze změnit efektivní ID uživatele na %ld: %s\n"
 
-#: sink.c:1255
+#: sink.c:1245
 #, c-format
 msgid "Cannot switch effective user id back to original %ld: %s\n"
 msgstr "Efektivní ID uživatele nelze vrátit na původní hodnotu %ld: %s\n"
 
-#: sink.c:1262
+#: sink.c:1252
 msgid "MDA open failed\n"
 msgstr "otevírání MDA selhalo\n"
 
-#: sink.c:1301
+#: sink.c:1291
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "připojení%cMTP k %s selhalo\n"
 
-#: sink.c:1325
+#: sink.c:1315
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "nemohu se spustit démona; nahrazuji jej %s"
 
-#: sink.c:1383
+#: sink.c:1373
 #, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
 msgstr "Ukončení zprávy nebo zavření souboru BSMTP selhalo: %s\n"
 
-#: sink.c:1408
+#: sink.c:1398
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Chyba při zapisování do MDA: %s\n"
 
-#: sink.c:1411
+#: sink.c:1401
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA umřel na signál %d\n"
 
-#: sink.c:1414
+#: sink.c:1404
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA vrátil nenulový stav %d\n"
 
-#: sink.c:1417
+#: sink.c:1407
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr "Záhada: MDA pclose vrátil %d a errno %d/%s, nezle zpracovat v %s:%d\n"
 
-#: sink.c:1442
+#: sink.c:1432
 msgid "SMTP listener refused delivery\n"
 msgstr "Démon SMTP odmítl doručení\n"
 
-#: sink.c:1472
+#: sink.c:1462
 msgid "LMTP delivery error on EOM\n"
 msgstr "Chyba doručování LMTP při EOM\n"
 
-#: sink.c:1475
+#: sink.c:1465
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Neočekávaná odpověď na LMTP EOM jiná než 503: %s\n"
 
-#: sink.c:1630
+#: sink.c:1620
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
@@ -3162,22 +3161,22 @@ msgstr "Další pokus čtení ze socketu Cygwin\n"
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Další pokus čtení ze socketu Cygwin selhal!\n"
 
-#: transact.c:65
+#: transact.c:71
 #, c-format
 msgid "mapped address %s to local %s\n"
 msgstr "adresa %s mapována na místní %s\n"
 
-#: transact.c:87
+#: transact.c:93
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "%s mapováno na místní %s\n"
 
-#: transact.c:154
+#: transact.c:160
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "předáno %s, odpovídá %s\n"
 
-#: transact.c:224
+#: transact.c:230
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -3186,67 +3185,87 @@ msgstr ""
 "analyzuji řádek Received:\n"
 "%s"
 
-#: transact.c:263
+#: transact.c:269
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "řádek přijat, %s je přezdívka poštovního serveru\n"
 
-#: transact.c:269
+#: transact.c:275
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "řádek odmítnut, %s není přezdívka poštovního serveru\n"
 
-#: transact.c:343
+#: transact.c:349
 msgid "no Received address found\n"
 msgstr "nenalezena adresa Received\n"
 
-#: transact.c:352
+#: transact.c:358
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "nalezena adresa Received „%s“\n"
 
-#: transact.c:595
+#: transact.c:601
 msgid "incorrect header line found - see manpage for bad-header option\n"
 msgstr ""
 "nalezen neplatný řádek hlavičky – vizte volbu bad-header v manuálové "
 "stránce\n"
 
-#: transact.c:597
+#: transact.c:603
 #, c-format
 msgid "line: %s"
 msgstr "řádek: %s"
 
-#: transact.c:1137
+#: transact.c:1095 transact.c:1105
+#, c-format
+msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
+msgstr "V obálce „%s“ se rozebírají se názvy „%-.*s“\n"
+
+#: transact.c:1120
+#, c-format
+msgid "Parsing Received names \"%-.*s\"\n"
+msgstr "Rozebírají se názvy Received „%-.*s“\n"
+
+#: transact.c:1132
+msgid "No envelope recipient found, resorting to header guessing.\n"
+msgstr ""
+"V obálce nenalezen žádný příjemce, je třeba se uchýlit k hádání z hlavičky.\n"
+
+#: transact.c:1150
+#, c-format
+msgid "Guessing from header \"%-.*s\".\n"
+msgstr "Odhaduje se z hlavičky „%-.*s“.\n"
+
+#: transact.c:1165
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "nevyhovuje žádná místní adresa, přeposílám na %s\n"
 
-#: transact.c:1152
+#: transact.c:1180
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "přeposílání a odstraňování bylo zrušeno kvůli chybám DNS\n"
 
-#: transact.c:1263
+#: transact.c:1291
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "zapisuji RFC822 msgblk.headers\n"
 
-#: transact.c:1282
+#: transact.c:1310
 msgid "no recipient addresses matched declared local names"
 msgstr "žádné adresy příjemců neodpovídaly deklarovaným místním jménům"
 
-#: transact.c:1289
+#: transact.c:1317
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "adresa příjemce %s neodpovídala žádnému místnímu jménu"
 
-#: transact.c:1298
+#: transact.c:1326
 msgid "message has embedded NULs"
 msgstr "zpráva obsahuje vložené NUL"
 
-#: transact.c:1306
+#: transact.c:1334
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "démon SMTP odmítl adresy místních příjemců: "
 
-#: transact.c:1445
+#: transact.c:1473
 msgid "error writing message text\n"
 msgstr "chyba při zápisu textu zprávy\n"
 
