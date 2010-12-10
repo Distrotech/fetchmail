@@ -16,6 +16,7 @@ soon - MUST:
   Postfix virtual users" around 2009-09-23 on fetchmail-users@).
 
 soon - SHOULD:
+- support NIL and strings where they are alternatives to literals
 - Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
   seems non-trivial to fix: in imap_idle(), we wait for untagged
   responses, and may be deep in SSL_peek -- and that restarts the
