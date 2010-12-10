@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-10-09 13:33+0200\n"
+"POT-Creation-Date: 2010-12-05 01:17+0100\n"
 "PO-Revision-Date: 2010-05-03 05:29+0700\n"
 "Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -1637,69 +1637,69 @@ msgstr ""
 msgid "GSSAPI error %s: %.*s\n"
 msgstr "Galat %cMTP: %s\n"
 
-#: gssapi.c:89
+#: gssapi.c:90
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "Tak mendapatkan nama layanan untuk [%s]\n"
 
-#: gssapi.c:94
+#: gssapi.c:95
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "Menggunakan nama layanan [%s]\n"
 
-#: gssapi.c:121
+#: gssapi.c:122
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
 
-#: gssapi.c:122
+#: gssapi.c:123
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
 
-#: gssapi.c:158
+#: gssapi.c:159
 #, c-format
 msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
 msgstr ""
 
-#: gssapi.c:168
+#: gssapi.c:169
 msgid "Sending credentials\n"
 msgstr "Mengirim kredensial\n"
 
-#: gssapi.c:199
+#: gssapi.c:200
 msgid "Error exchanging credentials\n"
 msgstr "Galat menukar kredential\n"
 
-#: gssapi.c:241
+#: gssapi.c:242
 msgid "Couldn't unwrap security level data\n"
 msgstr "Tak dapat membongkar level keamanan data\n"
 
-#: gssapi.c:246
+#: gssapi.c:247
 msgid "Credential exchange complete\n"
 msgstr "Penukaran kredensial selesai\n"
 
-#: gssapi.c:250
+#: gssapi.c:251
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Server memerlukan integritas dan/atau privasi\n"
 
-#: gssapi.c:259
+#: gssapi.c:260
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Bendera level keamanan terbongkar: %s%s%s\n"
 
-#: gssapi.c:263
+#: gssapi.c:264
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "Ukuran token GSS maksmimum adalah %ld\n"
 
-#: gssapi.c:276
+#: gssapi.c:277
 msgid "Error creating security level request\n"
 msgstr "Galat membuat permintaan level kemanan.\n"
 
-#: gssapi.c:287
+#: gssapi.c:288
 msgid "Releasing GSS credentials\n"
 msgstr "Membebaskan kredensial GSS\n"
 
-#: gssapi.c:291
+#: gssapi.c:292
 msgid "Error releasing credentials\n"
 msgstr "Galat membebaskan kredensial\n"
 
@@ -1739,95 +1739,95 @@ msgstr "Protokol teridentifkasi sebagai IMAP2 atau IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "akan siaga setelah penjajakan\n"
 
-#: imap.c:464 pop3.c:476
+#: imap.c:461 pop3.c:475
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: pemutakhiran ke TLS sukses.\n"
 
-#: imap.c:473 pop3.c:485
+#: imap.c:466 pop3.c:480
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: pemutakhiran ke TLS gagal.\n"
 
-#: imap.c:477
+#: imap.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: pemutakhiran oportunistik ke TLS gagal, coba melanjutkan\n"
 
-#: imap.c:593
+#: imap.c:586
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Kemampuan OTP yang diperlukan tidak dikompilasi ke fetchmail\n"
 
-#: imap.c:613 pop3.c:560
+#: imap.c:606 pop3.c:555
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Kemampuan NTLM yang diperlukan tidak dikompilasi ke fetchmail\n"
 
-#: imap.c:622
+#: imap.c:615
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Kemampuan LOGIN yang diperlukan tidak dikompilasi oleh server\n"
 
-#: imap.c:686
+#: imap.c:679
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "penghapusan surat tidak cocok (%d sebenarnya != %d diharapkan)\n"
 
-#: imap.c:825
+#: imap.c:818
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu tak terlihat\n"
 
-#: imap.c:889 pop3.c:845 pop3.c:857 pop3.c:1095 pop3.c:1102
+#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u sekarang tak terlihat\n"
 
-#: imap.c:924 imap.c:983
+#: imap.c:917 imap.c:976
 msgid "re-poll failed\n"
 msgstr "penjajakan ulang gagal\n"
 
-#: imap.c:932 imap.c:988
+#: imap.c:925 imap.c:981
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d pesan menunggu setelah penjajakan ulang\n"
 
-#: imap.c:949
+#: imap.c:942
 msgid "mailbox selection failed\n"
 msgstr "pemilihan kotak surat gagal\n"
 
-#: imap.c:953
+#: imap.c:946
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d pesan menunggu setelah penjajakan pertama\n"
 
-#: imap.c:967
+#: imap.c:960
 msgid "expunge failed\n"
 msgstr "penghapusan gagal\n"
 
-#: imap.c:971
+#: imap.c:964
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d pesan menunggu setelah penghapusan\n"
 
-#: imap.c:1010
+#: imap.c:1003
 msgid "search for unseen messages failed\n"
 msgstr "penelusuran pesan tak terlihat gagal\n"
 
-#: imap.c:1015 pop3.c:866
+#: imap.c:1008 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u pertama kali tak terlihat\n"
 
-#: imap.c:1099
+#: imap.c:1092
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 "Peringatan: mengabaikan data palsu untuk ukuran pesan yang dikembalikan oleh "
 "server.\n"
 
-#: imap.c:1197 imap.c:1204
+#: imap.c:1190 imap.c:1197
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr ""
@@ -2022,7 +2022,7 @@ msgstr "server recv fatal\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Tak dapat mengawasandi tantangan OTP\n"
 
-#: opie.c:64 pop3.c:587
+#: opie.c:64 pop3.c:582
 msgid "Secret pass phrase: "
 msgstr "Frasa sandi rahasia:"
 
@@ -2365,7 +2365,7 @@ msgstr "  -r, --folder      tentukan nama folder jarak jauh\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    tampilkan titik proses bahkan di berkas catatan\n"
 
-#: pop3.c:328
+#: pop3.c:327
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2373,75 +2373,75 @@ msgstr ""
 "Peringatan: \"server Maillennium POP3/PROXY\" ditemukan, gunakan perintah "
 "RETR ketimbang TOP.\n"
 
-#: pop3.c:412
+#: pop3.c:411
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr ""
 "TLS merupakan keharusan untuk sesi ini, tapi server menolak perintah CAPA.\n"
 
-#: pop3.c:413
+#: pop3.c:412
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr "Perintah CAPA diperlukan untuk TLS.\n"
 
-#: pop3.c:496
+#: pop3.c:491
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: pemutakhiran oportunistik ke TLS gagal, coba melanjutkan.\n"
 
-#: pop3.c:623
+#: pop3.c:618
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr "Kami kehabisan otentikator yang diizinkan dan tak dapat melanjutkan.\n"
 
-#: pop3.c:637
+#: pop3.c:632
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Stempel waktu APOP yang diperlukan tak ditemukan dalam perkenalan\n"
 
-#: pop3.c:646
+#: pop3.c:641
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Galat sintaks stempel waktu dalam perkenalan\n"
 
-#: pop3.c:662
+#: pop3.c:657
 msgid "Invalid APOP timestamp.\n"
 msgstr "Stempel waktu APOP tidak sah.\n"
 
-#: pop3.c:686
+#: pop3.c:681
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Permintaan protokol tak didefinisikan di POP3_auth\n"
 
-#: pop3.c:707
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr "kunci sibuk! Apakah sesi lain aktif?\n"
 
-#: pop3.c:786
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Tak dapat menangani repson UIDL dari server upstream.\n"
 
-#: pop3.c:809
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server menjawab dengan UID untuk pesan salah.\n"
 
-#: pop3.c:836
+#: pop3.c:831
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (num=%u) dihapus, tapi masih ada!\n"
 
-#: pop3.c:942
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Pesan dimasukkan dalam senarai pada server. Tak dapat menangani ini.\n"
 
-#: pop3.c:1038
+#: pop3.c:1033
 msgid "protocol error\n"
 msgstr "galat protokol\n"
 
-#: pop3.c:1054
+#: pop3.c:1049
 msgid "protocol error while fetching UIDLs\n"
 msgstr "galat protokol ketika mengambil UIDL\n"
 
-#: pop3.c:1086
+#: pop3.c:1081
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) dihapus, tapi masih ada!\n"
 
-#: pop3.c:1424
+#: pop3.c:1419
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Opsi --folder tidak didukung dengan POP3\n"
 
@@ -2715,104 +2715,104 @@ msgstr "SMTP: (tubuh pesan-pantul)\n"
 msgid "mail from %s bounced to %s\n"
 msgstr "pesan dari %s dipantulkan ke %s\n"
 
-#: sink.c:458
+#: sink.c:456
 #, c-format
 msgid "Saved error is still %d\n"
 msgstr "Galat tersimpan masih %d\n"
 
-#: sink.c:518 sink.c:617
+#: sink.c:508 sink.c:607
 #, c-format
 msgid "%cMTP error: %s\n"
 msgstr "Galat %cMTP: %s\n"
 
-#: sink.c:562
+#: sink.c:552
 msgid "SMTP server requires STARTTLS, keeping message.\n"
 msgstr "Server SMTP memerlukan STARTTLS, menyimpan pesan.\n"
 
-#: sink.c:745
+#: sink.c:735
 #, c-format
 msgid "BSMTP file open failed: %s\n"
 msgstr "Buka berkas BSMTP gagal: %s\n"
 
-#: sink.c:791
+#: sink.c:781
 #, c-format
 msgid "BSMTP preamble write failed: %s.\n"
 msgstr "Penulisan preambul BSMTP gagal: %s.\n"
 
-#: sink.c:1005
+#: sink.c:995
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "Pendengar %cMTP tidak menyukai alamat penerima `%s'\n"
 
-#: sink.c:1012
+#: sink.c:1002
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr "Pendengar %cMTP sangat tidak menyukai alamat penerima `%s'\n"
 
-#: sink.c:1058
+#: sink.c:1048
 msgid "no address matches; no postmaster set.\n"
 msgstr "tak ada alamat yang cocok; tak ada tuan pos yang diatur.\n"
 
-#: sink.c:1070
+#: sink.c:1060
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "bahkan tak dapat mengirim ke %s!\n"
 
-#: sink.c:1076
+#: sink.c:1066
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "tak ada kecocokan alamat; meneruskan ke %s.\n"
 
-#: sink.c:1232
+#: sink.c:1222
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "akan mengantarkan dengan: %s\n"
 
-#: sink.c:1243
+#: sink.c:1233
 #, c-format
 msgid "Cannot switch effective user id to %ld: %s\n"
 msgstr "Tak dapat mengganti id pengguna efektif ke %ld: %s\n"
 
-#: sink.c:1255
+#: sink.c:1245
 #, c-format
 msgid "Cannot switch effective user id back to original %ld: %s\n"
 msgstr "Tak dapat mengganti id pengguna efektif kembali ke %ld asli: %s\n"
 
-#: sink.c:1262
+#: sink.c:1252
 msgid "MDA open failed\n"
 msgstr "Buka MDA gagal\n"
 
-#: sink.c:1301
+#: sink.c:1291
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "Sambungan %cMTP ke %s gagal\n"
 
-#: sink.c:1325
+#: sink.c:1315
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "tak dapat menaikkan pendengar; mengembalikan ke %s"
 
-#: sink.c:1383
+#: sink.c:1373
 #, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
 msgstr "Penghapusan pesan atau penutupan berkas BSMTP gagal: %s\n"
 
-#: sink.c:1408
+#: sink.c:1398
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Galat menulis ke MDA: %s\n"
 
-#: sink.c:1411
+#: sink.c:1401
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA mati karena sinyal %d\n"
 
-#: sink.c:1414
+#: sink.c:1404
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA mengembalikan status tidak nol %d\n"
 
-#: sink.c:1417
+#: sink.c:1407
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
@@ -2820,21 +2820,21 @@ msgstr ""
 "Aneh: MDA pclose mengembalikan %d dan errno %d/%s, tak dapat menangani di %s:"
 "%d\n"
 
-#: sink.c:1442
+#: sink.c:1432
 msgid "SMTP listener refused delivery\n"
 msgstr "Pendengar SMTP menolak kiriman.\n"
 
-#: sink.c:1472
+#: sink.c:1462
 msgid "LMTP delivery error on EOM\n"
 msgstr "Galat kiriman LMTP pada akhir pesan\n"
 
-#: sink.c:1475
+#: sink.c:1465
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr ""
 "Balasan bukan-503 yang tidak diharapkan terhadap akhir pesan LMTP: %s\n"
 
-#: sink.c:1630
+#: sink.c:1620
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
@@ -3124,22 +3124,22 @@ msgstr "Coba ulang baca soket Cygwin\n"
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Coba ulang baca soket Cygwin gagal!\n"
 
-#: transact.c:65
+#: transact.c:71
 #, c-format
 msgid "mapped address %s to local %s\n"
 msgstr "memetakan alamat %s ke lokal %s\n"
 
-#: transact.c:87
+#: transact.c:93
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "memetakan %s ke lokal %s\n"
 
-#: transact.c:154
+#: transact.c:160
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "dilewati melalui %s mencocokkan %s\n"
 
-#: transact.c:224
+#: transact.c:230
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -3148,67 +3148,88 @@ msgstr ""
 "menganalisan baris Diterima:\n"
 "%s"
 
-#: transact.c:263
+#: transact.c:269
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "baris diterima, %s merupakan alias server surat\n"
 
-#: transact.c:269
+#: transact.c:275
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "baris ditolak, %s bukan alias dari server surat\n"
 
-#: transact.c:343
+#: transact.c:349
 msgid "no Received address found\n"
 msgstr "tak ada alamat Diterima yang ditemukan\n"
 
-#: transact.c:352
+#: transact.c:358
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "menemukan alamat Diterima `%s'\n"
 
-#: transact.c:595
+#: transact.c:601
 #, fuzzy
 msgid "incorrect header line found - see manpage for bad-header option\n"
 msgstr "baris tajuk tak benar ditemukan ketika memindai tajuk\n"
 
-#: transact.c:597
+#: transact.c:603
 #, c-format
 msgid "line: %s"
 msgstr "baris: %s"
 
-#: transact.c:1137
+#: transact.c:1095 transact.c:1105
+#, c-format
+msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
+msgstr ""
+
+#: transact.c:1120
+#, fuzzy, c-format
+msgid "Parsing Received names \"%-.*s\"\n"
+msgstr ""
+"menganalisan baris Diterima:\n"
+"%s"
+
+#: transact.c:1132
+msgid "No envelope recipient found, resorting to header guessing.\n"
+msgstr ""
+
+#: transact.c:1150
+#, c-format
+msgid "Guessing from header \"%-.*s\".\n"
+msgstr ""
+
+#: transact.c:1165
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "tak ada lokal yang cocok, meneruskan ke %s\n"
 
-#: transact.c:1152
+#: transact.c:1180
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "meneruskan dan menghapus ditekan karena galat DNS\n"
 
-#: transact.c:1263
+#: transact.c:1291
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "menulis RFC822 msgblk.headers\n"
 
-#: transact.c:1282
+#: transact.c:1310
 msgid "no recipient addresses matched declared local names"
 msgstr ""
 "tak ada alamat penerima yang cocok dengan nama lokal yang dideklarasikan"
 
-#: transact.c:1289
+#: transact.c:1317
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "alamat penerima %s tidak cocok dengan nama lokal apapun"
 
-#: transact.c:1298
+#: transact.c:1326
 msgid "message has embedded NULs"
 msgstr "pesan memiliki NUL tertanam"
 
-#: transact.c:1306
+#: transact.c:1334
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Pendengar SMTP menolak alamat penerima lokal: "
 
-#: transact.c:1445
+#: transact.c:1473
 msgid "error writing message text\n"
 msgstr "galat menulis teks pesan\n"
 

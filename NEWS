@@ -54,7 +54,7 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail-6.3.19 (not yet released):
+fetchmail-6.3.19 (released 2010-12-10, 25945 LoC):
 
 # ERRATUM NOTICE ISSUED
 * fetchmail 6.3.18 contains several bug fixes that were considered sufficiently

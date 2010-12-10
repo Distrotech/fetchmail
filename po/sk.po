@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.18-pre2\n"
+"Project-Id-Version: fetchmail 6.3.18\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-10-09 13:33+0200\n"
-"PO-Revision-Date: 2010-09-26 18:23+0200\n"
+"POT-Creation-Date: 2010-12-05 01:17+0100\n"
+"PO-Revision-Date: 2010-10-15 10:55+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -363,8 +363,8 @@ msgid ""
 msgstr ""
 "Pokus o autorizáciu bol neúspešný.\n"
 "Znamená to pravdepodobne, že vaše heslo je neplatné, avšak niektoré\n"
-"servre majú iné chybové módy, ktoré fetchmail nevie rozpoznať,\n"
-"pretože servre neposlali potrebné chybové hlásenia ohľadom prihlásenia.\n"
+"servery majú iné chybové módy, ktoré fetchmail nevie rozpoznať,\n"
+"pretože servery neposlali potrebné chybové hlásenia ohľadom prihlásenia.\n"
 "\n"
 "Fetchmail démon bude naďalej pokračovať v práci a bude sa pokúšať\n"
 "o spojenie. Ďalšie upozornenia nebudú zasielané, pokiaľ služba\n"
@@ -484,7 +484,7 @@ msgstr "protokol klient/server"
 
 #: driver.c:1564
 msgid "lock busy on server"
-msgstr "zámok na servri zaneprázdnený"
+msgstr "zámok na serveri zaneprázdnený"
 
 #: driver.c:1567
 msgid "SMTP transaction"
@@ -718,7 +718,7 @@ msgstr " a "
 #: fetchmail.c:414
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
-msgstr "Nie sú nastavené poštové severy -- možno chýba %s?\n"
+msgstr "Nie sú nastavené poštové servery -- možno chýba %s?\n"
 
 #: fetchmail.c:435
 msgid "fetchmail: no mailservers have been specified.\n"
@@ -1122,8 +1122,8 @@ msgstr "  Pošta bude získaná cez %s\n"
 #, fuzzy, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
-msgstr[0] "  Dotazovanie tohoto servra bude vykonané každé %d intervaly.\n"
-msgstr[1] "  Dotazovanie tohoto servra bude vykonané každé %d intervaly.\n"
+msgstr[0] "  Dotazovanie tohoto servera bude vykonané každé %d intervaly.\n"
+msgstr[1] "  Dotazovanie tohoto servera bude vykonané každé %d intervaly.\n"
 
 #: fetchmail.c:1594
 #, c-format
@@ -1266,7 +1266,7 @@ msgstr "  Odtlačok SSL kľúča (kontrolovaný oproti kľúču servera): %s\n"
 #: fetchmail.c:1686
 #, fuzzy, c-format
 msgid "  Server nonresponse timeout is %d seconds"
-msgstr "  Časový limit pre ne-odpovedanie servra je %d sekúnd"
+msgstr "  Časový limit pre ne-odpovedanie servera je %d sekúnd"
 
 #: fetchmail.c:1688
 #, fuzzy
@@ -1326,12 +1326,12 @@ msgstr ""
 #: fetchmail.c:1718
 #, fuzzy
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
-msgstr "  Prepis lokálnej adresy servra je %s (--norewrite %s).\n"
+msgstr "  Prepis lokálnej adresy servera je %s (--norewrite %s).\n"
 
 #: fetchmail.c:1719
 #, fuzzy
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
-msgstr "  Prepis lokálnej adresy servra je %s (--norewrite %s).\n"
+msgstr "  Prepis lokálnej adresy servera je %s (--norewrite %s).\n"
 
 #: fetchmail.c:1721
 #, fuzzy
@@ -1524,7 +1524,7 @@ msgstr "  SPAM-blokovanie vypnuté\n"
 #: fetchmail.c:1840
 #, fuzzy, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
-msgstr "  Spojenie so servrom bude aktivované s \"%s\".\n"
+msgstr "  Spojenie so serverom bude aktivované s \"%s\".\n"
 
 #: fetchmail.c:1843
 msgid "  No pre-connection command.\n"
@@ -1575,12 +1575,12 @@ msgstr "  DNS vyhľadávanie pre multi-drop adresy je %s.\n"
 #, fuzzy
 msgid ""
 "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr "  Prezývky servra budú porovnávané s multi-drop adresami pomocou "
+msgstr "  Prezývky servera budú porovnávané s multi-drop adresami pomocou "
 
 #: fetchmail.c:1887
 #, fuzzy
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
-msgstr "  Prezývky servra budú porovnávané s multi-drop adresami pomocou "
+msgstr "  Prezývky servera budú porovnávané s multi-drop adresami pomocou "
 
 #: fetchmail.c:1890
 #, fuzzy
@@ -1610,7 +1610,7 @@ msgstr "  Žiadne odstránenie prefixu\n"
 #: fetchmail.c:1907
 #, fuzzy
 msgid "  Predeclared mailserver aliases:"
-msgstr "  Preddeklarované prezývky poštového servra:"
+msgstr "  Preddeklarované prezývky poštového servera:"
 
 #: fetchmail.c:1915
 #, fuzzy
@@ -1717,74 +1717,74 @@ msgstr ""
 msgid "GSSAPI error %s: %.*s\n"
 msgstr ""
 
-#: gssapi.c:89
+#: gssapi.c:90
 #, fuzzy, c-format
 msgid "Couldn't get service name for [%s]\n"
 msgstr "Nemôžem získať názov služby pre [%s]\n"
 
-#: gssapi.c:94
+#: gssapi.c:95
 #, c-format
 msgid "Using service name [%s]\n"
 msgstr "Používa sa názov služby [%s]\n"
 
-#: gssapi.c:121
+#: gssapi.c:122
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
 
-#: gssapi.c:122
+#: gssapi.c:123
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
 
-#: gssapi.c:158
+#: gssapi.c:159
 #, c-format
 msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
 msgstr ""
 
-#: gssapi.c:168
+#: gssapi.c:169
 #, fuzzy
 msgid "Sending credentials\n"
 msgstr "Posielam osobné údaje\n"
 
-#: gssapi.c:199
+#: gssapi.c:200
 #, fuzzy
 msgid "Error exchanging credentials\n"
 msgstr "Chyba pri výmene osobných údajov\n"
 
-#: gssapi.c:241
+#: gssapi.c:242
 #, fuzzy
 msgid "Couldn't unwrap security level data\n"
 msgstr "Nemôžem rozbaliť dáta bezpečnostnej úrovne\n"
 
-#: gssapi.c:246
+#: gssapi.c:247
 #, fuzzy
 msgid "Credential exchange complete\n"
 msgstr "Výmena osobných údajov kompletná\n"
 
-#: gssapi.c:250
+#: gssapi.c:251
 msgid "Server requires integrity and/or privacy\n"
 msgstr "Server vyžaduje integritu a/alebo súkromie\n"
 
-#: gssapi.c:259
+#: gssapi.c:260
 #, fuzzy, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
 msgstr "Rozbalené príznaky bezpečnostnej úrovne: %s%s%s\n"
 
-#: gssapi.c:263
+#: gssapi.c:264
 #, fuzzy, c-format
 msgid "Maximum GSS token size is %ld\n"
 msgstr "Maximálna veľkosť GSS symbolu je %ld\n"
 
-#: gssapi.c:276
+#: gssapi.c:277
 msgid "Error creating security level request\n"
 msgstr "Chyba pri vytváraní žiadosti bezpečnostnej úrovne\n"
 
-#: gssapi.c:287
+#: gssapi.c:288
 #, fuzzy
 msgid "Releasing GSS credentials\n"
 msgstr "Uvoľňujem osobné údaje GSS\n"
 
-#: gssapi.c:291
+#: gssapi.c:292
 #, fuzzy
 msgid "Error releasing credentials\n"
 msgstr "Chyba pri uvoľňovaní osobných údajov\n"
@@ -1826,102 +1826,102 @@ msgstr "Protokol identifikovaný ako IMAP2 alebo IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "bude nečinný po stiahnutí\n"
 
-#: imap.c:464 pop3.c:476
+#: imap.c:461 pop3.c:475
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr ""
 
-#: imap.c:473 pop3.c:485
+#: imap.c:466 pop3.c:480
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr ""
 
-#: imap.c:477
+#: imap.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 
-#: imap.c:593
+#: imap.c:586
 #, fuzzy
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Požadovaná funkcia OTP nebola preložená do fetchmail-u\n"
 
-#: imap.c:613 pop3.c:560
+#: imap.c:606 pop3.c:555
 #, fuzzy
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Požadovaná funkcia NTLM nebola preložená do fetchmail-u\n"
 
-#: imap.c:622
+#: imap.c:615
 #, fuzzy
 msgid "Required LOGIN capability not supported by server\n"
-msgstr "Požadovaná funkcia LOGIN nie je podporovaná servrom\n"
+msgstr "Požadovaná funkcia LOGIN nie je podporovaná serverom\n"
 
-#: imap.c:686
+#: imap.c:679
 #, fuzzy, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "správa %s@%s:%d nemala očakávanú dĺžku (%d aktuálne != %d očakávané)\n"
 
-#: imap.c:825
+#: imap.c:818
 #, fuzzy, c-format
 msgid "%lu is unseen\n"
 msgstr "%u je neprečítaných\n"
 
-#: imap.c:889 pop3.c:845 pop3.c:857 pop3.c:1095 pop3.c:1102
+#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
 #, fuzzy, c-format
 msgid "%u is unseen\n"
 msgstr "%u je neprečítaných\n"
 
-#: imap.c:924 imap.c:983
+#: imap.c:917 imap.c:976
 #, fuzzy
 msgid "re-poll failed\n"
 msgstr "stiahnutie zlyhalo\n"
 
-#: imap.c:932 imap.c:988
+#: imap.c:925 imap.c:981
 #, fuzzy, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d správ čaká po stiahnutí\n"
 msgstr[1] "%d správ čaká po stiahnutí\n"
 
-#: imap.c:949
+#: imap.c:942
 msgid "mailbox selection failed\n"
 msgstr "výber poštového priečinka zlyhal\n"
 
-#: imap.c:953
+#: imap.c:946
 #, fuzzy, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d správ čaká po prvom stiahnutí\n"
 msgstr[1] "%d správ čaká po prvom stiahnutí\n"
 
-#: imap.c:967
+#: imap.c:960
 #, fuzzy
 msgid "expunge failed\n"
 msgstr "vymazanie zlyhalo\n"
 
-#: imap.c:971
+#: imap.c:964
 #, fuzzy, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d správ čaká po prvom vymazaní\n"
 msgstr[1] "%d správ čaká po prvom vymazaní\n"
 
-#: imap.c:1010
+#: imap.c:1003
 #, fuzzy
 msgid "search for unseen messages failed\n"
 msgstr "vyhľadávanie neprečítaných správ zlyhalo\n"
 
-#: imap.c:1015 pop3.c:866
+#: imap.c:1008 pop3.c:861
 #, fuzzy, c-format
 msgid "%u is first unseen\n"
 msgstr "%u je prvá neprečítaná\n"
 
-#: imap.c:1099
+#: imap.c:1092
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 
-#: imap.c:1197 imap.c:1204
+#: imap.c:1190 imap.c:1197
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr ""
@@ -2122,7 +2122,7 @@ msgstr ""
 msgid "Could not decode OTP challenge\n"
 msgstr "Nepodarilo sa dekódovať OTP výzvu\n"
 
-#: opie.c:64 pop3.c:587
+#: opie.c:64 pop3.c:582
 msgid "Secret pass phrase: "
 msgstr "Tajné heslo: "
 
@@ -2451,80 +2451,80 @@ msgstr ""
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 
-#: pop3.c:328
+#: pop3.c:327
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
 
-#: pop3.c:412
+#: pop3.c:411
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr ""
 
-#: pop3.c:413
+#: pop3.c:412
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr ""
 
-#: pop3.c:496
+#: pop3.c:491
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
 
-#: pop3.c:623
+#: pop3.c:618
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 
-#: pop3.c:637
+#: pop3.c:632
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr ""
 
-#: pop3.c:646
+#: pop3.c:641
 msgid "Timestamp syntax error in greeting\n"
 msgstr ""
 
-#: pop3.c:662
+#: pop3.c:657
 msgid "Invalid APOP timestamp.\n"
 msgstr ""
 
-#: pop3.c:686
+#: pop3.c:681
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr ""
 
-#: pop3.c:707
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr ""
 
-#: pop3.c:786
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:809
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:836
+#: pop3.c:831
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:942
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 
-#: pop3.c:1038
+#: pop3.c:1033
 msgid "protocol error\n"
 msgstr "chyba protokolu\n"
 
-#: pop3.c:1054
+#: pop3.c:1049
 msgid "protocol error while fetching UIDLs\n"
 msgstr ""
 
-#: pop3.c:1086
+#: pop3.c:1081
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:1424
+#: pop3.c:1419
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Voľba --folder nie je podporovaná s POP3\n"
 
@@ -2794,123 +2794,123 @@ msgstr ""
 msgid "mail from %s bounced to %s\n"
 msgstr ""
 
-#: sink.c:458
+#: sink.c:456
 #, c-format
 msgid "Saved error is still %d\n"
 msgstr ""
 
-#: sink.c:518 sink.c:617
+#: sink.c:508 sink.c:607
 #, c-format
 msgid "%cMTP error: %s\n"
 msgstr ""
 
-#: sink.c:562
+#: sink.c:552
 msgid "SMTP server requires STARTTLS, keeping message.\n"
 msgstr ""
 
-#: sink.c:745
+#: sink.c:735
 #, c-format
 msgid "BSMTP file open failed: %s\n"
 msgstr "Otvorenie súboru BSMTP zlyhalo: %s\n"
 
-#: sink.c:791
+#: sink.c:781
 #, c-format
 msgid "BSMTP preamble write failed: %s.\n"
 msgstr ""
 
-#: sink.c:1005
+#: sink.c:995
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr ""
 
-#: sink.c:1012
+#: sink.c:1002
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr ""
 
-#: sink.c:1058
+#: sink.c:1048
 msgid "no address matches; no postmaster set.\n"
 msgstr ""
 
-#: sink.c:1070
+#: sink.c:1060
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr ""
 
-#: sink.c:1076
+#: sink.c:1066
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr ""
 
-#: sink.c:1232
+#: sink.c:1222
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr ""
 
-#: sink.c:1243
+#: sink.c:1233
 #, c-format
 msgid "Cannot switch effective user id to %ld: %s\n"
 msgstr ""
 
-#: sink.c:1255
+#: sink.c:1245
 #, c-format
 msgid "Cannot switch effective user id back to original %ld: %s\n"
 msgstr ""
 
-#: sink.c:1262
+#: sink.c:1252
 msgid "MDA open failed\n"
 msgstr ""
 
-#: sink.c:1301
+#: sink.c:1291
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr ""
 
-#: sink.c:1325
+#: sink.c:1315
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr ""
 
-#: sink.c:1383
+#: sink.c:1373
 #, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
 msgstr ""
 
-#: sink.c:1408
+#: sink.c:1398
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr ""
 
-#: sink.c:1411
+#: sink.c:1401
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr ""
 
-#: sink.c:1414
+#: sink.c:1404
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr ""
 
-#: sink.c:1417
+#: sink.c:1407
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr ""
 
-#: sink.c:1442
+#: sink.c:1432
 msgid "SMTP listener refused delivery\n"
 msgstr ""
 
-#: sink.c:1472
+#: sink.c:1462
 msgid "LMTP delivery error on EOM\n"
 msgstr ""
 
-#: sink.c:1475
+#: sink.c:1465
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr ""
 
-#: sink.c:1630
+#: sink.c:1620
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
@@ -3188,22 +3188,22 @@ msgstr ""
 msgid "Cygwin socket read retry failed!\n"
 msgstr ""
 
-#: transact.c:65
+#: transact.c:71
 #, c-format
 msgid "mapped address %s to local %s\n"
 msgstr ""
 
-#: transact.c:87
+#: transact.c:93
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr ""
 
-#: transact.c:154
+#: transact.c:160
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr ""
 
-#: transact.c:224
+#: transact.c:230
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -3212,71 +3212,92 @@ msgstr ""
 "analýza riadka Received:\n"
 "%s"
 
-#: transact.c:263
-#, fuzzy, c-format
-msgid "line accepted, %s is an alias of the mailserver\n"
-msgstr "riadok akceptovaný, %s je alias poštového servra\n"
-
 #: transact.c:269
 #, fuzzy, c-format
-msgid "line rejected, %s is not an alias of the mailserver\n"
-msgstr "riadok zamietnutý, %s nie je alias poštového servra\n"
+msgid "line accepted, %s is an alias of the mailserver\n"
+msgstr "riadok akceptovaný, %s je alias poštového servera\n"
 
-#: transact.c:343
+#: transact.c:275
+#, fuzzy, c-format
+msgid "line rejected, %s is not an alias of the mailserver\n"
+msgstr "riadok zamietnutý, %s nie je alias poštového servera\n"
+
+#: transact.c:349
 msgid "no Received address found\n"
 msgstr "nenájdená adresa Received\n"
 
-#: transact.c:352
+#: transact.c:358
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "nájdená adresa Received `%s'\n"
 
-#: transact.c:595
+#: transact.c:601
 #, fuzzy
 msgid "incorrect header line found - see manpage for bad-header option\n"
 msgstr "nesprávny riadok hlavičky nájdený pri prezeraní hlavičiek\n"
 
-#: transact.c:597
+#: transact.c:603
 #, c-format
 msgid "line: %s"
 msgstr "riadok: %s"
 
-#: transact.c:1137
+#: transact.c:1095 transact.c:1105
+#, c-format
+msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
+msgstr ""
+
+#: transact.c:1120
+#, fuzzy, c-format
+msgid "Parsing Received names \"%-.*s\"\n"
+msgstr ""
+"analýza riadka Received:\n"
+"%s"
+
+#: transact.c:1132
+msgid "No envelope recipient found, resorting to header guessing.\n"
+msgstr ""
+
+#: transact.c:1150
+#, c-format
+msgid "Guessing from header \"%-.*s\".\n"
+msgstr ""
+
+#: transact.c:1165
 #, fuzzy, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "žiadne lokálne zhody, posielam na %s\n"
 
-#: transact.c:1152
+#: transact.c:1180
 #, fuzzy
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "odoslanie a zmazanie odložené kvôli DNS chybám\n"
 
-#: transact.c:1263
+#: transact.c:1291
 #, fuzzy
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "zápis msgblk.hlavičiek RFC822\n"
 
-#: transact.c:1282
+#: transact.c:1310
 #, fuzzy
 msgid "no recipient addresses matched declared local names"
 msgstr "žiadna adresa príjemcu nezodpovedá zadaným lokálnym menám"
 
-#: transact.c:1289
+#: transact.c:1317
 #, fuzzy, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "adresa príjemcu %s nezodpovedá žiadnemu lokálnemu menu"
 
-#: transact.c:1298
+#: transact.c:1326
 #, fuzzy
 msgid "message has embedded NULs"
 msgstr "správa obsahuje NUL-y"
 
-#: transact.c:1306
+#: transact.c:1334
 #, fuzzy
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP prijímač zamietol lokálne adresy príjemcu: "
 
-#: transact.c:1445
+#: transact.c:1473
 #, fuzzy
 msgid "error writing message text\n"
 msgstr "zápis textu správy\n"
