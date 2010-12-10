@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: fetchmail 6.3.18-pre2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2010-12-05 01:17+0100\n"
-"PO-Revision-Date: 2010-09-27 13:38+0200\n"
+"PO-Revision-Date: 2010-12-10 14:20+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -3253,23 +3253,21 @@ msgstr "Zeile: %s"
 #: transact.c:1095 transact.c:1105
 #, c-format
 msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
-msgstr ""
+msgstr "Analysiere Umschlag \"%s\" Namen \"%-.*s\"\n"
 
 #: transact.c:1120
-#, fuzzy, c-format
+#, c-format
 msgid "Parsing Received names \"%-.*s\"\n"
-msgstr ""
-"Received-Zeile wird überprüft:\n"
-"%s"
+msgstr "Received-Kopfzeile \"%-.*s\" wird analysiert\n"
 
 #: transact.c:1132
 msgid "No envelope recipient found, resorting to header guessing.\n"
-msgstr ""
+msgstr "Kein Empfänger auf dem Umschlag gefunden, muss anhand der Kopfzeilen raten.\n"
 
 #: transact.c:1150
 #, c-format
 msgid "Guessing from header \"%-.*s\".\n"
-msgstr ""
+msgstr "Rate anhand der Kopfzeile \"%-.*s\".\n"
 
 #: transact.c:1165
 #, c-format
@@ -3381,6 +3379,3 @@ msgstr "malloc fehlgeschlagen\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc fehlgeschlagen\n"
-
-#~ msgid "(null)"
-#~ msgstr "(Null)"
