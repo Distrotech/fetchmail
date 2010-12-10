@@ -6,7 +6,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.18-pre2\n"
+"Project-Id-Version: fetchmail 6.3.19-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2010-12-05 01:17+0100\n"
 "PO-Revision-Date: 2010-12-10 14:20+0100\n"
