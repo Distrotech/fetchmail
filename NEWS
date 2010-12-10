@@ -81,6 +81,9 @@ fetchmail-6.3.19 (not yet released):
 * Do STARTTLS/STLS negotiation in IMAP/POP3 if it is mandatory even if the
   server capabilities do not show support for upgradation to TLS.
   To use this, configure --sslproto tls1. (Sunil Shetye)
+* IMAP: Understand empty strings as FETCH response, seen on Yahoo. Reported by
+  Yasin Malli to fetchmail-users@ 2010-12-10.
+  Note that fetchmail continues to expect literals as FETCH response for now.
 
 # DOCUMENTATION
 * The manual page now links to IANA for GSSAPI service names.

@@ -1264,6 +1264,13 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	    return PS_SUCCESS;
     }
 
+    /* Understand the empty string. Seen on Yahoo. */
+    /* XXX FIXME: we should be able to handle strings here. */
+    if (strstr(buf+10, "\"\")")) {
+	    *lenp = 0;
+	    return PS_SUCCESS;
+    }
+
     /*
      * Try to extract a length from the FETCH response.  RFC2060 requires
      * it to be present, but at least one IMAP server (Novell GroupWise)
