@@ -36,7 +36,13 @@
 #endif
 #include <netdb.h>
 #ifdef HAVE_PKG_hesiod
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <hesiod.h>
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 #include <langinfo.h>
