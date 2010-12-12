@@ -20,7 +20,7 @@
 #include "gettext.h"
 #include "fetchmail.h"
 
-#  include <stdarg.h>
+#include <stdarg.h>
 
 #define MALLOC(n)	xmalloc(n)	
 #define REALLOC(n,s)	xrealloc(n,s)	
@@ -143,7 +143,6 @@ static void rep_ensuresize(void) {
 	}
 }
 
-#ifdef HAVE_STDARG_H
 static void report_vbuild(const char *message, va_list args)
 {
     int n;
@@ -172,7 +171,6 @@ static void report_vbuild(const char *message, va_list args)
 	partial_message = (char *)REALLOC (partial_message, partial_message_size);
     }
 }
-#endif
 
 void report_build (FILE *errfp, const char *message, ...)
 {
@@ -180,7 +178,7 @@ void report_build (FILE *errfp, const char *message, ...)
 
     rep_ensuresize();
 
-    VA_START(args, message);
+    va_start(args, message);
     report_vbuild(message, args);
     va_end(args);
 
@@ -212,7 +210,7 @@ void report_complete (FILE *errfp, const char *message, ...)
 
     rep_ensuresize();
 
-    VA_START(args, message);
+    va_start(args, message);
     report_vbuild(message, args);
     va_end(args);
 

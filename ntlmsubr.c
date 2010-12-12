@@ -2,7 +2,7 @@
 
 #ifdef NTLM_ENABLE
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 #include "ntlm.h"
 #include "socket.h"
 
