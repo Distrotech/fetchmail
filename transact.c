@@ -616,7 +616,7 @@ eoh:
 	     * our terminating combination \n\0, we move backwards to
 	     * make sure that we don't catch some \n\0 stored in the
 	     * decoded part of the message */
-	    for (tcp = line + linelen - 1; tcp > line && (*tcp != 0 || tcp[-1] != '\n'); tcp--);
+	    for (tcp = line + linelen - 1; tcp > line && (*tcp != 0 || tcp[-1] != '\n'); tcp--) { }
 	    if  (tcp > line) linelen = tcp - line;
 	}
 

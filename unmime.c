@@ -292,7 +292,7 @@ static char *GetBoundary(char *CntType)
   do {
     p2 = strchr(p1, ';'); 
     if (p2)
-      for (p2++; isspace((unsigned char)*p2); p2++);
+      for (p2++; isspace((unsigned char)*p2); p2++) { }
 
     p1 = p2;
   } while ((p1) && (strncasecmp(p1, "boundary", 8) != 0));
@@ -418,7 +418,7 @@ int MimeBodyType(char *hdrs, int WantDecode)
 	     */
 
 	    /* Skip the "Content-Type:" part and whitespace after it */
-	    for (NxtHdr += 13; ((*NxtHdr == ' ') || (*NxtHdr == '\t')); NxtHdr++);
+	    for (NxtHdr += 13; ((*NxtHdr == ' ') || (*NxtHdr == '\t')); NxtHdr++) { }
 
 	    /* 
 	     * Get the full value of the Content-Type header;
