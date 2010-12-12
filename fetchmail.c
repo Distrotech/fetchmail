@@ -1474,6 +1474,14 @@ static int query_host(struct query *ctl)
     return(st);
 }
 
+static int print_id_of(struct uid_db_record *rec, void *unused)
+{
+    (void)unused;
+
+    printf("\t%s\n", rec->id);
+    return 0;
+}
+
 static void dump_params (struct runctl *runp,
 			 struct query *querylist, flag implicit)
 /* display query parameters in English */
@@ -1866,20 +1874,14 @@ static void dump_params (struct runctl *runp,
 
 	if (MAILBOX_PROTOCOL(ctl))
 	{
-	    if (!ctl->oldsaved)
+	    int count;
+
+	    if (!(count = uid_db_n_records(&ctl->oldsaved)))
 		printf(GT_("  No UIDs saved from this host.\n"));
 	    else
 	    {
-		struct idlist *idp;
-		int count = 0;
-
-		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    ++count;
-
 		printf(GT_("  %d UIDs saved.\n"), count);
-		if (outlevel >= O_VERBOSE)
-		    for (idp = ctl->oldsaved; idp; idp = idp->next)
-			printf("\t%s\n", idp->id);
+		traverse_uid_db(&ctl->oldsaved, print_id_of, NULL);
 	    }
 	}
 

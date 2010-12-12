@@ -25,6 +25,8 @@ struct addrinfo;
 
 #include "fm_strl.h"
 
+#include "uid_db.h"
+
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP3		3
@@ -364,8 +366,7 @@ struct query
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
-    struct idlist *oldsaved, *newsaved;
-    struct idlist **oldsavedend;
+    struct uid_db oldsaved, newsaved;
     char lastdigest[DIGESTLEN];	/* last MD5 hash seen on this connection */
     char *folder;		/* folder currently being polled */
 
