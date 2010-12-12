@@ -1065,7 +1065,7 @@ int SockClose(int sock)
  */
 static ssize_t cygwin_read(int sock, void *buf, size_t count)
 {
-    char *bp = buf;
+    char *bp = (char *)buf;
     size_t n = 0;
 
     if ((n = read(sock, bp, count)) == (size_t)-1)
