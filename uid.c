@@ -320,7 +320,7 @@ static int dump_uid_db_record(struct uid_db_record *rec, void *arg)
 	unsigned *n_recs;
 	char *t;
 
-	n_recs = arg;
+	n_recs = (unsigned int *)arg;
 	--*n_recs;
 
 	t = sdump(rec->id, rec->id_len);
@@ -435,7 +435,7 @@ static int write_uid_db_record(struct uid_db_record *rec, void *arg)
     if (!(rec->status == UID_SEEN || rec->status == UID_DELETED))
 	return 0;
 
-    info = arg;
+    info = (struct write_saved_info *)arg;
     rc = fprintf(info->fp, "%s@%s %s\n",
 		 info->ctl->remotename, info->ctl->server.queryname,
 		 rec->id);

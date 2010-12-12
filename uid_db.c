@@ -173,7 +173,7 @@ static struct pat_node *get_pat_node(struct uid_db_record *rec)
     */
     struct pat_node *np;
 
-    np = xmalloc(sizeof(*np));
+    np = (struct pat_node *)xmalloc(sizeof(*np));
     np->rec = rec;
     rec->next = NULL;
     return np;
@@ -290,10 +290,10 @@ static struct uid_db_record *get_uid_db_record(char const *id, unsigned status)
     struct uid_db_record *rec;
     size_t id_len;
 
-    rec = xmalloc(sizeof(*rec));
+    rec = (struct uid_db_record *)xmalloc(sizeof(*rec));
 
     id_len = strlen(id);
-    rec->id = memcpy(xmalloc(id_len + 1), id, id_len + 1);
+    rec->id = (char *)memcpy(xmalloc(id_len + 1), id, id_len + 1);
     rec->id_len = id_len;
     rec->status = status;
     rec->num = 0;
@@ -317,7 +317,7 @@ static void insert_into_records(struct uid_db *db,
 
     if (next == db->records_max) {
 	want = db->records_max *= 2;
-	db->records = xrealloc(db->records, want * sizeof(rec));
+	db->records = (struct uid_db_record **)xrealloc(db->records, want * sizeof(rec));
     }
 
     rec->pos = next;
@@ -364,7 +364,7 @@ void set_uid_db_num(struct uid_db *db, struct uid_db_record *rec,
 	want = num_ndx->pos_0_value - num + 1;
 	num_ndx->end_value = num;
 
-	num_ndx->records = xrealloc(num_ndx->records, want * sizeof(rec));
+	num_ndx->records = (struct uid_db_record **)xrealloc(num_ndx->records, want * sizeof(rec));
 	do num_ndx->records[--want] = NULL; while (want > have);
     }
 
@@ -541,7 +541,7 @@ void init_uid_db(struct uid_db *db)
 
     db->pat_root = NULL;
 
-    db->records = xmalloc(MIN_RECORDS * sizeof(*db->records));
+    db->records = (struct uid_db_record **)xmalloc(MIN_RECORDS * sizeof(*db->records));
     db->records_max = MIN_RECORDS;
     db->records_next = 0;
 
