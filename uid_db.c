@@ -72,7 +72,7 @@ static struct pat_node *walk_down(struct uid_db *db, struct uid_db_record *rec,
       This routine is intended for inserts only.
      */
     struct pat_node *cur, **edge;
-    unsigned bit_ndx, v, ofs;
+    unsigned bit_ndx, v = 0, ofs;
 
     cur = db->pat_root;
     ofs = -1;
@@ -410,7 +410,7 @@ struct uid_db_record *find_uid_by_id(struct uid_db *db, char const *id)
     */
     struct pat_node *np;
     struct uid_db_record *rec;
-    unsigned v, bit_ndx, ofs;
+    unsigned v = 0, bit_ndx, ofs;
     size_t len;
 
     np = db->pat_root;
