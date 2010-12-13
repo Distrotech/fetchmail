@@ -27,6 +27,10 @@ struct addrinfo;
 
 #include "uid_db.h"
 
+#ifdef HAVE_LIBPWMD
+#include <libpwmd.h>
+#endif
+
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP3		3
@@ -157,6 +161,9 @@ struct runctl
     char	*pidfile;	/** where to record the PID of daemon mode processes */
     const char	*postmaster;
     char	*properties;
+#ifdef HAVE_LIBPWMD
+    int		pinentry_timeout;
+#endif
     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
     flag	spambounce;
@@ -305,6 +312,11 @@ struct query
     char *remotename;		/* remote login name to use */
     char *password;		/* remote password to use */
     struct idlist *mailboxes;	/* list of mailboxes to check */
+
+#ifdef HAVE_LIBPWMD
+    char *pwmd_socket;		/* socket to connect to */
+    char *pwmd_file;		/* file to open on the server */
+#endif
 
     /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */

@@ -100,6 +100,9 @@ accept		{ return ACCEPT; }
 reject		{ return REJECT_; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
+pwmd_socket	{ return PWMD_SOCKET; }
+pwmd_file	{ return PWMD_FILE; }
+pinentry_timeout	{ return PINENTRY_TIMEOUT; }
 <INITIAL,NAME>pass(word)?	{SETSTATE(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
