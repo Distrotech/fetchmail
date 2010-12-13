@@ -235,6 +235,9 @@ struct method		/* describe methods for protocol state machine */
 
 enum badheader { BHREJECT = 0, BHACCEPT };
 
+/* Message retrieval error mode */
+enum retrieveerror { RE_ABORT = 0, RE_CONTINUE, RE_MARKSEEN };
+
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
@@ -261,6 +264,7 @@ struct hostdata		/* shared among all user connections to given server */
     char *principal;			/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
     enum badheader badheader;		/* bad-header {pass|reject} */
+    enum retrieveerror retrieveerror;	/* retrieve-error (abort|continue|markseen) */
 
 #if defined(linux) || defined(__FreeBSD__)
 #define CAN_MONITOR

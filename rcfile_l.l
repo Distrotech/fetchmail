@@ -98,6 +98,10 @@ esmtppassword	{ return ESMTPPASSWORD; }
 bad-header	{ return BADHEADER; }
 accept		{ return ACCEPT; }
 reject		{ return REJECT_; }
+retrieve-error	{ return RETRIEVEERROR; }
+abort		{ return ABORT; }
+continue	{ return CONTINUE; }
+markseen	{ return MARKSEEN; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
 <INITIAL,NAME>pass(word)?	{SETSTATE(NAME); return PASSWORD; }

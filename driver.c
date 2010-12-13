@@ -602,8 +602,44 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		if (separatefetchbody)
 		{
 		    len = -1;
-		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
+		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len))) {
+			if (err == PS_ERROR && ctl->server.retrieveerror) {
+			    /*
+			     * Mark a message with a protocol error as seen.
+			     * This can be used to see which messages we've attempted
+			     * to download, but failed.
+			     */
+			    if (ctl->server.retrieveerror == RE_MARKSEEN) {
+				if ((ctl->server.base_protocol->mark_seen)(mailserver_socket,ctl,num)) {
+				    return(err);
+				}
+			    }
+
+			    if (ctl->server.retrieveerror != RE_ABORT) {
+				/*
+				 * Do not abort download session.  Continue with the next message.
+				 *
+				 * Prevents a malformed message from blocking all other messages
+				 * behind it in the mailbox from being downloaded.
+				 *
+				 * Reconnect to SMTP to force this incomplete message to be dropped.
+				 * Required because we've already begun the DATA portion of the
+				 * interaction with the SMTP server (commands are ignored/
+				 * considered part of the message data).
+				 */
+				abort_message_sink(ctl);
+
+				// Ensure we don't delete the failed message from the server.
+				suppress_delete = TRUE;
+
+				// Bookkeeping required before next message can be downloaded.
+				goto flagthemail;
+			    }
+			}
+
 			return(err);
+		    }
+
 		    /*
 		     * Work around a bug in Novell's
 		     * broken GroupWise IMAP server;
