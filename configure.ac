@@ -58,8 +58,7 @@ if test "x$SHELL" = "x" ; then
     AC_MSG_ERROR(no SUS compliant shell found - on Solaris, install SUNWxcu4)
 fi
 
-
-AC_CHECK_HEADERS([arpa/nameser.h md5.h])
+AC_CHECK_HEADERS([arpa/nameser.h])
 
 AC_CHECK_HEADERS([resolv.h],,,[
 #include <sys/types.h>
@@ -109,16 +108,6 @@ AC_CHECK_FUNC(inet_addr,
     AC_CHECK_LIB(nsl,inet_addr))
 
 AC_REPLACE_FUNCS([stpcpy strlcpy strlcat])
-
-have_md5=no
-if test "$ac_cv_header_md5_h" != no ; then
-    AC_SEARCH_LIBS(MD5Init, [md], [have_md5=yes])
-fi
-
-if test "$have_md5" != yes ; then
-    AC_LIBSOURCE(md5c.c)
-    EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"
-fi
 
 AC_CHECK_FUNC(getopt_long, [],
               [AC_LIBSOURCES([getopt.c, getopt1.c])
