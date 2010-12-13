@@ -73,7 +73,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
-	sys/select.h sys/socket.h sys/time.h langinfo.h md5.h])
+	sys/select.h sys/socket.h sys/time.h langinfo.h])
 if test _$ac_cv_header_stdarg_h != _yes ; then
 AC_MSG_WARN([stdarg.h is not defined. Unsupported configuration, proceed at your own risk.])
 fi
@@ -170,16 +170,6 @@ dnl AC_CHECK_LIB(intl, gettext,
 dnl 		[LIBS="$LIBS -lintl"])
 
 AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
-
-have_md5=no
-if test "$ac_cv_header_md5_h" != no ; then
-    AC_SEARCH_LIBS(MD5Init, [md], [have_md5=yes])
-fi
-
-if test "$have_md5" != yes ; then
-    AC_LIBSOURCE(md5c.c)
-    EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"
-fi
 
 AC_CHECK_FUNC(getopt_long, [],
               [AC_LIBSOURCES([getopt.c, getopt1.c])

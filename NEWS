@@ -54,7 +54,12 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-not yet released:
+fetchmail-6.3.20 (not yet released):
+
+# CHANGES
+* fetchmail now always uses its own MD5 implementation.  The library and header
+  variants are too diverse, and we've been bitten before -- and configure
+  complains noisily on Cyrus-SASL's RFC1321 md5.h.
 
 # TRANSLATION UPDATES
   [ja]    Japanese (Takeshi Hamasaki)
