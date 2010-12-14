@@ -176,8 +176,8 @@ serv_option	: AKA alias_list
 					    yyerror(GT_("SDPS not enabled."));
 #endif /* SDPS_ENABLE */
 					}
-		| UIDL			{current.server.uidl = FLAG_TRUE;}
-		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
+		| UIDL			{/* EMPTY - removed in 6.4.0 */}
+		| NO UIDL		{/* EMPTY - removed in 6.4.0 */}
 		| CHECKALIAS            {current.server.checkalias = FLAG_TRUE;}
 		| NO CHECKALIAS         {current.server.checkalias  = FLAG_FALSE;}
 		| SERVICE STRING	{

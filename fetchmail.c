@@ -1226,7 +1226,6 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.dns);
     FLAG_MERGE(server.checkalias);
-    FLAG_MERGE(server.uidl);
     FLAG_MERGE(server.principal);
 
 #ifdef CAN_MONITOR
@@ -1590,7 +1589,6 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->mimedecode, FALSE);
 	    DEFAULT(ctl->idle, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
-	    DEFAULT(ctl->server.uidl, FALSE);
 	    DEFAULT(ctl->use_ssl, FALSE);
 	    DEFAULT(ctl->sslcertck, FALSE);
 	    DEFAULT(ctl->server.checkalias, FALSE);
@@ -1953,8 +1951,6 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_(" (using service %s)"), ctl->server.service);
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_(" (using default port)"));
-	if (ctl->server.uidl && MAILBOX_PROTOCOL(ctl))
-	    printf(GT_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
 	switch (ctl->server.authenticate)

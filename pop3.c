@@ -259,7 +259,7 @@ static void set_peek_capable(struct query *ctl)
      * we have a means of reliably tracking which mail we need to
      * refetch should the connection abort in the middle.
      * fetchall forces RETR, as does keep without UIDL */
-    peek_capable = !ctl->fetchall && (!ctl->keep || ctl->server.uidl);
+    peek_capable = !ctl->fetchall;
 }
 
 static int pop3_getauth(int sock, struct query *ctl, char *greeting)
@@ -830,16 +830,10 @@ static int pop3_getrange(int sock,
     } else
 	return(ok);
 
-    /*
-     * Newer, RFC-1725/1939-conformant POP servers may not have the LAST
-     * command.  We work as hard as possible to hide this, but it makes
-     * counting new messages intrinsically quadratic in the worst case.
-     */
+    /* unless fetching all mail, get UID list (UIDL) */
     last = 0;
     *newp = -1;
-    /* if there are messages, and UIDL is desired, use UIDL
-     * also use UIDL if fetchall is unset */
-    if (*countp > 0 && (!ctl->fetchall || ctl->server.uidl))
+    if (*countp > 0)
     {
 	int fastuidl;
 	char id [IDLEN+1];
@@ -862,23 +856,6 @@ static int pop3_getrange(int sock,
 	else
 	    dofastuidl = 0;
 
-	if (!ctl->server.uidl) {
-	    gen_send(sock, "LAST");
-	    ok = pop3_ok(sock, buf);
-	} else
-	    ok = 1;
-
-	if (ok == 0)
-	{
-	    /* scan LAST reply */
-	    if (sscanf(buf, "%d", &last) == 0)
-	    {
-		report(stderr, GT_("protocol error\n"));
-		return(PS_ERROR);
-	    }
-	    *newp = (*countp - last);
-	}
-	else
 	{
 	    /* do UIDL */
 	    if (dofastuidl)
@@ -1025,7 +1002,6 @@ static int pop3_is_old(int sock, struct query *ctl, int num)
 	    return(TRUE);
 
 	/* in fast uidl, we manipulate the old list only! */
-
 	if ((rec = find_uid_by_num(&ctl->oldsaved, num)))
 	{
 	    /* we already have the id! */

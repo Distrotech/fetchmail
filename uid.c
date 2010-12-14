@@ -1,5 +1,5 @@
 /**
- * \file uid.c -- UIDL handling for POP3 servers without LAST
+ * \file uid.c -- UID list handling (currently, only for POP3)
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -19,10 +19,9 @@
 #include "sdump.h"
 
 /*
- * Machinery for handling UID lists live here.  This is mainly to support
- * RFC1725/RFC1939-conformant POP3 servers without a LAST command, but may also
- * be useful for making the IMAP4 querying logic UID-oriented, if a future
- * revision of IMAP forces me to.
+ * Machinery for handling UID lists live here.  This is currently used
+ * by POP3, but may also be useful for making the IMAP4 querying logic
+ * UID-oriented.
  *
  * These functions are also used by the rest of the code to maintain
  * string lists.

@@ -224,8 +224,7 @@ Keep retrieved messages on the remote mailserver.  Normally, messages
 are deleted from the folder on the mailserver after they have been retrieved.
 Specifying the \fBkeep\fP option causes retrieved messages to remain in
 your folder on the mailserver.  This option does not work with ETRN or
-ODMR. If used with POP3, it is recommended to also specify the \-\-uidl
-option or uidl keyword.
+ODMR.
 .TP
 .B \-K | \-\-nokeep
 (Keyword: nokeep)
@@ -245,8 +244,7 @@ you check your mail with other clients than fetchmail, and cause
 fetchmail to delete a message it had never fetched before.  It can also
 cause mail loss if the mail server marks the message seen after
 retrieval (IMAP2 servers). You should probably not use this option in your
-configuration file. If you use it with POP3, you must use the 'uidl'
-option. What you probably want is the default setting: if you don't
+configuration file. What you probably want is the default setting: if you don't
 specify '\-k', then fetchmail will automatically delete messages after
 successful delivery.
 .TP
@@ -294,19 +292,6 @@ your client machine in the server's queue of undelivered mail.   The
 ODMR mode requires an ODMR-capable server and works similarly to
 ETRN, except that it does not require the client machine to have
 a static DNS.
-.TP
-.B \-U | \-\-uidl
-(Keyword: uidl)
-.br
-Force UIDL use (effective only with POP3).  Force client-side tracking
-of 'newness' of messages (UIDL stands for "unique ID listing" and is
-described in RFC1939).  Use with 'keep' to use a mailbox as a baby
-news drop for a group of users. The fact that seen messages are skipped
-is logged, unless error logging is done through syslog while running in
-daemon mode.  Note that fetchmail may automatically enable this option
-depending on upstream server capabilities.  Note also that this option
-may be removed and forced enabled in a future fetchmail version. See
-also: \-\-idfile.
 .TP
 .B \-\-idle (since 6.3.3)
 (Keyword: idle, since before 6.0.0)
@@ -1130,13 +1115,9 @@ retrieves the full message with header and body, sets the "seen" flag
 that.
 .PP
 \fBfetchmail\fP will always use the RETR command if "fetchall" is set.
-\fBfetchmail\fP will also use the RETR command if "keep" is set and
-"uidl" is unset.  Finally, \fBfetchmail\fP will use the RETR command on
+As a workaround, \fBfetchmail\fP will use the RETR command on
 Maillennium POP3/PROXY servers (used by Comcast) to avoid a deliberate
 TOP misinterpretation in this server that causes message corruption.
-.PP
-In all other cases, \fBfetchmail\fP will use the TOP command. This
-implies that in "keep" setups, "uidl" must be set if "TOP" is desired.
 .PP
 \fBNote\fP that this description is true for the current version of
 fetchmail, but the behavior may change in future versions. In
@@ -1769,12 +1750,6 @@ T}
 no checkalias	\&	m	T{
 Do comparison by name for multidrop (default)
 T}
-uidl    	\-U	\&	T{
-Force POP3 to use client-side UIDLs (recommended)
-T}
-no uidl   	\&	\&	T{
-Turn off POP3 use of client-side UIDLs (default)
-T}
 interval   	\&	\&	T{
 Only check this site every N poll cycles; N is a numeric argument.
 T}
@@ -1870,7 +1845,7 @@ postconnect	\&	\&	T{
 Command to be executed after each connection
 T}
 keep     	\-k	\&	T{
-Don't delete seen messages from server (for POP3, uidl is recommended)
+Don't delete seen messages from server
 T}
 flush   	\-F	\&	T{
 Flush all seen messages before querying (DANGEROUS)

@@ -262,7 +262,6 @@ struct hostdata		/* shared among all user connections to given server */
     char *qvirtual;			/* prefix removed from local user id */
     flag skip;				/* suppress poll in implicit mode? */
     flag dns;				/* do DNS lookup on multidrop? */
-    flag uidl;				/* use RFC1725 UIDLs? */
 #ifdef SDPS_ENABLE
     flag sdps;				/* use Demon Internet SDPS *ENV */
 #endif /* SDPS_ENABLE */

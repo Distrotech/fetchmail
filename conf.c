@@ -282,8 +282,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef HAVE_RES_SEARCH
 	    booldump("dns", ctl->server.dns);
 #endif /* HAVE_RES_SEARCH */
-	    booldump("uidl", ctl->server.uidl);
-
 	    listdump("aka", ctl->server.akalist);
 	    listdump("localdomains", ctl->server.localdomains);
 

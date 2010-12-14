@@ -341,7 +341,7 @@ int parsecmdline (int argc /** argument count */,
 	    }
 	    break;
 	case 'U':
-	    ctl->server.uidl = FLAG_TRUE;
+	    /* EMPTY - removed in 6.4.0 */
 	    break;
 	case LA_IDLE:
 	    ctl->idle = FLAG_TRUE;
@@ -650,8 +650,7 @@ int parsecmdline (int argc /** argument count */,
         P(GT_("  -G, --pwmd-file   filename to use on the pwmd server\n"));
         P(GT_("  -O, --pinentry-timeout   seconds until pinentry is canceled\n"));
 #endif
- 
-	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
+
 	P(GT_("      --port        TCP port to connect to (obsolete, use --service)\n"));
 	P(GT_("  -P, --service     TCP service to connect to (can be numeric TCP port)\n"));
 	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));

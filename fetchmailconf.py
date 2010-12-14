@@ -88,7 +88,6 @@ class Server:
 	self.interval = 0		# Skip interval
 	self.protocol = 'auto'		# Default to auto protocol
 	self.service = None		# Service name to use
-	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
 	self.auth = 'any'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
@@ -115,7 +114,6 @@ class Server:
 	    ('interval',  'Int'),
 	    ('protocol',  'String'),
 	    ('service',	  'String'),
-	    ('uidl',	  'Boolean'),
 	    ('auth',	  'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
@@ -159,12 +157,10 @@ class Server:
 	    res = res + (" qvirtual " + str(self.qvirtual) + "\n");
 	if self.auth != ServerDefaults.auth:
 	    res = res + " auth " + self.auth
-	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
+	if self.dns != ServerDefaults.dns
 	    res = res + " and options"
 	if self.dns != ServerDefaults.dns:
 	    res = res + flag2str(self.dns, 'dns')
-	if self.uidl != ServerDefaults.uidl:
-	    res = res + flag2str(self.uidl, 'uidl')
 	if folded:	res = res + "\n    "
 	else:	     res = res + " "
 
@@ -1130,7 +1126,6 @@ class ServerEdit(Frame, MyWidget):
 	# a custom port number you should be in expert mode and playing
 	# close enough attention to notice this...
 	self.service.set(defaultports[proto])
-	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED
 
     def user_edit(self, username, mode):
 	self.subwidgets[username] = UserEdit(username, self).edit(mode, Toplevel())
@@ -1187,9 +1182,6 @@ class ServerEdit(Frame, MyWidget):
 	    LabeledEntry(protwin, 'On server TCP/IP service:',
 		      self.service, leftwidth).pack(side=TOP, fill=X)
 	    self.defaultPort()
-	    Checkbutton(protwin,
-		text="POP3: track `seen' with client-side UIDLs?",
-		variable=self.uidl).pack(side=TOP)
 	Button(protwin, text='Probe for supported protocols', fg='blue',
 	       command=self.autoprobe).pack(side=LEFT)
 	Button(protwin, text='Help', fg='blue',
