@@ -549,6 +549,7 @@ void stuff_warning(const char *, struct query *, const char *, ... )
     __attribute__ ((format (printf, 3, 4)))
     ;
 void close_warning_by_mail(struct query *, struct msgblk *);
+void abort_message_sink(struct query *ctl);
 
 /* rfc822.c: RFC822 header parsing */
 char *reply_hack(char *, const char *, size_t *);
