@@ -347,7 +347,7 @@ int parsecmdline (int argc /** argument count */,
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
-		ctl->server.service = KPOP_PORT;
+		ctl->server.service = xstrdup(KPOP_PORT);
 #ifdef KERBEROS_V5
 		ctl->server.authenticate =  A_KERBEROS_V5;
 #else
