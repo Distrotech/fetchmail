@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>  // ffs() lives here
 
 #include "xmalloc.h"
 #include "uid_db.h"
