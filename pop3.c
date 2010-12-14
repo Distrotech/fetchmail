@@ -863,8 +863,10 @@ static int pop3_getrange(int sock,
 	    /* grab the mailbox's UID list */
 	    if (gen_transact(sock, "UIDL") != 0)
 	    {
+		if (!ctl->fetchall) {
 		    report(stderr, GT_("protocol error while fetching UIDLs\n"));
 		    return(PS_ERROR);
+		}
 	    }
 	    else
 	    {
