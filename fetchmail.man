@@ -10,7 +10,7 @@
 .\" Load www macros to process .URL requests, this requires groff:
 .mso www.tmac
 .\"
-.TH fetchmail 1 "fetchmail 6.3.19" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 7.0.0-alpha1" "fetchmail" "fetchmail reference manual"
 
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
@@ -721,7 +721,7 @@ messages, but some distributors modified fetchmail to accept them. You can now
 configure fetchmail's behaviour per server.
 .TP
 .B \-\-retrieve\-error {abort|continue|markseen}
-(Keyword: retrieve\-error; since v6.4)
+(Keyword: retrieve\-error; since v7.0)
 .br
 Specify how fetchmail is supposed to treat messages which fail to be
 retrieved due to server errors, i. e. fetching the message body fails with

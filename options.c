@@ -341,7 +341,7 @@ int parsecmdline (int argc /** argument count */,
 	    }
 	    break;
 	case 'U':
-	    /* EMPTY - removed in 6.4.0 */
+	    /* EMPTY - removed in 7.0.0 */
 	    break;
 	case LA_IDLE:
 	    ctl->idle = FLAG_TRUE;
