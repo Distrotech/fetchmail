@@ -86,6 +86,16 @@ fetchmail-6.3.19 (released 2010-12-10, 25945 LoC):
 * fetchmail 6.3.18 contains several bug fixes that were considered sufficiently
   grave to warrant the issue of an erratum notice, fetchmail-EN-2010-03.txt.
 
+# FEATURE
+* Fetchmail now supports a retrieve-error command line or rcfile option that
+  takes exactly one argument, abort (default), continue or markseen.  This
+  specifies the policy used by fetchmail to handle messages whose bodies
+  fail to be retrieved due to server errors.  Both the continue and markseen
+  options will skip the message with errors and allow the session to
+  continue so that subsequent messages can be retrieved.  The markseen
+  option will also mark the message with errors as seen.  The default policy
+  is to abort the session whenever a server error occurs.
+
 # BUG FIXES
 * When specifying multiple local multidrop lists, do not lose wildcard flag.
   (Affects "user foo is bar baz * is joe here")

@@ -66,6 +66,7 @@ extern char * yytext;
 %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
 %token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
 %token BADHEADER ACCEPT REJECT_
+%token RETRIEVEERROR ABORT CONTINUE MARKSEEN
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
@@ -237,6 +238,9 @@ serv_option	: AKA alias_list
 		| NO TRACEPOLLS		{current.server.tracepolls = FLAG_FALSE;}
 		| BADHEADER ACCEPT	{current.server.badheader = BHACCEPT;}
 		| BADHEADER REJECT_	{current.server.badheader = BHREJECT;}
+		| RETRIEVEERROR ABORT	{current.server.retrieveerror = RE_ABORT;}
+		| RETRIEVEERROR CONTINUE {current.server.retrieveerror = RE_CONTINUE;}
+		| RETRIEVEERROR MARKSEEN {current.server.retrieveerror = RE_MARKSEEN;}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}

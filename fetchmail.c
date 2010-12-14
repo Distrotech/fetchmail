@@ -1239,6 +1239,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.plugout);
     FLAG_MERGE(server.tracepolls);
     FLAG_MERGE(server.badheader);
+    FLAG_MERGE(server.retrieveerror);
 
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
@@ -2288,6 +2289,19 @@ static void dump_params (struct runctl *runp,
 		break;
 	    case BHACCEPT:
 		printf(GT_("  Messages with bad headers will be passed on.\n"));
+		break;
+	}
+
+	switch (ctl->server.retrieveerror) {
+	    case RE_ABORT:
+		if (outlevel >= O_VERBOSE)
+		    printf(GT_("  Messages with fetch body errors will cause the session to abort.\n"));
+		break;
+	    case RE_CONTINUE:
+		printf(GT_("  Messages with fetch body errors will be skipped, the session will continue.\n"));
+		break;
+	    case RE_MARKSEEN:
+		printf(GT_("  Messages with fetch body errors will be marked seen, the session will continue.\n"));
 		break;
 	}
 

@@ -51,7 +51,8 @@ enum {
     LA_IDLE,
     LA_NOSOFTBOUNCE,
     LA_SOFTBOUNCE,
-    LA_BADHEADER
+    LA_BADHEADER,
+    LA_RETRIEVEERROR
 };
 
 static const char *shortoptions =
@@ -113,6 +114,7 @@ static const struct option longoptions[] = {
   {"norewrite",	no_argument,	   (int *) 0, 'n' },
   {"limit",	required_argument, (int *) 0, 'l' },
   {"warnings",	required_argument, (int *) 0, 'w' },
+  {"retrieve-error",	required_argument, (int *) 0, LA_RETRIEVEERROR },
 
   {"folder",	required_argument, (int *) 0, 'r' },
   {"smtphost",	required_argument, (int *) 0, 'S' },
@@ -577,6 +579,19 @@ int parsecmdline (int argc /** argument count */,
 	    ctl->server.tracepolls = FLAG_TRUE;
 	    break;
 
+	case LA_RETRIEVEERROR:
+	    if (strcasecmp(optarg,"abort") == 0) {
+		ctl->server.retrieveerror = RE_ABORT;
+	    } else if (strcasecmp(optarg,"continue") == 0) {
+		ctl->server.retrieveerror = RE_CONTINUE;
+	    } else if (strcasecmp(optarg,"markseen") == 0) {
+		ctl->server.retrieveerror = RE_MARKSEEN;
+	    } else {
+		fprintf(stderr,GT_("Invalid retrieve-error policy `%s' specified.\n"), optarg);
+		errflag++;
+	    }
+	    break;
+
 	case '?':
 	default:
 	    helpflag++;
@@ -626,6 +641,8 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
 	P(GT_("      --bad-header {reject|accept}\n"
 	      "                    specify policy for handling messages with bad headers\n"));
+	P(GT_("      --retrieve-error {abort|continue|markseen}\n"
+              "                        specify policy for processing messages with retrieve errors\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 #ifdef HAVE_LIBPWMD

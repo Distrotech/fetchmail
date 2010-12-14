@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.57"
+version = "1.58"
 
 from Tkinter import *
 from Dialog import *
@@ -106,6 +106,7 @@ class Server:
 	self.esmtppassword = None	# ESMTP 2554 password
 	self.tracepolls = FALSE		# Add trace-poll info to headers
 	self.badheader = FALSE		# Pass messages with bad headers on?
+	self.retrieveerror = 'abort'	# Policy when message retrieval errors encountered
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -131,7 +132,8 @@ class Server:
 	    ('esmtppassword', 'String'),
 	    ('principal', 'String'),
 	    ('tracepolls','Boolean'),
-	    ('badheader', 'Boolean'))
+	    ('badheader', 'Boolean'),
+	    ('retrieveerror', 'String'))
 
     def dump(self, folded):
 	res = ""
@@ -200,9 +202,17 @@ class Server:
 	    res = res + " esmtppassword " + `self.esmtppassword`
 	if self.interface or self.monitor or self.principal or self.plugin or self.plugout:
 	    if folded:
-		res = res + "\n"
+		res = res + "\n    "
+
 	if self.badheader:
 		res = res + "bad-header accept "
+	if self.retrieveerror == 'continue':
+		res = res + "retrieve-error continue "
+	if self.retrieveerror == 'markseen':
+		res = res + "retrieve-error markseen "
+	if self.badheader or self.retrieveerror != ServerDefaults.retrieveerror:
+	    if folded:
+		res = res + "\n"
 
 	if res[-1] == " ": res = res[0:-1]
 
@@ -958,6 +968,13 @@ the normal operation of fetchmail when it is run with no arguments.
 If it is off, fetchmail will only query this host when it is given as
 a command-line argument.
 
+The `Retrieve Error Policy' specifies how server errors during
+message retrieval are handled.  The default behaviour is to abort the
+current session.  Both the continue and markseen options will skip
+the message with the error, but continue the session allowing for 
+downloading of subsequent messages.  Additionally, the markseen
+option will mark the skipped message as seen.
+ 
 The `True name of server' box should specify the actual DNS name
 to query. By default this is the same as the poll name.
 
@@ -1135,6 +1152,9 @@ class ServerEdit(Frame, MyWidget):
 	    Checkbutton(ctlwin, text='Poll ' + host + ' normally?', variable=self.active).pack(side=TOP)
 	    Checkbutton(ctlwin, text='Pass messages with bad headers?',
 		    variable=self.badheader).pack(side=TOP)
+            retrieveerrorlist = ['abort', 'continue', 'markseen']
+            Label(ctlwin, text="Retrieve Error Policy").pack(side=TOP)
+            ButtonBar(ctlwin, '', self.retrieveerror, retrieveerrorlist, 1, None)
 	    LabeledEntry(ctlwin, 'True name of ' + host + ':',
 		      self.via, leftwidth).pack(side=TOP, fill=X)
 	    LabeledEntry(ctlwin, 'Cycles to skip between polls:',
