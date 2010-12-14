@@ -49,7 +49,8 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 # MAJOR CHANGES
 * The UIDL handler code is now much faster, especially noticable with lots of
   mail kept on a POP3 server. Where the 6.3.X code was of O(n^2) complexity,
-  we're down to O(n log n).  (Rainer Weikusat, MAD Partners Ltd./MSS GmbH).
+  we're down to O(n log n).
+  Contributed by Rainer Weikusat, MAD Partners Ltd./MSS GmbH.
 
 # REMOVED FEATURES
 * POP2 and RPOP were long obsolete and removed
