@@ -16,6 +16,11 @@ dist_man1_MANS=		fetchmail.man
 pys=			fetchmailconf.py
 pym=			fetchmailconf.man
 
+if HAVE_LIBPWMD
+CFLAGS += @libpwmd_CFLAGS@
+LDFLAGS += @libpwmd_LIBS@
+endif
+
 if HAVE_PYTHON
 nodist_bin_SCRIPTS=	fetchmailconf
 python_PYTHON=		$(pys)
