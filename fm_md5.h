@@ -5,15 +5,7 @@
 
 #include <sys/types.h>
 
-#ifdef HAVE_MD5_H
-#include <md5.h>
-#else
 #include "fetchmail.h"
-#ifndef HEADER_MD5_H
-/* Try to avoid clashes with OpenSSL */
-#define HEADER_MD5_H 
-#endif
-
 
 #if SIZEOF_INT == 4
 typedef unsigned int uint32;
@@ -37,5 +29,4 @@ void MD5Transform(uint32 buf[4], uint32 const in[16]);
  */
 typedef struct MD5Context MD5_CTX;
 
-#endif
 #endif /* !MD5_H */
