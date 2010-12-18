@@ -427,6 +427,8 @@ int main(int argc, char **argv)
 {
     int bkgd = FALSE;
     int implicitmode = FALSE;
+    flag safewithbg = FALSE; /** if parsed options are compatible with a
+			      fetchmail copy running in the background */
     struct query *ctl;
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
@@ -470,7 +472,7 @@ int main(int argc, char **argv)
 
 #define IDFILE_NAME	".fetchids"
     run.idfile = prependdir (IDFILE_NAME, fmhome);
-  
+
     outlevel = O_NORMAL;
 
     /*
@@ -494,7 +496,7 @@ int main(int argc, char **argv)
     {
 	int i;
 
-	i = parsecmdline(argc, argv, &cmd_run, &cmd_opts);
+	i = parsecmdline(argc, argv, &cmd_run, &cmd_opts, &safewithbg);
 	if (i < 0)
 	    exit(PS_SYNTAX);
 
@@ -759,17 +761,23 @@ int main(int argc, char **argv)
 	else if (getpid() == pid)
 	    /* this test enables re-execing on a changed rcfile */
 	    fm_lock_assert();
-	else if (argc > 1)
+	else if (argc > 1 && !safewithbg)
 	{
 	    fprintf(stderr,
 		    GT_("fetchmail: can't accept options while a background fetchmail is running.\n"));
+	    {
+		int i;
+		fprintf(stderr, "argc = %d, arg list:\n", argc);
+		for (i = 1; i < argc; i++) fprintf(stderr, "arg %d = \"%s\"\n", i, argv[i]);
+	    }
 	    return(PS_EXCLUDE);
 	}
 	else if (kill(pid, SIGUSR1) == 0)
 	{
-	    fprintf(stderr,
-		    GT_("fetchmail: background fetchmail at %ld awakened.\n"),
-		    (long)pid);
+	    if (outlevel > O_SILENT)
+		fprintf(stderr,
+			GT_("fetchmail: background fetchmail at %ld awakened.\n"),
+			(long)pid);
 	    return(0);
 	}
 	else

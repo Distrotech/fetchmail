@@ -636,7 +636,7 @@ int do_otp(int sock, const char *command, struct query *ctl);
 extern char currentwd[1024], rcfiledir[1024];
 
 struct query *hostalloc(struct query *); 
-int parsecmdline (int, char **, struct runctl *, struct query *);
+int parsecmdline (int, char **, struct runctl *, struct query *, flag *);
 char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned const char *);
 void hmac_md5 (const unsigned char *, size_t, const unsigned char *, size_t, unsigned char *, size_t);
