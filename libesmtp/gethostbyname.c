@@ -34,36 +34,7 @@
 
 #include "gethostbyname.h"
 
-#if HAVE_GETIPNODEBYNAME
-
-void
-free_ghbnctx (struct ghbnctx *ctx)
-{
-  assert (ctx != NULL);
-
-  if (ctx->hostent != NULL)
-    freehostent (ctx->hostent);
-}
-
-struct hostent *
-gethostbyname_ctx (const char *host, struct ghbnctx *ctx)
-{
-  assert (ctx != NULL);
-
-  memset (ctx, 0, sizeof (struct ghbnctx));
-  ctx->hostent = getipnodebyname (host, AF_UNSPEC, AI_ADDRCONFIG, &ctx->h_err);
-  return ctx->hostent;
-}
-
-int
-h_error_ctx (struct ghbnctx *ctx)
-{
-  assert (ctx != NULL);
-
-  return ctx->h_err;
-}
-
-#elif HAVE_GETHOSTBYNAME_R == 6
+#if HAVE_GETHOSTBYNAME_R == 6
 
 void
 free_ghbnctx (struct ghbnctx *ctx)
