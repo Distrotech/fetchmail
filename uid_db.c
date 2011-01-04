@@ -205,6 +205,7 @@ static struct pat_node *get_standalone_node(struct uid_db_record *rec)
 }
 
 /***  various helpers */
+#if 0
 static inline int record_id_equal(struct uid_db_record const *r0,
 				  struct uid_db_record const *r1)
 {
@@ -212,6 +213,7 @@ static inline int record_id_equal(struct uid_db_record const *r0,
 	r0->id_len == r1->id_len
 	&& memcmp(r0->id, r1->id, r0->id_len) == 0;
 }
+#endif
 
 static struct uid_db_record *append_to_list(struct uid_db_record **recp,
 					    struct uid_db_record *rec)
