@@ -919,8 +919,11 @@ static int pop3_getrange(int sock,
 			    old_rec = uid_db_insert(&ctl->oldsaved, id, UID_UNSEEN);
 
 			}
-			/* save the number */
-			if (new_rec->status == UID_UNSEEN || !ctl->keep) {
+			/*
+			 * save the number if it will be needed later on
+			 * (messsage will either be fetched or deleted)
+			 */
+			if (new_rec->status == UID_UNSEEN || ctl->flush) {
 			    set_uid_db_num(&ctl->oldsaved, old_rec, unum);
 			    set_uid_db_num(&ctl->newsaved, new_rec, unum);
 			}
