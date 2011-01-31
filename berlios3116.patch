@@ -1,0 +1,20 @@
+*** transact.c~ 2010-10-22 06:51:13.000000000 -0500
+--- transact.c  2011-01-08 19:58:23.867000090 -0600
+***************
+*** 924,930 ****
+                if (ctl->server.envelope 
+                    && strcasecmp(ctl->server.envelope, "Received"))
+                {
+!                   if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
+                                                       line,
+                                                       strlen(ctl->server.envelope)))
+                    {
+--- 924,931 ----
+                if (ctl->server.envelope 
+                    && strcasecmp(ctl->server.envelope, "Received"))
+                {
+!                   if (((env_offs == -1) || (ctl->server.envskip == -1))
+!                       && !strncasecmp(ctl->server.envelope,
+                                                       line,
+                                                       strlen(ctl->server.envelope)))
+                    {
