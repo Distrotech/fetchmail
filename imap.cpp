@@ -534,7 +534,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef OPIE_ENABLE
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate == A_OTP)
-	&& strstr(capabilities, "AUTH=X-OTP")) {
+	&& capabilities["AUTH=X-OTP"]) {
 	if ((ok = do_otp(sock, "AUTHENTICATE", ctl)))
 	{
 	    /* SASL cancellation of authentication */
@@ -556,7 +556,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef NTLM_ENABLE
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate == A_NTLM) 
-	&& strstr (capabilities, "AUTH=NTLM")) {
+	&& capabilities["AUTH=NTLM"]) {
 	if ((ok = do_imap_ntlm(sock, ctl)))
 	{
 	    if(ctl->server.authenticate != A_ANY)
