@@ -5,6 +5,10 @@
  * For license terms, see the file COPYING in this directory.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "config.h"
 
 #ifdef __NetBSD__
@@ -726,6 +730,10 @@ int ntlm_helper(int sock, struct query *ctl, const char *protocol);
 	((outlevel >= O_VERBOSE || (outlevel > O_SILENT && run.showdots)) \
 	&& !run.use_syslog \
 	&& (run.showdots || !is_a_file(1)))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /* fetchmail.h ends here */

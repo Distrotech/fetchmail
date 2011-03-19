@@ -7,6 +7,10 @@
 #ifndef SOCKET__
 #define SOCKET__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct addrinfo;
 
 #include <config.h>
@@ -70,5 +74,9 @@ int UnixOpen(const char *path);
 int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck, char *cacertfile, char *cacertpath,
     char *fingerprint, char *servercname, char *label, char **remotename);
 #endif /* SSL_ENABLE */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SOCKET__ */

@@ -9,7 +9,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl XXX - if bumping version here, check fetchmail.man, too!
-AC_INIT([fetchmail],[7.0.0-alpha1],[fetchmail-devel@lists.berlios.de])
+AC_INIT([fetchmail],[7.0.0-alpha2],[fetchmail-devel@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -35,6 +35,7 @@ AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 
 AC_PROG_AWK
 AC_PROG_CC_C99
+AC_PROG_CXX
 AC_PROG_INSTALL
 AM_PROG_LEX
 AC_PROG_MAKE_SET

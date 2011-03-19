@@ -8,7 +8,7 @@ fetchmail.c
 getpass.c
 gssapi.c
 idle.c
-imap.c
+imap.cpp
 interface.c
 lock.c
 netrc.c

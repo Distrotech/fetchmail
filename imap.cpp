@@ -1,3 +1,4 @@
+
 /*
  * imap.c -- IMAP2bis/IMAP4 protocol methods
  *
@@ -16,7 +17,12 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
+#include  "IMAPCapa.h"
+
 #include  "gettext.h"
+
+using namespace std;
+using namespace boost;
 
 /* imap_version values */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
@@ -29,13 +35,13 @@
 static int preauth = FALSE;
 
 /* session variables initialized in capa_probe() or imap_getauth() */
-static char capabilities[MSGBUFSIZE+1];
+IMAPCapa capabilities;
 static int imap_version = IMAP4;
 static flag do_idle = FALSE, has_idle = FALSE;
 static int expunge_period = 1;
 
 /* mailbox variables initialized in imap_getrange() */
-static int count = 0, oldcount = 0, recentcount = 0, unseen = 0, deletions = 0;
+static int msgcount = 0, oldcount = 0, recentcount = 0, unseen = 0, deletions = 0;
 static unsigned int startcount = 1;
 static int expunged = 0;
 static unsigned int *unseen_messages;
@@ -55,7 +61,7 @@ static int imap_untagged_response(int sock, const char *buf)
     if (stage == STAGE_GETAUTH
 	    && !strncmp(buf, "* CAPABILITY", 12))
     {
-	strlcpy(capabilities, buf + 12, sizeof(capabilities));
+	capabilities.parse(buf + 12);
     }
     else if (stage == STAGE_GETAUTH
 	    && !strncmp(buf, "* PREAUTH", 9))
@@ -89,9 +95,9 @@ static int imap_untagged_response(int sock, const char *buf)
 	    report(stderr, GT_("bogus message count in \"%s\"!"), buf);
 	    return(PS_PROTOCOL);
 	}
-	count = u; /* safe as long as count <= INT_MAX - checked above */
+	msgcount = u; /* safe as long as count <= INT_MAX - checked above */
 
-	if ((recentcount = count - oldcount) < 0)
+	if ((recentcount = msgcount - oldcount) < 0)
 	    recentcount = 0;
 
 	/*
@@ -138,14 +144,14 @@ static int imap_untagged_response(int sock, const char *buf)
 	}
 	if (u > 0)
 	{
-	    if (count > 0)
-		count--;
+	    if (msgcount > 0)
+		msgcount--;
 	    if (oldcount > 0)
 		oldcount--;
 	    /* We do expect an EXISTS response immediately
 	     * after this, so this updation of recentcount is
 	     * just a precaution! */
-	    if ((recentcount = count - oldcount) < 0)
+	    if ((recentcount = msgcount - oldcount) < 0)
 		recentcount = 0;
 	    actual_deletions++;
 	}
@@ -323,25 +329,16 @@ static void capa_probe(int sock, struct query *ctl)
     int	ok;
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-    capabilities[0] = '\0';
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
     {
-	char	*cp;
-
-	/* capability checks are supposed to be caseblind */
-	for (cp = capabilities; *cp; cp++)
-	    *cp = toupper((unsigned char)*cp);
-
 	/* UW-IMAP server 10.173 notifies in all caps, but RFC2060 says we
 	   should expect a response in mixed-case */
-	if (strstr(capabilities, "IMAP4REV1"))
+	if (capabilities["IMAP4REV1"])
 	{
 	    imap_version = IMAP4rev1;
 	    if (outlevel >= O_DEBUG)
 		report(stdout, GT_("Protocol identified as IMAP4 rev 1\n"));
-	}
-	else
-	{
+	} else {
 	    imap_version = IMAP4;
 	    if (outlevel >= O_DEBUG)
 		report(stdout, GT_("Protocol identified as IMAP4 rev 0\n"));
@@ -355,10 +352,8 @@ static void capa_probe(int sock, struct query *ctl)
     do_idle = ctl->idle;
     if (ctl->idle)
     {
-	if (strstr(capabilities, "IDLE"))
-	    has_idle = TRUE;
-	else
-	    has_idle = FALSE;
+	has_idle = capabilities["IDLE"];
+
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, GT_("will idle after poll\n"));
     }
@@ -421,8 +416,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (ctl->sslcommonname)
 	    commonname = ctl->sslcommonname;
 
-	if (strstr(capabilities, "STARTTLS")
-		|| must_tls(ctl)) /* if TLS is mandatory, ignore capabilities */
+	if (capabilities["STARTTLS"] || must_tls(ctl)) /* if TLS is mandatory, ignore capabilities */
 	{
 	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
 	     * protocol that will work with STARTTLS.  Don't need to worry
@@ -483,15 +477,14 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     /* Yahoo hack - we'll just try ID if it was offered by the server,
      * and IGNORE errors. */
     {
-	char *tmp = strstr(capabilities, " ID");
-	if (tmp && !isalnum((unsigned char)tmp[3]) && strstr(ctl->server.via ? ctl->server.via : ctl->server.pollname, "yahoo.com")) {
+	if (capabilities["ID"] && strstr(ctl->server.via ? ctl->server.via : ctl->server.pollname, "yahoo.com")) {
 		(void)gen_transact(sock, "ID (\"guid\" \"1\")");
 	}
     }
 
     if ((ctl->server.authenticate == A_ANY 
          || ctl->server.authenticate == A_EXTERNAL)
-	&& strstr(capabilities, "AUTH=EXTERNAL"))
+	&& capabilities["AUTH=EXTERNAL"])
     {
         ok = do_authcert(sock, "AUTHENTICATE", ctl->remotename);
 	if (ok)
@@ -508,7 +501,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef GSSAPI
     if (((ctl->server.authenticate == A_ANY && check_gss_creds("imap", ctl->server.truename) == PS_SUCCESS)
 	 || ctl->server.authenticate == A_GSSAPI)
-	&& strstr(capabilities, "AUTH=GSSAPI"))
+	&& capabilities["AUTH=GSSAPI"])
     {
 	if ((ok = do_gssauth(sock, "AUTHENTICATE", "imap",
 			ctl->server.truename, ctl->remotename)))
@@ -526,7 +519,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * in a challenge-response.
      */
 
-    if ((ctl->server.authenticate == A_ANY && strstr(capabilities, "AUTH=CRAM-MD5"))
+    if ((ctl->server.authenticate == A_ANY && capabilities["AUTH=CRAM-MD5"])
 	|| ctl->server.authenticate == A_CRAM_MD5)
     {
 	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl, NULL)))
@@ -587,7 +580,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * actually works.  So arrange things in such a way that
      * setting auth passwd makes it ignore this capability.
      */
-    if((ctl->server.authenticate==A_ANY&&!strstr(capabilities,"LOGINDISABLED"))
+    if((ctl->server.authenticate==A_ANY
+	    && !capabilities["LOGINDISABLED"])
 	|| ctl->server.authenticate == A_PASSWORD)
     {
 	/* these sizes guarantee no buffer overflow */
@@ -884,15 +878,15 @@ static int imap_getrange(int sock,
 	}
 	/* if recentcount is 0, return no mail */
 	if (recentcount == 0)
-		count = 0;
+		msgcount = 0;
 	if (outlevel >= O_DEBUG)
 	    report(stdout, ngettext("%d message waiting after re-poll\n",
 				    "%d messages waiting after re-poll\n",
-				    count), count);
+				    msgcount), msgcount);
     }
     else
     {
-	oldcount = count = 0;
+	oldcount = msgcount = 0;
 	ok = gen_transact(sock, 
 			  check_only ? "EXAMINE \"%s\"" : "SELECT \"%s\"",
 			  folder ? folder : "INBOX");
@@ -909,14 +903,14 @@ static int imap_getrange(int sock,
 	else if (outlevel >= O_DEBUG)
 	    report(stdout, ngettext("%d message waiting after first poll\n",
 				    "%d messages waiting after first poll\n",
-				    count), count);
+				    msgcount), msgcount);
 
 	/*
 	 * We should have an expunge here to
 	 * a) avoid fetching deleted mails during 'fetchall'
 	 * b) getting a wrong count of mails during 'no fetchall'
 	 */
-	if (!check_only && !ctl->keep && count > 0)
+	if (!check_only && !ctl->keep && msgcount > 0)
 	{
 	    ok = internal_expunge(sock);
 	    if (ok)
@@ -927,13 +921,13 @@ static int imap_getrange(int sock,
 	    if (outlevel >= O_DEBUG)
 		report(stdout, ngettext("%d message waiting after expunge\n",
 					"%d messages waiting after expunge\n",
-					count), count);
+					msgcount), msgcount);
 	}
 
-	if (count == 0 && do_idle)
+	if (msgcount == 0 && do_idle)
 	{
 	    /* no messages?  then we may need to idle until we get some */
-	    while (count == 0) {
+	    while (msgcount == 0) {
 		ok = imap_idle(sock);
 		if (ok)
 		{
@@ -944,24 +938,24 @@ static int imap_getrange(int sock,
 	    if (outlevel >= O_DEBUG)
 		report(stdout, ngettext("%d message waiting after re-poll\n",
 					"%d messages waiting after re-poll\n",
-					count), count);
+					msgcount), msgcount);
 	}
     }
 
-    *countp = oldcount = count;
+    *countp = oldcount = msgcount;
     recentcount = 0;
     startcount = 1;
 
     /* OK, now get a count of unseen messages and their indices */
-    if (!ctl->fetchall && count > 0)
+    if (!ctl->fetchall && msgcount > 0)
     {
 	if (unseen_messages)
 	    free(unseen_messages);
-	unseen_messages = (unsigned int *)xmalloc(count * sizeof(unsigned int));
-	memset(unseen_messages, 0, count * sizeof(unsigned int));
+	unseen_messages = (unsigned int *)xmalloc(msgcount * sizeof(unsigned int));
+	memset(unseen_messages, 0, msgcount * sizeof(unsigned int));
 	unseen = 0;
 
-	ok = imap_search(sock, ctl, count);
+	ok = imap_search(sock, ctl, msgcount);
 	if (ok != 0)
 	{
 	    report(stderr, GT_("search for unseen messages failed\n"));

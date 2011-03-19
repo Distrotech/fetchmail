@@ -74,7 +74,11 @@ if POP3_ENABLE
 fetchmail_SOURCES += pop3.c
 endif
 if IMAP_ENABLE
-fetchmail_SOURCES += imap.c
+fetchmail_SOURCES +=	imap.cpp IMAPCapa.h IMAPCapa.cpp
+check_PROGRAMS +=	IMAPCapa
+IMAPCapa_SOURCES =	IMAPCapa.cpp
+IMAPCapa_CPPFLAGS =	-DTEST
+TESTS +=		t.IMAPCapa
 endif
 if ETRN_ENABLE
 fetchmail_SOURCES += etrn.c
