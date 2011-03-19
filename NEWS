@@ -89,6 +89,8 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 # CHANGES
 * A foreground fetchmail can now accept a few more options while another copy is
   running in the background.
+* Fetchmail's IMAP client only probes CAPABILITY if it has to, i. e. if the
+  server doesn't send it in the greeting banner, or after STARTTLS.
 
 --------------------------------------------------------------------------------
 

@@ -35,7 +35,7 @@ using namespace boost;
 static int preauth = FALSE;
 
 /* session variables initialized in capa_probe() or imap_getauth() */
-IMAPCapa capabilities;
+static IMAPCapa capabilities;
 static int imap_version = IMAP4;
 static flag do_idle = FALSE, has_idle = FALSE;
 static int expunge_period = 1;
@@ -53,6 +53,16 @@ static int actual_deletions = 0;
 static int saved_timeout = 0, idle_timeout = 0;
 static time_t idle_start_time = 0;
 
+static void try_capamatch(const char *buf) {
+    const char *t;
+    if ((t = strstr(buf, "[CAPABILITY ")) && strstr(t, "]")) {
+	char *j = xstrdup(buf + 12);
+	strtok(j, "]");
+	capabilities.parse(j);
+	free(j);
+    }
+}
+
 static int imap_untagged_response(int sock, const char *buf)
 /* interpret untagged status responses */
 {
@@ -67,6 +77,12 @@ static int imap_untagged_response(int sock, const char *buf)
 	    && !strncmp(buf, "* PREAUTH", 9))
     {
 	preauth = TRUE;
+	try_capamatch(buf);
+    }
+    else if (stage == STAGE_GETAUTH
+	    && !strncmp(buf, "* OK", 4))
+    {
+	try_capamatch(buf);
     }
     else if (stage != STAGE_LOGOUT
 	    && !strncmp(buf, "* BYE", 5))
@@ -196,8 +212,7 @@ static int imap_response(int sock, char *argbuf)
 
 	/* all tokens in responses are caseblind */
 	for (cp = buf; *cp; cp++)
-	    if (islower((unsigned char)*cp))
-		*cp = toupper((unsigned char)*cp);
+	    *cp = toupper((unsigned char)*cp);
 
 	/* untagged responses start with "* " */
 	if (buf[0] == '*' && buf[1] == ' ') {
@@ -326,24 +341,15 @@ static void imap_canonicalize(char *result, char *raw, size_t maxlen)
 static void capa_probe(int sock, struct query *ctl)
 /* set capability variables from a CAPA probe */
 {
-    int	ok;
-
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-    if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
-    {
-	/* UW-IMAP server 10.173 notifies in all caps, but RFC2060 says we
-	   should expect a response in mixed-case */
-	if (capabilities["IMAP4REV1"])
-	{
-	    imap_version = IMAP4rev1;
-	    if (outlevel >= O_DEBUG)
-		report(stdout, GT_("Protocol identified as IMAP4 rev 1\n"));
-	} else {
-	    imap_version = IMAP4;
-	    if (outlevel >= O_DEBUG)
-		report(stdout, GT_("Protocol identified as IMAP4 rev 0\n"));
-	}
+    if (!capabilities.havecapa()) {
+	(void)gen_transact(sock, "CAPABILITY");
+	// we assume that the response parser picks this out
     }
+
+    imap_version = capabilities["IMAP4REV1"] ? IMAP4rev1 : IMAP4;
+    if (outlevel >= O_DEBUG)
+	report(stdout, GT_("Protocol identified as %s\n"), imap_version ? "IMAP4rev1" : "IMAP4");
 
     /* 
      * Handle idling.  We depend on coming through here on startup
@@ -440,6 +446,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		 * Now that we're confident in our TLS connection we can
 		 * guarantee a secure capability re-probe.
 		 */
+		capabilities.flush();
 		capa_probe(sock, ctl);
 		if (outlevel >= O_VERBOSE)
 		{
