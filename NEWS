@@ -69,12 +69,14 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   Contributed by Craig Brown.
 
 # REMOVED FEATURES
-* POP2 was removed
+* IMAP2 protocol support was removed.
+* POP2 protocol support was removed.
 * RPOP (not actually a protocol, but a variant of POP3) was removed
-* POP3: the uidl option has been removed. It is no longer configurable.
+* POP3: the uidl option has been removed. It is always on.
 * POP3: LAST is no longer used. It was removed from POP3 in 1994, and it could
-  cause mail loss.
-* Trio was removed, fetchmail expects reasonable stdio.h support levels.
+  cause mail loss when the connection was interrupted or if clients besides
+  fetchmail polled the mailbox.
+* Trio was removed, fetchmail expects reasonable stdio.h quality levels.
 * Support for systems that do not conform to C89 and POSIX 2001 was removed,
   this means that BeOS, EMX, NeXTSTEP quirks are no longer worked around.
 * The MX and host alias DNS lookups that fetchmail performs in multidrop mode

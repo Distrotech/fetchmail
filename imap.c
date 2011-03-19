@@ -19,7 +19,6 @@
 #include  "gettext.h"
 
 /* imap_version values */
-#define IMAP2		-1	/* IMAP2 or IMAP2BIS, RFC1176 */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
@@ -348,12 +347,6 @@ static void capa_probe(int sock, struct query *ctl)
 		report(stdout, GT_("Protocol identified as IMAP4 rev 0\n"));
 	}
     }
-    else if (ok == PS_ERROR)
-    {
-	imap_version = IMAP2;
-	if (outlevel >= O_DEBUG)
-	    report(stdout, GT_("Protocol identified as IMAP2 or IMAP2BIS\n"));
-    }
 
     /* 
      * Handle idling.  We depend on coming through here on startup
@@ -370,7 +363,7 @@ static void capa_probe(int sock, struct query *ctl)
 	    report(stdout, GT_("will idle after poll\n"));
     }
 
-    peek_capable = (imap_version >= IMAP4);
+    peek_capable = TRUE;
 }
 
 static int do_authcert (int sock, const char *command, const char *name)
@@ -738,7 +731,7 @@ static int imap_search(int sock, struct query *ctl, int count)
      * higher and only when keeping mails. This flag will have an
      * effect only when user has marked some unread mails for deletion
      * using another e-mail client. */
-    flag skipdeleted = (imap_version >= IMAP4) && ctl->keep;
+    flag skipdeleted = ctl->keep;
     const char *undeleted;
 
     /* Skip range search if there are less than or equal to
@@ -1192,27 +1185,22 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      * equivalent".  However, we know of at least one server that
      * treats them differently in the presence of MIME attachments;
      * the latter form downloads the attachment, the former does not.
-     * The server is InterChange, and the fool who implemented this
-     * misfeature ought to be strung up by his thumbs.  
+     * The server is InterChange.
      *
      * When I tried working around this by disabling use of the 4rev1 form,
      * I found that doing this breaks operation with M$ Exchange.
      * Annoyingly enough, Exchange's refusal to cope is technically legal
-     * under RFC2062.  Trust Microsoft, the Great Enemy of interoperability
-     * standards, to find a way to make standards compliance irritating....
+     * under RFC2062.
      */
     switch (imap_version)
     {
     case IMAP4rev1:	/* RFC 2060 */
+    default:
 	gen_send(sock, "FETCH %d BODY.PEEK[TEXT]", number);
 	break;
 
     case IMAP4:		/* RFC 1730 */
 	gen_send(sock, "FETCH %d RFC822.TEXT.PEEK", number);
-	break;
-
-    default:		/* RFC 1176 */
-	gen_send(sock, "FETCH %d RFC822.TEXT", number);
 	break;
     }
 
@@ -1288,20 +1276,13 @@ static int imap_delete(int sock, struct query *ctl, int number)
     number -= expunged;
 
     /*
-     * Use SILENT if possible as a minor throughput optimization.
-     * Note: this has been dropped from IMAP4rev1.
-     *
      * We set Seen because there are some IMAP servers (notably HP
      * OpenMail) that do message-receipt DSNs, but only when the seen
      * bit is set.  This is the appropriate time -- we get here right
      * after the local SMTP response that says delivery was
      * successful.
      */
-    if ((ok = gen_transact(sock,
-			imap_version == IMAP4 
-				? "STORE %d +FLAGS.SILENT (\\Seen \\Deleted)"
-				: "STORE %d +FLAGS (\\Seen \\Deleted)", 
-			number)))
+    if ((ok = gen_transact(sock, "STORE %d +FLAGS.SILENT (\\Seen \\Deleted)", number)))
 	return(ok);
     else
 	deletions++;
@@ -1329,11 +1310,7 @@ static int imap_mark_seen(int sock, struct query *ctl, int number)
     /* expunges change the message numbers */
     number -= expunged;
 
-    return(gen_transact(sock,
-	imap_version == IMAP4
-	? "STORE %d +FLAGS.SILENT (\\Seen)"
-	: "STORE %d +FLAGS (\\Seen)",
-	number));
+    return(gen_transact(sock,"STORE %d +FLAGS.SILENT (\\Seen)", number));
 }
 
 static int imap_end_mailbox_poll(int sock, struct query *ctl)
