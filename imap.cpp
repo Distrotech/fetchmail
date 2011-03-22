@@ -53,13 +53,21 @@ static int actual_deletions = 0;
 static int saved_timeout = 0, idle_timeout = 0;
 static time_t idle_start_time = 0;
 
-static void try_capamatch(const char *buf) {
-    const char *t;
-    if ((t = strstr(buf, "[CAPABILITY ")) && strstr(t, "]")) {
-	char *j = xstrdup(buf + 12);
-	strtok(j, "]");
-	capabilities.parse(j);
-	free(j);
+static void capa_doparse(const string &buf) {
+    capabilities.parse(buf);
+    if (outlevel >= O_DEBUG)
+	report(stdout, GT_("Server capabilities: %s\n"), capabilities.str().c_str());
+}
+
+static void capa_tryextract(const string &s_in) {
+    string s = to_upper_copy(s_in);
+    string m("[CAPABILITY ");
+    size_t p1, p2;
+    if ((p1 = s.find(m)) != s.npos
+	    && (p2 = s.find_first_of("]", p1 + 1)) != s.npos)
+    {
+	size_t l = m.size();
+	capa_doparse(s.substr(p1 + l, p2 - p1 - l));
     }
 }
 
