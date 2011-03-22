@@ -39,6 +39,7 @@ static IMAPCapa capabilities;
 static int imap_version = IMAP4;
 static flag do_idle = FALSE, has_idle = FALSE;
 static int expunge_period = 1;
+static bool capa_in_login;
 
 /* mailbox variables initialized in imap_getrange() */
 static int msgcount = 0, oldcount = 0, recentcount = 0, unseen = 0, deletions = 0;
@@ -63,11 +64,13 @@ static void capa_tryextract(const string &s_in) {
     string s = to_upper_copy(s_in);
     string m("[CAPABILITY ");
     size_t p1, p2;
+
     if ((p1 = s.find(m)) != s.npos
 	    && (p2 = s.find_first_of("]", p1 + 1)) != s.npos)
     {
 	size_t l = m.size();
 	capa_doparse(s.substr(p1 + l, p2 - p1 - l));
+	capa_in_login = true;
     }
 }
 
@@ -79,18 +82,18 @@ static int imap_untagged_response(int sock, const char *buf)
     if (stage == STAGE_GETAUTH
 	    && !strncmp(buf, "* CAPABILITY", 12))
     {
-	capabilities.parse(buf + 12);
+	capa_doparse(buf + 12);
     }
     else if (stage == STAGE_GETAUTH
 	    && !strncmp(buf, "* PREAUTH", 9))
     {
 	preauth = TRUE;
-	try_capamatch(buf);
+	capa_tryextract(buf);
     }
     else if (stage == STAGE_GETAUTH
 	    && !strncmp(buf, "* OK", 4))
     {
-	try_capamatch(buf);
+	capa_tryextract(buf);
     }
     else if (stage != STAGE_LOGOUT
 	    && !strncmp(buf, "* BYE", 5))
@@ -270,6 +273,8 @@ static int imap_response(int sock, char *argbuf)
 
         if (strncasecmp(cp, "OK", 2) == 0)
 	{
+            if (stage == STAGE_GETAUTH)
+		capa_tryextract(cp + 3);
 	    if (argbuf)
 		strcpy(argbuf, cp);
 	    return(PS_SUCCESS);
@@ -393,7 +398,7 @@ static int do_authcert (int sock, const char *command, const char *name)
     return gen_transact(sock, "%s EXTERNAL %s",command,buf);
 }
 
-static int imap_getauth(int sock, struct query *ctl, char *greeting)
+static int imap_do_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;
@@ -488,6 +493,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * Try the protocol variants that don't require passwords first.
      */
     ok = PS_AUTHFAIL;
+    capa_in_login = false;
 
     /* Yahoo hack - we'll just try ID if it was offered by the server,
      * and IGNORE errors. */
@@ -628,6 +634,17 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     return(ok);
 }
+
+static int imap_getauth(int sock, struct query *ctl, char *greeting) {
+    int rc = imap_do_getauth(sock, ctl, greeting);
+
+    if (rc == PS_SUCCESS && !capa_in_login)
+	capabilities.flush();
+	capa_probe(sock, ctl);
+
+    return rc;
+}
+
 
 static int internal_expunge(int sock)
 /* ship an expunge, resetting associated counters */
