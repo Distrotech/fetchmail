@@ -27,25 +27,24 @@ private:
     bool havecapabilities;
 
 public:
-    inline IMAPCapa() { havecapabilities = false; }
-    inline IMAPCapa(const string &capas) { parse(capas); }
+    IMAPCapa() : havecapabilities(false) { };
+    IMAPCapa(const string &capas) { parse(capas); }
 
-    inline bool havecapa(void) const { return havecapabilities; }
+    bool havecapa(void) const { return havecapabilities; }
     bool operator[] (const string &capa) const {
 	if (!havecapabilities) throw(string("IMAPCapa::operator[]: no capabilities parsed, use parse(const string &) first!"));
 	return capabilities.find(to_upper_copy(capa)) != capabilities.end();
     }
 
-    inline string str(void) const {
-	vector<string> sv;
+    void parse(const string &);
+
+    void flush() { capabilities.clear(); havecapabilities = false; }
+
+    string str(void) const {
 	stringstream ss;
 	copy(capabilities.begin(), capabilities.end(), ostream_iterator<string>(ss, " "));
 	return ss.rdbuf()->str();
     }
-
-    inline void flush() { capabilities.clear(); havecapabilities = false; }
-
-    void parse(const string &);
 
     virtual ~IMAPCapa();
 };
