@@ -971,21 +971,3 @@ static ssize_t cygwin_read(int sock, void *buf, size_t count)
     return count;
 }
 #endif /* __CYGWIN__ */
-
-#ifdef MAIN
-/*
- * Use the chargen service to test input buffering directly.
- * You may have to uncomment the `chargen' service description in your
- * inetd.conf (and then SIGHUP inetd) for this to work.  */
-main()
-{
-    int	 	sock = SockOpen("localhost", "chargen", NULL);
-    char	buf[80];
-
-    while (SockRead(sock, buf, sizeof(buf)-1))
-	SockWrite(1, buf, strlen(buf));
-    SockClose(sock);
-}
-#endif /* MAIN */
-
-/* socket.c ends here */
