@@ -28,14 +28,6 @@
 #include  "fm_md5.h"
 #include  "gettext.h"
 
-#ifdef TESTMODE
-extern unsigned char line1[];
-extern unsigned char line2[];
-extern unsigned char line3[];
-
-extern int linecount;
-#endif
-
 /* prototypes for internal functions */
 static int  POP3_rpa_resp(char* argbuf, int socket );
 static void LenAppend(char** pptr, int len);
@@ -155,9 +147,7 @@ int POP3_auth_rpa (char *userid, char *passphrase, int socket)
     /* Send Token 1, receive Token 2 */
 
     EncBase64(buf, bufp-buf);
-#ifndef TESTMODE
     SockPrintf(socket,"%s\r\n",buf);
-#endif
     if (outlevel >= O_MONITOR)
 	report(stdout, "> %s\n",buf);
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
@@ -231,9 +221,7 @@ int POP3_auth_rpa (char *userid, char *passphrase, int socket)
     /* Send Token 3, receive Token 4 */
 
     EncBase64(buf,bufp-buf);
-#ifndef TESTMODE
     SockPrintf(socket,"%s\r\n",buf);
-#endif
     if (outlevel >= O_MONITOR)
 	report(stdout, "> %s\n",buf);
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
@@ -326,9 +314,7 @@ int POP3_auth_rpa (char *userid, char *passphrase, int socket)
 	LenAppend(&bufp, 1 );
 	*(bufp++) = 0x42;
 	EncBase64(buf,bufp-buf);
-#ifndef TESTMODE
 	SockPrintf(socket,"%s\r\n",buf);
-#endif
 	if (outlevel >= O_MONITOR)
 	    report(stdout, "> %s\n",buf);
 	if ((ok = POP3_rpa_resp(buf,socket)) != 0)
@@ -368,17 +354,7 @@ static int POP3_rpa_resp (char *argbuf, int socket)
 
     if (outlevel >= O_DEBUG)
 	report(stdout,  GT_("Get response\n"));
-#ifndef TESTMODE
     sockrc = gen_recv(socket, buf, sizeof(buf));
-#else
-    linecount++;
-    if (linecount == 1) strcpy(buf,line1);
-    if (linecount == 2) strcpy(buf,line2);
-    if (linecount == 3) strcpy(buf,line3);
-/*  report(stdout, "--> "); fflush(stderr);  */
-/*  scanf("%s",&buf)                         */
-    sockrc = PS_SUCCESS;
-#endif
     if (sockrc == PS_SUCCESS) {
 	bufp = buf;
 	if ((*buf) == '+')
