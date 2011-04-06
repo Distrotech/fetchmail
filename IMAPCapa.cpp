@@ -78,7 +78,7 @@ int main() {
 
     result &= check("if uninitialized access throws exception", t_throwifuninit, c);
     c.parse("");
-    result &= check("if initialized acces does not throw exception", t_nothrowifinit, c);
+    result &= check("if initialized access does not throw exception", t_nothrowifinit, c);
     c.parse(s);
     cout << "- TEST: parsing \"" << s << "\" yields \"" << c.str() << "\"\n";
     result &= check("if we match sensitively", t_matchfoocase, c);
