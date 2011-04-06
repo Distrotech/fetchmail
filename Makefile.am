@@ -44,7 +44,7 @@ libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c \
 			libesmtp/gethostbyname.h libesmtp/gethostbyname.c \
 			smbtypes.h fm_getaddrinfo.c tls.c rfc822valid.c \
 			xmalloc.h sdump.h sdump.c x509_name_match.c \
-			fm_strl.h md5c.c
+			fm_strl.h md5c.c daemon.c
 if NTLM_ENABLE
 libfm_a_SOURCES += ntlmsubr.c
 endif
@@ -62,7 +62,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		gettext.h kerberos.h fm_md5.h netrc.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
-		fetchmail.c env.c idle.c options.c daemon.c \
+		fetchmail.c env.c idle.c options.c \
 		driver.c transact.c sink.c smtp.c \
 		idlist.c uid.c md5ify.c cram.c gssapi.c \
 		opie.c interface.c netrc.c \
@@ -96,13 +96,15 @@ fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
 check_PROGRAMS +=	rfc822 unmime netrc rfc2047e rfc822valid \
-			x509_name_match
+			x509_name_match t_idle
 
 rfc2047e_CFLAGS=	-DTEST
 
 rfc822valid_CFLAGS=	-DTEST
 
 rfc822_CFLAGS=		-DMAIN
+
+t_idle_SOURCES=		t_idle.cpp idle.c
 
 x509_name_match_CFLAGS=	-DTEST
 

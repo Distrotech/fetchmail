@@ -138,15 +138,4 @@ int interruptible_idle(int seconds)
     return(awoken ? lastsig : 0);
 }
 
-#ifdef MAIN
-int main(int argc, char **argv)
-{
-    for (;;)
-    {
-	printf("How may I serve you, master?\n");
-	interruptible_idle(5);
-    }
-}
-#endif /* MAIN */
-
 /* idle.c ends here */
