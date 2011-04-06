@@ -1,2 +1,2 @@
 #! /bin/sh
-exec ./x509_name_match ${TEST_VERBOSE:+-v}
+exec ./t_x509_name_match ${TEST_VERBOSE:+-v}

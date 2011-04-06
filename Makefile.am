@@ -53,7 +53,7 @@ libfm_a_DEPENDENCIES=	$(EXTRAOBJ)
 LDADD	=		libfm.a @LIBINTL@ $(LIBOBJS)
 DEPENDENCIES=		libfm.a $(LIBOBJS)
 
-check_PROGRAMS=
+check_PROGRAMS=		t_x509_name_match
 
 TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
@@ -96,7 +96,7 @@ fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
 check_PROGRAMS +=	rfc822 unmime netrc t_rfc2047e rfc822valid \
-			x509_name_match t_idle
+			t_idle
 
 t_rfc2047e_SOURCES=	t_rfc2047e.cpp
 
@@ -106,7 +106,7 @@ rfc822_SOURCES=		t_rfc822.cpp
 
 t_idle_SOURCES=		t_idle.cpp idle.c
 
-x509_name_match_CFLAGS=	-DTEST
+t_x509_name_match_SOURCES=	t_x509_name_match.cpp
 
 unmime_SOURCES=	unmime.c
 unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
