@@ -4,7 +4,7 @@ NAME:
    rfc822.c -- code for slicing and dicing RFC822 mail headers
 
 ENTRY POINTS:
-   nextaddr() -- parse the next address out of an RFC822 header
+   nxtaddr() -- parse the next address out of an RFC822 header
    reply_hack() -- append hostname to local header addresses 
 
 THEORY:
@@ -16,7 +16,7 @@ Really perverse combinations of quoting and commenting could break it.
 AUTHOR:
    Eric S. Raymond <esr@thyrsus.com>, 1997.  This source code example
 is part of fetchmail and the Unix Cookbook, and are released under the
-MIT license.  Compile with -DMAIN to build the demonstrator.
+MIT license.
 
 ******************************************************************************/
 
@@ -34,13 +34,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 
 #include "sdump.h"
 
-#ifndef MAIN
 #include "gettext.h"
-#else
-#include  <unistd.h>
-static int verbose;
-const char *program_name = "rfc822";
-#endif /* MAIN */
 
 #ifndef TRUE
 #define TRUE 1
@@ -59,9 +53,7 @@ char *reply_hack(
 {
     char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
-#ifndef MAIN
     int addresscount = 1;
-#endif /* MAIN */
 
     if (strncasecmp("From:", buf, 5)
 	&& strncasecmp("To:", buf, 3)
@@ -81,7 +73,6 @@ char *reply_hack(
 	return(buf);
     }
 
-#ifndef MAIN
     if (outlevel >= O_DEBUG) {
 	report_build(stdout, GT_("About to rewrite %s...\n"), (cp = sdump(buf, BEFORE_EOL(buf))));
 	xfree(cp);
@@ -92,7 +83,6 @@ char *reply_hack(
 	if (*cp == ',' || isspace((unsigned char)*cp))
 	    addresscount++;
     buf = (char *)xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
-#endif /* MAIN */
 
     /*
      * This is going to foo up on some ill-formed addresses.
@@ -104,13 +94,11 @@ char *reply_hack(
     has_host_part = has_bare_name_part = FALSE;
     for (from = buf; *from; from++)
     {
-#ifdef MAIN
-	if (verbose)
+	if (testmode)
 	{
 	    printf("state %d: %s", state, buf);
 	    printf("%*s^\n", (int)(from - buf + 10), " ");
 	}
-#endif /* MAIN */
 	if (state != 2)
 	{
 	    if (*from == '(')
@@ -219,14 +207,12 @@ char *reply_hack(
 	}
     }
 
-#ifndef MAIN
-    if (outlevel >= O_DEBUG) {
+    if (!testmode && outlevel >= O_DEBUG) {
 	report_complete(stdout, GT_("...rewritten version is %s.\n"),
 			(cp = sdump(buf, BEFORE_EOL(buf))));
 	xfree(cp)
     }
 
-#endif /* MAIN */
     *length = strlen(buf);
     return(buf);
 }
@@ -238,9 +224,7 @@ char *nxtaddr(const char *hdr /* header to be parsed, NUL to continue previous h
     static size_t tp;
     static const char *hp;
     static int	state, oldstate;
-#ifdef MAIN
     static const char *orighdr;
-#endif /* MAIN */
     int parendepth = 0;
 
 #define START_HDR	0	/* before header colon */
@@ -257,9 +241,7 @@ char *nxtaddr(const char *hdr /* header to be parsed, NUL to continue previous h
     {
 	hp = hdr;
 	state = START_HDR;
-#ifdef MAIN
 	orighdr = hdr;
-#endif /* MAIN */
 	tp = 0;
     }
 
@@ -267,13 +249,11 @@ char *nxtaddr(const char *hdr /* header to be parsed, NUL to continue previous h
 
     for (; *hp; hp++)
     {
-#ifdef MAIN
-	if (verbose)
+	if (testmode)
 	{
 	    printf("state %d: %s", state, orighdr);
 	    printf("%*s^\n", (int)(hp - orighdr + 10), " ");
 	}
-#endif /* MAIN */
 
 	if (state == ENDIT_ALL)		/* after last address */
 	    return(NULL);
@@ -402,74 +382,5 @@ char *nxtaddr(const char *hdr /* header to be parsed, NUL to continue previous h
 
     return(NULL);
 }
-
-#ifdef MAIN
-static void parsebuf(char *longbuf, int reply)
-{
-    char	*cp;
-    size_t	dummy;
-
-    if (reply)
-    {
-	reply_hack(longbuf, "HOSTNAME.NET", &dummy);
-	printf("Rewritten buffer: %s", (char *)longbuf);
-    }
-    else
-	if ((cp = nxtaddr(longbuf)) != (char *)NULL)
-	    do {
-		printf("\t-> \"%s\"\n", (char *)cp);
-	    } while
-		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
-}
-
-
-
-int main(int argc, char *argv[])
-{
-    char	buf[BUFSIZ], longbuf[BUFSIZ];
-    int		ch, reply;
-    
-    verbose = reply = FALSE;
-    while ((ch = getopt(argc, argv, "rv")) != EOF)
-	switch(ch)
-	{
-	case 'r':
-	    reply = TRUE;
-	    break;
-
-	case 'v':
-	    verbose = TRUE;
-	    break;
-	}
-
-    longbuf[0] = '\0';
-
-    while (fgets(buf, sizeof(buf)-1, stdin))
-    {
-	if (buf[0] == ' ' || buf[0] == '\t')
-	    strlcat(longbuf, buf, sizeof(longbuf));
-	else if (!strncasecmp("From: ", buf, 6)
-		    || !strncasecmp("To: ", buf, 4)
-		    || !strncasecmp("Reply-", buf, 6)
-		    || !strncasecmp("Cc: ", buf, 4)
-		    || !strncasecmp("Bcc: ", buf, 5))
-	    strlcpy(longbuf, buf, sizeof(longbuf));
-	else if (longbuf[0])
-	{
-	    if (verbose)
-		fputs(longbuf, stdout);
-	    parsebuf(longbuf, reply);
-	    longbuf[0] = '\0';
-	}
-    }
-    if (longbuf[0])
-    {
-	if (verbose)
-	    fputs(longbuf, stdout);
-	parsebuf(longbuf, reply);
-    }
-    exit(0);
-}
-#endif /* MAIN */
 
 /* rfc822.c end */

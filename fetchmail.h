@@ -442,6 +442,7 @@ extern void envquery(int, char **);
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
 extern int yydebug;		/* enable parse debugging */
+extern int testmode;		/* enable self-tests - only to be set by t_* programs. */
 
 /* these get computed */
 extern int batchcount;		/* count of messages sent in current batch */
