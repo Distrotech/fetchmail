@@ -44,7 +44,7 @@ libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c \
 			libesmtp/gethostbyname.h libesmtp/gethostbyname.c \
 			smbtypes.h fm_getaddrinfo.c tls.c rfc822valid.c \
 			xmalloc.h sdump.h sdump.c x509_name_match.c \
-			fm_strl.h md5c.c fm-unordered_set.h
+			fm_strl.h md5c.c
 if NTLM_ENABLE
 libfm_a_SOURCES += ntlmsubr.c
 endif

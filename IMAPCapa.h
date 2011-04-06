@@ -8,7 +8,7 @@
 #ifndef IMAPCAPA_H_
 #define IMAPCAPA_H_
 
-#include "fm-unordered_set.h"
+#include <boost/tr1/unordered_set.hpp>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -19,7 +19,7 @@
 using namespace std;
 using namespace boost;
 
-typedef fetchmail::uset<string>::type sosT;
+typedef std::tr1::unordered_set<string> sosT;
 
 class IMAPCapa {
 private:
