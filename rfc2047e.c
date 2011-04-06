@@ -31,10 +31,6 @@ static const char noenc[] = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQR
 static const char encchars[] = "!\"#$%&'*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}~";
 static const char ws[] = " \t\r\n";
 
-#ifdef TEST
-void report (FILE *fp, const char *format, ...) { (void)fp; (void)format;}
-#endif
-
 static int needs_enc(const char *string) {
     if (strspn(string, noenc) < strlen(string))
 	return 1;
@@ -194,17 +190,3 @@ char *rfc2047e(const char *string, const char *charset) {
     free(words);
     return out;
 }
-
-#ifdef TEST
-int main(int argc, char **argv) {
-    char *t;
-
-    if (argc > 1) {
-	t = rfc2047e(argv[1], argc > 2 ? argv[2] : "utf-8");
-	printf( " input: \"%s\"\n"
-		"output: \"%s\"\n", argv[1], t);
-	free(t);
-    }
-    return EXIT_SUCCESS;
-}
-#endif
