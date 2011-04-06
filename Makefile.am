@@ -95,14 +95,12 @@ if NEED_GETADDRINFO
 fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
-check_PROGRAMS +=	rfc822 unmime netrc t_rfc2047e rfc822valid \
+check_PROGRAMS +=	t_rfc822 unmime netrc t_rfc2047e t_rfc822valid \
 			t_idle
 
 t_rfc2047e_SOURCES=	t_rfc2047e.cpp
 
-rfc822valid_CFLAGS=	-DTEST
-
-rfc822_SOURCES=		t_rfc822.cpp
+t_rfc822_SOURCES=	t_rfc822.cpp
 
 t_idle_SOURCES=		t_idle.cpp idle.c
 

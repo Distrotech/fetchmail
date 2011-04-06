@@ -126,15 +126,3 @@ int rfc822_valid_msgid(const unsigned char *x) {
     if (*x != '>') return 0;
     return 1;
 }
-
-#ifdef TEST
-#include <stdio.h>
-
-int main(int argc, char **argv) {
-    int i;
-    for (i = 1; i < argc; i++) {
-	printf("%s: %s\n", argv[i], rfc822_valid_msgid((unsigned char *)argv[i]) ? "OK" : "INVALID");
-    }
-    return 0;
-}
-#endif
