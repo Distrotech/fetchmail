@@ -44,7 +44,8 @@ libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c \
 			libesmtp/gethostbyname.h libesmtp/gethostbyname.c \
 			smbtypes.h fm_getaddrinfo.c tls.c rfc822valid.c \
 			xmalloc.h sdump.h sdump.c x509_name_match.c \
-			fm_strl.h md5c.c daemon.c testmode.c
+			fm_strl.h md5c.c daemon.c testmode.c unmime.c \
+			netrc.h netrc.c
 if NTLM_ENABLE
 libfm_a_SOURCES += ntlmsubr.c
 endif
@@ -59,14 +60,14 @@ TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		gettext.h kerberos.h fm_md5.h netrc.h smtp.h \
+		gettext.h kerberos.h fm_md5.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c \
 		driver.c transact.c sink.c smtp.c \
 		idlist.c uid.c md5ify.c cram.c gssapi.c \
-		opie.c interface.c netrc.c \
-		unmime.c conf.c checkalias.c uid_db.h uid_db.c\
+		opie.c interface.c \
+		conf.c checkalias.c uid_db.h uid_db.c\
 		lock.h lock.c \
 		rcfile_l.l rcfile_y.y \
 		ucs/norm_charmap.c ucs/norm_charmap.h
@@ -95,7 +96,7 @@ if NEED_GETADDRINFO
 fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
-check_PROGRAMS +=	t_rfc822 unmime netrc t_rfc2047e t_rfc822valid \
+check_PROGRAMS +=	t_rfc822 t_unmime t_netrc t_rfc2047e t_rfc822valid \
 			t_idle
 
 t_rfc2047e_SOURCES=	t_rfc2047e.cpp
@@ -106,11 +107,9 @@ t_idle_SOURCES=		t_idle.cpp idle.c
 
 t_x509_name_match_SOURCES=	t_x509_name_match.cpp
 
-unmime_SOURCES=	unmime.c
-unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
+t_unmime_SOURCES=	t_unmime.cpp
 
-netrc_SOURCES=	netrc.c xmalloc.c report.c
-netrc_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
+t_netrc_SOURCES=	t_netrc.cpp xmalloc.c report.c
 
 @SET_MAKE@
 
