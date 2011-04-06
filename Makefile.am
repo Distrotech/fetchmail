@@ -76,8 +76,7 @@ endif
 if IMAP_ENABLE
 fetchmail_SOURCES +=	imap.cpp IMAPCapa.h IMAPCapa.cpp
 check_PROGRAMS +=	IMAPCapa
-IMAPCapa_SOURCES =	IMAPCapa.cpp
-IMAPCapa_CPPFLAGS =	-DTEST
+IMAPCapa_SOURCES =	t_IMAPCapa.cpp IMAPCapa.cpp
 TESTS +=		t.IMAPCapa
 endif
 if ETRN_ENABLE
