@@ -3,7 +3,7 @@
 
 const char *program_name;
 
-int main(int argc, char **argv)
+int main()
 {
     program_name = "t_idle";
 

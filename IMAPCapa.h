@@ -27,8 +27,8 @@ private:
     bool havecapabilities;
 
 public:
-    IMAPCapa() : havecapabilities(false) { };
-    IMAPCapa(const string &capas) { parse(capas); }
+    IMAPCapa() : havecapabilities(false) { }
+    explicit IMAPCapa(const string &capas) { parse(capas); }
 
     bool havecapa(void) const { return havecapabilities; }
     bool operator[] (const string &capa) const {

@@ -33,7 +33,8 @@ int main(int argc, char *argv[])
     bool	verbose;
 
     program_name = "rfc822";
-    verbose = reply = false;
+    verbose = false;
+    reply = 0;
     while ((ch = getopt(argc, argv, "rv")) != EOF)
 	switch(ch)
 	{
