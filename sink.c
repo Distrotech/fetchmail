@@ -1089,9 +1089,9 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	 */
 	nameslen = 0;
 	for (idp = msg->recipients; idp; idp = idp->next)
-	    if ((idp->val.status.mark == XMIT_ACCEPT))
+	    if (idp->val.status.mark == XMIT_ACCEPT)
 		nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
-	if ((*good_addresses == 0))
+	if (*good_addresses == 0)
 	    nameslen = strlen(run.postmaster);
 
 	names = (char *)xmalloc(nameslen + 1);	/* account for '\0' */
