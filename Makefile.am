@@ -103,6 +103,8 @@ t_rfc2047e_SOURCES=	t_rfc2047e.cpp
 
 t_rfc822_SOURCES=	t_rfc822.cpp
 
+t_rfc822valid_SOURCES=	t_rfc822valid.cpp
+
 t_idle_SOURCES=		t_idle.cpp idle.c
 
 t_x509_name_match_SOURCES=	t_x509_name_match.cpp

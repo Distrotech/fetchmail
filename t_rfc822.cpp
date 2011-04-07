@@ -2,8 +2,6 @@
 #include <unistd.h>
 #include <strings.h>
 
-using namespace std;
-
 int testmode = 0;
 int outlevel = O_DEBUG;
 const char *program_name;
