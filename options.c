@@ -649,7 +649,7 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --sslcertpath path to trusted-CA ssl certificate directory\n"));
 	P(GT_("      --sslcommonname  expect this CommonName from server (discouraged)\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
-	P(GT_("      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"));
+	P(GT_("      --sslproto    force ssl protocol (SSL23/SSL3/TLS1)\n"));
 #endif
 	P(GT_("      --plugin      specify external command to open connection\n"));
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
