@@ -2269,8 +2269,8 @@ msgstr ""
 "Servers.\n"
 
 #: options.c:654
-msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr "      --sslproto    SSL-Protokoll erzwingen (SSL2/SSL3/TLS1)\n"
+msgid "      --sslproto    force ssl protocol (SSL23/SSL3/TLS1)\n"
+msgstr "      --sslproto    SSL-Protokoll erzwingen (SSL23/SSL3/TLS1)\n"
 
 #: options.c:656
 msgid "      --plugin      specify external command to open connection\n"
@@ -3174,9 +3174,9 @@ msgstr "Datei-Deskriptor außerhalb des Bereichs für SSL"
 
 #: socket.c:901
 #, c-format
-msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+msgid "Invalid SSL protocol '%s' specified, using default (SSL23).\n"
 msgstr ""
-"Ungültiges SSL-Protokoll „%s“ angegeben, benutze Voreinstellung (SSLv23).\n"
+"Ungültiges SSL-Protokoll „%s“ angegeben, benutze Voreinstellung (SSL23).\n"
 
 #: socket.c:994
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
