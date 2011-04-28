@@ -206,7 +206,7 @@ TODO: todo.html $(srcdir)/dist-tools/html2txt
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/todo.html >$@ || { rm -f $@ ; exit 1 ; }
 
 fetchmail-man.html: fetchmail.man $(srcdir)/dist-tools/manServer.pl
-	env - "PATH=$$PATH" $(srcdir)/dist-tools/manServer.pl $(srcdir)/fetchmail.man >$@ \
+	env - "PATH=$$PATH" perl -T $(srcdir)/dist-tools/manServer.pl $(srcdir)/fetchmail.man >$@ \
 	|| { rm -f $@ ; exit 1 ; }
 
 dist-hook:
