@@ -452,7 +452,7 @@ int SockRead(int sock, char *buf, int len)
 		/* OK...  SSL_peek works a little different from MSG_PEEK
 			Problem is that SSL_peek can return 0 if there
 			is no data currently available.  If, on the other
-			hand, we loose the socket, we also get a zero, but
+			hand, we lose the socket, we also get a zero, but
 			the SSL_read then SEGFAULTS!  To deal with this,
 			we'll check the error code any time we get a return
 			of zero from SSL_peek.  If we have an error, we bail.
