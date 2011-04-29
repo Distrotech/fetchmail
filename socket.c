@@ -179,7 +179,7 @@ static int handle_plugin(const char *host,
 		(void) close(fds[1]);
 		if ( (dup2(fds[0],0) == -1) || (dup2(fds[0],1) == -1) ) {
 			report(stderr, GT_("dup2 failed\n"));
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		/* fds[0] is now connected to 0 and 1; close it */
 		(void) close(fds[0]);
@@ -188,7 +188,7 @@ static int handle_plugin(const char *host,
 		argvec = parse_plugin(plugin,host,service);
 		execvp(*argvec, argvec);
 		report(stderr, GT_("execvp(%s) failed\n"), *argvec);
-		exit(0);
+		exit(EXIT_FAILURE);
 		break;
 	default:	/* parent */
 		/* NOP */
