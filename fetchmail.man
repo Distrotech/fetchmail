@@ -365,7 +365,7 @@ email if this happens.
 .IP
 Beginning with fetchmail 6.3.10, the SMTP client uses the recommended minimum
 timeouts from RFC-5321 while waiting for the SMTP/LMTP server it is talking to.
-You can raise the timeouts even more, but you cannot shorten it. This is to
+You can raise the timeouts even more, but you cannot shorten them. This is to
 avoid a painful situation where fetchmail has been configured with a short
 timeout (a minute or less), ships a long message (many MBytes) to the local
 MTA, which then takes longer than timeout to respond "OK", which it eventually
