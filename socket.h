@@ -20,12 +20,6 @@ struct addrinfo;
 /** Create a new client socket; returns -1 on error */
 int SockOpen(const char *host, const char *service, const char *plugin, struct addrinfo **);
 
-/** Returns 1 if socket \a fd is OK, 0 if it isn't select()able
- * on - probably because it's been closed. You should
- * always check this function before passing stuff to the
- * select()-based waiter, as otherwise it may loop. 
- */
-int SockCheckOpen(int fd);
 
 /** 
 Get a string terminated by an '\n' (matches interface of fgets).

@@ -200,30 +200,6 @@ static int handle_plugin(const char *host,
 }
 #endif /* HAVE_SOCKETPAIR */
 
-#ifdef __UNUSED__
-
-int SockCheckOpen(int fd)
-/* poll given socket; is it selectable? */
-{
-    fd_set r, w, e;
-    int rt;
-    struct timeval tv;
-  
-    for (;;) 
-    {
-	FD_ZERO(&r); FD_ZERO(&w); FD_ZERO(&e);
-	FD_SET(fd, &e);
-    
-	tv.tv_sec = 0; tv.tv_usec = 0;
-	rt = select(fd+1, &r, &w, &e, &tv);
-	if (rt == -1 && (errno != EAGAIN && errno != EINTR))
-	    return 0;
-	if (rt != -1)
-	    return 1;
-    }
-}
-#endif /* __UNUSED__ */
-
 int UnixOpen(const char *path)
 {
     int sock = -1;
@@ -1026,30 +1002,6 @@ int SockClose(int sock)
 	_ctx[sock] = NULL;
     }
 #endif
-
-#ifdef __UNUSED__
-    /* 
-     * This hangs in RedHat 6.2 after fetchmail runs for a while a
-     * FIN_WAIT2 comes up in netstat and fetchmail never returns from
-     * the recv system call. (Reported from jtnews
-     * <jtnews@bellatlantic.net>, Wed, 24 May 2000 21:26:02.)
-     *
-     * Half-close the connection first so the other end gets notified.
-     *
-     * This stops sends but allows receives (effectively, it sends a
-     * TCP <FIN>).  */
-    if (shutdown(sock, 1) == 0) {
-	char ch;
-	/* If there is any data still waiting in the queue, discard it.
-	 * Call recv() until either it returns 0 (meaning we received a FIN)
-	 * or any error occurs.  This makes sure all data sent by the other
-	 * side is acknowledged at the TCP level.
-	 */
-	if (fm_peek(sock, &ch, 1) > 0)
-	    while (fm_read(sock, &ch, 1) > 0)
-		continue;
-    }
-#endif /* __UNUSED__ */
 
     /* if there's an error closing at this point, not much we can do */
     return(fm_close(sock));	/* this is guarded */
