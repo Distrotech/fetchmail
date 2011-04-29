@@ -200,6 +200,31 @@ static int handle_plugin(const char *host,
 }
 #endif /* HAVE_SOCKETPAIR */
 
+static int setsocktimeout(int sock, int which, int timeout) {
+    struct timeval tv;
+    int rc;
+
+    tv.tv_sec = timeout;
+    tv.tv_usec = 0;
+    rc = setsockopt(sock, SOL_SOCKET, which, &tv, sizeof(tv));
+    if (rc) {
+	report(stderr, GT_("setsockopt(%d, SOL_SOCKET) failed: %s"), sock, strerror(errno));
+    }
+    return rc;
+}
+
+/** Configure socket options such as send/receive timeout at the socket
+ * level, to avoid network-induced stalls.
+ */
+int SockTimeout(int sock, int timeout)
+{
+    int err = 0;
+
+    if (setsocktimeout(sock, SO_RCVTIMEO, timeout)) err = 1;
+    if (setsocktimeout(sock, SO_SNDTIMEO, timeout)) err = 1;
+    return err;
+}
+
 int UnixOpen(const char *path)
 {
     int sock = -1;
