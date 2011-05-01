@@ -1554,6 +1554,7 @@ int gen_recv(int sock  /** socket to which server is connected */,
 	     char *buf /* buffer to receive input */,
 	     int size  /* length of buffer */)
 {
+    size_t n;
     int oldphase = phase;	/* we don't have to be re-entrant */
 
     phase = SERVER_WAIT;
@@ -1573,10 +1574,11 @@ int gen_recv(int sock  /** socket to which server is connected */,
     else
     {
 	set_timeout(0);
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\0';
+	n = strlen(buf);
+	if (n > 0 && buf[n-1] == '\n')
+	    buf[--n] = '\0';
+	if (n > 0 && buf[n-1] == '\r')
+	    buf[--n] = '\0';
 	if (outlevel >= O_MONITOR)
 	    report(stdout, "%s< %s\n", protocol->name, buf);
 	phase = oldphase;

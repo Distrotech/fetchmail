@@ -185,15 +185,16 @@ int SMTP_ehlo(int sock, char smtp_mode, const char *host, char *name, char *pass
   *opt = 0;
   while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
   {
-      int  n = strlen(smtp_response);
+      size_t n;
 
       set_timeout(0);
       (void)set_signal_handler(SIGALRM, alrmsave);
 
-      if (smtp_response[strlen(smtp_response)-1] == '\n')
-	  smtp_response[strlen(smtp_response)-1] = '\0';
-      if (smtp_response[strlen(smtp_response)-1] == '\r')
-	  smtp_response[strlen(smtp_response)-1] = '\0';
+      n = strlen(smtp_response);
+      if (n > 0 && smtp_response[n-1] == '\n')
+	  smtp_response[--n] = '\0';
+      if (n > 0 && smtp_response[n-1] == '\r')
+	  smtp_response[--n] = '\0';
       if (n < 4)
 	  return SM_ERROR;
       smtp_response[n] = '\0';
@@ -329,10 +330,9 @@ int SMTP_ok(int sock, char smtp_mode, int mintimeout)
 
 	n = strlen(reply);
 	if (n > 0 && reply[n-1] == '\n')
-	    n--;
+	    reply[--n] = '\0';
 	if (n > 0 && reply[n-1] == '\r')
-	    n--;
-	reply[n] = '\0';
+	    reply[--n] = '\0';
 
 	/* stomp over control characters */
 	for (i = reply; *i; i++)

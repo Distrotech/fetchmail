@@ -65,6 +65,9 @@ fetchmail-6.3.20 (not yet released):
   variants are too diverse, and we've been bitten before -- and configure
   complains noisily on Cyrus-SASL's RFC1321 md5.h.
 
+# BUG FIXES
+* Call strlen() only once when removing CRLF from a line. (Sunil Shetye)
+
 # TRANSLATION UPDATES
   [ja]    Japanese (Takeshi Hamasaki)
 
