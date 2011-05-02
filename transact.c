@@ -1586,6 +1586,98 @@ int gen_recv(int sock  /** socket to which server is connected */,
     }
 }
 
+/*
+ * gen_recv_split() splits the response from a server which is too
+ * long to fit into the buffer into multiple lines. If the prefix is
+ * set as "MY FEATURES" and the response from the server is too long
+ * to fit in the buffer, as in:
+ *
+ * "MY FEATURES ABC DEF GHI JKLMNOPQRS TU VWX YZ"
+ *
+ * Repeated calls to gen_recv_split() may return:
+ *
+ * "MY FEATURES ABC DEF GHI"
+ * "MY FEATURES JKLMNOPQRS"
+ * "MY FEATURES TU VWX YZ"
+ *
+ * A response not beginning with the prefix "MY FEATURES" will not be
+ * split.
+ *
+ * To use:
+ * - Declare a variable of type struct RecvSplit
+ * - Call gen_recv_split_init() once
+ * - Call gen_recv_split() in a loop
+ */
+
+void gen_recv_split_init (const char *prefix, struct RecvSplit *rs)
+{
+    snprintf(rs->prefix, sizeof(rs->prefix), "%s", prefix);
+    rs->cached = 0;
+    rs->buf[0] = '\0';
+}
+
+int gen_recv_split(int sock  /** socket to which server is connected */,
+	     char *buf /* buffer to receive input */,
+	     int size  /* length of buffer */,
+	     struct RecvSplit *rs /* cached information across calls */)
+{
+    size_t n = 0;
+    int foundnewline = 0;
+    char *p;
+    int oldphase = phase;	/* we don't have to be re-entrant */
+
+    /* if this is not our first call, prepare the buffer */
+    if (rs->cached)
+    {
+	snprintf (buf, size, "%s%s", rs->prefix, rs->buf);
+	n = strlen(buf);
+	/* clear the cache for the next call */
+	rs->cached = 0;
+	rs->buf[0] = '\0';
+    }
+
+    phase = SERVER_WAIT;
+    set_timeout(mytimeout);
+    if (SockRead(sock, buf + n, size - n) == -1)
+    {
+	set_timeout(0);
+	phase = oldphase;
+	return(PS_SOCKET);
+    }
+    set_timeout(0);
+
+    n = strlen(buf);
+    if (n > 0 && buf[n-1] == '\n')
+    {
+	buf[--n] = '\0';
+	foundnewline = 1;
+    }
+    if (n > 0 && buf[n-1] == '\r')
+	buf[--n] = '\0';
+
+    if (foundnewline				/* we have found a complete line */
+	|| strncmp(buf, rs->prefix, strlen(rs->prefix))	/* mismatch in prefix */
+	|| !(p = strrchr(buf, ' '))		/* no space found in response */
+	|| p < buf + strlen(rs->prefix))	/* space is at the wrong location */
+    {
+	if (outlevel >= O_MONITOR)
+	    report(stdout, "%s< %s\n", protocol->name, buf);
+	phase = oldphase;
+	return(PS_SUCCESS);
+    }
+
+    /* we are ready to cache some information now. */
+    rs->cached = 1;
+    snprintf (rs->buf, sizeof(rs->buf), "%s", p);
+    *p = '\0';
+    if (outlevel >= O_MONITOR)
+	report(stdout, "%s< %s\n", protocol->name, buf);
+    if (outlevel >= O_DEBUG)
+	report(stdout, "%s< %s%s...\n", protocol->name, rs->prefix, rs->buf);
+    phase = oldphase;
+    return(PS_SUCCESS);
+}
+
 #if defined(HAVE_STDARG_H)
 int gen_transact(int sock, const char *fmt, ... )
 #else

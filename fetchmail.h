@@ -517,6 +517,13 @@ void resetidletimeout(void);
 int do_protocol(struct query *, const struct method *);
 
 /* transact.c: transaction support */
+struct RecvSplit
+{
+    char prefix[100];
+    int cached;
+    char buf[MSGBUFSIZE];
+};
+
 void init_transact(const struct method *);
 int readheaders(int sock,
 		       long fetchlen,
@@ -530,12 +537,16 @@ void gen_send(int sock, const char *, ... )
     __attribute__ ((format (printf, 2, 3)))
     ;
 int gen_recv(int sock, char *buf, int size);
+void gen_recv_split_init(const char *prefix, struct RecvSplit *rs);
+int gen_recv_split(int sock, char *buf, int size, struct RecvSplit *rs);
 int gen_transact(int sock, const char *, ... )
     __attribute__ ((format (printf, 2, 3)))
     ;
 #else
 void gen_send();
 int gen_recv();
+void gen_recv_split_init();
+int gen_recv_split();
 int gen_transact();
 #endif
 extern struct msgblk msgblk;

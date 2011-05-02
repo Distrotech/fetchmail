@@ -179,7 +179,7 @@ static int imap_untagged_response(int sock, const char *buf)
     return(PS_SUCCESS);
 }
 
-static int imap_response(int sock, char *argbuf)
+static int imap_response(int sock, char *argbuf, struct RecvSplit *rs)
 /* parse command response */
 {
     char buf[MSGBUFSIZE+1];
@@ -188,7 +188,11 @@ static int imap_response(int sock, char *argbuf)
 	int	ok;
 	char	*cp;
 
-	if ((ok = gen_recv(sock, buf, sizeof(buf))))
+	if (rs)
+	    ok = gen_recv_split(sock, buf, sizeof(buf), rs);
+	else
+	    ok = gen_recv(sock, buf, sizeof(buf));
+	if (ok != PS_SUCCESS)
 	    return(ok);
 
 	/* all tokens in responses are caseblind */
@@ -269,7 +273,7 @@ static int imap_ok(int sock, char *argbuf)
 {
     int ok;
 
-    while ((ok = imap_response(sock, argbuf)) == PS_UNTAGGED)
+    while ((ok = imap_response(sock, argbuf, NULL)) == PS_UNTAGGED)
 	; /* wait for the tagged response */
     return(ok);
 }
@@ -754,9 +758,6 @@ static int imap_idle(int sock)
     return(ok);
 }
 
-/* maximum number of numbers we can process in "SEARCH" response */
-# define IMAP_SEARCH_MAX 1000
-
 static int imap_search(int sock, struct query *ctl, int count)
 /* search for unseen messages */
 {
@@ -770,29 +771,20 @@ static int imap_search(int sock, struct query *ctl, int count)
     flag skipdeleted = (imap_version >= IMAP4) && ctl->keep;
     const char *undeleted;
 
-    /* Skip range search if there are less than or equal to
-     * IMAP_SEARCH_MAX mails. */
-    flag skiprangesearch = (count <= IMAP_SEARCH_MAX);
+    /* structure to keep the end portion of the incomplete response */
+    struct RecvSplit rs;
 
     /* startcount is higher than count so that if there are no
      * unseen messages, imap_getsizes() will not need to do
      * anything! */
     startcount = count + 1;
 
-    for (first = 1, last = IMAP_SEARCH_MAX; first <= count; first += IMAP_SEARCH_MAX, last += IMAP_SEARCH_MAX)
+    for (;;)
     {
-	if (last > count)
-	    last = count;
-
-restartsearch:
 	undeleted = (skipdeleted ? " UNDELETED" : "");
-	if (skiprangesearch)
-	    gen_send(sock, "SEARCH UNSEEN%s", undeleted);
-	else if (last == first)
-	    gen_send(sock, "SEARCH %d UNSEEN%s", last, undeleted);
-	else
-	    gen_send(sock, "SEARCH %d:%d UNSEEN%s", first, last, undeleted);
-	while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+	gen_send(sock, "SEARCH UNSEEN%s", undeleted);
+	gen_recv_split_init("* SEARCH", &rs);
+	while ((ok = imap_response(sock, buf, &rs)) == PS_UNTAGGED)
 	{
 	    if ((cp = strstr(buf, "* SEARCH")))
 	    {
@@ -824,39 +816,25 @@ restartsearch:
 		}
 	    }
 	}
-	/* if there is a protocol error on the first loop, try a
-	 * different search command */
-	if (ok == PS_ERROR && first == 1)
-	{
-	    if (skipdeleted)
-	    {
-		/* retry with "SEARCH 1:1000 UNSEEN" */
-		skipdeleted = FALSE;
-		goto restartsearch;
-	    }
-	    if (!skiprangesearch)
-	    {
-		/* retry with "SEARCH UNSEEN" */
-		skiprangesearch = TRUE;
-		goto restartsearch;
-	    }
-	    /* try with "FETCH 1:n FLAGS" */
-	    goto fetchflags;
-	}
-	if (ok != PS_SUCCESS)
+	if (ok != PS_ERROR) /* success or non-protocol error */
 	    return(ok);
-	/* loop back only when searching in range */
-	if (skiprangesearch)
-	    break;
-    }
-    return(PS_SUCCESS);
 
-fetchflags:
+	/* there is a protocol error. try a different search command. */
+	if (skipdeleted)
+	{
+	    /* retry with "SEARCH UNSEEN" */
+	    skipdeleted = FALSE;
+	    continue;
+	}
+	/* try with "FETCH 1:n FLAGS" */
+	break;
+    }
+
     if (count == 1)
 	gen_send(sock, "FETCH %d FLAGS", count);
     else
 	gen_send(sock, "FETCH %d:%d FLAGS", 1, count);
-    while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+    while ((ok = imap_response(sock, buf, NULL)) == PS_UNTAGGED)
     {
 	unsigned int num;
 	int consumed;
@@ -1067,7 +1045,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	gen_send(sock, "FETCH %d:%d RFC822.SIZE", first, last);
     else /* no unseen messages! */
 	return(PS_SUCCESS);
-    while ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+    while ((ok = imap_response(sock, buf, NULL)) == PS_UNTAGGED)
     {
 	unsigned int size;
 	int num;
@@ -1155,7 +1133,7 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     gen_send(sock, "FETCH %d RFC822.HEADER", number);
 
     /* looking for FETCH response */
-    if ((ok = imap_response(sock, buf)) == PS_UNTAGGED)
+    if ((ok = imap_response(sock, buf, NULL)) == PS_UNTAGGED)
     {
 		int consumed;
 	/* expected response formats:

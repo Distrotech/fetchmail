@@ -70,6 +70,10 @@ fetchmail-6.3.20 (not yet released):
 
 # BUG FIXES
 * Call strlen() only once when removing CRLF from a line. (Sunil Shetye)
+* Do not search for UNSEEN messages in ranges. Usually, there are very few new
+  messages and most of the range searches result in nothing. Instead, split the
+  long response to make the IMAP driver think that there are multiple lines of
+  response. (Sunil Shetye)
 
 # TRANSLATION UPDATES
   [ja]    Japanese (Takeshi Hamasaki)
