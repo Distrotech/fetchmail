@@ -761,7 +761,7 @@ static int imap_idle(int sock)
 static int imap_search(int sock, struct query *ctl, int count)
 /* search for unseen messages */
 {
-    int ok, first, last;
+    int ok;
     char buf[MSGBUFSIZE+1], *cp;
 
     /* Don't count deleted messages. Enabled only for IMAP4 servers or
