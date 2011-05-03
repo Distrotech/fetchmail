@@ -2781,6 +2781,14 @@ then that name is used as the default local name.  Otherwise
 session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
+.IP \fBFETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN\fP
+(since v6.3.20):
+If this environment variable is set and not empty, fetchmail will NOT mark 
+messages retrieved through IMAP as \\Seen as they are deleted. On some servers, 
+for instance HP OpenMail and MS Exchange, this suppresses delivery 
+notifications. The default (if this variable is unset or empty) is to mark 
+messages as \\Seen and \\Deleted at the same time.
+
 .IP \fBFETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS\fP
 (since v6.3.17):
 If this environment variable is set and not empty, fetchmail will always load

@@ -1311,6 +1311,22 @@ static int imap_delete(int sock, struct query *ctl, int number)
 /* set delete flag for given message */
 {
     int	ok;
+    /* Select which flags to set on message deletion: */
+    const char delflags_seen[] = "\\Seen \\Deleted";
+    const char delflags_unseen[] = "\\Deleted";
+    static const char *delflags;
+    /* Which environment variable to look for: */
+    const char dis_env[] = "FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN";
+
+    if (!delflags) {
+	char *tmp;
+	if ((tmp = getenv(dis_env)) != NULL && *tmp) {
+	    delflags = delflags_unseen;
+	} else {
+	    /* DEFAULT since many fetchmail versions <= 6.3.X */
+	    delflags = delflags_seen;
+	}
+    }
 
     (void)ctl;
     /* expunges change the fetch numbers */
@@ -1320,17 +1336,18 @@ static int imap_delete(int sock, struct query *ctl, int number)
      * Use SILENT if possible as a minor throughput optimization.
      * Note: this has been dropped from IMAP4rev1.
      *
-     * We set Seen because there are some IMAP servers (notably HP
-     * OpenMail) that do message-receipt DSNs, but only when the seen
-     * bit is set.  This is the appropriate time -- we get here right
+     * We set \Seen because there are some IMAP servers (notably HP
+     * OpenMail and MS Exchange) do message-receipt DSNs,
+     * but only when the seen bit gets set.
+     * This is the appropriate time -- we get here right
      * after the local SMTP response that says delivery was
      * successful.
      */
     if ((ok = gen_transact(sock,
 			imap_version == IMAP4 
-				? "STORE %d +FLAGS.SILENT (\\Seen \\Deleted)"
-				: "STORE %d +FLAGS (\\Seen \\Deleted)", 
-			number)))
+				? "STORE %d +FLAGS.SILENT (%s)"
+				: "STORE %d +FLAGS (%s)",
+			number, delflags)))
 	return(ok);
     else
 	deletions++;

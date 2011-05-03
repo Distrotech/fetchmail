@@ -64,6 +64,9 @@ fetchmail-6.3.20 (not yet released):
 * fetchmail now always uses its own MD5 implementation.  The library and header
   variants are too diverse, and we've been bitten before -- and configure
   complains noisily on Cyrus-SASL's RFC1321 md5.h.
+* fetchmail now supports an environment variable to suppress marking deleted
+  messages as seen at the same time, FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN.
+  See the manual page for details. Requested by Jonathan Buschmann.
 
 # BUG FIXES
 * Call strlen() only once when removing CRLF from a line. (Sunil Shetye)
