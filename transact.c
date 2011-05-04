@@ -24,6 +24,7 @@
 #include  <varargs.h>
 #endif
 #include <limits.h>
+#include <assert.h>
 
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
@@ -1606,45 +1607,74 @@ int gen_recv(int sock  /** socket to which server is connected */,
  * To use:
  * - Declare a variable of type struct RecvSplit
  * - Call gen_recv_split_init() once
- * - Call gen_recv_split() in a loop
+ * - Call gen_recv_split() in a loop, preferably with the same buffer
+ *   size as the "buf" array in struct RecvSplit
  */
+
+/* If this happens, the calling site needs to be adjusted to set
+ * a shorter prefix, or the prefix capacity needs to be raised in
+ * struct RecvSplit. */
+ __attribute__((noreturn))
+static void overrun(const char *f, size_t l)
+{
+    report(stderr, GT_("Buffer too small. This is a bug in the caller of %s:%lu.\n"), f, (unsigned long)l);
+    abort();
+}
 
 void gen_recv_split_init (const char *prefix, struct RecvSplit *rs)
 {
-    snprintf(rs->prefix, sizeof(rs->prefix), "%s", prefix);
+    if (strlcpy(rs->prefix, prefix, sizeof(rs->prefix)) > sizeof(rs->prefix))
+	overrun(__FILE__, __LINE__);
     rs->cached = 0;
     rs->buf[0] = '\0';
 }
 
+/** Function to split replies at blanks, and duplicate prefix.
+ * gen_recv_split_init() must be called before this can be used. */
 int gen_recv_split(int sock  /** socket to which server is connected */,
-	     char *buf /* buffer to receive input */,
-	     int size  /* length of buffer */,
-	     struct RecvSplit *rs /* cached information across calls */)
+	     char *buf /** buffer to receive input */,
+	     int size  /** length of buffer, must be the same for all calls */,
+	     struct RecvSplit *rs /** cached information across calls */)
 {
     size_t n = 0;
     int foundnewline = 0;
     char *p;
     int oldphase = phase;	/* we don't have to be re-entrant */
 
+    assert(size > 0);
+
     /* if this is not our first call, prepare the buffer */
     if (rs->cached)
     {
-	snprintf (buf, size, "%s%s", rs->prefix, rs->buf);
+	/*
+	 * if this condition is not met, we lose data
+	 * because the cached data does not fit into the buffer.
+	 * this cannot happen if size is the same throughout all calls.
+	 */
+	assert(strlen(rs->prefix) + strlen(rs->buf) + 1 <= (size_t)size);
+
+	if ((strlcpy(buf, rs->prefix, size) >= (size_t)size)
+		|| (strlcat(buf, rs->buf, size) >= (size_t)size)) {
+	    overrun(__FILE__, __LINE__);
+	}
+
 	n = strlen(buf);
 	/* clear the cache for the next call */
 	rs->cached = 0;
 	rs->buf[0] = '\0';
     }
 
-    phase = SERVER_WAIT;
-    set_timeout(mytimeout);
-    if (SockRead(sock, buf + n, size - n) == -1)
-    {
+    if ((size_t)size > n) {
+	int rr;
+
+	phase = SERVER_WAIT;
+	set_timeout(mytimeout);
+	rr = SockRead(sock, buf + n, size - n);
 	set_timeout(0);
 	phase = oldphase;
-	return(PS_SOCKET);
+	if (rr == -1)
+	    return PS_SOCKET;
     }
-    set_timeout(0);
 
     n = strlen(buf);
     if (n > 0 && buf[n-1] == '\n')
@@ -1656,25 +1686,25 @@ int gen_recv_split(int sock  /** socket to which server is connected */,
 	buf[--n] = '\0';
 
     if (foundnewline				/* we have found a complete line */
-	|| strncmp(buf, rs->prefix, strlen(rs->prefix))	/* mismatch in prefix */
+	|| strncasecmp(buf, rs->prefix, strlen(rs->prefix))	/* mismatch in prefix */
 	|| !(p = strrchr(buf, ' '))		/* no space found in response */
 	|| p < buf + strlen(rs->prefix))	/* space is at the wrong location */
     {
 	if (outlevel >= O_MONITOR)
 	    report(stdout, "%s< %s\n", protocol->name, buf);
-	phase = oldphase;
 	return(PS_SUCCESS);
     }
 
     /* we are ready to cache some information now. */
     rs->cached = 1;
-    snprintf (rs->buf, sizeof(rs->buf), "%s", p);
-    *p = '\0';
+    if (strlcpy(rs->buf, p, sizeof(rs->buf)) >= sizeof(rs->buf)) {
+	overrun(__FILE__, __LINE__);
+    }
+    *p = '\0'; /* chop off what we've cached */
     if (outlevel >= O_MONITOR)
 	report(stdout, "%s< %s\n", protocol->name, buf);
     if (outlevel >= O_DEBUG)
 	report(stdout, "%s< %s%s...\n", protocol->name, rs->prefix, rs->buf);
-    phase = oldphase;
     return(PS_SUCCESS);
 }
 
