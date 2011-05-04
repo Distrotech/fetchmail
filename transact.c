@@ -1,5 +1,5 @@
-/*
- * transact.c -- transaction primitives for the fetchmail driver loop
+/**
+ * \file transact.c -- transaction primitives for the fetchmail driver loop
  *
  * Copyright 2001 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
@@ -37,32 +37,39 @@
 #include "socket.h"
 #include "fetchmail.h"
 
+/** Macro to clamp the argument so it is >= INT_MIN. */
 #define _FIX_INT_MIN(x) ((x) < INT_MIN ? INT_MIN : (x))
+/** Macro to clamp the argument so it is <= INT_MAX. */
 #define _FIX_INT_MAX(x) ((x) > INT_MAX ? INT_MAX : (x))
+/** Macro to clamp the argument so it is representable as an int. */
 #define CAST_TO_INT(x) ((int)(_FIX_INT_MIN(_FIX_INT_MAX(x))))
+/** Macro to clamp the unsigned argument so it is representable as an int. */
 #define UCAST_TO_INT(x) ((int)(_FIX_INT_MAX(x)))
 
 /* global variables: please reinitialize them explicitly for proper
  * working in daemon mode */
 
 /* session variables initialized in init_transact() */
-int suppress_tags = FALSE;	/* emit tags? */
-char tag[TAGLEN];
-static int tagnum;
+int suppress_tags = FALSE;	/**< emit tags in the protocol? */
+char tag[TAGLEN];		/**< buffer for the tag */
+static int tagnum;		/**< local counter for the tag */
+/** Macro to generate the tag and store it in #tag. */
 #define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
-static const struct method *protocol;
-char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
+static const struct method *protocol; /**< description of the protocol used for the current poll */
+char shroud[PASSWORDLEN*2+3];	/**< string to shroud in debug output */
 
 /* session variables initialized in do_session() */
-int mytimeout;		/* value of nonreponse timeout */
+int mytimeout;		/**< value of nonreponse timeout */
 
 /* mail variables initialized in readheaders() */
-struct msgblk msgblk;
-static int accept_count, reject_count;
+struct msgblk msgblk;   /**< stores attributes of the currently processed message */
+static int accept_count /** count of accepted recipients */, reject_count /** count of rejected recipients */;
 
 /** add given address to xmit_names if it exactly matches a full address
  * \returns nonzero if matched */
-static int map_address(const char *addr, struct query *ctl, struct idlist **xmit_names)
+static int map_address(const char *addr,/**< address to match */
+	struct query *ctl,		/**< contains list of aliases */
+	struct idlist **xmit_names	/**< list of recipient names */)
 {
     const char	*lname;
 
@@ -78,9 +85,9 @@ static int map_address(const char *addr, struct query *ctl, struct idlist **xmit
 
 /** add given name to xmit_names if it matches declared localnames */
 static void map_name(const char *name, struct query *ctl, struct idlist **xmit_names)
-/*   name:	 name to map */
-/*   ctl:	 list of permissible aliases */
-/*   xmit_names: list of recipient names parsed out */
+/** \param name		name to map */
+/** \param ctl		list of permissible aliases */
+/** \param xmit_names	list of recipient names parsed out */
 {
     const char	*lname;
 
@@ -100,10 +107,10 @@ static void map_name(const char *name, struct query *ctl, struct idlist **xmit_n
 static void find_server_names(const char *hdr,
 			      struct query *ctl,
 			      struct idlist **xmit_names)
-/* parse names out of a RFC822 header into an ID list */
-/*   hdr:		RFC822 header in question */
-/*   ctl:		list of permissible aliases */
-/*   xmit_names:	list of recipient names parsed out */
+/** parse names out of a RFC822 header into an ID list */
+/** \param hdr		RFC822 header in question */
+/** \param ctl		list of permissible aliases */
+/** \param xmit_names	list of recipient names parsed out */
 {
     if (hdr == (char *)NULL)
 	return;
@@ -190,12 +197,12 @@ static void find_server_names(const char *hdr,
     }
 }
 
-/*
+/**
  * Return zero on a syntactically invalid address, nz on a valid one.
  *
  * This used to be strchr(a, '.'), but it turns out that lines like this
  *
- * Received: from punt-1.mail.demon.net by mailstore for markb@ordern.com
+ * Received: from punt-1.mail.demon.net by mailstore for markb@example.com
  *          id 938765929:10:27223:2; Fri, 01 Oct 99 08:18:49 GMT
  *
  * are not uncommon.  So now we just check that the following token is
@@ -203,21 +210,23 @@ static void find_server_names(const char *hdr,
  */
 #define VALID_ADDRESS(a)	(!strchr((a), '@'))
 
-static char *parse_received(struct query *ctl, char *bufp)
-/* try to extract real address from the Received line */
-/* If a valid Received: line is found, we return the full address in
- * a buffer which can be parsed from nxtaddr().  This is to ansure that
+/** write \a value into \a rbuf, indexed by \a tp, if there is
+ * sufficient room left. */
+#define RBUF_WRITE(value) do { if (tp < rbuf+sizeof(rbuf)-1) *tp++=(value); } while(0)
+
+/** Try to extract real address from the Received line.
+ * If a valid Received: line is found, we return the full address in
+ * a buffer which can be parsed from nxtaddr().  This is to ensure that
  * the local domain part of the address can be passed along in 
  * find_server_names() if it contains one.
  * Note: We should return a dummy header containing the address 
  * which makes nxtaddr() behave correctly. 
  */
+static char *parse_received(struct query *ctl, char *bufp)
 {
     char *base, *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
     struct addrinfo *ai0;
-
-#define RBUF_WRITE(value) do { if (tp < rbuf+sizeof(rbuf)-1) *tp++=(value); } while(0)
 
     /*
      * Try to extract the real envelope addressee.  We look here
@@ -364,7 +373,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 }
 
 /* shared by readheaders and readbody */
-static int sizeticker;
+static int sizeticker; /**< internal state variable for print_ticker() */
 
 /** Print ticker based on a amount of data transferred of \a bytes.
  * Increments \a *tickervar by \a bytes, and if it exceeds
@@ -383,30 +392,32 @@ static void print_ticker(int *tickervar, int bytes)
     }
 }
 
+/** Check if \a s is equal to a LF or CR LF sequence, followed by a NUL
+ * byte. \todo FIXME merge this with end_of_header? */
 #define EMPTYLINE(s)   (((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0') \
                        || ((s)[0] == '\n' && (s)[1] == '\0'))
 
+/** Check if \a s is an empty line. Accept "\r*\n" as EOH in order to be bulletproof against broken survers */
 static int end_of_header (const char *s)
-/* accept "\r*\n" as EOH in order to be bulletproof against broken survers */
 {
     while (s[0] == '\r')
 	s++;
     return (s[0] == '\n' && s[1] == '\0');
 }
 
+/** read message headers and ship to SMTP or MDA */
 int readheaders(int sock,
 		       long fetchlen,
 		       long reallen,
 		       struct query *ctl,
 		       int num,
 		       flag *suppress_readbody)
-/* read message headers and ship to SMTP or MDA */
-/*   sock:		to which the server is connected */
-/*   fetchlen:		length of message according to fetch response */
-/*   reallen:		length of message according to getsizes */
-/*   ctl:		query control record */
-/*   num:		index of message */
-/*   suppress_readbody:	whether call to readbody() should be supressed */
+/** \param sock		to which the server is connected */
+/** \param fetchlen	length of message according to fetch response */
+/** \param reallen	length of message according to getsizes */
+/** \param ctl		query control record */
+/** \param num		index of message */
+/** \param suppress_readbody	output: whether call to readbody() should be supressed */
 {
     struct addrblk
     {
@@ -1373,11 +1384,11 @@ process_headers:
 }
 
 int readbody(int sock, struct query *ctl, flag forward, int len)
-/* read and dispose of a message body presented on sock */
-/*   ctl:		query control record */
-/*   sock:		to which the server is connected */
-/*   len:		length of message */
-/*   forward:		TRUE to forward */
+/** read and dispose of a message body presented on \a sock */
+/** \param ctl		query control record */
+/** \param sock		to which the server is connected */
+/** \param forward	TRUE to forward */
+/** \param len		length of message */
 {
     int	linelen;
     char buf[MSGBUFSIZE+4];
@@ -1487,7 +1498,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 }
 
 void init_transact(const struct method *proto)
-/* initialize state for the send and receive functions */
+/** initialize state for the send and receive functions */
 {
     suppress_tags = FALSE;
     tagnum = 0;
@@ -1496,8 +1507,8 @@ void init_transact(const struct method *proto)
     shroud[0] = '\0';
 }
 
+/** shroud a password in the given buffer */
 static void enshroud(char *buf)
-/* shroud a password in the given buffer */
 {
     char *cp;
 
@@ -1514,14 +1525,14 @@ static void enshroud(char *buf)
 }
 
 #if defined(HAVE_STDARG_H)
+/** assemble command in printf(3) style and send to the server */
 void gen_send(int sock, const char *fmt, ... )
 #else
 void gen_send(sock, fmt, va_alist)
-int sock;		/* socket to which server is connected */
-const char *fmt;	/* printf-style format */
+int sock;		/** socket to which server is connected */
+const char *fmt;	/** printf-style format */
 va_dcl
 #endif
-/* assemble command in printf(3) style and send to the server */
 {
     char buf [MSGBUFSIZE+1];
     va_list ap;
@@ -1552,8 +1563,8 @@ va_dcl
 
 /** get one line of input from the server */
 int gen_recv(int sock  /** socket to which server is connected */,
-	     char *buf /* buffer to receive input */,
-	     int size  /* length of buffer */)
+	     char *buf /** buffer to receive input */,
+	     int size  /** length of buffer */)
 {
     size_t n;
     int oldphase = phase;	/* we don't have to be re-entrant */
@@ -1587,19 +1598,20 @@ int gen_recv(int sock  /** socket to which server is connected */,
     }
 }
 
-/*
+/** \addtogroup gen_recv_split
+ * @{
  * gen_recv_split() splits the response from a server which is too
  * long to fit into the buffer into multiple lines. If the prefix is
  * set as "MY FEATURES" and the response from the server is too long
  * to fit in the buffer, as in:
  *
- * "MY FEATURES ABC DEF GHI JKLMNOPQRS TU VWX YZ"
+ *   "MY FEATURES ABC DEF GHI JKLMNOPQRS TU VWX YZ"
  *
  * Repeated calls to gen_recv_split() may return:
  *
- * "MY FEATURES ABC DEF GHI"
- * "MY FEATURES JKLMNOPQRS"
- * "MY FEATURES TU VWX YZ"
+ *   "MY FEATURES ABC DEF GHI"
+ *   "MY FEATURES JKLMNOPQRS"
+ *   "MY FEATURES TU VWX YZ"
  *
  * A response not beginning with the prefix "MY FEATURES" will not be
  * split.
@@ -1611,17 +1623,20 @@ int gen_recv(int sock  /** socket to which server is connected */,
  *   size as the "buf" array in struct RecvSplit
  */
 
-/* If this happens, the calling site needs to be adjusted to set
- * a shorter prefix, or the prefix capacity needs to be raised in
- * struct RecvSplit. */
- __attribute__((noreturn))
+static void overrun(const char *f, size_t l) __attribute__((noreturn));
+
+/** Internal error report function. If this happens, the calling site
+ * needs to be adjusted to set a shorter prefix, or the prefix capacity
+ * needs to be raised in struct RecvSplit. */
 static void overrun(const char *f, size_t l)
 {
     report(stderr, GT_("Buffer too small. This is a bug in the caller of %s:%lu.\n"), f, (unsigned long)l);
     abort();
 }
 
-void gen_recv_split_init (const char *prefix, struct RecvSplit *rs)
+/** Initialize \a rs for later use by gen_recv_split. */
+void gen_recv_split_init (const char *prefix /** prefix to match/repeat */,
+	struct RecvSplit *rs /** structure to be initialized */)
 {
     if (strlcpy(rs->prefix, prefix, sizeof(rs->prefix)) > sizeof(rs->prefix))
 	overrun(__FILE__, __LINE__);
@@ -1707,16 +1722,17 @@ int gen_recv_split(int sock  /** socket to which server is connected */,
 	report(stdout, "%s< %s%s...\n", protocol->name, rs->prefix, rs->buf);
     return(PS_SUCCESS);
 }
+/** @} */
 
 #if defined(HAVE_STDARG_H)
 int gen_transact(int sock, const char *fmt, ... )
 #else
 int gen_transact(int sock, fmt, va_alist)
-int sock;		/* socket to which server is connected */
-const char *fmt;	/* printf-style format */
+int sock;		/** socket to which server is connected */
+const char *fmt;	/** printf-style format */
 va_dcl
 #endif
-/* assemble command in printf(3) style, send to server, accept a response */
+/** assemble command in printf(3) style, send to server, fetch a response */
 {
     int ok;
     char buf [MSGBUFSIZE+1];

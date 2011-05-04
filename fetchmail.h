@@ -402,11 +402,11 @@ struct query
     struct query *next;		/* next query control block in chain */
 };
 
-struct msgblk			/* message header parsed for open_sink() */
+struct msgblk			/** message header parsed for open_sink() */
 {
-    char   		*headers;	/* raw message headers */
-    struct idlist	*recipients;	/* addressees */
-    char		return_path[HOSTLEN + USERNAMELEN + 4]; 
+    char   		*headers;	/**< raw message headers */
+    struct idlist	*recipients;	/**< addressees */
+    char		return_path[HOSTLEN + USERNAMELEN + 4]; /**< envelope sender */
     int			msglen;
     int			reallen;
 };
@@ -517,11 +517,14 @@ void resetidletimeout(void);
 int do_protocol(struct query *, const struct method *);
 
 /* transact.c: transaction support */
+/** \ingroup gen_recv_split
+ * Data structure to cache data between \func gen_recv_split calls,
+ * must be initialized before use by calling \func gen_recv_split_init. */
 struct RecvSplit
 {
-    char prefix[100];
-    int cached;
-    char buf[MSGBUFSIZE];
+    char prefix[100];		/**< prefix to match/repeat when splitting lines */
+    int cached;			/**< flag to record if we have data cached in \a buf */
+    char buf[MSGBUFSIZE];	/**< buffer for cached data */
 };
 
 void init_transact(const struct method *);
