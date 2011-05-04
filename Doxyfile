@@ -31,7 +31,7 @@ PROJECT_NAME           = fetchmail
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = BRANCH_6-3
+PROJECT_NUMBER         = master
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -1292,6 +1292,7 @@ SEARCH_INCLUDES        = YES
 # the preprocessor.
 
 INCLUDE_PATH           = /usr/include \
+			 /usr/include/lsb3 \
                          build \
                          trio
 
