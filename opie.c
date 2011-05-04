@@ -45,7 +45,7 @@ int do_otp(int sock, const char *command, struct query *ctl)
 
     to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
 	suppress_tags = TRUE;
-    gen_send(sock, buffer, sizeof(buffer));
+    gen_send(sock, "%s", buffer);
 	suppress_tags = FALSE;
 
     if ((rval = gen_recv(sock, buffer, sizeof(buffer))))
@@ -72,7 +72,7 @@ int do_otp(int sock, const char *command, struct query *ctl)
 
     to64frombits(buffer, response, strlen(response));
     suppress_tags = TRUE;
-    gen_send(sock, buffer, strlen(buffer));
+    gen_send(sock, "%s", buffer);
     suppress_tags = FALSE;
 
     if ((rval = gen_recv(sock, buffer, sizeof(buffer))))
