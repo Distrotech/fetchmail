@@ -201,7 +201,7 @@ static void find_server_names(const char *hdr,
  * are not uncommon.  So now we just check that the following token is
  * not itself an email address.
  */
-#define VALID_ADDRESS(a)	!strchr(a, '@')
+#define VALID_ADDRESS(a)	(!strchr((a), '@'))
 
 static char *parse_received(struct query *ctl, char *bufp)
 /* try to extract real address from the Received line */
@@ -217,7 +217,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
     struct addrinfo *ai0;
 
-#define RBUF_WRITE(value) if (tp < rbuf+sizeof(rbuf)-1) *tp++=value
+#define RBUF_WRITE(value) do { if (tp < rbuf+sizeof(rbuf)-1) *tp++=(value); } while(0)
 
     /*
      * Try to extract the real envelope addressee.  We look here
