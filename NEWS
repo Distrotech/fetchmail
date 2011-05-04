@@ -74,6 +74,9 @@ fetchmail-6.3.20 (not yet released):
   messages and most of the range searches result in nothing. Instead, split the
   long response to make the IMAP driver think that there are multiple lines of
   response. (Sunil Shetye)
+* Do not print "skipping message" for old messages even in verbose mode. If
+  there are too many old messages, the logs just get filled without any real
+  activity. (Sunil Shetye) (suggested by Yunfan Jiang)
 
 # TRANSLATION UPDATES
   [ja]    Japanese (Takeshi Hamasaki)

@@ -511,14 +511,11 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
         }
 	if (msgcode == MSGLEN_OLD)
 	{
-  		/* To avoid flooding the syslog when using --keep,
-  		 * report "Skipped message" only when:
-  		 *  1) --verbose is on, or
-  		 *  2) fetchmail does not use syslog
-  		 */
-	    if (   (outlevel >= O_VERBOSE) ||
-	           (outlevel > O_SILENT && !run.use_syslog)
-	       )
+	    /*
+	     * To avoid flooding the logs when using --keep, report
+	     * skipping for old messages only when --flush is on.
+	     */
+	    if (outlevel > O_SILENT && ctl->flush)
 	    {
 		report_build(stdout, 
 			     GT_("skipping message %s@%s:%d"),
@@ -810,16 +807,11 @@ flagthemail:
 	}
 	else
 	{
-	    if (   (outlevel >= O_VERBOSE) ||
-         		/* To avoid flooding the syslog when using --keep,
-         		 * report "Skipped message" only when:
-         		 *  1) --verbose is on, or
-         		 *  2) fetchmail does not use syslog, or
-         		 *  3) the message was skipped for some other
-         		 *     reason than just being old.
-         		 */
-	           (outlevel > O_SILENT && (!run.use_syslog || msgcode != MSGLEN_OLD))
-	       )
+	    /*
+	     * To avoid flooding the logs when using --keep, report
+	     * skipping of new messages only.
+	     */
+	    if (outlevel > O_SILENT && msgcode != MSGLEN_OLD)
 	    report_complete(stdout, GT_(" not flushed\n"));
 
 	    /* maybe we mark this message as seen now? */
