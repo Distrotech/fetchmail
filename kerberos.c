@@ -249,7 +249,7 @@ int do_rfc1731(int sock, char *command, char *truename)
 
     /* ship down the response, accept the server's error/ok indication */
     suppress_tags = TRUE;
-    result = gen_transact(sock, buf1, strlen(buf1));
+    result = gen_transact(sock, "%s", buf1);
     suppress_tags = FALSE;
     if (result)
 	return(result);
