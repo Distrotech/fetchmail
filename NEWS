@@ -67,6 +67,9 @@ fetchmail-6.3.20 (not yet released):
 * fetchmail now supports an environment variable to suppress marking deleted
   messages as seen at the same time, FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN.
   See the manual page for details. Requested by Jonathan Buschmann.
+* fetchmail sets Internet domain sockets to "keepalive" mode now. Note that
+  there is no portable way to configure actual timeouts for this mode, and some
+  systems only support a system-wide timeout setting.
 
 # BUG FIXES
 * Call strlen() only once when removing CRLF from a line. (Sunil Shetye)

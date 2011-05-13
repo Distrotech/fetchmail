@@ -225,6 +225,12 @@ int SockTimeout(int sock, int timeout)
     return err;
 }
 
+/** Set socket to SO_KEEPALIVE. \return 0 for success. */
+int SockKeepalive(int sock) {
+    int keepalive = 1;
+    return setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof keepalive);
+}
+
 int UnixOpen(const char *path)
 {
     int sock = -1;
@@ -318,6 +324,9 @@ int SockOpen(const char *host, const char *service,
 		     GT_("name %d: cannot create socket family %d type %d: %s\n"), ord, ai->ai_family, ai->ai_socktype, strerror(e));
 	    continue;
 	}
+
+	SockTimeout(i, mytimeout);
+	SockKeepalive(i);
 
 	/* Save socket descriptor.
 	 * Used to close the socket after connect timeout. */
