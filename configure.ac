@@ -351,8 +351,8 @@ AC_CACHE_SAVE
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,
 	[  --enable-opie           support OTP through the OPIE library],
-	[ AC_CHECK_HEADER(opie.h,, [AC_MSG_ERROR(cannot find <opie.h>, which is required for OPIE support.)])
-          AC_CHECK_LIB(opie,opiegenerator,, [AC_MSG_ERROR(cannot find libopie, which is required for OPIE support.)])
+	[ AC_CHECK_HEADER(opie.h,, [AC_MSG_ERROR([cannot find <opie.h>, which is required for OPIE support.])])
+          AC_CHECK_LIB(opie,opiegenerator,, [AC_MSG_ERROR([cannot find libopie, which is required for OPIE support.])])
           with_opie=$enableval],
 	[with_opie=no])
 test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
