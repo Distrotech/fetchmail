@@ -15,13 +15,6 @@
 # define __END_DECLS /* empty */
 #endif
 
-#undef __P
-#if defined (__STDC__) || defined (_AIX) || (defined (__mips) && defined (_SYSTYPE_SVR4)) || defined(WIN32) || defined(__cplusplus)
-# define __P(protos) protos
-#else
-# define __P(protos) ()
-#endif
-
 /* The structure used to return account information from the .netrc. */
 typedef struct _netrc_entry {
   /* The exact host name given in the .netrc, NULL if default. */
@@ -41,14 +34,14 @@ __BEGIN_DECLS
 /* Parse FILE as a .netrc file (as described in ftp(1)), and return a
    list of entries.  NULL is returned if the file could not be
    parsed. */
-netrc_entry *parse_netrc __P((char *file));
+netrc_entry *parse_netrc (char *file);
 
 /* Return the netrc entry from LIST corresponding to HOST.  NULL is
    returned if no such entry exists. */
-netrc_entry *search_netrc __P((netrc_entry *list, char *host, char *account));
+netrc_entry *search_netrc (netrc_entry *list, char *host, char *account);
 
 /* Free the netrc list structure */
-void free_netrc __P((netrc_entry *list));
+void free_netrc (netrc_entry *list);
 __END_DECLS
 
 #endif /* _NETRC_H_ */

@@ -10,18 +10,11 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 # ADVANCE WARNING OF FEATURES TO BE REMOVED OR CHANGED IN FUTURE VERSIONS
 (There are no plans to remove features from a 6.3.X release, but they may be
-removed from a 6.4.0 or newer release.)
-* The MX and host alias DNS lookups that fetchmail performs in multidrop mode
-  are based on assumptions that are rarely met in practice, somewhat defective,
-  deprecated and may be removed from a future fetchmail version.
-  They have never supported IPv6 (including IPv6-mapped IPv4).
-  Non-DNS based alias keywords such as "aka" will remain in fetchmail.
+removed from a 7.0.0 or newer release.)
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not reasonably portable across operating systems.
-* POP2 is obsolete, support will be removed from a future fetchmail version.
 * IMAP2 and IMAP4 (not IMAP4r1) are obsolete, support may be removed from a
   future fetchmail version.
-* RPOP is obsolete, support will be removed from a future fetchmail release.
 * --sslcertck will become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
   is deprecated and may be removed from a future release.
@@ -36,15 +29,10 @@ removed from a 6.4.0 or newer release.)
   inconsistent and confusing.
 * The "protocol auto" default inside fetchmail may be removed from a future
   fetchmail release. Explicit configuration of the protocol is recommended.
-* Kerberos IV support may be removed from a future fetchmail release.
 * Kerberos 5 support may be removed from a future fetchmail release.
 * The --principal option may be removed from a future fetchmail release.
 * SIGHUP wakeup support may be removed from a future fetchmail release and
   cause fetchmail to terminate - it was broken for many years.
-* Support for operating systems that are not sufficiently POSIX compliant may be
-  removed or operation on such systems may be suboptimal for future releases.
-  This means that fetchmail may only continue to work on C99 and POSIX 2001
-  based systems.
 * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
   requirements (dependencies), such as Boost or other class libraries.
 * The softbounce option default will change to "false" in the next release.
@@ -53,6 +41,56 @@ removed from a 6.4.0 or newer release.)
   fetchmail may switch to a different SSL library.
 * SSLv2 support will be removed from a future fetchmail release. It has been
   obsolete for more than a decade.
+
+--------------------------------------------------------------------------------
+
+fetchmail-7.0.0 (not yet released):
+
+NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
+
+# MAJOR CHANGES
+* The UIDL handler code is now much faster, especially noticable with lots of
+  mail kept on a POP3 server. Where the 6.3.X code was of O(n^2) complexity,
+  we're down to O(n log n).
+  Contributed by Rainer Weikusat, MAD Partners Ltd./MSS GmbH.
+* The POP3 code now always uses UIDL, except if "fetchall" is in effect.
+  Fixes BerliOS Bug #16172.
+
+# FEATURES ADDED
+* Fetchmail can now retrieve credentials from PWMD. This needs to be enabled at
+  compile-time and requires run-time configuration. See README.PWMD for details.
+  Contributed by Ben Kibbey, author of libpwmd and pwmd.
+* Fetchmail now supports a retrieve-error command line or rcfile option that
+  takes exactly one argument, abort (default), continue or markseen.  This
+  specifies the policy used by fetchmail to handle messages whose bodies
+  fail to be retrieved due to server errors.  Both the continue and markseen
+  options will skip the message with errors and allow the session to
+  continue so that subsequent messages can be retrieved.  The markseen
+  option will also mark the message with errors as seen.
+  The default policy is to abort the session whenever a server error occurs.
+  Contributed by Craig Brown.
+
+# REMOVED FEATURES
+* IMAP2 protocol support was removed.
+* POP2 protocol support was removed.
+* RPOP (not actually a protocol, but a variant of POP3) was removed
+* POP3: the uidl option has been removed. It is always on.
+* POP3: LAST is no longer used. It was removed from POP3 in 1994, and it could
+  cause mail loss when the connection was interrupted or if clients besides
+  fetchmail polled the mailbox.
+* Trio was removed, fetchmail expects reasonable stdio.h quality levels.
+* Support for systems that do not conform to C89 and POSIX 2001 was removed,
+  this means that BeOS, EMX, NeXTSTEP quirks are no longer worked around.
+* The MX and host alias DNS lookups that fetchmail performs in multidrop mode
+  have been removed. They were based on the mistaken assumption that the
+  IMAP/POP3 server was also the MX server, which is rarely the case.  They have
+  never supported IPv6 (including IPv6-mapped IPv4) either.
+  Non-DNS based alias keywords such as "aka" remain.
+* Kerberos IV support was removed.
+
+# CHANGES
+* A foreground fetchmail can now accept a few more options while another copy is
+  running in the background.
 
 --------------------------------------------------------------------------------
 

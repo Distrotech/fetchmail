@@ -12,11 +12,9 @@
 
 #include <stdio.h>
 #include <string.h>
-
-#if defined(STDC_HEADERS)
 #include <string.h>
-#endif
 
+#include "fetchmail.h"
 #include "fm_md5.h"
 
 char *

@@ -15,20 +15,9 @@
 #include  <errno.h>
 #include  <string.h>
 #include  <signal.h>
-#ifdef HAVE_MEMORY_H
-#include  <memory.h>
-#endif /* HAVE_MEMORY_H */
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include  <unistd.h>
-#endif
-#if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
-#else
-#include  <varargs.h>
-#endif
 #include  <ctype.h>
 #include  <langinfo.h>
 
@@ -42,7 +31,7 @@
 
 #include  "socket.h"
 #include  "smtp.h"
-#include  "i18n.h"
+#include  "gettext.h"
 
 /* BSD portability hack...I know, this is an ugly place to put it */
 #if !defined(SIGCHLD) && defined(SIGCLD)
@@ -445,18 +434,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 
     responses[0] = xstrdup(smtp_response);
 
-#ifdef __UNUSED__
-    /*
-     * Don't do this!  It can really mess you up if, for example, you're
-     * reporting an error with a single RCPT TO address among several;
-     * RSET discards the message body and it doesn't get sent to the
-     * valid recipients.
-     */
-    smtp_rset(ctl);    /* stay on the safe side */
-    if (outlevel >= O_DEBUG)
-	report(stdout, GT_("Saved error is still %d\n"), smtperr);
-#endif /* __UNUSED */
-
     /*
      * Note: send_bouncemail message strings are not made subject
      * to gettext translation because (a) they're going to be 
@@ -533,12 +510,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * (b) we wouldn't want spammers to get confirmation that
 	 * this address is live, anyway.
 	 */
-#ifdef __DONT_FEED_THE_SPAMMERS__
-	if (run.bouncemail)
-	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
-			1, responses);
-#endif /* __DONT_FEED_THE_SPAMMERS__ */
 	free(responses[0]);
 	return(PS_REFUSED);
 
@@ -617,10 +588,7 @@ static int handle_smtp_report_without_bounce(struct query *ctl, struct msgblk *m
 	return(PS_REFUSED);
 
     case 553: /* invalid sending domain */
-#ifdef __DONT_FEED_THE_SPAMMERS__
-	if (run.bouncemail)
-	    return(PS_SUCCESS);
-#endif /* __DONT_FEED_THE_SPAMMERS__ */
+	/* do not send bounce mail - it would feed spammers */
 	return(PS_REFUSED);
 
     default:
@@ -1097,9 +1065,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* open a stream to a local MDA */
 {
-#ifdef HAVE_SETEUID
     uid_t orig_uid;
-#endif /* HAVE_SETEUID */
     struct	idlist *idp;
     int	length = 0, fromlen = 0, nameslen = 0;
     char	*names = NULL, *before, *after, *from = NULL;
@@ -1222,7 +1188,6 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
     if (outlevel >= O_DEBUG)
 	report(stdout, GT_("about to deliver with: %s\n"), before);
 
-#ifdef HAVE_SETEUID
     /*
      * Arrange to run with user's permissions if we're root.
      * This will initialize the ownership of any files the
@@ -1234,19 +1199,16 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	report(stderr, GT_("Cannot switch effective user id to %ld: %s\n"), (long)ctl->uid, strerror(errno));
 	return PS_IOERR;
     }
-#endif /* HAVE_SETEUID */
 
     sinkfp = popen(before, "w");
     free(before);
     before = NULL;
 
-#ifdef HAVE_SETEUID
     /* this will fail quietly if we didn't start as root */
     if (seteuid(orig_uid)) {
 	report(stderr, GT_("Cannot switch effective user id back to original %ld: %s\n"), (long)orig_uid, strerror(errno));
 	return PS_IOERR;
     }
-#endif /* HAVE_SETEUID */
 
     if (!sinkfp)
     {
@@ -1577,15 +1539,7 @@ int open_warning_by_mail(struct query *ctl)
 /* if rfc2047charset is non-NULL, encode the line (that is assumed to be
  * a header line) as per RFC-2047 using rfc2047charset as the character
  * set field */
-#if defined(HAVE_STDARG_H)
 void stuff_warning(const char *rfc2047charset, struct query *ctl, const char *fmt, ... )
-#else
-void stuff_warning(rfc2047charset, ctl, fmt, va_alist)
-const char *charset;
-struct query *ctl;
-const char *fmt;	/* printf-style format */
-va_dcl
-#endif
 {
     /* make huge -- i18n can bulk up error messages a lot */
     char	buf[2*MSGBUFSIZE+4];
@@ -1597,11 +1551,7 @@ va_dcl
      * case it was a string constant.  We make a virtue of that necessity
      * here by supporting stdargs/varargs.
      */
-#if defined(HAVE_STDARG_H)
     va_start(ap, fmt) ;
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf, sizeof(buf) - 2, fmt, ap);
     va_end(ap);
 
@@ -1620,6 +1570,20 @@ void close_warning_by_mail(struct query *ctl, struct msgblk *msg)
 {
     stuff_warning(NULL, ctl, GT_("-- \nThe Fetchmail Daemon"));
     close_sink(ctl, msg, TRUE);
+}
+
+void abort_message_sink(struct query *ctl)
+/*
+ * Forcibly close the SMTP connection and re-open.
+ *
+ * Used to abort message delivery once the DATA command has been issued.
+ * Required because all text after the DATA command is considered to be
+ * part of the message body (it is impossible to issue an SMTP command
+ * to abort message delivery once the DATA command has been issued).
+ */
+{
+  smtp_close(ctl, 0);
+  smtp_setup(ctl);
 }
 
 /* sink.c ends here */

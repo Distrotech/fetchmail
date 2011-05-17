@@ -9,31 +9,17 @@
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
-#ifdef HAVE_MEMORY_H
-#include  <memory.h>
-#endif /* HAVE_MEMORY_H */
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
-#if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
-#else
-#include  <varargs.h>
-#endif
 #include <limits.h>
 #include <assert.h>
 
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <sys/socket.h>
 #include <netdb.h>
 #include "fm_md5.h"
 
-#include "i18n.h"
+#include "gettext.h"
 #include "socket.h"
 #include "fetchmail.h"
 
@@ -687,15 +673,6 @@ eoh:
 	 * We will just check if the first message in the mailbox has an
 	 * X-IMAP: header.
 	 */
-#ifdef POP2_ENABLE
-	/*
-	 * We disable this check under POP2 because there's no way to
-	 * prevent deletion of the message.  So at least we ought to
-	 * forward it to the user so he or she will have some clue
-	 * that things have gone awry.
-	 */
-	if (servport("pop2") != servport(protocol->service))
-#endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);
 		retain_mail = 1;
@@ -887,24 +864,6 @@ eoh:
 	    sender_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Resent-Sender:", line, 14) && (strchr(line, '@') || strchr(line, '!')))
 	    resent_sender_offs = (line - msgblk.headers);
-
-#ifdef __UNUSED__
- 	else if (!strncasecmp("Message-Id:", line, 11))
-	{
-	    if (ctl->server.uidl)
- 	    {
-	        char id[IDLEN+1];
-
-		line[IDLEN+12] = 0;		/* prevent stack overflow */
- 		sscanf(line+12, "%s", id);
- 	        if (!str_find( &ctl->newsaved, num))
-		{
- 		    struct idlist *newl = save_str(&ctl->newsaved,id,UID_SEEN);
-		    newl->val.status.num = num;
-		}
- 	    }
- 	}
-#endif /* __UNUSED__ */
 
 	/* if multidrop is on, gather addressee headers */
 	if (MULTIDROP(ctl))
@@ -1522,15 +1481,10 @@ static void enshroud(char *buf)
     }
 }
 
-#if defined(HAVE_STDARG_H)
 /** assemble command in printf(3) style and send to the server */
-void gen_send(int sock, const char *fmt, ... )
-#else
-void gen_send(sock, fmt, va_alist)
-int sock;		/** socket to which server is connected */
-const char *fmt;	/** printf-style format */
-va_dcl
-#endif
+void gen_send(int sock/** socket to which server is connected */,
+	      const char *fmt /** printf-style format */,
+	      ...)
 {
     char buf [MSGBUFSIZE+1];
     va_list ap;
@@ -1540,11 +1494,7 @@ va_dcl
     else
 	buf[0] = '\0';
 
-#if defined(HAVE_STDARG_H)
     va_start(ap, fmt);
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf + strlen(buf), sizeof(buf)-2-strlen(buf), fmt, ap);
     va_end(ap);
 
@@ -1723,15 +1673,10 @@ int gen_recv_split(int sock  /** socket to which server is connected */,
 }
 /** @} */
 
-#if defined(HAVE_STDARG_H)
-int gen_transact(int sock, const char *fmt, ... )
-#else
-int gen_transact(int sock, fmt, va_alist)
-int sock;		/** socket to which server is connected */
-const char *fmt;	/** printf-style format */
-va_dcl
-#endif
 /** assemble command in printf(3) style, send to server, fetch a response */
+int gen_transact(int sock	 /** socket to which server is connected */,
+		 const char *fmt /** printf-style format */,
+		 ...)
 {
     int ok;
     char buf [MSGBUFSIZE+1];
@@ -1745,11 +1690,7 @@ va_dcl
     else
 	buf[0] = '\0';
 
-#if defined(HAVE_STDARG_H)
     va_start(ap, fmt) ;
-#else
-    va_start(ap);
-#endif
     vsnprintf(buf + strlen(buf), sizeof(buf)-2-strlen(buf), fmt, ap);
     va_end(ap);
 

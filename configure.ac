@@ -9,15 +9,18 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl XXX - if bumping version here, check fetchmail.man, too!
-AC_INIT([fetchmail],[6.3.20-pre1],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.4.0-alpha1],[fetchmail-devel@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
 
 AC_CANONICAL_HOST
 
+dnl keep this before stuff that runs the compiler!
+AC_USE_SYSTEM_EXTENSIONS
+
 dnl automake options are in Makefile.am
-AC_PREREQ(2.60)
+AC_PREREQ(2.64)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE
 
@@ -31,21 +34,12 @@ AM_PATH_PYTHON(2.0,,AC_MSG_WARN([Disabling fetchmailconf: python 2.0 or greater 
 AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 
 AC_PROG_AWK
-AC_PROG_CC
-AM_PROG_CC_C_O
+AC_PROG_CC_C99
 AC_PROG_INSTALL
-AC_PROG_CPP			dnl Later checks need this.
+AM_PROG_LEX
+AC_PROG_MAKE_SET
 AC_PROG_RANLIB
-AM_PROG_CC_C_O
-AC_USE_SYSTEM_EXTENSIONS
-
-AC_ISC_POSIX
-dnl AC_ISC_POSIX: - XXX FIXME: remove in fetchmail 6.4.
-dnl This macro adds `-lcposix' to output variable `LIBS' if necessary
-dnl for Posix facilities.  Sun dropped support for the obsolete
-dnl INTERACTIVE Systems Corporation Unix on 2006-07-23.  New programs
-dnl need not use this macro.  It is implemented as
-dnl `AC_SEARCH_LIBS([strerror], [cposix])'
+AC_PROG_YACC
 
 dnl check for b0rked Solaris (and other shells) and find one that works
 AC_MSG_CHECKING(for a working shell...)
@@ -64,31 +58,11 @@ if test "x$SHELL" = "x" ; then
     AC_MSG_ERROR(no SUS compliant shell found - on Solaris, install SUNWxcu4)
 fi
 
+AC_CHECK_HEADERS([arpa/nameser.h])
 
-AC_HEADER_STDC
-AC_HEADER_TIME
-AC_TYPE_SIZE_T
-AC_TYPE_PID_T
-AC_TYPE_SIGNAL
-AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
-	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
-	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
-	sys/select.h sys/socket.h sys/time.h langinfo.h])
-if test _$ac_cv_header_stdarg_h != _yes ; then
-AC_MSG_WARN([stdarg.h is not defined. Unsupported configuration, proceed at your own risk.])
-fi
-AC_CHECK_TYPE(u_int32_t,,
-	AC_DEFINE(u_int32_t,unsigned int,
-		[Define to unsigned int if <sys/types.h> does not define.]),
-	[AC_INCLUDES_DEFAULT
-#ifdef HAVE_ARPA_NAMESER_H
-#include <arpa/nameser.h>
-#endif])
 AC_CHECK_HEADERS([resolv.h],,,[
 #include <sys/types.h>
-#ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#endif
 #ifdef HAVE_ARPA_NAMESER_H
 #include <arpa/nameser.h>
 #endif
@@ -96,16 +70,8 @@ AC_CHECK_HEADERS([resolv.h],,,[
 
 AC_CHECK_DECLS([h_errno],,,[
 	AC_INCLUDES_DEFAULT
-	#ifdef HAVE_NETDB_H
 	#include <netdb.h>
-	#endif
 ])
-
-AC_C_CONST			dnl getopt needs this.
-
-AM_PROG_LEX
-AC_PROG_MAKE_SET
-AC_PROG_YACC
 
 # Check for OS special cases
 case $host_os in
@@ -117,20 +83,6 @@ darwin*)
 freebsd*)
     AC_MSG_NOTICE(found FreeBSD - Adding -lkvm -lcom_err to standard libraries)
     LIBS="$LIBS -lkvm -lcom_err"
-    ;;
-# Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
-# not working.
-lynxos*)
-    AC_MSG_NOTICE(found LynxOS - Adding -lbsd to standard libraries)
-    LIBS="$LIBS -lbsd"
-    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
-    AC_MSG_NOTICE(found LynxOS - Prepending standard include path to gcc flags)
-    CPPFLAGS="$CPPFLAGS -I/usr/include"
-    ;;
-# Check for Rhapsody special case: it doesn't like -s
-rhapsody*)
-    AC_MSG_NOTICE(found Rhapsody - Removing -s load flag)
-    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
     ;;
 esac
 
@@ -155,46 +107,22 @@ AC_CHECK_FUNC(inet_addr,
     AC_MSG_RESULT(using libc's inet_addr),
     AC_CHECK_LIB(nsl,inet_addr))
 
-dnl Port hack for Interactive UNIX System V/386 Release 3.2
-AC_CHECK_LIB(cposix, strchr,
-		[DEFS="$DEFS -D_SYSV3"
-		LIBS="$LIBS -lcposix"])
-
-dnl Port hack for Sparc/NetBSD-1.5
-dnl
-dnl NB: this has been disabled as it causes the unconditional
-dnl addition of libintl to the build, which is both undesired
-dnl and breaks on Solaris/Blastwave.org machines.
-dnl
-dnl AC_CHECK_LIB(intl, gettext,
-dnl 		[LIBS="$LIBS -lintl"])
-
-AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
+AC_REPLACE_FUNCS([stpcpy strlcpy strlcat])
 
 AC_CHECK_FUNC(getopt_long, [],
               [AC_LIBSOURCES([getopt.c, getopt1.c])
 	       EXTRAOBJ="$EXTRAOBJ getopt.\$(OBJEXT) getopt1.\$(OBJEXT)"])
 
-AC_FUNC_VPRINTF
-
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
-  strerror syslog snprintf vprintf vsnprintf vsyslog dnl
-  atexit inet_aton strftime setrlimit socketpair dnl
-  sigaction strdup setlocale)
+AC_CHECK_FUNCS(vsyslog inet_aton)
 
-AC_CHECK_DECLS([strerror,getenv])
 dnl INET6 is used by KAME/getnameinfo
 AC_CACHE_CHECK(for AF_INET6/PF_INET6,ac_cv_inet6,
 AC_COMPILE_IFELSE([
   AC_LANG_PROGRAM([[
-    #ifdef HAVE_SYS_TYPES_H
     #include <sys/types.h>
-    #endif
-    #ifdef HAVE_SYS_SOCKET_H
     #include <sys/socket.h>
-    #endif
   ]],[[
     int foo = AF_INET6;
     int bar = PF_INET6;
@@ -220,9 +148,7 @@ for lib in '' -lresolv; do
     LIBS="$old_LIBS $lib"
     AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#endif
 #ifdef HAVE_ARPA_NAMESER_H
 #include <arpa/nameser.h>
 #endif
@@ -241,50 +167,29 @@ done
 dnl Check for libcrypt -- it may live in libc or libcrypt, as on IRIX
 AC_CHECK_FUNC(crypt, , AC_CHECK_LIB(crypt,crypt))
 
-dnl Check for usable void pointer type
-AC_MSG_CHECKING(use of void pointer type)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[char *p;
-    void *xmalloc();
-    p = (char *) xmalloc(1);
-   ]])],[AC_DEFINE(HAVE_VOIDPOINTER,1,[Define if your C compiler allows void * as a function result]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
-
-dnl Check for ANSI volatile
-AC_C_VOLATILE
-
-dnl Check out the wait reality.  We have to assume sys/wait.h is present.
-AC_CHECK_FUNCS(waitpid wait3)
-AC_MSG_CHECKING(for union wait);
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <sys/wait.h>]], [[union wait status; int pid; pid = wait (&status);
-#ifdef WEXITSTATUS
-/* Some POSIXoid systems have both the new-style macros and the old
-   union wait type, and they do not work together.  If union wait
-   conflicts with WEXITSTATUS et al, we don't want to use it at all.  */
-if (WEXITSTATUS (status) != 0) pid = -1;
-#endif
-#ifdef HAVE_WAITPID
-/* Make sure union wait works with waitpid.  */
-pid = waitpid (-1, &status, 0);
-#endif
-]])],[AC_DEFINE(HAVE_UNION_WAIT,1,Define if 'union wait' is the type of the first arg to wait functions.) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
-
 AC_MSG_CHECKING(sys_siglist declaration in signal.h or unistd.h)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>
 /* NetBSD declares sys_siglist in <unistd.h>.  */
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif]], [[char *msg = *(sys_siglist + 1);]])],[AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+]], [[char *msg = *(sys_siglist + 1);]])],[AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
-# Find the right directory to put the root-mode PID file in
-for dir in "/var/run" "/etc"
-do
-	if test -d $dir 
-	then
-		break;
-	fi
-done
-AC_MSG_RESULT(root-mode pid file will go in $dir)
-AC_DEFINE_UNQUOTED(PID_DIR, "$dir", directory for PID lock files)
+AC_DEFINE_UNQUOTED(PID_DIR, "/var/run", directory for PID lock files)
+
+AC_ARG_ENABLE(pwmd,
+	[  --enable-pwmd           enable Password Manager Daemon support],
+	, [enable_pwmd=no])
+
+if test "$enable_pwmd" = "yes"; then
+    PKG_CHECK_EXISTS([libpwmd], have_libpwmd=1,
+		     AC_MSG_ERROR([Could not find libpwmd pkg-config module.]))
+
+
+    PKG_CHECK_MODULES([libpwmd], [libpwmd >= 6.0.0])
+    AM_CONDITIONAL(HAVE_LIBPWMD, true)
+    AC_DEFINE(HAVE_LIBPWMD, 1, [Define if you have libPWMD installed.])
+else
+    AM_CONDITIONAL(HAVE_LIBPWMD, false)
+fi
 
 # We may have a fallback MDA available in case the socket open to the 
 # local SMTP listener fails.  Best to use procmail for this, as we know
@@ -375,18 +280,6 @@ case "$enable_fallback" in
 			;;
 esac
 
-AC_CHECK_SIZEOF(short)
-AC_CHECK_SIZEOF(int)
-AC_CHECK_SIZEOF(long)
-
-###	use option --enable-POP2 to compile in the POP2 support
-AC_ARG_ENABLE(POP2,
-	[  --enable-POP2           compile in POP2 protocol support (obsolete)],
-	[with_POP2=$enableval],
-	[with_POP2=no])
-test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE,1,Define if you want POP2 support compiled in)
-AM_CONDITIONAL(POP2_ENABLE, test "$with_POP2" = yes)
-
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
 	[  --disable-POP3          don't compile in POP3 protocol support],
@@ -448,9 +341,8 @@ if test "$with_SDPS" = yes ; then
        AC_DEFINE(SDPS_ENABLE,1,Define if you want SDPS support compiled in)
    fi
 fi
-if test "$with_POP3" != yes && test "$with_POP2" != yes \
-    && test "$with_IMAP"  != yes ; then
-    AC_MSG_ERROR([You must enable at least one of POP2, POP3 and IMAP.])
+if test "$with_POP3" != yes && test "$with_IMAP"  != yes ; then
+    AC_MSG_ERROR([You must enable at least one of POP3 and IMAP.])
 fi
 
 AC_CACHE_SAVE
@@ -467,17 +359,11 @@ test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE sup
 dnl Mostly stolen from gnulib's getaddrinfo.m4
 AC_SEARCH_LIBS(getaddrinfo, [nsl socket])
 AC_CACHE_CHECK([for getaddrinfo],[fm_cv_getaddrinfo],[
-  AC_TRY_LINK([
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NETDB_H
 #include <netdb.h>
-#endif
-  ], [getaddrinfo(0, 0, 0, 0);],
-    [ fm_cv_getaddrinfo=yes],
-    [ fm_cv_getaddrinfo=no ])
+  ]], [[getaddrinfo(0, 0, 0, 0);]])],[ fm_cv_getaddrinfo=yes],[ fm_cv_getaddrinfo=no ])
 ])
 
 if test x"$fm_cv_getaddrinfo" = "xyes"; then  
@@ -486,20 +372,14 @@ if test x"$fm_cv_getaddrinfo" = "xyes"; then
 fi
 
 AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
-  AC_TRY_LINK([
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NETDB_H
 #include <netdb.h>
-#endif
 #ifndef NULL
 #define NULL 0
 #endif
-  ], [getnameinfo(NULL,0, NULL,0, NULL, 0, 0);],
-    [ fm_cv_getnameinfo=yes],
-    [ fm_cv_getnameinfo=no ])
+  ]], [[getnameinfo(NULL,0, NULL,0, NULL, 0, 0);]])],[ fm_cv_getnameinfo=yes],[ fm_cv_getnameinfo=no ])
 ])
 if test $fm_cv_getnameinfo = yes ; then
     AC_DEFINE(HAVE_GETNAMEINFO,1,[Define to 1 if your system has getnameinfo()])
@@ -526,20 +406,10 @@ if test "$fm_cv_getaddrinfo" = yes ; then
     fi
 fi
 
-# This version of the Kerberos 4 and 5 options addresses the follwing issues:
+# This version of the Kerberos 5 options addresses the follwing issues:
 # 
 # * Build correctly under Heimdal kerberos if it is compiled with db2 and
 #   OpenSSL support (Debian's is)
-# * Build the kerberos.c stuff (KPOP) only for kerberosIV, to avoid breakage.
-#   I don't know if this is 100% correct, but now at least IMAP and POP3
-#   behave the same way regarding kerberosV.
-# * Build without any fuss for both kerberosIV and V at the same time.
-# * Move all the kerberos header mess to kerberos.h, and #include that
-#   in driver.c and kerberos.c.
-# 
-# Tested using the Heimdal Kerberos V libs, Kungliga Tekniska Högskolan (the
-# Royal Institute of Technology in Stockholm, Sweden)'s kerberos IV libs, and
-# the MIT reference implementation of KerberosV (all as packaged in Debian).
 
 ###    use option --with-kerberos5=DIR to point at a Kerberos 5 directory
 ### make sure --with-ssl is run before --with-kerberos* !
@@ -628,97 +498,6 @@ else
 fi
 fi
 ]) dnl --with-kerberos5=DIR
-
-###    use option --with-kerberos=DIR to point at a Kerberos 4 directory
-KERBEROS_V4=0
-AC_ARG_WITH(kerberos,
-       [  --with-kerberos=DIR     point fetchmail compilation at a Kerberos 4 directory],
-[
-if test "$with_kerberos" != "no"
-then
-    AC_MSG_WARN([Kerberos IV support is obsolete. Use --with-kerberos5 if possible.])
-# Check for a NetBSD/OpenBSD special case
-if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname` = "OpenBSD" )
-then
-  AS_MESSAGE(checking kerberosIV for `uname`...)
-  KERBEROS_V4=1
-  CFLAGS="$CFLAGS -I/usr/include/kerberosIV"
-  case `uname` in
-      NetBSD)  LIBS="$LIBS -lkrb -ldes -lroken -lcom_err" ;;
-      OpenBSD) LIBS="$LIBS -lkrb -ldes" ;;
-  esac
-elif krb4-config 2> /dev/null >/dev/null ; then
-  krb4_prefix=`krb4-config --prefix`
-  AC_MSG_RESULT([krb4-config points to kerberosIV under $krb4_prefix])
-  unset krb4_prefix
-  CFLAGS="$CFLAGS `krb4-config --cflags`"
-  LIBS="$LIBS `krb4-config --libs`"
-  KERBEROS_V4=1
-elif krb5-config 2> /dev/null >/dev/null ; then
-  krb4_prefix=`krb5-config --prefix krb4`
-  AC_MSG_RESULT([krb5-config points to kerberosIV under $krb4_prefix])
-  if test -f ${krb4_prefix}/include/kerberosIV/krb.h ; then
-    AC_DEFINE(KERBEROS_V4_V5,1,Define if you have Kerberos V4 headers under a kerberosIV directory)
-  fi
-  unset krb4_prefix
-  CFLAGS="$CFLAGS `krb5-config --cflags krb4`"
-  LIBS="$LIBS `krb5-config --libs krb4`"
-  KERBEROS_V4=1
-else
-  #we need to detect when we're building under a kerberosV compatibility
-  #layer, btw...
-  if test "$with_kerberos" != "yes" ; then
-     searchdirs="$with_kerberos"
-  else
-     searchdirs="$with_kerberos5 /usr/kerberos /usr/kerberosIV /usr/athena /usr"
-  fi
-  with_kerberos=
-  ac_saveLDFLAGS="$LDFLAGS"
-  for dir in $searchdirs
-  do
-     AC_MSG_CHECKING([for Kerberos IV in $dir])
-     if test -f "$dir/include/krb.h" || test -f "$dir/include/krb4.h" \
-            || test -f "$dir/include/kerberosIV/krb.h"
-     then
-        AC_MSG_RESULT([found])
-     else
-        AC_MSG_RESULT([not found])
-       continue
-     fi
-     #Find libs
-     if test -f "$with_kerberos5/roken.h" ; then
-       AC_CHECK_LIB(45, krb_mk_req)
-     fi
-     LDFLAGS="-L$dir/lib $ac_saveLDFLAGS"
-     if test `uname` = "FreeBSD"; then
-        AC_SEARCH_LIBS(_ossl_old_des_string_to_key, [des425 des crypto], [], continue)
-     else
-        AC_SEARCH_LIBS(des_string_to_key, [crypto], [], continue)
-     fi
-     AC_SEARCH_LIBS(krb_realmofhost, [krb4 krb], [], continue)
-     with_kerberos="$dir"
-     if test -f "$dir/include/kerberosIV/krb.h" ; then
-        dir="$dir/include/kerberosIV"
-     else
-       dir="$dir/include"
-     fi
-     KERBEROS_V4=1
-     test -f "$with_kerberos5/roken.h" && AC_DEFINE(HEIMDAL)
-     test "$dir" != "/usr/include" && CFLAGS="$CFLAGS -I$dir"
-     LDFLAGS="$LDFLAGS -L$with_kerberos/lib"
-     break
-  done
-  if test -z "$with_kerberos" ; then
-     AC_MSG_ERROR([Kerberos 4 libraries not found])
-  fi
-  LDFLAGS="$ac_saveLDFLAGS"
-fi
-fi
-]) dnl --with-kerberos=DIR
-if test "$KERBEROS_V4" = 1 ; then
-    AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
-fi
-AM_CONDITIONAL(KERBEROS_V4_ENABLE, test "$KERBEROS_V4" = 1)
 
 ###	use option --with-ssl to compile in the SSL support
 AC_ARG_WITH(ssl,
@@ -899,58 +678,6 @@ then
     AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi/gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
   fi
 fi])
-
-dnl ,------------------------------------------------------------------
-dnl Check if we need TRIO
-needtrio=0
-if test "$FORCE_TRIO" = "yes" ; then
-    needtrio=1
-    ac_cv_func_vsnprintf=no
-    ac_cv_func_snprintf=no
-fi
-if test "x$ac_cv_func_snprintf" != "xyes" ; then
-    AC_DEFINE(snprintf, trio_snprintf,
-	      [Define to trio_snprintf if your system lacks snprintf])
-    needtrio=1
-fi
-if test "x$ac_cv_func_vsnprintf" != "xyes" ; then
-    AC_DEFINE(vsnprintf, trio_vsnprintf,
-	      [Define to trio_vsnprintf if your system lacks vsnprintf])
-    needtrio=1
-fi
-AM_CONDITIONAL(NEED_TRIO, test "$needtrio" = 1)
-
-dnl TRIO IEEE compiler option for Alpha
-dnl
-if test "$needtrio" = 1 ; then
-    AC_MSG_CHECKING(for IEEE compilation options)
-    AC_CACHE_VAL(ac_cv_ieee_option, [
-    AC_TRY_COMPILE(,[
-    #if !(defined(__alpha) && (defined(__DECC) || defined(__DECCXX) || (defined(__osf__) && defined(__LANGUAGE_C__))) && (defined(VMS) || defined(__VMS)))
-    # error "Option needed"
-    #endif
-    ],ac_cv_ieee_option="/IEEE_MODE=UNDERFLOW_TO_ZERO/FLOAT=IEEE",
-    AC_TRY_COMPILE(,[
-    #if !(defined(__alpha) && (defined(__DECC) || defined(__DECCXX) || (defined(__osf__) && defined(__LANGUAGE_C__))) && !(defined(VMS) || defined(__VMS)) && !defined(_CFE))
-    # error "Option needed"
-    #endif
-    ],ac_cv_ieee_option="-ieee",
-    AC_TRY_COMPILE(,[
-    #if !(defined(__alpha) && (defined(__GNUC__) && (defined(__osf__) || defined(__linux__))))
-    # error "Option needed"
-    #endif
-    ],ac_cv_ieee_option="-mieee",
-    ac_cv_ieee_option="none"
-    )
-    )
-    )
-    ])
-    AC_MSG_RESULT($ac_cv_ieee_option)
-    if test $ac_cv_ieee_option != none; then
-      CFLAGS="${CFLAGS} ${ac_cv_ieee_option}"
-    fi
-fi
-dnl ----------------------------------------------------------------'
 
 AC_CONFIG_FILES([Makefile po/Makefile.in genlsm.sh])
 AC_OUTPUT

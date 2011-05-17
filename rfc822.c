@@ -20,7 +20,11 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 
 ******************************************************************************/
 
+#define _XOPEN_SOURCE 600
+#define __BSD_VISIBLE 1
+
 #include "config.h"
+#include "fetchmail.h"
 
 #include  <stdio.h>
 #include  <ctype.h>
@@ -28,11 +32,10 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #include  <strings.h>
 #include  <stdlib.h>
 
-#include "fetchmail.h"
 #include "sdump.h"
 
 #ifndef MAIN
-#include "i18n.h"
+#include "gettext.h"
 #else
 #include  <unistd.h>
 static int verbose;

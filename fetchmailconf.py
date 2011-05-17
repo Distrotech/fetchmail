@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.57"
+version = "1.58"
 
 from Tkinter import *
 from Dialog import *
@@ -88,7 +88,6 @@ class Server:
 	self.interval = 0		# Skip interval
 	self.protocol = 'auto'		# Default to auto protocol
 	self.service = None		# Service name to use
-	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
 	self.auth = 'any'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
@@ -106,6 +105,7 @@ class Server:
 	self.esmtppassword = None	# ESMTP 2554 password
 	self.tracepolls = FALSE		# Add trace-poll info to headers
 	self.badheader = FALSE		# Pass messages with bad headers on?
+	self.retrieveerror = 'abort'	# Policy when message retrieval errors encountered
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -114,7 +114,6 @@ class Server:
 	    ('interval',  'Int'),
 	    ('protocol',  'String'),
 	    ('service',	  'String'),
-	    ('uidl',	  'Boolean'),
 	    ('auth',	  'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
@@ -131,7 +130,8 @@ class Server:
 	    ('esmtppassword', 'String'),
 	    ('principal', 'String'),
 	    ('tracepolls','Boolean'),
-	    ('badheader', 'Boolean'))
+	    ('badheader', 'Boolean'),
+	    ('retrieveerror', 'String'))
 
     def dump(self, folded):
 	res = ""
@@ -157,12 +157,10 @@ class Server:
 	    res = res + (" qvirtual " + str(self.qvirtual) + "\n");
 	if self.auth != ServerDefaults.auth:
 	    res = res + " auth " + self.auth
-	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
+	if self.dns != ServerDefaults.dns
 	    res = res + " and options"
 	if self.dns != ServerDefaults.dns:
 	    res = res + flag2str(self.dns, 'dns')
-	if self.uidl != ServerDefaults.uidl:
-	    res = res + flag2str(self.uidl, 'uidl')
 	if folded:	res = res + "\n    "
 	else:	     res = res + " "
 
@@ -200,9 +198,17 @@ class Server:
 	    res = res + " esmtppassword " + `self.esmtppassword`
 	if self.interface or self.monitor or self.principal or self.plugin or self.plugout:
 	    if folded:
-		res = res + "\n"
+		res = res + "\n    "
+
 	if self.badheader:
 		res = res + "bad-header accept "
+	if self.retrieveerror == 'continue':
+		res = res + "retrieve-error continue "
+	if self.retrieveerror == 'markseen':
+		res = res + "retrieve-error markseen "
+	if self.badheader or self.retrieveerror != ServerDefaults.retrieveerror:
+	    if folded:
+		res = res + "\n"
 
 	if res[-1] == " ": res = res[0:-1]
 
@@ -432,8 +438,7 @@ class User:
 #
 
 # IANA port assignments and bogus 1109 entry
-ianaservices = {"pop2":109,
-		"pop3":110,
+ianaservices = {"pop3":110,
 		"1109":1109,
 		"imap":143,
 		"smtp":25,
@@ -441,7 +446,6 @@ ianaservices = {"pop2":109,
 
 # fetchmail protocol to IANA service name
 defaultports = {"auto":None,
-		"POP2":"pop2",
 		"POP3":"pop3",
 		"APOP":"pop3",
 		"KPOP":"1109",
@@ -960,6 +964,13 @@ the normal operation of fetchmail when it is run with no arguments.
 If it is off, fetchmail will only query this host when it is given as
 a command-line argument.
 
+The `Retrieve Error Policy' specifies how server errors during
+message retrieval are handled.  The default behaviour is to abort the
+current session.  Both the continue and markseen options will skip
+the message with the error, but continue the session allowing for 
+downloading of subsequent messages.  Additionally, the markseen
+option will mark the skipped message as seen.
+ 
 The `True name of server' box should specify the actual DNS name
 to query. By default this is the same as the poll name.
 
@@ -1115,7 +1126,6 @@ class ServerEdit(Frame, MyWidget):
 	# a custom port number you should be in expert mode and playing
 	# close enough attention to notice this...
 	self.service.set(defaultports[proto])
-	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED
 
     def user_edit(self, username, mode):
 	self.subwidgets[username] = UserEdit(username, self).edit(mode, Toplevel())
@@ -1137,6 +1147,9 @@ class ServerEdit(Frame, MyWidget):
 	    Checkbutton(ctlwin, text='Poll ' + host + ' normally?', variable=self.active).pack(side=TOP)
 	    Checkbutton(ctlwin, text='Pass messages with bad headers?',
 		    variable=self.badheader).pack(side=TOP)
+            retrieveerrorlist = ['abort', 'continue', 'markseen']
+            Label(ctlwin, text="Retrieve Error Policy").pack(side=TOP)
+            ButtonBar(ctlwin, '', self.retrieveerror, retrieveerrorlist, 1, None)
 	    LabeledEntry(ctlwin, 'True name of ' + host + ':',
 		      self.via, leftwidth).pack(side=TOP, fill=X)
 	    LabeledEntry(ctlwin, 'Cycles to skip between polls:',
@@ -1149,8 +1162,6 @@ class ServerEdit(Frame, MyWidget):
 
 	# Compute the available protocols from the compile-time options
 	protolist = ['auto']
-	if 'pop2' in feature_options:
-	    protolist.append("POP2")
 	if 'pop3' in feature_options:
 	    protolist = protolist + ["POP3", "APOP", "KPOP"]
 	if 'sdps' in feature_options:
@@ -1171,9 +1182,6 @@ class ServerEdit(Frame, MyWidget):
 	    LabeledEntry(protwin, 'On server TCP/IP service:',
 		      self.service, leftwidth).pack(side=TOP, fill=X)
 	    self.defaultPort()
-	    Checkbutton(protwin,
-		text="POP3: track `seen' with client-side UIDLs?",
-		variable=self.uidl).pack(side=TOP)
 	Button(protwin, text='Probe for supported protocols', fg='blue',
 	       command=self.autoprobe).pack(side=LEFT)
 	Button(protwin, text='Help', fg='blue',
@@ -1247,7 +1255,7 @@ class ServerEdit(Frame, MyWidget):
 	else:
 	    realhost = self.server.pollname
 	greetline = None
-	for protocol in ("IMAP","POP3","POP2"):
+	for protocol in ("IMAP","POP3"):
 	    service = defaultports[protocol]
 	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	    try:
@@ -1271,18 +1279,6 @@ out before getting a response.
 	else:
 	    warnings = ''
 	    # OK, now try to recognize potential problems
-
-	    if protocol == "POP2":
-		warnings = warnings + """
-It appears you have somehow found a mailserver running only POP2.
-Congratulations.  Have you considered a career in archaeology?
-
-Unfortunately, stock fetchmail binaries don't include POP2 support anymore.
-Unless the first line of your fetchmail -V output includes the string "POP2",
-you'll have to build it from sources yourself with the configure
-switch --enable-POP2.
-
-"""
 
 ### POP3 servers start here
 

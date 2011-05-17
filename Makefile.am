@@ -1,7 +1,7 @@
 # Makefile for fetchmail
 
 SUBDIRS=		. po
-AUTOMAKE_OPTIONS=	1.8 foreign no-dist-gzip dist-bzip2
+AUTOMAKE_OPTIONS=	1.11 foreign no-dist-gzip dist-xz
 
 AM_CPPFLAGS=		-I$(srcdir)/libesmtp
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
@@ -15,6 +15,11 @@ dist_man1_MANS=		fetchmail.man
 
 pys=			fetchmailconf.py
 pym=			fetchmailconf.man
+
+if HAVE_LIBPWMD
+CFLAGS += @libpwmd_CFLAGS@
+LDFLAGS += @libpwmd_LIBS@
+endif
 
 if HAVE_PYTHON
 nodist_bin_SCRIPTS=	fetchmailconf
@@ -53,32 +58,18 @@ check_PROGRAMS=
 TESTS=			t.smoke t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
-if NEED_TRIO
-noinst_LIBRARIES+=	libtrio.a
-libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
-			trio/trio.h trio/triop.h trio/triodef.h \
-			trio/trionan.h trio/triostr.h
-check_PROGRAMS+=	regression
-regression_SOURCES=	trio/regression.c
-LDADD+=			libtrio.a -lm
-TESTS+=			t.regression
-endif
-
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		i18n.h kerberos.h fm_md5.h mx.h netrc.h smtp.h \
+		gettext.h kerberos.h fm_md5.h netrc.h smtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c \
 		fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
-		idlist.c uid.c mxget.c md5ify.c cram.c gssapi.c \
+		idlist.c uid.c md5ify.c cram.c gssapi.c \
 		opie.c interface.c netrc.c \
-		unmime.c conf.c checkalias.c \
+		unmime.c conf.c checkalias.c uid_db.h uid_db.c\
 		lock.h lock.c \
 		rcfile_l.l rcfile_y.y \
 		ucs/norm_charmap.c ucs/norm_charmap.h
-if POP2_ENABLE
-fetchmail_SOURCES += pop2.c
-endif
 if POP3_ENABLE
 fetchmail_SOURCES += pop3.c
 endif
@@ -91,9 +82,6 @@ endif
 if ODMR_ENABLE
 fetchmail_SOURCES += odmr.c
 endif
-if KERBEROS_V4_ENABLE
-fetchmail_SOURCES += kerberos.c
-endif
 if RPA_ENABLE
 fetchmail_SOURCES += rpa.c
 endif
@@ -104,7 +92,7 @@ if NEED_GETADDRINFO
 fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
-check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget rfc822valid \
+check_PROGRAMS +=	rfc822 unmime netrc rfc2047e rfc822valid \
 			x509_name_match
 
 rfc2047e_CFLAGS=	-DTEST
@@ -120,9 +108,6 @@ unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
 netrc_SOURCES=	netrc.c xmalloc.c report.c
 netrc_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
-
-mxget_SOURCES=	mxget.c
-mxget_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
 @SET_MAKE@
 
@@ -154,7 +139,6 @@ distdirs = rh-config contrib beos
 
 EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
 		fetchmail.spec fetchmail.xpm \
-		trio/CHANGES trio/README \
 		strlcpy.3 bighand.png \
 		m4/codeset.m4 \
 		m4/gettext.m4 \

@@ -12,8 +12,8 @@ can then be be read by normal mail user agents such as mutt(1), elm(1) or
 Mail(1).
 
 Fetchmail supports all standard mail-retrieval protocols in use on the 
-Internet: POP3 (including some variants such as RPOP, APOP, KPOP), IMAP4rev1 
-(also IMAP4, IMAP2bis), POP2, IMAP4, ETRN, and ODMR. On the output side, 
+Internet: POP3 (including some variants such as APOP, KPOP), IMAP4rev1 
+(also IMAP4, IMAP2bis), IMAP4, ETRN, and ODMR. On the output side, 
 fetchmail supports ESMTP/SMTP, LMTP, and invocation of a local delivery agent.
 
 Fetchmail also fully supports authentication via GSSAPI, Kerberos 4 and 5, 
@@ -29,15 +29,9 @@ such as --sslcertck to tighten certificate checking.
 Portability
 -----------
 
-The fetchmail code was developed under Linux, but has also been extensively 
-tested under the BSD variants, AIX, HP-UX versions 9 and 10, SunOS, Solaris, 
-NEXTSTEP, OSF 3.2, IRIX, and Rhapsody.
-
-It should be readily portable to other Unix variants and Unix-like operating 
-systems (it uses GNU autoconf).  It has been ported to Cygwin, LynxOS and BeOS 
-and will build there without special action.  It has also been ported to QNX; 
-to build under QNX, see the header comments in the Makefile.  It is reported to 
-build and run under AmigaOS.
+The fetchmail code was developed under Linux, but has also been tested under
+Cygwin, FreeBSD, NetBSD, Solaris.  It should be readily portable to other IEEE
+Std 1003.1 (2001 or later) compliant operating systems.
 
 Further reading
 ---------------

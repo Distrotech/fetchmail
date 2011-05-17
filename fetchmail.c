@@ -6,18 +6,12 @@
 #include "config.h"
 
 #include <stdio.h>
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
-#if defined(HAVE_SYSLOG)
 #include <syslog.h>
-#endif
 #include <pwd.h>
 #ifdef __FreeBSD__
 #include <grp.h>
@@ -25,24 +19,20 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_SETRLIMIT
 #include <sys/resource.h>
-#endif /* HAVE_SETRLIMIT */
 
 #ifdef HAVE_SOCKS
 #include <socks.h> /* SOCKSinit() */
 #endif /* HAVE_SOCKS */
 
-#ifdef HAVE_LANGINFO_H
 #include <langinfo.h>
-#endif
 
 #include "fetchmail.h"
 #include "socket.h"
 #include "tunable.h"
 #include "smtp.h"
 #include "netrc.h"
-#include "i18n.h"
+#include "gettext.h"
 #include "lock.h"
 
 /* need these (and sys/types.h) for res_init() */
@@ -84,8 +74,14 @@ static int activecount;		/* count number of active entries */
 static struct runctl cmd_run;	/* global options set from command line */
 static time_t parsetime;	/* time of last parse */
 
-static RETSIGTYPE terminate_run(int);
-static RETSIGTYPE terminate_poll(int);
+static void terminate_run(int);
+static void terminate_poll(int);
+
+#ifdef HAVE_LIBPWMD
+static pwm_t *pwm;		/* the handle */
+static const char *pwmd_socket;	/* current socket */
+static const char *pwmd_file;	/* current file */
+#endif
 
 #if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
 /* drop SGID kmem privileage until we need it */
@@ -108,8 +104,8 @@ static void dropprivs(void)
 }
 #endif
 
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
 #include <locale.h>
+#if defined(ENABLE_NLS)
 /** returns timestamp in current locale,
  * and resets LC_TIME locale to POSIX. */
 static char *timestamp (void)
@@ -127,7 +123,7 @@ static char *timestamp (void)
 #define timestamp rfc822timestamp
 #endif
 
-static RETSIGTYPE donothing(int sig) 
+static void donothing(int sig) 
 {
     set_signal_handler(sig, donothing);
     lastsig = sig;
@@ -138,7 +134,7 @@ static void printcopyright(FILE *fp) {
 		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
 		   "                   Robert M. Funk, Graham Wilson\n"
 		   "Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
-		   "Copyright (C) 2005 - 2010 Matthias Andree\n"
+		   "Copyright (C) 2005 - 2011 Matthias Andree\n"
 		   ));
 	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 		   "are welcome to redistribute it under certain conditions. For details,\n"
@@ -151,10 +147,288 @@ static void printcopyright(FILE *fp) {
 
 const char *iana_charset;
 
+#ifdef HAVE_LIBPWMD
+static void exit_with_pwmd_error(gpg_error_t error)
+{
+    gpg_err_code_t code = gpg_err_code(error);
+
+    report(stderr, GT_("pwmd: error %i: %s\n"), code, pwmd_strerror(error));
+
+    if (pwm) {
+	pwmd_close(pwm);
+	pwm = NULL;
+    }
+
+    /* Don't exit if daemonized. There may be other active accounts. */
+    if (isatty(1))
+	exit(PS_UNDEFINED);
+}
+
+static int do_pwmd_connect(const char *socketname, const char *filename)
+{
+    static int init;
+    gpg_error_t rc;
+    pwmd_socket_t s;
+
+    if (!init) {
+	pwmd_init();
+	init = 1;
+    }
+
+    if (!pwm || (pwm && socketname && !pwmd_socket) ||
+	    (pwm && !socketname && pwmd_socket) ||
+	    (pwm && socketname && pwmd_socket && strcmp(socketname, pwmd_socket))) {
+	if (pwm)
+	    pwmd_close(pwm);
+
+	pwm = pwmd_new("Fetchmail");
+	rc = pwmd_connect_url(pwm, socketname);
+
+	if (rc) {
+	    exit_with_pwmd_error(rc);
+	    return 1;
+	}
+    }
+
+    if (run.pinentry_timeout > 0) {
+	rc = pwmd_setopt(pwm, PWMD_OPTION_PINENTRY_TIMEOUT,
+		run.pinentry_timeout);
+
+	if (rc) {
+	    exit_with_pwmd_error(rc);
+	    return 1;
+	}
+    }
+
+    rc = pwmd_socket_type(pwm, &s);
+
+    if (rc) {
+	exit_with_pwmd_error(rc);
+	return 1;
+    }
+
+    if (!pwmd_file || strcmp(filename, pwmd_file)) {
+	if (s == PWMD_SOCKET_SSH)
+	    /* use a local pinentry since X11 forwarding is broken. */
+	    rc = pwmd_open2(pwm, filename);
+	else
+	    rc = pwmd_open(pwm, filename);
+
+	if (rc) {
+	    exit_with_pwmd_error(rc);
+	    return 1;
+	}
+    }
+
+    /* May be null to use the default of ~/.pwmd/socket. */
+    pwmd_socket = socketname;
+    pwmd_file = filename;
+    return 0;
+}
+
+static int get_pwmd_details(const char *pwmd_account, int protocol,
+	struct query *ctl)
+{
+    const char *prot = showproto(protocol);
+    gpg_error_t error;
+    char *result;
+    char *tmp = xstrdup(pwmd_account);
+    int i;
+
+    for (i = 0; tmp[i]; i++) {
+	if (i && tmp[i] == '^')
+	    tmp[i] = '\t';
+    }
+
+    /*
+     * Get the hostname for this protocol. Element path must be
+     * account->[protocol]->hostname.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\thostname", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->%s->hostname: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+	    pwmd_close(pwm);
+	    pwm = NULL;
+
+	    if (isatty(1))
+		exit(PS_SYNTAX);
+
+	    return 1;
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+
+    if (ctl->server.pollname != ctl->server.via)
+	xfree(ctl->server.via);
+
+    ctl->server.via = xstrdup(result);
+
+    if (ctl->server.queryname)
+	xfree(ctl->server.queryname);
+
+    ctl->server.queryname = xstrdup(ctl->server.via);
+
+    if (ctl->server.truename)
+	xfree(ctl->server.truename);
+
+    ctl->server.truename = xstrdup(ctl->server.queryname);
+    pwmd_free(result);
+
+    /*
+     * Server port. Fetchmail tries standard ports for known services so it
+     * should be alright if this element isn't found. ctl->server.protocol is
+     * already set. This sets ctl->server.service.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\tport", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND)
+	    report(stderr, GT_("pwmd: %s->%s->port: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->server.service)
+	    xfree(ctl->server.service);
+
+	ctl->server.service = xstrdup(result);
+	pwmd_free(result);
+    }
+
+    /*
+     * Get the remote username. Element must be account->username.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\tusername", tmp);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->username: %s\n"), pwmd_account, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->remotename)
+	    xfree(ctl->remotename);
+
+	if (ctl->server.esmtp_name)
+	    xfree(ctl->server.esmtp_name);
+
+	ctl->remotename = xstrdup(result);
+	ctl->server.esmtp_name = xstrdup(result);
+	pwmd_free(result);
+    }
+
+    /*
+     * Get the remote password. Element must be account->password.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\tpassword", tmp);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->password: %s\n"), pwmd_account, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->password)
+	    xfree(ctl->password);
+
+	ctl->password= xstrdup(result);
+	pwmd_free(result);
+    }
+
+#ifdef SSL_ENABLE
+    /*
+     * If there is a ssl element and set to 1, enable ssl for this account.
+     * Element path must be account->[protocol]->ssl.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\tssl", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->%s->ssl: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	ctl->use_ssl = atoi(result) >= 1 ? FLAG_TRUE : FLAG_FALSE;
+	pwmd_free(result);
+    }
+
+    /*
+     * account->[protocol]->sslfingerprint.
+     */
+    error = pwmd_command(pwm, &result, "GET %s\t%s\tsslfingerprint", tmp, prot);
+
+    if (error) {
+	if (gpg_err_code(error) == GPG_ERR_NOT_FOUND) {
+	    report(stderr, GT_("pwmd: %s->%s->sslfingerprint: %s\n"), pwmd_account, prot, pwmd_strerror(error));
+
+	    if (!isatty(1)) {
+		pwmd_close(pwm);
+		pwm = NULL;
+		return 1;
+	    }
+	}
+	else {
+	    exit_with_pwmd_error(error);
+	    return 1;
+	}
+    }
+    else {
+	if (ctl->sslfingerprint)
+	    xfree(ctl->sslfingerprint);
+
+	ctl->sslfingerprint = xstrdup(result);
+	pwmd_free(result);
+    }
+#endif
+
+    xfree(tmp);
+    return 0;
+}
+#endif
+
 int main(int argc, char **argv)
 {
     int bkgd = FALSE;
     int implicitmode = FALSE;
+    flag safewithbg = FALSE; /** if parsed options are compatible with a
+			      fetchmail copy running in the background */
     struct query *ctl;
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
@@ -198,7 +472,7 @@ int main(int argc, char **argv)
 
 #define IDFILE_NAME	".fetchids"
     run.idfile = prependdir (IDFILE_NAME, fmhome);
-  
+
     outlevel = O_NORMAL;
 
     /*
@@ -222,7 +496,7 @@ int main(int argc, char **argv)
     {
 	int i;
 
-	i = parsecmdline(argc, argv, &cmd_run, &cmd_opts);
+	i = parsecmdline(argc, argv, &cmd_run, &cmd_opts, &safewithbg);
 	if (i < 0)
 	    exit(PS_SYNTAX);
 
@@ -233,9 +507,6 @@ int main(int argc, char **argv)
     if (versioninfo)
     {
 	const char *features = 
-#ifdef POP2_ENABLE
-	"+POP2"
-#endif /* POP2_ENABLE */
 #ifndef POP3_ENABLE
 	"-POP3"
 #endif /* POP3_ENABLE */
@@ -275,15 +546,12 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
 	"+NLS"
 #endif /* ENABLE_NLS */
-#ifdef KERBEROS_V4
-	"+KRB4"
-#endif /* KERBEROS_V4 */
 #ifdef KERBEROS_V5
 	"+KRB5"
 #endif /* KERBEROS_V5 */
-#ifndef HAVE_RES_SEARCH
-	"-DNS"
-#endif
+#ifdef HAVE_LIBPWMD
+	"+PWMD"
+#endif /* HAVE_LIBPWMD */
 	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
@@ -312,20 +580,13 @@ int main(int argc, char **argv)
 	run.use_syslog = 0;
     }
 
-#if defined(HAVE_SYSLOG)
     /* logging should be set up early in case we were restarted from exec */
     if (run.use_syslog)
     {
-#if defined(LOG_MAIL)
 	openlog(program_name, LOG_PID, LOG_MAIL);
-#else
-	/* Assume BSD4.2 openlog with two arguments */
-	openlog(program_name, LOG_PID);
-#endif
 	report_init(-1);
     }
     else
-#endif
 	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
 #ifdef POP3_ENABLE
@@ -343,7 +604,6 @@ int main(int argc, char **argv)
     /* construct the lockfile */
     fm_lock_setup(&run);
 
-#ifdef HAVE_SETRLIMIT
     /*
      * Before getting passwords, disable core dumps unless -v -d0 mode is on.
      * Core dumps could otherwise contain passwords to be scavenged by a
@@ -356,7 +616,6 @@ int main(int argc, char **argv)
 	corelimit.rlim_max = 0;
 	setrlimit(RLIMIT_CORE, &corelimit);
     }
-#endif /* HAVE_SETRLIMIT */
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
@@ -502,17 +761,23 @@ int main(int argc, char **argv)
 	else if (getpid() == pid)
 	    /* this test enables re-execing on a changed rcfile */
 	    fm_lock_assert();
-	else if (argc > 1)
+	else if (argc > 1 && !safewithbg)
 	{
 	    fprintf(stderr,
 		    GT_("fetchmail: can't accept options while a background fetchmail is running.\n"));
+	    {
+		int i;
+		fprintf(stderr, "argc = %d, arg list:\n", argc);
+		for (i = 1; i < argc; i++) fprintf(stderr, "arg %d = \"%s\"\n", i, argv[i]);
+	    }
 	    return(PS_EXCLUDE);
 	}
 	else if (kill(pid, SIGUSR1) == 0)
 	{
-	    fprintf(stderr,
-		    GT_("fetchmail: background fetchmail at %ld awakened.\n"),
-		    (long)pid);
+	    if (outlevel > O_SILENT)
+		fprintf(stderr,
+			GT_("fetchmail: background fetchmail at %ld awakened.\n"),
+			(long)pid);
 	    return(0);
 	}
 	else
@@ -643,6 +908,11 @@ int main(int argc, char **argv)
 	 * leaks...
 	 */
 	struct stat	rcstat;
+#ifdef HAVE_LIBPWMD
+	time_t now;
+
+	time(&now);
+#endif
 
 	if (strcmp(rcfile, "-") == 0) {
 	    /* do nothing */
@@ -652,7 +922,15 @@ int main(int argc, char **argv)
 		       GT_("couldn't time-check %s (error %d)\n"),
 		       rcfile, errno);
 	}
+#ifdef HAVE_LIBPWMD
+	/*
+	 * isatty() to make sure this is a background process since the
+	 * lockfile is removed after each invokation.
+	 */
+	else if (!isatty(1) && rcstat.st_mtime > parsetime)
+#else
 	else if (rcstat.st_mtime > parsetime)
+#endif
 	{
 	    report(stdout, GT_("restarting fetchmail (%s changed)\n"), rcfile);
 
@@ -745,6 +1023,19 @@ int main(int argc, char **argv)
 
 		    dofastuidl = 0; /* this is reset in the driver if required */
 
+#ifdef HAVE_LIBPWMD
+		    /*
+		     * At each poll interval, check the pwmd server for
+		     * changes in host and auth settings.
+		     */
+		    if (ctl->pwmd_file) {
+			if (do_pwmd_connect(ctl->pwmd_socket, ctl->pwmd_file))
+			    continue;
+
+			if (get_pwmd_details(ctl->server.pollname, ctl->server.protocol, ctl))
+			    continue;
+		    }
+#endif
 		    querystatus = query_host(ctl);
 
 		    if (NUM_NONZERO(ctl->fastuidl))
@@ -812,6 +1103,13 @@ int main(int argc, char **argv)
 #endif /* CAN_MONITOR */
 		}
 	    }
+
+#ifdef HAVE_LIBPWMD
+	if (pwm) {
+	    pwmd_close(pwm);
+	    pwm = NULL;
+	}
+#endif
 
 	/* close connections cleanly */
 	terminate_poll(0);
@@ -936,7 +1234,6 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.dns);
     FLAG_MERGE(server.checkalias);
-    FLAG_MERGE(server.uidl);
     FLAG_MERGE(server.principal);
 
 #ifdef CAN_MONITOR
@@ -949,6 +1246,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.plugout);
     FLAG_MERGE(server.tracepolls);
     FLAG_MERGE(server.badheader);
+    FLAG_MERGE(server.retrieveerror);
 
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
@@ -1058,8 +1356,36 @@ static int load_params(int argc, char **argv, int optind)
 
     if ((implicitmode = (optind >= argc)))
     {
+#ifdef HAVE_LIBPWMD
+	for (ctl = querylist; ctl; ctl = ctl->next) {
+	    ctl->active = !ctl->server.skip;
+
+	    if (ctl->pwmd_file) {
+		/*
+		 * Cannot get an element path without a service.
+		 */
+		if (ctl->server.protocol <= 1) {
+		    report(stderr, GT_("fetchmail: %s configuration invalid, pwmd_file requires a protocol specification\n"),
+			    ctl->server.pollname);
+		    pwmd_close(pwm);
+		    exit(PS_SYNTAX);
+		}
+
+		if (do_pwmd_connect(ctl->pwmd_socket, ctl->pwmd_file))
+		    continue;
+
+		if (get_pwmd_details(ctl->server.pollname, ctl->server.protocol,
+			    ctl))
+		    continue;
+
+		time(&rcstat.st_mtime);
+	    }
+	}
+
+#else
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    ctl->active = !ctl->server.skip;
+#endif
     }
     else
 	for (; optind < argc; optind++) 
@@ -1080,6 +1406,27 @@ static int load_params(int argc, char **argv, int optind)
 			fprintf(stderr,GT_("Warning: multiple mentions of host %s in config file\n"),argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;
+
+#ifdef HAVE_LIBPWMD
+		    if (ctl->pwmd_file) {
+			/*
+			 * Cannot get an element path without a service.
+			 */
+			if (ctl->server.protocol <= 1) {
+			    report(stderr, GT_("%s configuration invalid, pwmd_file requires a protocol specification\n"),
+				   ctl->server.pollname);
+			    exit(PS_SYNTAX);
+			}
+
+			fprintf(stderr, "%s(%i): %s\n", __FILE__, __LINE__, __FUNCTION__);
+			if (do_pwmd_connect(ctl->pwmd_socket, ctl->pwmd_file))
+			    continue;
+
+			if (get_pwmd_details(ctl->server.pollname,
+				    ctl->server.protocol, ctl))
+			    continue;
+		    }
+#endif
 		}
 
 	    if (!predeclared)
@@ -1090,8 +1437,32 @@ static int load_params(int argc, char **argv, int optind)
 		 * call later on.
 		 */
 		ctl = hostalloc((struct query *)NULL);
+
+#ifdef HAVE_LIBPWMD
+		if (cmd_opts.pwmd_file) {
+		    /*
+		     * Cannot get an element path without a service.
+		     */
+		    if (cmd_opts.server.protocol == 0 || cmd_opts.server.protocol == 1) {
+			report(stderr, GT_("Option --pwmd-file needs a service (-p) parameter.\n"));
+			exit(PS_SYNTAX);
+		    }
+
+			fprintf(stderr, "%s(%i): %s\n", __FILE__, __LINE__, __FUNCTION__);
+		    if (do_pwmd_connect(cmd_opts.pwmd_socket, cmd_opts.pwmd_file))
+			continue;
+
+		    if (get_pwmd_details(argv[optind], cmd_opts.server.protocol,
+			    ctl))
+			continue;
+		}
+		else
+		    ctl->server.via =
+			ctl->server.pollname = xstrdup(argv[optind]);
+#else
 		ctl->server.via =
 		    ctl->server.pollname = xstrdup(argv[optind]);
+#endif
 		ctl->active = TRUE;
 		ctl->server.lead_server = (struct hostdata *)NULL;
 	    }
@@ -1167,7 +1538,6 @@ static int load_params(int argc, char **argv, int optind)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && 
 		(ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
-		 || ctl->server.authenticate == A_KERBEROS_V4
 		 || ctl->server.authenticate == A_KERBEROS_V5))
 	{
 	    fetchmailhost = host_fqdn(1);
@@ -1227,7 +1597,6 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->mimedecode, FALSE);
 	    DEFAULT(ctl->idle, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
-	    DEFAULT(ctl->server.uidl, FALSE);
 	    DEFAULT(ctl->use_ssl, FALSE);
 	    DEFAULT(ctl->sslcertck, FALSE);
 	    DEFAULT(ctl->server.checkalias, FALSE);
@@ -1243,12 +1612,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 #endif /* SSL_ENABLE */
 #undef DEFAULT
-#ifndef KERBEROS_V4
-	    if (ctl->server.authenticate == A_KERBEROS_V4) {
-		report(stderr, GT_("KERBEROS v4 support is configured, but not compiled in.\n"));
-		exit(PS_SYNTAX);
-	    }
-#endif
 #ifndef KERBEROS_V5
 	    if (ctl->server.authenticate == A_KERBEROS_V5) {
 		report(stderr, GT_("KERBEROS v5 support is configured, but not compiled in.\n"));
@@ -1282,15 +1645,6 @@ static int load_params(int argc, char **argv, int optind)
 	    if (!ctl->localnames)	/* for local delivery via SMTP */
 		save_str_pair(&ctl->localnames, user, NULL);
 
-#ifndef HAVE_RES_SEARCH
-	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (MULTIDROP(ctl) && ctl->server.dns)
-	    {
-		ctl->server.dns = FALSE;
-		report(stderr, GT_("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
-	    }
-#endif /* !HAVE_RES_SEARCH */
-
 	    /*
 	     * can't handle multidrop mailboxes without "envelope"
 	     * option, this causes truckloads full of support complaints
@@ -1317,13 +1671,6 @@ static int load_params(int argc, char **argv, int optind)
 		{
 		    (void) fprintf(stderr,
 				   GT_("fetchmail: %s configuration invalid, specify positive port number for service or port\n"),
-				   ctl->server.pollname);
-		    exit(PS_SYNTAX);
-		}
-		if (ctl->server.protocol == P_RPOP && port >= 1024)
-		{
-		    (void) fprintf(stderr,
-				   GT_("fetchmail: %s configuration invalid, RPOP requires a privileged port\n"),
 				   ctl->server.pollname);
 		    exit(PS_SYNTAX);
 		}
@@ -1375,7 +1722,7 @@ static int load_params(int argc, char **argv, int optind)
     return(implicitmode);
 }
 
-static RETSIGTYPE terminate_poll(int sig)
+static void terminate_poll(int sig)
 /* to be executed at the end of a poll cycle */
 {
 
@@ -1393,7 +1740,7 @@ static RETSIGTYPE terminate_poll(int sig)
 #endif /* POP3_ENABLE */
 }
 
-static RETSIGTYPE terminate_run(int sig)
+static void terminate_run(int sig)
 /* to be executed on normal or signal-induced termination */
 {
     struct query	*ctl;
@@ -1415,10 +1762,6 @@ static RETSIGTYPE terminate_run(int sig)
 	if (ctl->password)
 	  memset(ctl->password, '\0', strlen(ctl->password));
 
-#if !defined(HAVE_ATEXIT)
-    fm_lock_release();
-#endif
-
     if (activecount == 0)
 	exit(PS_NOMAIL);
     else
@@ -1436,9 +1779,6 @@ static const int autoprobe[] =
 #ifdef POP3_ENABLE
     P_POP3,
 #endif /* POP3_ENABLE */
-#ifdef POP2_ENABLE
-    P_POP2
-#endif /* POP2_ENABLE */
 };
 
 static int query_host(struct query *ctl)
@@ -1474,17 +1814,8 @@ static int query_host(struct query *ctl)
 	}
 	ctl->server.protocol = P_AUTO;
 	break;
-    case P_POP2:
-#ifdef POP2_ENABLE
-	st = doPOP2(ctl);
-#else
-	report(stderr, GT_("POP2 support is not configured.\n"));
-	st = PS_PROTOCOL;
-#endif /* POP2_ENABLE */
-	break;
     case P_POP3:
     case P_APOP:
-    case P_RPOP:
 #ifdef POP3_ENABLE
 	do {
 	    st = doPOP3(ctl);
@@ -1541,6 +1872,14 @@ static int query_host(struct query *ctl)
     return(st);
 }
 
+static int print_id_of(struct uid_db_record *rec, void *unused)
+{
+    (void)unused;
+
+    printf("\t%s\n", rec->id);
+    return 0;
+}
+
 static void dump_params (struct runctl *runp,
 			 struct query *querylist, flag implicit)
 /* display query parameters in English */
@@ -1553,10 +1892,8 @@ static void dump_params (struct runctl *runp,
 	printf(GT_("Logfile is %s\n"), runp->logfile);
     if (strcmp(runp->idfile, IDFILE_NAME))
 	printf(GT_("Idfile is %s\n"), runp->idfile);
-#if defined(HAVE_SYSLOG)
     if (runp->use_syslog)
 	printf(GT_("Progress messages will be logged via syslog\n"));
-#endif
     if (runp->invisible)
 	printf(GT_("Fetchmail will masquerade and will not generate Received\n"));
     if (runp->showdots)
@@ -1605,9 +1942,6 @@ static void dump_params (struct runctl *runp,
 		if (ctl->server.protocol == P_APOP)
 		    printf(GT_("  APOP secret = \"%s\".\n"),
 			   visbuf(ctl->password));
-		else if (ctl->server.protocol == P_RPOP)
-		    printf(GT_("  RPOP id = \"%s\".\n"),
-			   visbuf(ctl->password));
 		else
 		    printf(GT_("  Password = \"%s\".\n"),
 							visbuf(ctl->password));
@@ -1616,8 +1950,7 @@ static void dump_params (struct runctl *runp,
 
 	if (ctl->server.protocol == P_POP3 
 	    && ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT)
-	    && (ctl->server.authenticate == A_KERBEROS_V4 ||
-		ctl->server.authenticate == A_KERBEROS_V5))
+	    && (ctl->server.authenticate == A_KERBEROS_V5))
 	    printf(GT_("  Protocol is KPOP with Kerberos %s authentication"),
 		   ctl->server.authenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
@@ -1626,8 +1959,6 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_(" (using service %s)"), ctl->server.service);
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_(" (using default port)"));
-	if (ctl->server.uidl && MAILBOX_PROTOCOL(ctl))
-	    printf(GT_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
 	switch (ctl->server.authenticate)
@@ -1652,9 +1983,6 @@ static void dump_params (struct runctl *runp,
 	    break;
 	case A_GSSAPI:
 	    printf(GT_("  GSSAPI authentication will be forced.\n"));
-	    break;
-	case A_KERBEROS_V4:
-	    printf(GT_("  Kerberos V4 authentication will be forced.\n"));
 	    break;
 	case A_KERBEROS_V5:
 	    printf(GT_("  Kerberos V5 authentication will be forced.\n"));
@@ -1940,22 +2268,16 @@ static void dump_params (struct runctl *runp,
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_("  No plugout command specified.\n"));
 
-	if (ctl->server.protocol > P_POP2 && MAILBOX_PROTOCOL(ctl))
+	if (MAILBOX_PROTOCOL(ctl))
 	{
-	    if (!ctl->oldsaved)
+	    int count;
+
+	    if (!(count = uid_db_n_records(&ctl->oldsaved)))
 		printf(GT_("  No UIDs saved from this host.\n"));
 	    else
 	    {
-		struct idlist *idp;
-		int count = 0;
-
-		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    ++count;
-
 		printf(GT_("  %d UIDs saved.\n"), count);
-		if (outlevel >= O_VERBOSE)
-		    for (idp = ctl->oldsaved; idp; idp = idp->next)
-			printf("\t%s\n", idp->id);
+		traverse_uid_db(&ctl->oldsaved, print_id_of, NULL);
 	    }
 	}
 
@@ -1971,6 +2293,19 @@ static void dump_params (struct runctl *runp,
 		break;
 	    case BHACCEPT:
 		printf(GT_("  Messages with bad headers will be passed on.\n"));
+		break;
+	}
+
+	switch (ctl->server.retrieveerror) {
+	    case RE_ABORT:
+		if (outlevel >= O_VERBOSE)
+		    printf(GT_("  Messages with fetch body errors will cause the session to abort.\n"));
+		break;
+	    case RE_CONTINUE:
+		printf(GT_("  Messages with fetch body errors will be skipped, the session will continue.\n"));
+		break;
+	    case RE_MARKSEEN:
+		printf(GT_("  Messages with fetch body errors will be marked seen, the session will continue.\n"));
 		break;
 	}
 

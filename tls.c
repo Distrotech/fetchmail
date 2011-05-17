@@ -5,9 +5,7 @@
 
 #include "fetchmail.h"
 
-#ifdef HAVE_STRINGS_H
 #include <strings.h>
-#endif
 
 /** return true if user allowed TLS */
 int maybe_tls(struct query *ctl) {

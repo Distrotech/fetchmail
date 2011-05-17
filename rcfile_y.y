@@ -9,17 +9,11 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/file.h>
-#if defined(HAVE_SYS_WAIT_H)
 #include <sys/wait.h>
-#endif
 #include <sys/stat.h>
 #include <errno.h>
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 #include <string.h>
 
 #if defined(__CYGWIN__)
@@ -27,7 +21,7 @@
 #endif /* __CYGWIN__ */
 
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
   
 /* parser reads these */
 char *rcfile;			/* path name of rc file */
@@ -63,6 +57,7 @@ extern char * yytext;
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP SDPS ENVELOPE QVIRTUAL
+%token PINENTRY_TIMEOUT PWMD_SOCKET PWMD_FILE
 %token USERNAME PASSWORD FOLDER SMTPHOST FETCHDOMAINS MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
 %token INTERFACE MONITOR PLUGIN PLUGOUT
@@ -71,6 +66,7 @@ extern char * yytext;
 %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
 %token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
 %token BADHEADER ACCEPT REJECT_
+%token RETRIEVEERROR ABORT CONTINUE MARKSEEN
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
@@ -116,6 +112,13 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = prependdir ($4, rcfiledir);
 		| SET NO INVISIBLE		{run.invisible = FALSE;}
 		| SET SHOWDOTS			{run.showdots = FLAG_TRUE;}
 		| SET NO SHOWDOTS		{run.showdots = FLAG_FALSE;}
+		| SET PINENTRY_TIMEOUT optmap NUMBER {
+#ifdef HAVE_LIBPWMD
+		    run.pinentry_timeout = $4;
+#else
+		    yyerror(GT_("pwmd not enabled"));
+#endif
+		    }
 
 /* 
  * The way the next two productions are written depends on the fact that
@@ -154,14 +157,13 @@ serv_option	: AKA alias_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
-
-					    if (current.server.authenticate == A_PASSWORD)
 #ifdef KERBEROS_V5
+					    if (current.server.authenticate == A_PASSWORD)
 						current.server.authenticate = A_KERBEROS_V5;
-#else
-						current.server.authenticate = A_KERBEROS_V4;
-#endif /* KERBEROS_V5 */
 					    current.server.service = KPOP_PORT;
+#else
+					    yyerror(GT_("Kerberos not enabled."));
+#endif
 					}
 		| PRINCIPAL STRING	{current.server.principal = $2;}
 		| ESMTPNAME STRING	{current.server.esmtp_name = $2;}
@@ -174,8 +176,8 @@ serv_option	: AKA alias_list
 					    yyerror(GT_("SDPS not enabled."));
 #endif /* SDPS_ENABLE */
 					}
-		| UIDL			{current.server.uidl = FLAG_TRUE;}
-		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
+		| UIDL			{/* EMPTY - removed in 7.0.0 */}
+		| NO UIDL		{/* EMPTY - removed in 7.0.0 */}
 		| CHECKALIAS            {current.server.checkalias = FLAG_TRUE;}
 		| NO CHECKALIAS         {current.server.checkalias  = FLAG_FALSE;}
 		| SERVICE STRING	{
@@ -236,6 +238,9 @@ serv_option	: AKA alias_list
 		| NO TRACEPOLLS		{current.server.tracepolls = FLAG_FALSE;}
 		| BADHEADER ACCEPT	{current.server.badheader = BHACCEPT;}
 		| BADHEADER REJECT_	{current.server.badheader = BHREJECT;}
+		| RETRIEVEERROR ABORT	{current.server.retrieveerror = RE_ABORT;}
+		| RETRIEVEERROR CONTINUE {current.server.retrieveerror = RE_CONTINUE;}
+		| RETRIEVEERROR MARKSEEN {current.server.retrieveerror = RE_MARKSEEN;}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}
@@ -373,6 +378,22 @@ user_option	: TO mapping_list HERE
 		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE_IN($2);}
 
 		| PROPERTIES STRING	{current.properties  = $2;}
+
+		| PWMD_SOCKET STRING	{
+#ifdef HAVE_LIBPWMD
+		    current.pwmd_socket = xstrdup($2);
+#else
+		    yyerror(GT_("pwmd not enabled"));
+#endif
+					}
+
+		| PWMD_FILE STRING	{
+#ifdef HAVE_LIBPWMD
+		    current.pwmd_file = xstrdup($2);
+#else
+		    yyerror(GT_("pwmd not enabled"));
+#endif
+					}
 		;
 %%
 
@@ -396,7 +417,6 @@ void yyerror (const char *s)
 int prc_filecheck(const char *pathname,
 		  const flag securecheck /** shortcuts permission, filetype and uid tests if false */)
 {
-#ifndef __EMX__
     struct stat statbuf;
 
     errno = 0;
@@ -430,7 +450,6 @@ int prc_filecheck(const char *pathname,
 	return(PS_IOERR);
     }
 
-#ifndef __BEOS__
 #ifdef __CYGWIN__
     if (cygwin_internal(CW_CHECK_NTSEC, pathname))
 #endif /* __CYGWIN__ */
@@ -440,18 +459,12 @@ int prc_filecheck(const char *pathname,
 		pathname);
 	return(PS_IOERR);
     }
-#endif /* __BEOS__ */
 
-#ifdef HAVE_GETEUID
     if (statbuf.st_uid != geteuid())
-#else
-    if (statbuf.st_uid != getuid())
-#endif /* HAVE_GETEUID */
     {
 	fprintf(stderr, GT_("File %s must be owned by you.\n"), pathname);
 	return(PS_IOERR);
     }
-#endif
     return(PS_SUCCESS);
 }
 

@@ -10,30 +10,14 @@
 #include  <setjmp.h>
 #include  <errno.h>
 #include  <string.h>
-#ifdef HAVE_MEMORY_H
-#include  <memory.h>
-#endif /* HAVE_MEMORY_H */
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <limits.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
-#if defined(HAVE_SYS_ITIMER_H)
-#include <sys/itimer.h>
-#endif
 #include  <signal.h>
-#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif
+#include <sys/time.h>
 
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <netdb.h>
 #ifdef HAVE_PKG_hesiod
 #ifdef __cplusplus
@@ -48,11 +32,8 @@ extern "C" {
 #include <langinfo.h>
 
 #include "kerberos.h"
-#ifdef KERBEROS_V4
-#include <netinet/in.h>
-#endif /* KERBEROS_V4 */
 
-#include "i18n.h"
+#include "gettext.h"
 #include "socket.h"
 
 #include "fetchmail.h"
@@ -98,7 +79,6 @@ void resetidletimeout(void)
 void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
-#if !defined(__EMX__) && !defined(__BEOS__)
     struct itimerval ntimeout;
 
     if (timeleft == 0)
@@ -108,10 +88,9 @@ void set_timeout(int timeleft)
     ntimeout.it_value.tv_sec  = timeleft;
     ntimeout.it_value.tv_usec = 0;
     setitimer(ITIMER_REAL, &ntimeout, (struct itimerval *)NULL);
-#endif
 }
 
-static RETSIGTYPE timeout_handler (int signal)
+static void timeout_handler (int signal)
 /* handle SIGALRM signal indicating a server timeout */
 {
     (void)signal;
@@ -134,74 +113,9 @@ static int cleanupSockClose (int fd)
     return SockClose(fd);
 }
 
-#ifdef KERBEROS_V4
-static int kerberos_auth(socket, canonical, principal) 
-/* authenticate to the server host using Kerberos V4 */
-int socket;		/* socket to server host */
-char *canonical;	/* server name */
-char *principal;
-{
-    KTEXT ticket;
-    MSG_DAT msg_data;
-    CREDENTIALS cred;
-    Key_schedule schedule;
-    int rem;
-    char * prin_copy = (char *) NULL;
-    char * prin = (char *) NULL;
-    char * inst = (char *) NULL;
-    char * realm = (char *) NULL;
-
-    if (principal != (char *)NULL && *principal)
-    {
-        char *cp;
-        prin = prin_copy = xstrdup(principal);
-	for (cp = prin_copy; *cp && *cp != '.'; ++cp)
-	    ;
-	if (*cp)
-	{
-	    *cp++ = '\0';
-	    inst = cp;
-	    while (*cp && *cp != '@')
-	        ++cp;
-	    if (*cp)
-	    {
-	        *cp++ = '\0';
-	        realm = cp;
-	    }
-	}
-    }
-  
-    ticket = xmalloc(sizeof (KTEXT_ST));
-    rem = (krb_sendauth (0L, socket, ticket,
-			 prin ? prin : "pop",
-			 inst ? inst : canonical,
-			 realm ? realm : ((char *) (krb_realmofhost (canonical))),
-			 ((unsigned long) 0),
-			 (&msg_data),
-			 (&cred),
-			 (schedule),
-			 ((struct sockaddr_in *) 0),
-			 ((struct sockaddr_in *) 0),
-			 "KPOPV0.1"));
-    free(ticket);
-    if (prin_copy)
-    {
-        free(prin_copy);
-    }
-    if (rem != KSUCCESS)
-    {
-	report(stderr, GT_("kerberos error %s\n"), (krb_get_err_text (rem)));
-	return (PS_AUTHFAIL);
-    }
-    return (0);
-}
-#endif /* KERBEROS_V4 */
-
 #ifdef KERBEROS_V5
-static int kerberos5_auth(socket, canonical)
-/* authenticate to the server host using Kerberos V5 */
-int socket;             /* socket to server host */
-const char *canonical;  /* server name */
+/** authenticate to the server host using Kerberos V5 */
+static int kerberos5_auth(int socket /** socket to server host */, const char *canonical /** server name */)
 {
     krb5_error_code retval;
     krb5_context context;
@@ -448,7 +362,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	 * could be "auto". */
 	switch (ctl->server.protocol)
 	{
-	    case P_POP3: case P_APOP: case P_RPOP:
+	    case P_POP3: case P_APOP:
 	    fetchsizelimit = 1;
 	}
 
@@ -458,7 +372,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
     }
 
     /*
-     * What forces this code is that in POP2 and
+     * What forces this code is that in
      * IMAP2bis you can't fetch a message without
      * having it marked `seen'.  In POP3 and IMAP4, on the
      * other hand, you can (peek_capable is set by 
@@ -679,8 +593,44 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		if (separatefetchbody)
 		{
 		    len = -1;
-		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
+		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len))) {
+			if (err == PS_ERROR && ctl->server.retrieveerror) {
+			    /*
+			     * Mark a message with a protocol error as seen.
+			     * This can be used to see which messages we've attempted
+			     * to download, but failed.
+			     */
+			    if (ctl->server.retrieveerror == RE_MARKSEEN) {
+				if ((ctl->server.base_protocol->mark_seen)(mailserver_socket,ctl,num)) {
+				    return(err);
+				}
+			    }
+
+			    if (ctl->server.retrieveerror != RE_ABORT) {
+				/*
+				 * Do not abort download session.  Continue with the next message.
+				 *
+				 * Prevents a malformed message from blocking all other messages
+				 * behind it in the mailbox from being downloaded.
+				 *
+				 * Reconnect to SMTP to force this incomplete message to be dropped.
+				 * Required because we've already begun the DATA portion of the
+				 * interaction with the SMTP server (commands are ignored/
+				 * considered part of the message data).
+				 */
+				abort_message_sink(ctl);
+
+				// Ensure we don't delete the failed message from the server.
+				suppress_delete = TRUE;
+
+				// Bookkeeping required before next message can be downloaded.
+				goto flagthemail;
+			    }
+			}
+
 			return(err);
+		    }
+
 		    /*
 		     * Work around a bug in Novell's
 		     * broken GroupWise IMAP server;
@@ -1068,7 +1018,6 @@ static int do_session(
 			     ctl->server.base_protocol->name, ctl->server.pollname);
 		    strlcpy(errbuf, strerror(err_no), sizeof(errbuf));
 		report_complete(stderr, ": %s\n", errbuf);
-
 	    }
 	    err = PS_SOCKET;
 	    set_timeout(0);
@@ -1108,17 +1057,6 @@ static int do_session(
 	 */
 	set_timeout(0);
 	phase = oldphase;
-#ifdef KERBEROS_V4
-	if (ctl->server.authenticate == A_KERBEROS_V4 && (strcasecmp(proto->name,"IMAP") != 0))
-	{
-	    set_timeout(mytimeout);
-	    err = kerberos_auth(mailserver_socket, ctl->server.truename,
-			       ctl->server.principal);
-	    set_timeout(0);
- 	    if (err != 0)
-		goto cleanUp;
-	}
-#endif /* KERBEROS_V4 */
 
 #ifdef KERBEROS_V5
 	if (ctl->server.authenticate == A_KERBEROS_V5)
@@ -1582,14 +1520,6 @@ int do_protocol(struct query *ctl /** parsed options with merged-in defaults */,
 		const struct method *proto /** protocol method table */)
 {
     int	err;
-
-#ifndef KERBEROS_V4
-    if (ctl->server.authenticate == A_KERBEROS_V4)
-    {
-	report(stderr, GT_("Kerberos V4 support not linked.\n"));
-	return(PS_ERROR);
-    }
-#endif /* KERBEROS_V4 */
 
 #ifndef KERBEROS_V5
     if (ctl->server.authenticate == A_KERBEROS_V5)

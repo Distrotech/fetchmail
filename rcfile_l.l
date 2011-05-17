@@ -5,12 +5,13 @@
  *
  * For license terms, see the file COPYING in this directory.
  */
-#include <string.h>
 
 #include "config.h"
 #include "fetchmail.h"
 #include "xmalloc.h"
 #include "rcfile_y.h"
+
+#include <string.h>
 
 int prc_lineno = 1;
 
@@ -79,9 +80,8 @@ preauth(enticate)?	{ SETSTATE(AUTH); return AUTHENTICATE; }
 auth(enticate)?	{ SETSTATE(AUTH); return AUTHENTICATE; }
 any		{ SETSTATE(0); yylval.proto = A_ANY; return AUTHTYPE;}
 gssapi		{ SETSTATE(0); yylval.proto = A_GSSAPI; return AUTHTYPE;}
-kerberos(_v)?4	{ SETSTATE(0); yylval.proto = A_KERBEROS_V4; return AUTHTYPE;}
 kerberos(_v)?5	{ SETSTATE(0); yylval.proto = A_KERBEROS_V5; return AUTHTYPE;}
-kerberos	{ SETSTATE(0); yylval.proto = A_KERBEROS_V4; return AUTHTYPE;}
+kerberos	{ SETSTATE(0); yylval.proto = A_KERBEROS_V5; return AUTHTYPE;}
 ssh		{ SETSTATE(0); yylval.proto = A_SSH; return AUTHTYPE;}
 external	{ SETSTATE(0); yylval.proto = A_EXTERNAL; return AUTHTYPE;}
 (otp|opie)	{ SETSTATE(0); yylval.proto = A_OTP; return AUTHTYPE;}
@@ -98,8 +98,15 @@ esmtppassword	{ return ESMTPPASSWORD; }
 bad-header	{ return BADHEADER; }
 accept		{ return ACCEPT; }
 reject		{ return REJECT_; }
+retrieve-error	{ return RETRIEVEERROR; }
+abort		{ return ABORT; }
+continue	{ return CONTINUE; }
+markseen	{ return MARKSEEN; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
+pwmd_socket	{ return PWMD_SOCKET; }
+pwmd_file	{ return PWMD_FILE; }
+pinentry_timeout	{ return PINENTRY_TIMEOUT; }
 <INITIAL,NAME>pass(word)?	{SETSTATE(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
@@ -188,12 +195,10 @@ options		{/* EMPTY */}
 [;:,]		{/* EMPTY */}
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
-(pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
 (sdps)|(SDPS)   { return SDPS; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
 (apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
-(rpop)|(RPOP)   { yylval.proto = P_RPOP;  return PROTO; }
 (etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }
 (odmr)|(ODMR)   { yylval.proto = P_ODMR;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }

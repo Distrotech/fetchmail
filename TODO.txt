@@ -62,7 +62,7 @@ questionable:
 - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
   <simpkins@cisco.com> around Nov 2nd)?
 
-6.4:
+7.0:
 - Properly free host/user entries (through C++ class instantiation and destructors...)
 - Remove stupid options, such as spambounce, or deferred bounces for anything
   but wrong addresses

@@ -5,53 +5,36 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-/* We need this for HAVE_STDARG_H, etc */
 #include "config.h"
+
+#ifdef __NetBSD__
+#define _NETBSD_SOURCE 1
+#endif
 
 struct addrinfo;
 
 /* We need this for size_t */
 #include <sys/types.h>
 
-/* We need this for time_t */
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
 
-#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#endif
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
 #include <netdb.h>
 #include <stdio.h>
 
-/* Import Trio if needed */
-#if !defined(HAVE_SNPRINTF) || !defined(HAVE_VSNPRINTF)
-#  include "trio/trio.h"
-#endif
-
-/* We need this for strstr */
-#if !defined(HAVE_STRSTR) && !defined(strstr)
-char *strstr(const char *, const char *);
-#endif
-
 #include "fm_strl.h"
+
+#include "uid_db.h"
+
+#ifdef HAVE_LIBPWMD
+#include <libpwmd.h>
+#endif
 
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
-#define		P_POP2		2
 #define		P_POP3		3
 #define		P_APOP		4
-#define		P_RPOP		5
 #define		P_IMAP		6
 #define		P_ETRN		7
 #define		P_ODMR		8
@@ -78,7 +61,6 @@ char *strstr(const char *, const char *);
 #define		A_NTLM		2	/* Microsoft NTLM protocol */
 #define		A_CRAM_MD5	3	/* CRAM-MD5 shrouding (RFC2195) */
 #define		A_OTP		4	/* One-time password (RFC1508) */
-#define		A_KERBEROS_V4	5	/* authenticate w/ Kerberos V4 */
 #define		A_KERBEROS_V5	6	/* authenticate w/ Kerberos V5 */
 #define 	A_GSSAPI	7	/* authenticate with GSSAPI */
 #define		A_SSH		8	/* authentication at session level */
@@ -89,7 +71,6 @@ char *strstr(const char *, const char *);
  * require a password */
 #define NO_PASSWORD(ctl) \
     ((ctl)->server.authenticate == A_OTP \
-     || (ctl)->server.authenticate == A_KERBEROS_V4 \
      || (ctl)->server.authenticate == A_KERBEROS_V5 \
      || (ctl)->server.authenticate == A_GSSAPI \
      || (ctl)->server.authenticate == A_SSH \
@@ -180,6 +161,9 @@ struct runctl
     char	*pidfile;	/** where to record the PID of daemon mode processes */
     const char	*postmaster;
     char	*properties;
+#ifdef HAVE_LIBPWMD
+    int		pinentry_timeout;
+#endif
     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
     flag	spambounce;
@@ -258,6 +242,9 @@ struct method		/* describe methods for protocol state machine */
 
 enum badheader { BHREJECT = 0, BHACCEPT };
 
+/* Message retrieval error mode */
+enum retrieveerror { RE_ABORT = 0, RE_CONTINUE, RE_MARKSEEN };
+
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
@@ -266,7 +253,7 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
-    const char *service;		/* service name */
+    char *service;			/* service name */
     int interval;			/* # cycles to skip between polls */
     int authenticate;			/* authentication mode to try */
     int timeout;			/* inactivity timout in seconds */
@@ -275,7 +262,6 @@ struct hostdata		/* shared among all user connections to given server */
     char *qvirtual;			/* prefix removed from local user id */
     flag skip;				/* suppress poll in implicit mode? */
     flag dns;				/* do DNS lookup on multidrop? */
-    flag uidl;				/* use RFC1725 UIDLs? */
 #ifdef SDPS_ENABLE
     flag sdps;				/* use Demon Internet SDPS *ENV */
 #endif /* SDPS_ENABLE */
@@ -284,6 +270,7 @@ struct hostdata		/* shared among all user connections to given server */
     char *principal;			/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
     enum badheader badheader;		/* bad-header {pass|reject} */
+    enum retrieveerror retrieveerror;	/* retrieve-error (abort|continue|markseen) */
 
 #if defined(linux) || defined(__FreeBSD__)
 #define CAN_MONITOR
@@ -328,6 +315,11 @@ struct query
     char *remotename;		/* remote login name to use */
     char *password;		/* remote password to use */
     struct idlist *mailboxes;	/* list of mailboxes to check */
+
+#ifdef HAVE_LIBPWMD
+    char *pwmd_socket;		/* socket to connect to */
+    char *pwmd_file;		/* file to open on the server */
+#endif
 
     /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
@@ -389,8 +381,7 @@ struct query
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
-    struct idlist *oldsaved, *newsaved;
-    struct idlist **oldsavedend;
+    struct uid_db oldsaved, newsaved;
     char lastdigest[DIGESTLEN];	/* last MD5 hash seen on this connection */
     char *folder;		/* folder currently being polled */
 
@@ -482,12 +473,11 @@ extern const char *iana_charset;	/* IANA assigned charset name */
 /* prototypes for globally callable functions */
 
 /* from /usr/include/sys/cdefs.h */
-#if !defined __GNUC__ || __GNUC__ < 2
+#if !defined __GNUC__
 # define __attribute__(xyz)    /* Ignore. */
 #endif
 
 /* error.c: Error reporting */
-#if defined(HAVE_STDARG_H)
 void report_init(int foreground);
  /** Flush partial message, suppress program name tag for next report printout. */
 void report_flush(FILE *fp);
@@ -503,12 +493,6 @@ void report_complete (FILE *fp, const char *format, ...)
 void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...)
     __attribute__ ((format (printf, 5, 6)))
     ;
-#else
-void report ();
-void report_build ();
-void report_complete ();
-void report_at_line ();
-#endif
 
 /* driver.c -- main driver loop */
 void set_timeout(int);
@@ -535,7 +519,6 @@ int readheaders(int sock,
 		       int num,
 		       flag *suppress_readbody);
 int readbody(int sock, struct query *ctl, flag forward, int len);
-#if defined(HAVE_STDARG_H)
 void gen_send(int sock, const char *, ... )
     __attribute__ ((format (printf, 2, 3)))
     ;
@@ -545,13 +528,6 @@ int gen_recv_split(int sock, char *buf, int size, struct RecvSplit *rs);
 int gen_transact(int sock, const char *, ... )
     __attribute__ ((format (printf, 2, 3)))
     ;
-#else
-void gen_send();
-int gen_recv();
-void gen_recv_split_init();
-int gen_recv_split();
-int gen_transact();
-#endif
 extern struct msgblk msgblk;
 
 /* use these to track what was happening when the nonresponse timer fired */
@@ -592,14 +568,11 @@ int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);
 int close_sink(struct query *, struct msgblk *, flag);
 int open_warning_by_mail(struct query *);
-#if defined(HAVE_STDARG_H)
 void stuff_warning(const char *, struct query *, const char *, ... )
     __attribute__ ((format (printf, 3, 4)))
     ;
-#else
-void stuff_warning();
-#endif
 void close_warning_by_mail(struct query *, struct msgblk *);
+void abort_message_sink(struct query *ctl);
 
 /* rfc822.c: RFC822 header parsing */
 char *reply_hack(char *, const char *, size_t *);
@@ -657,7 +630,6 @@ int interface_approve(struct hostdata *, flag domonitor);
 #include "xmalloc.h"
 
 /* protocol driver and methods */
-int doPOP2 (struct query *); 
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
 int doETRN (struct query *);
@@ -676,14 +648,14 @@ int do_otp(int sock, const char *command, struct query *ctl);
 extern char currentwd[1024], rcfiledir[1024];
 
 struct query *hostalloc(struct query *); 
-int parsecmdline (int, char **, struct runctl *, struct query *);
+int parsecmdline (int, char **, struct runctl *, struct query *, flag *);
 char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned const char *);
 void hmac_md5 (const unsigned char *, size_t, const unsigned char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(char *, char *, int socket);
-typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
+typedef void (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
-RETSIGTYPE null_signal_handler(int sig);
+void null_signal_handler(int sig);
 SIGHANDLERTYPE set_signal_handler(int sig, SIGHANDLERTYPE handler);
 int daemonize(const char *);
 char *fm_getpassword(char *);
@@ -711,33 +683,8 @@ char *rfc2047e(const char*, const char *);
 void yyerror(const char *);
 int yylex(void);
 
-#ifdef __EMX__
-void itimerthread(void*);
-/* Have to include these first to avoid errors from redefining getcwd
-   and chdir.  They're re-include protected in EMX, so it's okay, I
-   guess.  */
-#include <stdlib.h>
-#include <unistd.h>
-/* Redefine getcwd and chdir to get drive-letter support so we can
-   find all of our lock files and stuff. */
-#define getcwd _getcwd2
-#define chdir _chdir2
-#endif /* _EMX_ */
-
-#ifdef HAVE_STRERROR
-#  if !defined(strerror) && !defined(HAVE_DECL_STRERROR)	/* On some systems, strerror is a macro */
-char *strerror (int);
-#  endif
-#endif /* HAVE_STRERROR */
-
 #define STRING_DISABLED	(char *)-1
 #define STRING_DUMMY	""
-
-#ifdef NeXT
-#ifndef S_IXGRP
-#define S_IXGRP 0000010
-#endif
-#endif
 
 #ifndef HAVE_STPCPY
 char *stpcpy(char *, const char*);

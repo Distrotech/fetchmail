@@ -8,13 +8,11 @@
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
-#endif
 #include  "fetchmail.h"
 #include  "socket.h"
 
-#include  "i18n.h"
+#include  "gettext.h"
 #include "fm_md5.h"
 
 #include <sys/types.h>

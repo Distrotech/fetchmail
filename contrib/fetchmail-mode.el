@@ -75,7 +75,7 @@
 
 (unless fetchmail-keywords
    (setq fetchmail-keywords
-          '("poll" "skip" "via" "in" "proto" "protocol" "uidl" "no" "port" "auth" "authenticate" "timeout" "envelope" "qvirtual" "envelope" "aka" "localdomains" "interface" "monitor" "dns" "user" "username" "is" "folder" "pass" "password" "smtp" "smtphost" "smtpaddress" "antispam" "mda" "pre" "preconnect" "post" "postconnect" "keep" "flush" "fetchall" "rewrite" "forcecr" "stripcr" "pass8bits" "dropstatus" "limit" "fetchlimit" "batchlimit" "expunge" "pop2" "POP2" "pop3" "POP3" "imap" "IMAP" "imap-k4" "IMAP-K4" "apop" "APOP" "rpop" "RPOP" "kpop" "KPOP" "etrn" "ETRN" "login" "kerberos" "kerberos_v5" "logfile" "daemon" "syslog" "invisible" "and" "with" "has" "wants" "options" "here" "there" "aka" "set")))
+          '("poll" "skip" "via" "in" "proto" "protocol" "uidl" "no" "port" "auth" "authenticate" "timeout" "envelope" "qvirtual" "envelope" "aka" "localdomains" "interface" "monitor" "dns" "user" "username" "is" "folder" "pass" "password" "smtp" "smtphost" "smtpaddress" "antispam" "mda" "pre" "preconnect" "post" "postconnect" "keep" "flush" "fetchall" "rewrite" "forcecr" "stripcr" "pass8bits" "dropstatus" "limit" "fetchlimit" "batchlimit" "expunge" "pop3" "POP3" "imap" "IMAP" "imap-k4" "IMAP-K4" "apop" "APOP" "rpop" "RPOP" "kpop" "KPOP" "etrn" "ETRN" "login" "kerberos" "kerberos_v5" "logfile" "daemon" "syslog" "invisible" "and" "with" "has" "wants" "options" "here" "there" "aka" "set")))
 
 (defvar fetchmail-keyword-table nil
   "Completion table for fetchmail-mode" )

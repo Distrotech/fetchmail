@@ -37,7 +37,7 @@ read SITE
 echo
 echo "Protocol?: pop3   <My service provider uses the 'pop3' mail protocol>"
 echo "Protocol?: auto   <If not sure put: auto>"
-echo "Choices: apop auto etrn imap imap-gss imap-k4 kpop pop2 pop3 rpop sdps"
+echo "Choices: apop auto etrn imap imap-gss imap-k4 kpop pop3 rpop sdps"
 echo -n "Protocol?: "
 read PROTO
 echo

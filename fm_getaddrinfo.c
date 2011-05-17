@@ -1,6 +1,6 @@
 #include "config.h"
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 
 #include <signal.h>
 #include <errno.h>

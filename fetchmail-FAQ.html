@@ -17,7 +17,7 @@ a much better one.
 <title>The Fetchmail FAQ</title>
 <meta name="description"
 content="Frequently asked questions about fetchmail."/>
-<meta name="keywords" content="fetchmail, POP, POP2, POP3, IMAP, remote mail"/>
+<meta name="keywords" content="fetchmail, POP3, IMAP, remote mail"/>
 </head>
 <body>
 <table width="100%" cellpadding="0" summary="Canned page footer">
@@ -528,11 +528,11 @@ paper on the Web with a search for that title.</p>
 <h2><a id="G8" name="G8">G8. What is the best server to use with
 fetchmail?</a></h2>
 
-<p>Fetchmail will work with any POP, IMAP, ETRN, or ODMR server
+<p>Fetchmail will work with any POP3, IMAP, ETRN, or ODMR server
 that conforms to the relevant standards/RFCs (and even some outright
 broken ones like <a href="#S2">Microsoft Exchange</a> and <a
     href="#S6">Novell GroupWise</a>). This doesn't mean it works equally
-well with all, however. POP2 servers, and POP3 servers without UIDL,
+well with all, however. POP3 servers without UIDL
 limit fetchmail's capabilities in various ways described on the manual
 page.</p>
 
@@ -3548,7 +3548,7 @@ oversized mails or both when a user specifies both
 first message in your mailbox. This usually stems from a message like
 the one shown below, which is automatically created on your server. This
 message shows up if the University of Washington IMAP or PINE software
-is used on the server together with a POP2 or POP3 daemon that is not
+is used on the server together with a POP3 daemon that is not
 aware of these messages, such as some versions of Qualcomm Popper
 (QPOP):</p>
 

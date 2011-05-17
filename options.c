@@ -11,16 +11,12 @@
 #include <pwd.h>
 #include <string.h>
 #include <errno.h>
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <limits.h>
-#else
-#include  <ctype.h>
-#endif
 
 #include "getopt.h"
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 
 enum {
     LA_INVISIBLE = 256,
@@ -55,15 +51,24 @@ enum {
     LA_IDLE,
     LA_NOSOFTBOUNCE,
     LA_SOFTBOUNCE,
-    LA_BADHEADER
+    LA_BADHEADER,
+    LA_RETRIEVEERROR
 };
 
-/* options still left: CgGhHjJoORTWxXYz */
-static const char *shortoptions = 
+static const char *shortoptions =
+/* options still left: ghHjJoRTWxXYz */
+#ifdef HAVE_LIBPWMD
+	"O:C:G:"
+#endif
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:I:M:yw:D:";
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
+#ifdef HAVE_LIBPWMD
+  {"pwmd-socket",	required_argument,  (int *) 0, 'C' },
+  {"pwmd-file",		required_argument,  (int *) 0, 'G' },
+  {"pinentry-timeout",	required_argument,  (int *) 0, 'O' },
+#endif
   {"help",	no_argument,	   (int *) 0, '?' },
   {"version",	no_argument,	   (int *) 0, 'V' },
   {"check",	no_argument,	   (int *) 0, 'c' },
@@ -109,6 +114,7 @@ static const struct option longoptions[] = {
   {"norewrite",	no_argument,	   (int *) 0, 'n' },
   {"limit",	required_argument, (int *) 0, 'l' },
   {"warnings",	required_argument, (int *) 0, 'w' },
+  {"retrieve-error",	required_argument, (int *) 0, LA_RETRIEVEERROR },
 
   {"folder",	required_argument, (int *) 0, 'r' },
   {"smtphost",	required_argument, (int *) 0, 'S' },
@@ -159,7 +165,6 @@ static const struct option longoptions[] = {
 static int xatoi(char *s, int *errflagptr)
 /* do safe conversion from string to number */
 {
-#if defined (STDC_HEADERS) && defined (LONG_MAX) && defined (INT_MAX)
     /* parse and convert numbers, but also check for invalid characters in
      * numbers
      */
@@ -190,48 +195,16 @@ static int xatoi(char *s, int *errflagptr)
     }
 
     return (int) value;  /* shut up, I know what I'm doing */
-#else
-    int	i;
-    char *dp;
-# if defined (STDC_HEADERS)
-    size_t	len;
-# else
-    int		len;
-# endif
-
-    /* We do only base 10 conversions here (atoi)! */
-
-    len = strlen(s);
-    /* check for leading white spaces */
-    for (i = 0; (i < len) && isspace((unsigned char)s[i]); i++)
-    	;
-
-    dp = &s[i];
-
-    /* check for +/- */
-    if (i < len && (s[i] == '+' || s[i] == '-'))	i++;
-
-    /* skip over digits */
-    for ( /* no init */ ; (i < len) && isdigit((unsigned char)s[i]); i++)
-    	;
-
-    /* check for trailing garbage */
-    if (i != len) {
-    	(void) fprintf(stderr, GT_("String '%s' is not a valid number string.\n"), s);
-    	(*errflagptr)++;
-	return 0;
-    }
-
-    /* atoi should be safe by now, except for number range over/underflow */
-    return atoi(dp);
-#endif
 }
 
 /** parse and validate the command line options */
 int parsecmdline (int argc /** argument count */,
 		  char **argv /** argument strings */,
 		  struct runctl *rctl /** global run controls to modify */,
-		  struct query *ctl /** option record to initialize */)
+		  struct query *ctl /** option record to initialize */,
+		  flag *safewithbg /** set to whether options are
+				     compatible with another copy
+				     running in the background */)
 {
     /*
      * return value: if positive, argv index of last parsed option + 1
@@ -246,9 +219,12 @@ int parsecmdline (int argc /** argument count */,
     int errflag = 0;	/* TRUE when a syntax error is detected */
     int helpflag = 0;	/* TRUE when option help was explicitly requested */
     int option_index;
+    int option_safe;	/* to track if option currently parsed is safe
+			   with a background copy */
     char *buf, *cp;
 
     rctl->poll_interval = -1;
+    *safewithbg = TRUE;
 
     memset(ctl, '\0', sizeof(struct query));    /* start clean */
     ctl->smtp_socket = -1;
@@ -257,21 +233,37 @@ int parsecmdline (int argc /** argument count */,
 	   (c = getopt_long(argc,argv,shortoptions,
 			    longoptions, &option_index)) != -1)
     {
+	option_safe = FALSE;
+
 	switch (c) {
+#ifdef HAVE_LIBPWMD
+	case 'C':
+	    ctl->pwmd_socket = prependdir(optarg, currentwd);
+	    break;
+	case 'G':
+	    ctl->pwmd_file = xstrdup(optarg);
+	    break;
+	case 'O':
+	    rctl->pinentry_timeout = atoi(optarg);
+	    break;
+#endif
 	case 'V':
 	    versioninfo = TRUE;
+	    option_safe = TRUE;
 	    break;
 	case 'c':
 	    check_only = TRUE;
 	    break;
 	case 's':
 	    outlevel = O_SILENT;
+	    option_safe = 1;
 	    break;
 	case 'v':
 	    if (outlevel >= O_VERBOSE)
 		outlevel = O_DEBUG;
 	    else
 		outlevel = O_VERBOSE;
+	    option_safe = TRUE;
 	    break;
 	case 'd':
 	    rctl->poll_interval = xatoi(optarg, &errflag);
@@ -329,8 +321,6 @@ int parsecmdline (int argc /** argument count */,
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"auto") == 0)
 		ctl->server.protocol = P_AUTO;
-	    else if (strcasecmp(optarg,"pop2") == 0)
-		ctl->server.protocol = P_POP2;
 #ifdef SDPS_ENABLE
 	    else if (strcasecmp(optarg,"sdps") == 0)
 	    {
@@ -342,16 +332,12 @@ int parsecmdline (int argc /** argument count */,
 		ctl->server.protocol = P_POP3;
 	    else if (strcasecmp(optarg,"apop") == 0)
 		ctl->server.protocol = P_APOP;
-	    else if (strcasecmp(optarg,"rpop") == 0)
-		ctl->server.protocol = P_RPOP;
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
 		ctl->server.service = xstrdup(KPOP_PORT);
 #ifdef KERBEROS_V5
 		ctl->server.authenticate =  A_KERBEROS_V5;
-#else
-		ctl->server.authenticate =  A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
@@ -366,7 +352,7 @@ int parsecmdline (int argc /** argument count */,
 	    }
 	    break;
 	case 'U':
-	    ctl->server.uidl = FLAG_TRUE;
+	    /* EMPTY - removed in 7.0.0 */
 	    break;
 	case LA_IDLE:
 	    ctl->idle = FLAG_TRUE;
@@ -377,16 +363,12 @@ int parsecmdline (int argc /** argument count */,
 	case LA_AUTH:
 	    if (strcmp(optarg, "password") == 0)
 		ctl->server.authenticate = A_PASSWORD;
-	    else if (strcmp(optarg, "kerberos") == 0)
 #ifdef KERBEROS_V5
+	    else if (strcmp(optarg, "kerberos") == 0)
 		ctl->server.authenticate = A_KERBEROS_V5;
-#else
-		ctl->server.authenticate = A_KERBEROS_V4;
-#endif /* KERBEROS_V5 */
 	    else if (strcmp(optarg, "kerberos_v5") == 0)
 		ctl->server.authenticate = A_KERBEROS_V5;
-	    else if (strcmp(optarg, "kerberos_v4") == 0)
-		ctl->server.authenticate = A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
 	    else if (strcmp(optarg, "ssh") == 0)
 		ctl->server.authenticate = A_SSH;
 	    else if (strcasecmp(optarg, "external") == 0)
@@ -594,6 +576,7 @@ int parsecmdline (int argc /** argument count */,
 
 	case LA_CONFIGDUMP:
 	    configdump = TRUE;
+	    option_safe = TRUE;
 	    break;
 
 	case LA_SYSLOG:
@@ -608,10 +591,25 @@ int parsecmdline (int argc /** argument count */,
 	    ctl->server.tracepolls = FLAG_TRUE;
 	    break;
 
+	case LA_RETRIEVEERROR:
+	    if (strcasecmp(optarg,"abort") == 0) {
+		ctl->server.retrieveerror = RE_ABORT;
+	    } else if (strcasecmp(optarg,"continue") == 0) {
+		ctl->server.retrieveerror = RE_CONTINUE;
+	    } else if (strcasecmp(optarg,"markseen") == 0) {
+		ctl->server.retrieveerror = RE_MARKSEEN;
+	    } else {
+		fprintf(stderr,GT_("Invalid retrieve-error policy `%s' specified.\n"), optarg);
+		errflag++;
+	    }
+	    break;
+
 	case '?':
+	    helpflag = 1;
 	default:
-	    helpflag++;
+	    break;
 	}
+	*safewithbg &= option_safe;
     }
 
     if (errflag || ocount > 1 || helpflag) {
@@ -657,9 +655,16 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
 	P(GT_("      --bad-header {reject|accept}\n"
 	      "                    specify policy for handling messages with bad headers\n"));
+	P(GT_("      --retrieve-error {abort|continue|markseen}\n"
+              "                        specify policy for processing messages with retrieve errors\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
-	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
+#ifdef HAVE_LIBPWMD
+        P(GT_("  -C, --pwmd-socket pwmd socket path (~/.pwmd/socket)\n"));
+        P(GT_("  -G, --pwmd-file   filename to use on the pwmd server\n"));
+        P(GT_("  -O, --pinentry-timeout   seconds until pinentry is canceled\n"));
+#endif
+
 	P(GT_("      --port        TCP port to connect to (obsolete, use --service)\n"));
 	P(GT_("  -P, --service     TCP service to connect to (can be numeric TCP port)\n"));
 	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));

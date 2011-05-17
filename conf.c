@@ -9,12 +9,8 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#if defined(STDC_HEADERS)
 #include <stdlib.h>
-#endif
-#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
-#endif
 #include <string.h>
 #include <pwd.h>
 #include <errno.h>
@@ -151,9 +147,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
      * in fetchmail.c.
      */
     features = "feature_options = ("
-#ifdef POP2_ENABLE
-    "'pop2',"
-#endif /* POP2_ENABLE */
 #ifdef POP3_ENABLE
     "'pop3',"
 #endif /* POP3_ENABLE */
@@ -163,9 +156,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef GSSAPI
     "'gssapi',"
 #endif /* GSSAPI */
-#if defined(KERBEROS_V4)
-    "'kerberos',"
-#endif /* defined(IMAP4) */
 #ifdef RPA_ENABLE
     "'rpa',"
 #endif /* RPA_ENABLE */
@@ -248,7 +238,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    using_kpop =
 		(ctl->server.protocol == P_POP3 &&
 		 ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT ) &&
-		 ctl->server.authenticate == A_KERBEROS_V4);
+		 ctl->server.authenticate == A_KERBEROS_V5);
 
 	    stringdump("pollname", ctl->server.pollname); 
 	    booldump("active", !ctl->server.skip); 
@@ -280,8 +270,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		stringdump("auth", "cram-md5");
 	    else if (ctl->server.authenticate == A_GSSAPI)
 		stringdump("auth", "gssapi");
-	    else if (ctl->server.authenticate == A_KERBEROS_V4)
-		stringdump("auth", "kerberos_v4");
 	    else if (ctl->server.authenticate == A_KERBEROS_V5)
 		stringdump("auth", "kerberos_v5");
 	    else if (ctl->server.authenticate == A_SSH)
@@ -294,8 +282,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef HAVE_RES_SEARCH
 	    booldump("dns", ctl->server.dns);
 #endif /* HAVE_RES_SEARCH */
-	    booldump("uidl", ctl->server.uidl);
-
 	    listdump("aka", ctl->server.akalist);
 	    listdump("localdomains", ctl->server.localdomains);
 
@@ -318,6 +304,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		 * fetchmailconf purposes */
 		case BHREJECT: puts("'badheader': FALSE,"); break;
 		case BHACCEPT: puts("'badheader': TRUE,"); break;
+	    }
+
+	    switch (ctl->server.retrieveerror) {
+		case RE_ABORT: stringdump("retrieveerror", "abort"); break;
+		case RE_CONTINUE: stringdump("retrieveerror", "continue"); break;
+		case RE_MARKSEEN: stringdump("retrieveerror", "markseen"); break;
 	    }
 
 	    indent(0);

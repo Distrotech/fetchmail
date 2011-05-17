@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "fetchmail.h"
-#include "i18n.h"
+#include "gettext.h"
 
 static unsigned char unhex(unsigned char c)
 {
