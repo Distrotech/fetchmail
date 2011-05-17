@@ -168,6 +168,10 @@ static int handle_plugin(const char *host,
 	report(stderr, GT_("fetchmail: socketpair failed\n"));
 	return -1;
     }
+
+    if (SockTimeout(fds[0], mytimeout)) return -1;
+    if (SockTimeout(fds[1], mytimeout)) return -1;
+
     switch (fork()) {
 	case -1:
 		/* error */
@@ -214,7 +218,8 @@ static int setsocktimeout(int sock, int which, int timeout) {
 }
 
 /** Configure socket options such as send/receive timeout at the socket
- * level, to avoid network-induced stalls.
+ * level, to avoid network-induced stalls. \return 0 for success, 1 for
+ * error.
  */
 int SockTimeout(int sock, int timeout)
 {
@@ -245,6 +250,8 @@ int UnixOpen(const char *path)
 	h_errno = 0;
 	return -1;
     }
+
+    SockTimeout(sock, mytimeout);
 
 	/* Socket opened saved. Usefull if connect timeout 
 	 * because it can be closed.
@@ -368,7 +375,6 @@ int SockOpen(const char *host, const char *service,
 
     return i;
 }
-
 
 #if defined(HAVE_STDARG_H)
 int SockPrintf(int sock, const char* format, ...)

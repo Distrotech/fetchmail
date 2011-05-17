@@ -82,6 +82,8 @@ fetchmail-6.3.20 (not yet released):
 * Do not print "skipping message" for old messages even in verbose mode. If
   there are too many old messages, the logs just get filled without any real
   activity. (Sunil Shetye) (suggested by Yunfan Jiang)
+* Set socket timeouts, to fix hangs during STARTTLS negotiation.
+  Reported by Thomas Jarosch.
 
 # TRANSLATION UPDATES
   [ja]    Japanese (Takeshi Hamasaki)

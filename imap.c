@@ -751,7 +751,6 @@ static int imap_idle(int sock)
     }
 
     /* restore normal timeout value */
-    set_timeout(0);
     mytimeout = saved_timeout;
     stage = STAGE_GETRANGE;
 
