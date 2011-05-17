@@ -340,11 +340,6 @@ int SockOpen(const char *host, const char *service,
     return i;
 }
 
-<<<<<<< HEAD
-#if defined(HAVE_STDARG_H)
-=======
-
->>>>>>> before-cpp
 int SockPrintf(int sock, const char* format, ...)
 {
     va_list ap;
