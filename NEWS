@@ -13,7 +13,7 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 removed from a 7.0.0 or newer release.)
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not reasonably portable across operating systems.
-* IMAP2 and IMAP4 (not IMAP4r1) are obsolete, support may be removed from a
+* IMAP4 (not IMAP4r1) is obsolete, support may be removed from a
   future fetchmail version.
 * --sslcertck will become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
@@ -30,7 +30,6 @@ removed from a 7.0.0 or newer release.)
 * The "protocol auto" default inside fetchmail may be removed from a future
   fetchmail release. Explicit configuration of the protocol is recommended.
 * Kerberos 5 support may be removed from a future fetchmail release.
-* The --principal option may be removed from a future fetchmail release.
 * SIGHUP wakeup support may be removed from a future fetchmail release and
   cause fetchmail to terminate - it was broken for many years.
 * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
@@ -44,7 +43,7 @@ removed from a 7.0.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail-7.0.0 (not yet released):
+fetchmail-6.4.0 (not yet released):
 
 NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
