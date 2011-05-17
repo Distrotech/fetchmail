@@ -51,6 +51,8 @@ removed from a 6.4.0 or newer release.)
 * The --bsmtp - mode of operation may be removed in a future release.
 * Given that OpenSSL is severely underdocumented, and needs license exceptions,
   fetchmail may switch to a different SSL library.
+* SSLv2 support will be removed from a future fetchmail release. It has been
+  obsolete for more than a decade.
 
 --------------------------------------------------------------------------------
 
