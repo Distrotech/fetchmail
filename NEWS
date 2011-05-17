@@ -59,10 +59,6 @@ removed from a 6.4.0 or newer release.)
 fetchmail-6.3.20 (not yet released):
 
 # CHANGES
-* fetchmail no longer supports SSL v2, nor the corresponding SSL2 option to
-  --sslproto. SSLv2 is insecure and had been deprecated 15 years ago. fetchmail
-  will actively forbid SSLv2 negotiation by means of SSL_OP_NO_SSLv2.
-  To fix Debian Bug#622054.
 * fetchmail now always uses its own MD5 implementation.  The library and header
   variants are too diverse, and we've been bitten before -- and configure
   complains noisily on Cyrus-SASL's RFC1321 md5.h.
