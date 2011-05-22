@@ -487,6 +487,7 @@ int readheaders(int sock,
 		char	*sp, *tp;
 
 		set_timeout(mytimeout);
+		SockTimeout(sock, mytimeout);
 		if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
 		    set_timeout(0);
 		    free(line);
@@ -1408,6 +1409,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
     while (protocol->delimited || len > 0)
     {
 	set_timeout(mytimeout);
+	SockTimeout(sock, mytimeout);
 	/* XXX FIXME: for undelimited protocols that ship the size, such
 	 * as IMAP, we might want to use the count of remaining characters
 	 * instead of the buffer size -- not for fetchmail 6.3.X though */
@@ -1551,6 +1553,7 @@ va_dcl
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
+    SockTimeout(sock, mytimeout);
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)
@@ -1571,6 +1574,7 @@ int gen_recv(int sock  /** socket to which server is connected */,
 
     phase = SERVER_WAIT;
     set_timeout(mytimeout);
+    SockTimeout(sock, mytimeout);
     if (SockRead(sock, buf, size) == -1)
     {
 	set_timeout(0);
@@ -1684,6 +1688,7 @@ int gen_recv_split(int sock  /** socket to which server is connected */,
 
 	phase = SERVER_WAIT;
 	set_timeout(mytimeout);
+	SockTimeout(sock, mytimeout);
 	rr = SockRead(sock, buf + n, size - n);
 	set_timeout(0);
 	phase = oldphase;
@@ -1755,6 +1760,7 @@ va_dcl
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
+    SockTimeout(sock, mytimeout);
     ok = SockWrite(sock, buf, strlen(buf));
     if (ok == -1 || (size_t)ok != strlen(buf)) {
 	/* short write, bail out */

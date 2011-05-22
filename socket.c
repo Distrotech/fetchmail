@@ -251,6 +251,7 @@ int UnixOpen(const char *path)
      */
     mailserver_socket_temp = sock;
 
+    SockTimeout(sock, mytimeout);
     if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	int olderr = errno;
@@ -390,8 +391,8 @@ va_dcl {
 #endif
     vsnprintf(buf, sizeof(buf), format, ap);
     va_end(ap);
+    SockTimeout(sock, mytimeout);
     return SockWrite(sock, buf, strlen(buf));
-
 }
 
 #ifdef SSL_ENABLE
