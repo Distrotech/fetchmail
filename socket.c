@@ -208,7 +208,7 @@ static int setsocktimeout(int sock, int which, int timeout) {
     tv.tv_usec = 0;
     rc = setsockopt(sock, SOL_SOCKET, which, &tv, sizeof(tv));
     if (rc) {
-	report(stderr, GT_("setsockopt(%d, SOL_SOCKET) failed: %s"), sock, strerror(errno));
+	report(stderr, GT_("setsockopt(%d, SOL_SOCKET) failed: %s\n"), sock, strerror(errno));
     }
     return rc;
 }
