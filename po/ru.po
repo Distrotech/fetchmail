@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.10-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-12-05 01:17+0100\n"
+"POT-Creation-Date: 2011-05-23 20:43+0200\n"
 "PO-Revision-Date: 2009-06-05 14:53+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49,92 +50,92 @@ msgstr "невозможно было декодировать запрос BASE
 msgid "decoded as %s\n"
 msgstr "декодирован как %s\n"
 
-#: driver.c:193
+#: driver.c:199
 #, c-format
 msgid "kerberos error %s\n"
 msgstr "ошибка kerberos %s\n"
 
-#: driver.c:253 driver.c:259
+#: driver.c:259 driver.c:265
 #, fuzzy, c-format
 msgid "krb5_sendauth: %s [server says '%s']\n"
 msgstr "krb5_sendauth: %s [сервер сообщил '%*s'] \n"
 
-#: driver.c:339
+#: driver.c:345
 msgid "Subject: Fetchmail oversized-messages warning"
 msgstr "Тема: Предупреждение Fetchmail о превышении размера сообщений"
 
-#: driver.c:343
+#: driver.c:349
 #, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
 msgstr ""
 "Следующие сообщения завышенного размера были удалены с почтового сервера %s, "
 "учётная запись %s:"
 
-#: driver.c:347
+#: driver.c:353
 #, c-format
 msgid "The following oversized messages remain on server %s account %s:"
 msgstr ""
 "Следующие сообщения завышенного размера находятся на почтовом сервере %s, "
 "учётная запись %s:"
 
-#: driver.c:366
+#: driver.c:372
 #, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
 msgstr[0] "  fetchmail удалил %d сообщение длиной %d октетов."
 msgstr[1] "  fetchmail удалил %d сообщений длиной %d октетов."
 
-#: driver.c:371
+#: driver.c:377
 #, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
 msgstr[0] "  fetchmail пропустил %d сообщение длиной %d октетов."
 msgstr[1] "  fetchmail пропустил %d сообщений длиной %d октетов."
 
-#: driver.c:518
+#: driver.c:521
 #, c-format
 msgid "skipping message %s@%s:%d"
 msgstr "пропускается сообщение %s@%s:%d"
 
-#: driver.c:572
+#: driver.c:575
 #, c-format
 msgid "skipping message %s@%s:%d (%d octets)"
 msgstr "пропускается сообщение %s@%s:%d (%d октетов)"
 
-#: driver.c:588
+#: driver.c:591
 msgid " (length -1)"
 msgstr " (длина -1)"
 
-#: driver.c:591
+#: driver.c:594
 msgid " (oversized)"
 msgstr " (завышенного размера)"
 
-#: driver.c:609
+#: driver.c:612
 #, c-format
 msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
 msgstr "невозможно было извлечь заголовки, сообщение %s@%s:%d (%d октетов)\n"
 
-#: driver.c:626
+#: driver.c:629
 #, c-format
 msgid "reading message %s@%s:%d of %d"
 msgstr "считывается сообщение %s@%s:%d из %d"
 
-#: driver.c:631
+#: driver.c:634
 #, c-format
 msgid " (%d octets)"
 msgstr " (%d октетов)"
 
-#: driver.c:632
+#: driver.c:635
 #, c-format
 msgid " (%d header octets)"
 msgstr " (%d октетов в заголовке)"
 
-#: driver.c:699
+#: driver.c:702
 #, c-format
 msgid " (%d body octets)"
 msgstr " (%d октетов в теле)"
 
-#: driver.c:758
+#: driver.c:761
 #, c-format
 msgid ""
 "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
@@ -142,19 +143,19 @@ msgstr ""
 "длина сообщения %s@%s:%d не совпала с ожидаемой (%d на самом деле != %d "
 "ожидалось)\n"
 
-#: driver.c:790
+#: driver.c:793
 msgid " retained\n"
 msgstr " задержано\n"
 
-#: driver.c:800
+#: driver.c:803
 msgid " flushed\n"
 msgstr " очищено\n"
 
-#: driver.c:817
+#: driver.c:815
 msgid " not flushed\n"
 msgstr " не очищено\n"
 
-#: driver.c:835
+#: driver.c:833
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
@@ -166,45 +167,45 @@ msgstr[1] ""
 "Достигнут предел извлечения %d; осталось %d сообщений, сервер %s, учётная "
 "запись %s\n"
 
-#: driver.c:892
+#: driver.c:890
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
 msgstr "таймаут после %d секунд ожидания подключения к серверу %s.\n"
 
-#: driver.c:896
+#: driver.c:894
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
 msgstr "таймаут после %d секунд ожидания сервера %s.\n"
 
-#: driver.c:900
+#: driver.c:898
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
 msgstr "таймаут после %d секунд ожидания %s.\n"
 
-#: driver.c:905
+#: driver.c:903
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
 msgstr "таймаут после %d секунд ожидания ответа от слушателя.\n"
 
-#: driver.c:908
+#: driver.c:906
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "таймаут после %d секунд.\n"
 
-#: driver.c:920
+#: driver.c:918
 msgid "Subject: fetchmail sees repeated timeouts"
 msgstr "Тема: fetchmail наблюдает повторяющиеся тайм-ауты"
 
-#: driver.c:923
+#: driver.c:921
 #, c-format
 msgid ""
-"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
-"s.\n"
+"Fetchmail saw more than %d timeouts while attempting to get mail from %s@"
+"%s.\n"
 msgstr ""
-"Fetchmail обнаружил более %d тайм-аутов при попытке получения почты из %s@%"
-"s.\n"
+"Fetchmail обнаружил более %d тайм-аутов при попытке получения почты из %s@"
+"%s.\n"
 
-#: driver.c:927
+#: driver.c:925
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -222,82 +223,73 @@ msgstr ""
 "Fetchmail не будет опрашивать этот почтовый ящик до тех\n"
 "пор, пока вы его не перезапустите.\n"
 
-#: driver.c:953
+#: driver.c:951
 #, c-format
 msgid "pre-connection command terminated with signal %d\n"
 msgstr "выполняемая до соединения команда завершена с сигналом %d\n"
 
-#: driver.c:956
+#: driver.c:954
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "сбой команды, выполняемой до соединения; статус: %d\n"
 
-#: driver.c:980
+#: driver.c:978
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "невозможно было найти HESIOD pobox для %s\n"
 
-#: driver.c:1001
+#: driver.c:999
 msgid "Lead server has no name.\n"
 msgstr "Ведущий сервер без имени.\n"
 
-#: driver.c:1028
+#: driver.c:1026
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
 msgstr "невозможно было найти каноническое имя DNS %s (%s): %s\n"
 
-#: driver.c:1075
+#: driver.c:1073
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "сбой %s-подключения к %s"
 
-#: driver.c:1091
-msgid "Subject: Fetchmail unreachable-server warning."
-msgstr "Тема: Предупреждение Fetchmail о недоступности сервера."
-
-#: driver.c:1093
-#, c-format
-msgid "Fetchmail could not reach the mail server %s:"
-msgstr "Fetchmail не смог установить связь с почтовым сервером %s:"
-
-#: driver.c:1122
+#: driver.c:1101
 msgid "SSL connection failed.\n"
 msgstr "Сбой подключения через SSL.\n"
 
-#: driver.c:1177
+#: driver.c:1156
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Ошибка блокировки занятости для %s@%s\n"
 
-#: driver.c:1181
+#: driver.c:1160
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Ошибка занятости сервера для %s@%s\n"
 
-#: driver.c:1186
+#: driver.c:1165
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Ошибка авторизации для %s@%s%s\n"
 
-#: driver.c:1189
+#: driver.c:1168
 msgid " (previously authorized)"
 msgstr " (ранее авторизовано)"
 
-#: driver.c:1192
+#: driver.c:1171
 msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
 msgstr ""
 
-#: driver.c:1213
+#: driver.c:1192
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Тема: Ошибка аутентификации fetchmail для %s@%s"
 
-#: driver.c:1217
+#: driver.c:1196
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail не смог получить почту из %s@%s.\n"
 
-#: driver.c:1221
+#: driver.c:1200
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -311,7 +303,7 @@ msgstr ""
 "fetchmail не смог распознать из-за того, что сервер не отправил\n"
 "сообщение об ошибке."
 
-#: driver.c:1227
+#: driver.c:1206
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -331,7 +323,7 @@ msgstr ""
 "подключиться. В дальнейшем уведомления отправляться не будут до тех\n"
 "пор, пока служба не будет восстановлена."
 
-#: driver.c:1237
+#: driver.c:1216
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -354,172 +346,172 @@ msgstr ""
 "отправляться не будут до тех пор, пока служба не будет\n"
 "восстановлена."
 
-#: driver.c:1253
+#: driver.c:1232
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Немедленно повторить опрос для %s@%s\n"
 
-#: driver.c:1258
+#: driver.c:1237
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Неизвестный логин или ошибка аутентификации для %s@%s\n"
 
-#: driver.c:1282
+#: driver.c:1261
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Авторизация выполнена для %s@%s\n"
 
-#: driver.c:1288
+#: driver.c:1267
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Тема: Выполнена авторизация fetchmail для %s@%s"
 
-#: driver.c:1292
+#: driver.c:1271
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail вошел в систему %s@%s.\n"
 
-#: driver.c:1296
+#: driver.c:1275
 msgid "Service has been restored.\n"
 msgstr "Служба была восстановлена.\n"
 
-#: driver.c:1328
+#: driver.c:1307
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "выбирается или повторяется опрос каталога %s\n"
 
-#: driver.c:1330
+#: driver.c:1309
 msgid "selecting or re-polling default folder\n"
 msgstr "выбирается или повторяется опрос каталога по умолчанию\n"
 
-#: driver.c:1342
+#: driver.c:1321
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s на %s (каталог %s)"
 
-#: driver.c:1345 rcfile_y.y:390
+#: driver.c:1324 rcfile_y.y:390
 #, c-format
 msgid "%s at %s"
 msgstr "%s на %s"
 
-#: driver.c:1350
+#: driver.c:1329
 #, c-format
 msgid "Polling %s\n"
 msgstr "Опрашивается %s\n"
 
-#: driver.c:1354
+#: driver.c:1333
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d сообщение (%d %s) для %s"
 msgstr[1] "%d сообщений (%d %s) для %s"
 
-#: driver.c:1357
+#: driver.c:1336
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "просмотрено"
 msgstr[1] "просмотрено"
 
-#: driver.c:1360
+#: driver.c:1339
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d сообщение для %s"
 msgstr[1] "%d сообщений для %s"
 
-#: driver.c:1367
+#: driver.c:1346
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d октетов).\n"
 
-#: driver.c:1373
+#: driver.c:1352
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Для %s почты нет\n"
 
-#: driver.c:1406
+#: driver.c:1385
 msgid "bogus message count!"
 msgstr "фиктивное количество сообщений!"
 
-#: driver.c:1549
+#: driver.c:1528
 msgid "socket"
 msgstr "сокет"
 
-#: driver.c:1552
+#: driver.c:1531
 msgid "missing or bad RFC822 header"
 msgstr "отсутствует или неверный заголовок RFC822"
 
-#: driver.c:1555
+#: driver.c:1534
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1558
+#: driver.c:1537
 msgid "client/server synchronization"
 msgstr "синхронизация клиент/сервер"
 
-#: driver.c:1561
+#: driver.c:1540
 msgid "client/server protocol"
 msgstr "протокол клиент/сервер"
 
-#: driver.c:1564
+#: driver.c:1543
 msgid "lock busy on server"
 msgstr "блокировка занятости на сервере"
 
-#: driver.c:1567
+#: driver.c:1546
 msgid "SMTP transaction"
 msgstr "SMTP-транзакция"
 
-#: driver.c:1570
+#: driver.c:1549
 msgid "DNS lookup"
 msgstr "DNS-запрос"
 
-#: driver.c:1573
+#: driver.c:1552
 msgid "undefined"
 msgstr "неопределённый"
 
-#: driver.c:1579
+#: driver.c:1558
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr "Ошибка %s при выборке из %s@%s и доставке на хост SMTP %s\n"
 
-#: driver.c:1581
+#: driver.c:1560
 msgid "unknown"
 msgstr "неизв."
 
-#: driver.c:1583
+#: driver.c:1562
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "Ошибка %s при выборке из %s@%s\n"
 
-#: driver.c:1595
+#: driver.c:1574
 #, c-format
 msgid "post-connection command terminated with signal %d\n"
 msgstr "выполняемая после соединения команда завершена с сигналом %d\n"
 
-#: driver.c:1597
+#: driver.c:1576
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "сбой команды, выполняемой после соединения; статус: %d\n"
 
-#: driver.c:1616
+#: driver.c:1595
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Поддержка Kerberos V4 не связана.\n"
 
-#: driver.c:1624
+#: driver.c:1603
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Поддержка Kerberos V5 не связана.\n"
 
-#: driver.c:1635
+#: driver.c:1614
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Опция --flush не поддерживается с %s\n"
 
-#: driver.c:1641
+#: driver.c:1620
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Опция --all не поддерживается с %s\n"
 
-#: driver.c:1650
+#: driver.c:1629
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Опция --limit не поддерживается с %s\n"
@@ -749,8 +741,8 @@ msgstr ""
 #: fetchmail.c:491
 #, fuzzy, c-format
 msgid ""
-"fetchmail: can't poll specified hosts with another fetchmail running at %"
-"ld.\n"
+"fetchmail: can't poll specified hosts with another fetchmail running at "
+"%ld.\n"
 msgstr ""
 "fetchmail: невозможно опросить указанные хосты из-за другого fetchmail, "
 "запущенного на %d.\n"
@@ -1428,8 +1420,8 @@ msgstr ""
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr ""
-"  Выполнять двоичный поиск UID'ов во время %d из %d опросов (--fastuidl %"
-"d).\n"
+"  Выполнять двоичный поиск UID'ов во время %d из %d опросов (--fastuidl "
+"%d).\n"
 
 #: fetchmail.c:1772
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
@@ -1605,8 +1597,8 @@ msgstr "  Не указан интерфейс монитора.\n"
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
 msgstr ""
-"  Подключения к серверу будут выполняться посредством плагина %s (--plugin %"
-"s).\n"
+"  Подключения к серверу будут выполняться посредством плагина %s (--plugin "
+"%s).\n"
 
 #: fetchmail.c:1937
 msgid "  No plugin command specified.\n"
@@ -1764,116 +1756,116 @@ msgstr "фиктивное количество сообщений!"
 msgid "bogus EXPUNGE count in \"%s\"!"
 msgstr ""
 
-#: imap.c:344
+#: imap.c:348
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Протокол идентифицирован как IMAP4 ревизия 1\n"
 
-#: imap.c:350
+#: imap.c:354
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Протокол идентифицирован как IMAP4 ревизия 0\n"
 
-#: imap.c:357
+#: imap.c:361
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Протокол идентифицирован как IMAP2 или IMAP2BIS\n"
 
-#: imap.c:372
+#: imap.c:376
 msgid "will idle after poll\n"
 msgstr "будет приостановлен после опроса\n"
 
-#: imap.c:461 pop3.c:475
+#: imap.c:465 pop3.c:475
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: обновление до TLS выполнено успешно.\n"
 
-#: imap.c:466 pop3.c:480
+#: imap.c:470 pop3.c:480
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: сбой обновления до TLS.\n"
 
-#: imap.c:470
+#: imap.c:474
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 "%s: сбой принудительного обновления до TLS; выполняется попытка продолжить "
 "работу\n"
 
-#: imap.c:586
+#: imap.c:590
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Fetchmail скомпилирован без требуемой поддержки OTP\n"
 
-#: imap.c:606 pop3.c:555
+#: imap.c:610 pop3.c:555
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Fetchmail скомпилирован без требуемой поддержки NTLM\n"
 
-#: imap.c:615
+#: imap.c:619
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Требуемая опция LOGIN не поддерживается сервером\n"
 
-#: imap.c:679
+#: imap.c:683
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "разногласие при удалении писем (%d на самом деле != %d ожидалось)\n"
 
-#: imap.c:818
+#: imap.c:810
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu не просмотрено\n"
 
-#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
+#: imap.c:860 pop3.c:841 pop3.c:853 pop3.c:1092 pop3.c:1099
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u не просмотрено\n"
 
-#: imap.c:917 imap.c:976
+#: imap.c:895 imap.c:954
 msgid "re-poll failed\n"
 msgstr "не удалось повторить опрос\n"
 
-#: imap.c:925 imap.c:981
+#: imap.c:903 imap.c:959
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "ожидается %d сообщение после повторного опроса\n"
 msgstr[1] "ожидается %d сообщений после повторного опроса\n"
 
-#: imap.c:942
+#: imap.c:920
 msgid "mailbox selection failed\n"
 msgstr "не удалось выбрать почтовый ящик\n"
 
-#: imap.c:946
+#: imap.c:924
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "ожидается %d сообщение после первого опроса\n"
 msgstr[1] "ожидается %d сообщений после первого опроса\n"
 
-#: imap.c:960
+#: imap.c:938
 msgid "expunge failed\n"
 msgstr "не удалось удалить\n"
 
-#: imap.c:964
+#: imap.c:942
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "ожидается %d сообщение после удаления\n"
 msgstr[1] "ожидается %d сообщений после удаления\n"
 
-#: imap.c:1003
+#: imap.c:981
 msgid "search for unseen messages failed\n"
 msgstr "сбой поиска непросмотренных сообщений\n"
 
-#: imap.c:1008 pop3.c:861
+#: imap.c:986 pop3.c:862
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u первое не просмотренное\n"
 
-#: imap.c:1092
+#: imap.c:1070
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 "Предупреждение: игнорируются некорректные данные о размерах сообщений, "
 "возвращённые сервером.\n"
 
-#: imap.c:1190 imap.c:1197
+#: imap.c:1168 imap.c:1175
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr ""
@@ -2482,29 +2474,29 @@ msgstr "Невозможно обработать UIDL-ответ upstream-се�
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Сервер возвратил ответ с UID для неверного сообщения.\n"
 
-#: pop3.c:831
+#: pop3.c:832
 #, fuzzy, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr "id=%s (номер=%d) было удалено, но все еще присутствует!\n"
 
-#: pop3.c:937
+#: pop3.c:938
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Сообщения добавлены в список на сервере. Обработка невозможна.\n"
 
-#: pop3.c:1033
+#: pop3.c:1034
 msgid "protocol error\n"
 msgstr "ошибка протокола\n"
 
-#: pop3.c:1049
+#: pop3.c:1050
 msgid "protocol error while fetching UIDLs\n"
 msgstr "ошибка протокола при выборке UIDL'ов\n"
 
-#: pop3.c:1081
+#: pop3.c:1083
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (номер=%d) было удалено, но все еще присутствует!\n"
 
-#: pop3.c:1419
+#: pop3.c:1421
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Опция --folder не поддерживается с POP3\n"
 
@@ -2959,183 +2951,188 @@ msgstr "запущен %s (хост %s служба %s)\n"
 msgid "execvp(%s) failed\n"
 msgstr "сбой execvp(%s)\n"
 
-#: socket.c:283
+#: socket.c:211
+#, c-format
+msgid "setsockopt(%d, SOL_SOCKET) failed: %s\n"
+msgstr ""
+
+#: socket.c:290
 #, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
 msgstr "ошибка getaddrinfo(\"%s\",\"%s\"): %s\n"
 
-#: socket.c:286
+#: socket.c:293
 msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr "Попробуйте добавить опцию --service (см. FAQ, пункт R12).\n"
 
-#: socket.c:300 socket.c:303
+#: socket.c:307 socket.c:310
 #, c-format
 msgid "unknown (%s)"
 msgstr "неизв. (%s)"
 
-#: socket.c:306
+#: socket.c:313
 #, c-format
 msgid "Trying to connect to %s/%s..."
 msgstr "Попытка подключения к %s/%s..."
 
-#: socket.c:315
+#: socket.c:322
 #, c-format
 msgid "cannot create socket: %s\n"
 msgstr "невозможно создать сокет: %s\n"
 
-#: socket.c:317
+#: socket.c:324
 #, fuzzy, c-format
 msgid "name %d: cannot create socket family %d type %d: %s\n"
 msgstr "невозможно создать сокет: %s\n"
 
-#: socket.c:333
+#: socket.c:343
 msgid "connection failed.\n"
 msgstr "не удалось подключиться.\n"
 
-#: socket.c:335
+#: socket.c:345
 #, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
 msgstr "сбой подключения к %s:%s [%s/%s]: %s.\n"
 
-#: socket.c:336
+#: socket.c:346
 #, fuzzy, c-format
 msgid "name %d: connection to %s:%s [%s/%s] failed: %s.\n"
 msgstr "сбой подключения к %s:%s [%s/%s]: %s.\n"
 
-#: socket.c:342
+#: socket.c:352
 msgid "connected.\n"
 msgstr "соединение установлено.\n"
 
-#: socket.c:355
+#: socket.c:365
 #, c-format
 msgid ""
 "Connection errors for this poll:\n"
 "%s"
 msgstr ""
 
-#: socket.c:621
+#: socket.c:631
 #, fuzzy
 msgid "Server certificate:\n"
 msgstr "Ошибка проверки сертификата сервера: %s\n"
 
-#: socket.c:626
+#: socket.c:636
 #, c-format
 msgid "Certificate chain, from root to peer, starting at depth %d:\n"
 msgstr ""
 
-#: socket.c:629
+#: socket.c:639
 #, c-format
 msgid "Certificate at depth %d:\n"
 msgstr ""
 
-#: socket.c:635
+#: socket.c:645
 #, c-format
 msgid "Issuer Organization: %s\n"
 msgstr "Запрашивающая организация: %s\n"
 
-#: socket.c:638
+#: socket.c:648
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
 msgstr ""
 "Предупреждение: имя запрашивающей организации слишком длинное (возможно "
 "укорочено).\n"
 
-#: socket.c:640
+#: socket.c:650
 msgid "Unknown Organization\n"
 msgstr "Неизвестная организация\n"
 
-#: socket.c:642
+#: socket.c:652
 #, c-format
 msgid "Issuer CommonName: %s\n"
 msgstr "Общепринятое имя: %s\n"
 
-#: socket.c:645
+#: socket.c:655
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
 msgstr ""
 "Предупреждение: общепринятое имя слишком длинное (возможно укорочено).\n"
 
-#: socket.c:647
+#: socket.c:657
 msgid "Unknown Issuer CommonName\n"
 msgstr "Неизвестное общепринятое имя\n"
 
-#: socket.c:653
+#: socket.c:663
 #, fuzzy, c-format
 msgid "Subject CommonName: %s\n"
 msgstr "Общепринятое имя: %s\n"
 
-#: socket.c:659
+#: socket.c:669
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Неправильный сертификат: общее название Темы слишком длинное!\n"
 
-#: socket.c:665
+#: socket.c:675
 #, fuzzy
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
 msgstr "Неправильный сертификат: общее название Темы слишком длинное!\n"
 
-#: socket.c:693
+#: socket.c:703
 #, c-format
 msgid "Subject Alternative Name: %s\n"
 msgstr ""
 
-#: socket.c:699
+#: socket.c:709
 #, fuzzy
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
 msgstr "Неправильный сертификат: общее название Темы слишком длинное!\n"
 
-#: socket.c:716
+#: socket.c:726
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Несовпадение общепринятого имени сервера: %s != %s\n"
 
-#: socket.c:723
+#: socket.c:733
 msgid "Server name not set, could not verify certificate!\n"
 msgstr "Имя сервера не установлено, невозможно проверить сертификат!\n"
 
-#: socket.c:728
+#: socket.c:738
 msgid "Unknown Server CommonName\n"
 msgstr "Неизвестное общепринятое имя сервера\n"
 
-#: socket.c:730
+#: socket.c:740
 msgid "Server name not specified in certificate!\n"
 msgstr "Имя сервера не указано в сертификате!\n"
 
-#: socket.c:742
+#: socket.c:752
 msgid "EVP_md5() failed!\n"
 msgstr "сбой EVP_md5()!\n"
 
-#: socket.c:746
+#: socket.c:756
 msgid "Out of memory!\n"
 msgstr "Нехватка памяти!\n"
 
-#: socket.c:754
+#: socket.c:764
 msgid "Digest text buffer too small!\n"
 msgstr "Буфер текстового журнала слишком мал!\n"
 
-#: socket.c:760
+#: socket.c:770
 #, c-format
 msgid "%s key fingerprint: %s\n"
 msgstr "Отпечаток ключа %s: %s\n"
 
-#: socket.c:764
+#: socket.c:774
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "Отпечатки %s совпадают.\n"
 
-#: socket.c:766
+#: socket.c:776
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "Отпечатки %s не совпадают!\n"
 
-#: socket.c:776
+#: socket.c:786
 #, c-format
 msgid "Server certificate verification error: %s\n"
 msgstr "Ошибка проверки сертификата сервера: %s\n"
 
-#: socket.c:783
+#: socket.c:793
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "неизвестная запрашивающая сторона (первые %d символов): %s\n"
 
-#: socket.c:784
+#: socket.c:794
 msgid ""
 "This error usually happens when the server provides an incomplete "
 "certificate chain, which is nothing fetchmail could do anything about.  For "
@@ -3143,7 +3140,7 @@ msgid ""
 "fetchmail.\n"
 msgstr ""
 
-#: socket.c:793
+#: socket.c:803
 #, c-format
 msgid ""
 "This means that the root signing certificate (issued for %s) is not in the "
@@ -3152,51 +3149,51 @@ msgid ""
 "sslcertpath and --sslcertfile in the manual page.\n"
 msgstr ""
 
-#: socket.c:885
+#: socket.c:895
 msgid "File descriptor out of range for SSL"
 msgstr "Дескриптор файла вне диапазона SSL"
 
-#: socket.c:901
+#: socket.c:911
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr ""
 "Указан неверный протокол SSL '%s', используется протокол по умолчанию "
 "(SSLv23).\n"
 
-#: socket.c:994
+#: socket.c:1004
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Проверка сертификата/отпечатка была как-то пропущена!\n"
 
-#: socket.c:1011
+#: socket.c:1021
 msgid ""
 "Warning: the connection is insecure, continuing anyways. (Better use --"
 "sslcertck!)\n"
 msgstr ""
 
-#: socket.c:1077
+#: socket.c:1063
 msgid "Cygwin socket read retry\n"
 msgstr "Повторная попытка чтения сокета Cygwin\n"
 
-#: socket.c:1080
+#: socket.c:1066
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Сбой повторного чтения сокета Cygwin!\n"
 
-#: transact.c:71
+#: transact.c:79
 #, c-format
 msgid "mapped address %s to local %s\n"
 msgstr "установлено соответствие адреса %s локальному %s\n"
 
-#: transact.c:93
+#: transact.c:101
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "установлено соответствие %s локальному %s\n"
 
-#: transact.c:160
+#: transact.c:168
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "пройден через %s соответствующий %s\n"
 
-#: transact.c:230
+#: transact.c:240
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -3205,89 +3202,94 @@ msgstr ""
 "анализируется строка Received:\n"
 "%s"
 
-#: transact.c:269
+#: transact.c:279
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "строка принята, %s является алиасом почтового сервера\n"
 
-#: transact.c:275
+#: transact.c:285
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "строка отвергнута, %s не является алиасом почтового сервера\n"
 
-#: transact.c:349
+#: transact.c:359
 msgid "no Received address found\n"
 msgstr "адрес Received не найден\n"
 
-#: transact.c:358
+#: transact.c:368
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "найден адрес Received `%s'\n"
 
-#: transact.c:601
+#: transact.c:613
 #, fuzzy
 msgid "incorrect header line found - see manpage for bad-header option\n"
 msgstr "при сканировании заголовков найдена неверная строка\n"
 
-#: transact.c:603
+#: transact.c:615
 #, c-format
 msgid "line: %s"
 msgstr "строка: %s"
 
-#: transact.c:1095 transact.c:1105
+#: transact.c:1107 transact.c:1117
 #, c-format
 msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
 msgstr ""
 
-#: transact.c:1120
+#: transact.c:1132
 #, fuzzy, c-format
 msgid "Parsing Received names \"%-.*s\"\n"
 msgstr ""
 "анализируется строка Received:\n"
 "%s"
 
-#: transact.c:1132
+#: transact.c:1144
 msgid "No envelope recipient found, resorting to header guessing.\n"
 msgstr ""
 
-#: transact.c:1150
+#: transact.c:1162
 #, c-format
 msgid "Guessing from header \"%-.*s\".\n"
 msgstr ""
 
-#: transact.c:1165
+#: transact.c:1177
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "нет локальных совпадений, переадресовывается на %s\n"
 
-#: transact.c:1180
+#: transact.c:1192
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "переадресация и удаление приостановлены из-за ошибок DNS\n"
 
-#: transact.c:1291
+#: transact.c:1303
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "записываются заголовки RFC822 msgblk\n"
 
-#: transact.c:1310
+#: transact.c:1322
 msgid "no recipient addresses matched declared local names"
 msgstr "нет адресов получателей, соответствующих объявленным локальным именам"
 
-#: transact.c:1317
+#: transact.c:1329
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "адрес получателя %s не соответствует ни одному локальному имени"
 
-#: transact.c:1326
+#: transact.c:1338
 msgid "message has embedded NULs"
 msgstr "сообщение содержит вложенные NUL"
 
-#: transact.c:1334
+#: transact.c:1346
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Слушатель SMTP отверг адреса локальных получателей: "
 
-#: transact.c:1473
+#: transact.c:1485
 msgid "error writing message text\n"
 msgstr "ошибка записи текста сообщения\n"
+
+#: transact.c:1633
+#, c-format
+msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
+msgstr ""
 
 #: uid.c:249
 #, c-format
@@ -3364,6 +3366,12 @@ msgstr "сбой malloc\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "сбой realloc\n"
+
+#~ msgid "Subject: Fetchmail unreachable-server warning."
+#~ msgstr "Тема: Предупреждение Fetchmail о недоступности сервера."
+
+#~ msgid "Fetchmail could not reach the mail server %s:"
+#~ msgstr "Fetchmail не смог установить связь с почтовым сервером %s:"
 
 #~ msgid "Server CommonName: %s\n"
 #~ msgstr "Общепринятое имя сервера: %s\n"
