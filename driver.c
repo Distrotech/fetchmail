@@ -1098,6 +1098,7 @@ static int do_session(
 		    ctl->sslcommonname : realhost, ctl->server.pollname,
 		    &ctl->remotename) == -1)
 	{
+	    set_timeout(0);
 	    report(stderr, GT_("SSL connection failed.\n"));
 	    err = PS_SOCKET;
 	    goto cleanUp;
