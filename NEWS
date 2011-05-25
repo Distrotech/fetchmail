@@ -58,19 +58,15 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.20 (not yet released):
 
-# CHANGES
-* fetchmail now always uses its own MD5 implementation.  The library and header
-  variants are too diverse, and we've been bitten before -- and configure
-  complains noisily on Cyrus-SASL's RFC1321 md5.h.
-* fetchmail now supports an environment variable to suppress marking deleted
-  messages as seen at the same time, FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN.
-  See the manual page for details. Requested by Jonathan Buschmann.
-* fetchmail sets Internet domain sockets to "keepalive" mode now. Note that
-  there is no portable way to configure actual timeouts for this mode, and some
-  systems only support a system-wide timeout setting.
+# SECURITY BUG FIXES
+* Fetchmail runs the IMAP STARTTLS or POP3 STLS negotiation with the set timeout
+  (default five minutes) now. This was reported missing, from fetchmail freezes
+  beyond a week, by Thomas Jarosch.
+     SSL-wrapped connections were unaffected by this timeout, so users of older
+  versions can force ssl-wrapped connections -- if supported by the server --
+  with the --ssl command line or ssl rcfile option.
 
 # BUG FIXES
-* Call strlen() only once when removing CRLF from a line. (Sunil Shetye)
 * Do not search for UNSEEN messages in ranges. Usually, there are very few new
   messages and most of the range searches result in nothing. Instead, split the
   long response to make the IMAP driver think that there are multiple lines of
@@ -79,8 +75,25 @@ fetchmail-6.3.20 (not yet released):
   there are too many old messages, the logs just get filled without any real
   activity. (Sunil Shetye) (suggested by Yunfan Jiang)
 
+# CHANGES
+* fetchmail now always uses its own MD5 implementation.  The library and header
+  variants are too diverse, and we've been bitten before -- and configure
+  complains noisily on Cyrus-SASL's RFC1321 md5.h.
+* fetchmail now supports an environment variable to suppress marking deleted
+  messages as seen at the same time, FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN.
+  See the manual page for details. Requested by Jonathan Buschmann.
+* Call strlen() only once when removing CRLF from a line. (Sunil Shetye)
+* fetchmail sets Internet domain sockets to "keepalive" mode now. Note that
+  there is no portable way to configure actual timeouts for this mode, and some
+  systems only support a system-wide timeout setting. Thus, fetchmail does not
+  attempt to tune the time spans of keepalive mode.
+
 # TRANSLATION UPDATES
+  [cs]    Chech (Petr Pisar)
+  [fr]    French (Frédéric Marchal)
+  [de]    German (Matthias Andree)
   [ja]    Japanese (Takeshi Hamasaki)
+  [pl]    Polish (Jakub Bogusz)
 
 
 fetchmail-6.3.19 (released 2010-12-10, 25945 LoC):
