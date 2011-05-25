@@ -58,14 +58,6 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.20 (not yet released):
 
-# SECURITY FIXES
-* Fetchmail's socket timeout handling was incomplete.  Network outages in the
-  wrong phase of a communication, combined with unlucky operating systems and
-  their defaults, could cause fetchmail to hang for extended amounts of time.
-  Freezes for beyond a week were reported by Thomas Jarosch. Fetchmail sets
-  UNIX- and Internet-domain socket send and receive timeouts now.
-  This fixes a hang during STARTTLS negotiation reported by Thomas Jarosch.
-
 # CHANGES
 * fetchmail now always uses its own MD5 implementation.  The library and header
   variants are too diverse, and we've been bitten before -- and configure

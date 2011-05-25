@@ -313,12 +313,10 @@ int SMTP_ok(int sock, char smtp_mode, int mintimeout)
 {
     SIGHANDLERTYPE alrmsave;
     char reply[MSGBUFSIZE], *i;
-    int tmo = (mytimeout >= mintimeout) ? mytimeout : mintimeout;
 
     /* set an alarm for smtp ok */
     alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
-    set_timeout(tmo);
-    SockTimeout(sock, tmo);
+    set_timeout(mytimeout >= mintimeout ? mytimeout : mintimeout);
 
     smtp_response[0] = '\0';
 

@@ -200,31 +200,6 @@ static int handle_plugin(const char *host,
 }
 #endif /* HAVE_SOCKETPAIR */
 
-static int setsocktimeout(int sock, int which, int timeout) {
-    struct timeval tv;
-    int rc;
-
-    tv.tv_sec = timeout;
-    tv.tv_usec = 0;
-    rc = setsockopt(sock, SOL_SOCKET, which, &tv, sizeof(tv));
-    if (rc) {
-	report(stderr, GT_("setsockopt(%d, SOL_SOCKET) failed: %s\n"), sock, strerror(errno));
-    }
-    return rc;
-}
-
-/** Configure socket options such as send/receive timeout at the socket
- * level, to avoid network-induced stalls.
- */
-int SockTimeout(int sock, int timeout)
-{
-    int err = 0;
-
-    if (setsocktimeout(sock, SO_RCVTIMEO, timeout)) err = 1;
-    if (setsocktimeout(sock, SO_SNDTIMEO, timeout)) err = 1;
-    return err;
-}
-
 /** Set socket to SO_KEEPALIVE. \return 0 for success. */
 int SockKeepalive(int sock) {
     int keepalive = 1;
@@ -251,7 +226,6 @@ int UnixOpen(const char *path)
      */
     mailserver_socket_temp = sock;
 
-    SockTimeout(sock, mytimeout);
     if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	int olderr = errno;
@@ -326,7 +300,6 @@ int SockOpen(const char *host, const char *service,
 	    continue;
 	}
 
-	SockTimeout(i, mytimeout);
 	SockKeepalive(i);
 
 	/* Save socket descriptor.
@@ -391,8 +364,8 @@ va_dcl {
 #endif
     vsnprintf(buf, sizeof(buf), format, ap);
     va_end(ap);
-    SockTimeout(sock, mytimeout);
     return SockWrite(sock, buf, strlen(buf));
+
 }
 
 #ifdef SSL_ENABLE

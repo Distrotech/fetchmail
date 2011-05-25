@@ -20,9 +20,6 @@ struct addrinfo;
 /** Create a new client socket; returns -1 on error */
 int SockOpen(const char *host, const char *service, const char *plugin, struct addrinfo **);
 
-/** Sets the send/receive timeouts for socket \a sock to \a timeout
- * seconds. \return zero on success. */
-int SockTimeout(int sock, int timeout);
 
 /** 
 Get a string terminated by an '\n' (matches interface of fgets).
