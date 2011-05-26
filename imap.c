@@ -1299,20 +1299,11 @@ static int imap_delete(int sock, struct query *ctl, int number)
     int	ok;
     /* Select which flags to set on message deletion: */
     const char delflags_seen[] = "\\Seen \\Deleted";
-    const char delflags_unseen[] = "\\Deleted";
     static const char *delflags;
     /* Which environment variable to look for: */
-    const char dis_env[] = "FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN";
 
-    if (!delflags) {
-	char *tmp;
-	if ((tmp = getenv(dis_env)) != NULL && *tmp) {
-	    delflags = delflags_unseen;
-	} else {
-	    /* DEFAULT since many fetchmail versions <= 6.3.X */
-	    delflags = delflags_seen;
-	}
-    }
+    /* DEFAULT since many fetchmail versions <= 6.3.X */
+    delflags = delflags_seen;
 
     (void)ctl;
     /* expunges change the fetch numbers */
