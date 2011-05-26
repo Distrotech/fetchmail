@@ -439,9 +439,9 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		* whether TLS is mandatory or opportunistic unless SSLOpen() fails
 		* (see below). */
 	       if (gen_transact(sock, "STLS") == PS_SUCCESS
-		       && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+		       && (set_timeout(mytimeout), SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
 			   ctl->sslcertfile, ctl->sslcertpath, ctl->sslfingerprint, commonname,
-			   ctl->server.pollname, &ctl->remotename) != -1)
+			   ctl->server.pollname, &ctl->remotename)) != -1)
 	       {
 		   /*
 		    * RFC 2595 says this:
@@ -456,6 +456,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    * Now that we're confident in our TLS connection we can
 		    * guarantee a secure capability re-probe.
 		    */
+		   set_timeout(0);
 		   done_capa = FALSE;
 		   ok = capa_probe(sock);
 		   if (ok != PS_SUCCESS) {
@@ -468,6 +469,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	       } else if (must_tls(ctl)) {
 		   /* Config required TLS but we couldn't guarantee it, so we must
 		    * stop. */
+		   set_timeout(0);
 		   report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
 		   return PS_SOCKET;
 	       } else {
@@ -476,6 +478,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    * allowed til post-authentication), so leave it in an unknown
 		    * state, mark it as such, and check more carefully if things
 		    * go wrong when we try to authenticate. */
+		   set_timeout(0);
 		   connection_may_have_tls_errors = TRUE;
 		   if (outlevel >= O_VERBOSE)
 		   {

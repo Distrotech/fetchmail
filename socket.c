@@ -217,14 +217,12 @@ int UnixOpen(const char *path)
 	return -1;
     }
 
-    SockTimeout(sock, mytimeout);
+    /* Socket opened saved. Usefull if connect timeout
+     * because it can be closed.
+     */
+    mailserver_socket_temp = sock;
 
-	/* Socket opened saved. Usefull if connect timeout 
-	 * because it can be closed.
-	 */
-	mailserver_socket_temp = sock;
-    
-	if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
+    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	int olderr = errno;
 	fm_close(sock);	/* don't use SockClose, no traffic yet */
@@ -232,9 +230,9 @@ int UnixOpen(const char *path)
 	errno = olderr;
 	sock = -1;
     }
-	
-	/* No connect timeout, then no need to set mailserver_socket_temp */
-	mailserver_socket_temp = -1;
+
+    /* No connect timeout, then no need to set mailserver_socket_temp */
+    mailserver_socket_temp = -1;
 
     return sock;
 }

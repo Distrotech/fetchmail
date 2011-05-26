@@ -321,7 +321,7 @@ static void imap_canonicalize(char *result, char *raw, size_t maxlen)
     result[j] = '\0';
 }
 
-static void capa_probe(int sock, struct query *ctl)
+static int capa_probe(int sock, struct query *ctl)
 /* set capability variables from a CAPA probe */
 {
     int	ok;
@@ -351,6 +351,8 @@ static void capa_probe(int sock, struct query *ctl)
 		report(stdout, GT_("Protocol identified as IMAP4 rev 0\n"));
 	}
     }
+    else
+	return ok;
 
     /* 
      * Handle idling.  We depend on coming through here on startup
@@ -368,6 +370,8 @@ static void capa_probe(int sock, struct query *ctl)
     }
 
     peek_capable = TRUE;
+
+    return PS_SUCCESS;
 }
 
 static int do_authcert (int sock, const char *command, const char *name)
@@ -403,7 +407,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     else
 	expunge_period = 1;
 
-    capa_probe(sock, ctl);
+    if ((ok = capa_probe(sock, ctl)))
+	return ok;
 
     /* 
      * If either (a) we saw a PREAUTH token in the greeting, or
@@ -433,9 +438,9 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	     * whether TLS is mandatory or opportunistic unless SSLOpen() fails
 	     * (see below). */
 	    if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
-		    && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+		    && (set_timeout(mytimeout), SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
 			ctl->sslcertfile, ctl->sslcertpath, ctl->sslfingerprint, commonname,
-			ctl->server.pollname, &ctl->remotename) != -1)
+			ctl->server.pollname, &ctl->remotename)) != -1)
 	    {
 		/*
 		 * RFC 2595 says this:
@@ -450,7 +455,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		 * Now that we're confident in our TLS connection we can
 		 * guarantee a secure capability re-probe.
 		 */
-		capa_probe(sock, ctl);
+		if ((ok = capa_probe(sock, ctl)))
+		    return ok;
 		if (outlevel >= O_VERBOSE)
 		{
 		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
@@ -458,9 +464,11 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    } else if (must_tls(ctl)) {
 		/* Config required TLS but we couldn't guarantee it, so we must
 		 * stop. */
+		set_timeout(0);
 		report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
 		return PS_SOCKET;
 	    } else {
+		set_timeout(0);
 		if (outlevel >= O_VERBOSE) {
 		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), commonname);
 		}
@@ -1249,20 +1257,11 @@ static int imap_delete(int sock, struct query *ctl, int number)
     int	ok;
     /* Select which flags to set on message deletion: */
     const char delflags_seen[] = "\\Seen \\Deleted";
-    const char delflags_unseen[] = "\\Deleted";
     static const char *delflags;
     /* Which environment variable to look for: */
-    const char dis_env[] = "FETCHMAIL_IMAP_DELETED_REMAINS_UNSEEN";
 
-    if (!delflags) {
-	char *tmp;
-	if ((tmp = getenv(dis_env)) != NULL && *tmp) {
-	    delflags = delflags_unseen;
-	} else {
-	    /* DEFAULT since many fetchmail versions <= 6.3.X */
-	    delflags = delflags_seen;
-	}
-    }
+    /* DEFAULT since many fetchmail versions <= 6.3.X */
+    delflags = delflags_seen;
 
     (void)ctl;
     /* expunges change the fetch numbers */
