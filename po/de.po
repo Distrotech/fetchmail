@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.20-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2011-05-26 01:51+0200\n"
-"PO-Revision-Date: 2011-05-23 20:44+0200\n"
+"POT-Creation-Date: 2011-05-29 19:34+0200\n"
+"PO-Revision-Date: 2011-05-29 18:35+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "Language: \n"
@@ -3377,12 +3377,3 @@ msgstr "malloc fehlgeschlagen\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc fehlgeschlagen\n"
-
-#~ msgid "setsockopt(%d, SOL_SOCKET) failed: %s\n"
-#~ msgstr "setsockopt(%d, SOL_SOCKET) ist fehlgeschlagen: %s\n"
-
-#~ msgid "Subject: Fetchmail unreachable-server warning."
-#~ msgstr "Subject: Fetchmail-Warnung: Server nicht erreichbar."
-
-#~ msgid "Fetchmail could not reach the mail server %s:"
-#~ msgstr "Fetchmail konnte keine Mail von %s erhalten:"

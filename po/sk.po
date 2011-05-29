@@ -2,14 +2,14 @@
 # Copyright (C) 2010 Eric S. Raymond (msgids)
 # This file is distributed under the same license as the fetchmail package.
 # Lubos Vitek <lubos_vitek@yahoo.com>, 2002, 2003.
-# Marcel Telka <marcel@telka.sk>, 2010.
+# Marcel Telka <marcel@telka.sk>, 2010, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.18\n"
+"Project-Id-Version: fetchmail 6.3.20-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2011-05-26 01:51+0200\n"
-"PO-Revision-Date: 2010-10-15 10:55+0200\n"
+"POT-Creation-Date: 2011-05-29 19:34+0200\n"
+"PO-Revision-Date: 2011-05-28 21:37+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "Language: sk\n"
@@ -241,9 +241,9 @@ msgid "Lead server has no name.\n"
 msgstr "Vedúci server nemá meno.\n"
 
 #: driver.c:1026
-#, fuzzy, c-format
+#, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
-msgstr "nemôžem nájsť kanonické DNS meno pre %s\n"
+msgstr "nepodarilo sa nájsť kanonické DNS meno pre %s (%s): %s\n"
 
 #: driver.c:1073
 #, c-format
@@ -497,9 +497,9 @@ msgid "unknown"
 msgstr "neznáme"
 
 #: driver.c:1563
-#, fuzzy, c-format
+#, c-format
 msgid "%s error while fetching from %s@%s\n"
-msgstr "%s-chyba pri sťahovaní pošty z %s\n"
+msgstr "%s chyba pri výbere z %s@%s\n"
 
 #: driver.c:1575
 #, fuzzy, c-format
@@ -608,9 +608,9 @@ msgid "Queuing for %s started\n"
 msgstr "Spracovanie fronty pre %s bolo spustené\n"
 
 #: etrn.c:84
-#, fuzzy, c-format
+#, c-format
 msgid "No messages waiting for %s\n"
-msgstr "Žiadna správa pre %s\n"
+msgstr "Žiadne čakajúce správy pre %s\n"
 
 #: etrn.c:90
 #, fuzzy, c-format
@@ -732,7 +732,7 @@ msgstr "popredie"
 #: fetchmail.c:462
 #, fuzzy, c-format
 msgid "fetchmail: %s fetchmail at %ld killed.\n"
-msgstr "fetchmail: %s-fetchmail pri %d ukončený.\n"
+msgstr "fetchmail: %s-fetchmail pri %ld ukončený.\n"
 
 #: fetchmail.c:485
 #, fuzzy
@@ -753,9 +753,9 @@ msgstr ""
 "%d.\n"
 
 #: fetchmail.c:498
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: another foreground fetchmail is running at %ld.\n"
-msgstr "fetchmail: v popredí beží iný fetchmail na %d.\n"
+msgstr "fetchmail: v popredí beží iný fetchmail na %ld.\n"
 
 #: fetchmail.c:508
 #, fuzzy
@@ -785,9 +785,8 @@ msgid "Enter password for %s@%s: "
 msgstr "Zadajte heslo pre %s@%s: "
 
 #: fetchmail.c:587
-#, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: nie je spustený žiadny ďalší fetchmail\n"
+msgstr ""
 
 #: fetchmail.c:591
 #, fuzzy, c-format
@@ -797,7 +796,7 @@ msgstr "štartujem fetchmail %s démona\n"
 #: fetchmail.c:607 fetchmail.c:609
 #, fuzzy, c-format
 msgid "could not open %s to append logs to\n"
-msgstr "nemôžem otvoriť %s pre pripojenie logov k \n"
+msgstr "nepodarilo sa otvoriť %s pre pripojenie logov k \n"
 
 #: fetchmail.c:611
 #, fuzzy
@@ -1423,12 +1422,12 @@ msgstr "  Príjem správ nie je limitovaný (--fetchlimit 0).\n"
 #: fetchmail.c:1760
 #, fuzzy, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
-msgstr "  Limit pre prijaté správy je %d (--fetchlimit %d).\n"
+msgstr "  Limit pre prijaté správy je %d (--fetchsizelimit %d).\n"
 
 #: fetchmail.c:1763
 #, fuzzy
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
-msgstr "  Správy nemajú limitovanú veľkosť (--limit 0).\n"
+msgstr "  Správy nemajú limitovanú veľkosť (--fetchsizelimit 0).\n"
 
 #: fetchmail.c:1767
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
@@ -1488,9 +1487,9 @@ msgid "  Messages will be %cMTP-forwarded to:"
 msgstr "  Správy budú %cMTP-dopravené na:"
 
 #: fetchmail.c:1819
-#, fuzzy, c-format
+#, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
-msgstr "  Hosťová časť z MAIL FROM riadku bude %s\n"
+msgstr "  Hostiteľ v riadku MAIL FROM bude %s\n"
 
 #: fetchmail.c:1822
 #, fuzzy, c-format
@@ -2078,9 +2077,9 @@ msgid "Authentication required.\n"
 msgstr "Vyžadované overenie totožnosti.\n"
 
 #: odmr.c:132
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown ODMR error \"%s\"\n"
-msgstr "Neznáma chyba ODMR %d\n"
+msgstr "Neznáma chyba ODMR \"%s\"\n"
 
 #: odmr.c:192
 msgid "receiving message data\n"
@@ -2218,7 +2217,7 @@ msgstr "  -i, --idfile      špecifikuj náhradný súbor UID-ov\n"
 #: options.c:636
 #, fuzzy
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "  -i, --idfile      špecifikuj náhradný súbor UID-ov\n"
+msgstr "      --pidfile     špecifikuj náhradný súbor UID-ov\n"
 
 #: options.c:637
 msgid "      --postmaster  specify recipient of last resort\n"
@@ -2245,7 +2244,7 @@ msgstr ""
 
 #: options.c:643
 msgid "  -M, --monitor     monitor interface for activity\n"
-msgstr ""
+msgstr "  -M, --monitor     sledovať aktivitu rozhrania\n"
 
 #: options.c:646
 msgid "      --ssl         enable ssl encrypted session\n"
@@ -2266,7 +2265,7 @@ msgstr ""
 #: options.c:650
 #, fuzzy
 msgid "      --sslcertfile path to trusted-CA ssl certificate file\n"
-msgstr "      --sslcertpath cesta k ssl certifikátom\n"
+msgstr "      --sslcertfile cesta k ssl certifikátom\n"
 
 #: options.c:651
 #, fuzzy
@@ -2286,7 +2285,7 @@ msgstr ""
 
 #: options.c:654
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr "      --sslproto    vynútiť ssl protokol (SL2/SSL3/TLS1)\n"
+msgstr "      --sslproto    vynútiť ssl protokol (SSL2/SSL3/TLS1)\n"
 
 #: options.c:656
 msgid "      --plugin      specify external command to open connection\n"
@@ -2349,7 +2348,7 @@ msgstr ""
 
 #: options.c:673
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr ""
+msgstr "  -a, --[fetch]all  získať staré a nové správy\n"
 
 #: options.c:674
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
@@ -2361,11 +2360,11 @@ msgstr ""
 
 #: options.c:676
 msgid "  -F, --flush       delete old messages from server\n"
-msgstr ""
+msgstr "  -F, --flush       vymazať staré správy zo servera\n"
 
 #: options.c:677
 msgid "      --limitflush  delete oversized messages\n"
-msgstr ""
+msgstr "      --limitflush  vymazať nadrozmerné správy\n"
 
 #: options.c:678
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
@@ -2790,7 +2789,7 @@ msgstr ""
 #: sink.c:508 sink.c:607
 #, c-format
 msgid "%cMTP error: %s\n"
-msgstr ""
+msgstr "Chyba %cMTP: %s\n"
 
 #: sink.c:552
 msgid "SMTP server requires STARTTLS, keeping message.\n"
@@ -2867,7 +2866,7 @@ msgstr ""
 #: sink.c:1398
 #, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr ""
+msgstr "Chyba zápisu do MDA: %s\n"
 
 #: sink.c:1401
 #, c-format

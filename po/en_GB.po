@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2011-05-26 01:51+0200\n"
-"PO-Revision-Date: 2006-11-02 06:58-0000\n"
+"POT-Creation-Date: 2011-05-29 19:34+0200\n"
+"PO-Revision-Date: 2011-05-29 18:43+0200\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
 "Language: en_GB\n"
@@ -55,9 +55,9 @@ msgid "kerberos error %s\n"
 msgstr "kerberos error %s\n"
 
 #: driver.c:259 driver.c:265
-#, fuzzy, c-format
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s']\n"
-msgstr "krb5_sendauth: %s [server says '%*s'] \n"
+msgstr "krb5_sendauth: %s [server says '%s']\n"
 
 #: driver.c:345
 msgid "Subject: Fetchmail oversized-messages warning"
@@ -74,18 +74,18 @@ msgid "The following oversized messages remain on server %s account %s:"
 msgstr "The following oversized messages remain on server %s account %s:"
 
 #: driver.c:372
-#, fuzzy, c-format
+#, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
-msgstr[0] "  %d msg %d octets long deleted by fetchmail."
-msgstr[1] "  %d msg %d octets long deleted by fetchmail."
+msgstr[0] "  %d message %d octets long deleted by fetchmail."
+msgstr[1] "  %d messages %d octets long deleted by fetchmail."
 
 #: driver.c:377
-#, fuzzy, c-format
+#, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
-msgstr[0] "  %d msg %d octets long skipped by fetchmail."
-msgstr[1] "  %d msg %d octets long skipped by fetchmail."
+msgstr[0] "  %d message %d octets long skipped by fetchmail."
+msgstr[1] "  %d messages %d octets long skipped by fetchmail."
 
 #: driver.c:521
 #, c-format
@@ -212,9 +212,9 @@ msgstr ""
 "Fetchmail won't poll this mailbox again until you restart it.\n"
 
 #: driver.c:951
-#, fuzzy, c-format
+#, c-format
 msgid "pre-connection command terminated with signal %d\n"
-msgstr "pre-connection command failed with status %d\n"
+msgstr "pre-connection command terminated with signal %d\n"
 
 #: driver.c:954
 #, c-format
@@ -469,9 +469,9 @@ msgid "%s error while fetching from %s@%s\n"
 msgstr "%s error while fetching from %s@%s\n"
 
 #: driver.c:1575
-#, fuzzy, c-format
+#, c-format
 msgid "post-connection command terminated with signal %d\n"
-msgstr "post-connection command failed with status %d\n"
+msgstr "post-connection command terminated with signal %d\n"
 
 #: driver.c:1577
 #, c-format
@@ -629,7 +629,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Option --check is not supported with ETRN\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
@@ -638,9 +637,10 @@ msgid ""
 "Copyright (C) 2005 - 2010 Matthias Andree\n"
 msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
-"Wilson\n"
-"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
+"                   Robert M. Funk, Graham Wilson\n"
+"Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
+"Copyright (C) 2005 - 2010 Matthias Andree\n"
 
 #: fetchmail.c:143
 msgid ""
@@ -692,9 +692,9 @@ msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: no other fetchmail is running\n"
 
 #: fetchmail.c:453
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error killing %s fetchmail at %ld; bailing out.\n"
-msgstr "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
+msgstr "fetchmail: error killing %s fetchmail at %ld; bailing out.\n"
 
 #: fetchmail.c:454 fetchmail.c:463
 msgid "background"
@@ -705,9 +705,9 @@ msgid "foreground"
 msgstr "foreground"
 
 #: fetchmail.c:462
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: %s fetchmail at %ld killed.\n"
-msgstr "fetchmail: %s fetchmail at %d killed.\n"
+msgstr "fetchmail: %s fetchmail at %ld killed.\n"
 
 #: fetchmail.c:485
 msgid ""
@@ -718,17 +718,18 @@ msgstr ""
 "running.\n"
 
 #: fetchmail.c:491
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at "
 "%ld.\n"
 msgstr ""
-"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+"fetchmail: can't poll specified hosts with another fetchmail running at "
+"%ld.\n"
 
 #: fetchmail.c:498
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: another foreground fetchmail is running at %ld.\n"
-msgstr "fetchmail: another foreground fetchmail is running at %d.\n"
+msgstr "fetchmail: another foreground fetchmail is running at %ld.\n"
 
 #: fetchmail.c:508
 msgid ""
@@ -737,14 +738,14 @@ msgstr ""
 "fetchmail: can't accept options while a background fetchmail is running.\n"
 
 #: fetchmail.c:514
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: background fetchmail at %ld awakened.\n"
-msgstr "fetchmail: background fetchmail at %d awakened.\n"
+msgstr "fetchmail: background fetchmail at %ld awakened.\n"
 
 #: fetchmail.c:526
 #, fuzzy, c-format
 msgid "fetchmail: elder sibling at %ld died mysteriously.\n"
-msgstr "fetchmail: elder sibling at %d died mysteriously.\n"
+msgstr "fetchmail: elder sibling at %ld died mysteriously.\n"
 
 #: fetchmail.c:541
 #, c-format
@@ -761,14 +762,14 @@ msgid "fetchmail: Cannot detach into background. Aborting.\n"
 msgstr "fetchmail: Cannot detach into background. Aborting.\n"
 
 #: fetchmail.c:591
-#, fuzzy, c-format
+#, c-format
 msgid "starting fetchmail %s daemon\n"
-msgstr "starting fetchmail %s daemon \n"
+msgstr "starting fetchmail %s daemon\n"
 
 #: fetchmail.c:607 fetchmail.c:609
-#, fuzzy, c-format
+#, c-format
 msgid "could not open %s to append logs to\n"
-msgstr "could not open %s to append logs to \n"
+msgstr "could not open %s to append logs to\n"
 
 #: fetchmail.c:611
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
@@ -914,14 +915,12 @@ msgid "SSL support is not compiled in.\n"
 msgstr "SSL support is not compiled in.\n"
 
 #: fetchmail.c:1248
-#, fuzzy
 msgid "KERBEROS v4 support is configured, but not compiled in.\n"
-msgstr "SSL support is not compiled in.\n"
+msgstr "KERBEROS v4 support is configured, but not compiled in.\n"
 
 #: fetchmail.c:1254
-#, fuzzy
 msgid "KERBEROS v5 support is configured, but not compiled in.\n"
-msgstr "SSL support is not compiled in.\n"
+msgstr "KERBEROS v5 support is configured, but not compiled in.\n"
 
 #: fetchmail.c:1260
 #, fuzzy
@@ -1698,9 +1697,9 @@ msgid "Received BYE response from IMAP server: %s"
 msgstr ""
 
 #: imap.c:92
-#, fuzzy, c-format
+#, c-format
 msgid "bogus message count in \"%s\"!"
-msgstr "bogus message count!"
+msgstr "bogus message count in \"%s\"!"
 
 #: imap.c:139
 #, c-format
@@ -2922,7 +2921,7 @@ msgstr ""
 #: socket.c:605
 #, fuzzy
 msgid "Server certificate:\n"
-msgstr "Server certificate verification error: %s\n"
+msgstr "Server certificate:\n"
 
 #: socket.c:610
 #, c-format
@@ -2961,18 +2960,17 @@ msgid "Unknown Issuer CommonName\n"
 msgstr "Unknown Issuer CommonName\n"
 
 #: socket.c:637
-#, fuzzy, c-format
+#, c-format
 msgid "Subject CommonName: %s\n"
-msgstr "Issuer CommonName: %s\n"
+msgstr "Subject CommonName: %s\n"
 
 #: socket.c:643
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Bad certificate: Subject CommonName too long!\n"
 
 #: socket.c:649
-#, fuzzy
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
-msgstr "Bad certificate: Subject CommonName too long!\n"
+msgstr "Bad certificate: Subject CommonName contains NUL, aborting!\n"
 
 #: socket.c:677
 #, c-format
@@ -2982,7 +2980,7 @@ msgstr ""
 #: socket.c:683
 #, fuzzy
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
-msgstr "Bad certificate: Subject CommonName too long!\n"
+msgstr "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
 
 #: socket.c:700
 #, c-format
@@ -3126,9 +3124,8 @@ msgid "found Received address `%s'\n"
 msgstr "found Received address `%s'\n"
 
 #: transact.c:613
-#, fuzzy
 msgid "incorrect header line found - see manpage for bad-header option\n"
-msgstr "incorrect header line found while scanning headers\n"
+msgstr "incorrect header line found - see manpage for bad-header option\n"
 
 #: transact.c:615
 #, c-format
@@ -3141,11 +3138,9 @@ msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
 msgstr ""
 
 #: transact.c:1132
-#, fuzzy, c-format
+#, c-format
 msgid "Parsing Received names \"%-.*s\"\n"
-msgstr ""
-"analyzing Received line:\n"
-"%s"
+msgstr "Parsing Received names \"%-.*s\"\n"
 
 #: transact.c:1144
 msgid "No envelope recipient found, resorting to header guessing.\n"
@@ -3244,9 +3239,9 @@ msgid "Writing fetchids file.\n"
 msgstr "Writing fetchids file.\n"
 
 #: uid.c:439 uid.c:447
-#, fuzzy, c-format
+#, c-format
 msgid "Write error on fetchids file %s: %s\n"
-msgstr "Writing fetchids file.\n"
+msgstr "Write error on fetchids file %s: %s\n"
 
 #: uid.c:459
 #, c-format
