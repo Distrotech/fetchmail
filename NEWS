@@ -99,41 +99,65 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
 fetchmail-6.3.20 (not yet released):
 
+fetchmail-6.3.20 (not yet released, 26005 LoC):
+
 # SECURITY BUG FIXES
-* Fetchmail runs the IMAP STARTTLS or POP3 STLS negotiation with the set timeout
-  (default five minutes) now. This was reported missing, from fetchmail freezes
-  beyond a week, by Thomas Jarosch.
+* STARTTLS: Fetchmail runs the IMAP STARTTLS or POP3 STLS negotiation with the
+  set timeout (default five minutes) now. This was reported missing, with
+  observed fetchmail freezes beyond a week, by Thomas Jarosch.
      SSL-wrapped connections were unaffected by this timeout, so users of older
   versions can force ssl-wrapped connections -- if supported by the server --
   with the --ssl command line or ssl rcfile option.
+  See fetchmail-SA-2011-01.txt for further details.
 
 # BUG FIXES
-* Do not search for UNSEEN messages in ranges. Usually, there are very few new
-  messages and most of the range searches result in nothing. Instead, split the
-  long response to make the IMAP driver think that there are multiple lines of
-  response. (Sunil Shetye)
+* IMAP: Do not search for UNSEEN messages in ranges. Usually, there are very few
+  new messages and most of the range searches result in nothing. Instead, split
+  the long response to make the IMAP driver think that there are multiple lines
+  of response. (Sunil Shetye)
 * Do not print "skipping message" for old messages even in verbose mode. If
   there are too many old messages, the logs just get filled without any real
   activity. (Sunil Shetye) (suggested by Yunfan Jiang)
-* Set socket timeouts, to fix hangs during STARTTLS negotiation.
-  Reported by Thomas Jarosch.
+* Build: fetchmail now always uses its own MD5 implementation rather than trying
+  to find a system library with matched header. The library and header variants
+  found on systems are too diverse, and the code size saving is not worth any
+  more wasted user or programmer time.
 
 # CHANGES
-* fetchmail now always uses its own MD5 implementation.  The library and header
-  variants are too diverse, and we've been bitten before -- and configure
-  complains noisily on Cyrus-SASL's RFC1321 md5.h.
 * Call strlen() only once when removing CRLF from a line. (Sunil Shetye)
 * fetchmail sets Internet domain sockets to "keepalive" mode now. Note that
   there is no portable way to configure actual timeouts for this mode, and some
-  systems only support a system-wide timeout setting. Thus, fetchmail does not
+  systems only support a system-wide timeout setting. fetchmail does not
   attempt to tune the time spans of keepalive mode.
 
 # TRANSLATION UPDATES
   [cs]    Chech (Petr Pisar)
+  [nl]    Dutch (Erwin Poeze)
   [fr]    French (Frédéric Marchal)
   [de]    German (Matthias Andree)
   [ja]    Japanese (Takeshi Hamasaki)
   [pl]    Polish (Jakub Bogusz)
+  [sk]    Slovak (Marcel Telka)
+
+# KNOWN BUGS AND WORKAROUNDS
+  (this section floats upwards through the NEWS file so it stays with the
+  current release information - however, it was stuck with 6.3.8 for a while)
+* fetchmail does not handle messages without Message-ID header well
+  (See sourceforge.net bug #780933)
+* BSMTP is mostly untested and errors can cause corrupt output.
+* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
+  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
+  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
+  so compiling 32-bit SPARC code should not cause any difficulties.
+* fetchmail does not track pending deletes over crashes.
+* the command line interface is sometimes a bit stubborn, for instance,
+  fetchmail -s doesn't work with a daemon running.
+* Linux systems may return duplicates of an IP address in some circumstances if
+  no or no global IPv6 addresses are configured.
+  (No workaround. Ubuntu Bug#582585, Novell Bug#606980.)
+* Kerberos 5 may be broken, particularly on Heimdal, and provide bogus error
+  messages. This will not be fixed, because the maintainer has no Kerberos 5
+  server to test against. Use GSSAPI.
 
 
 fetchmail-6.3.19 (released 2010-12-10, 25945 LoC):
@@ -176,26 +200,6 @@ fetchmail-6.3.19 (released 2010-12-10, 25945 LoC):
   [de]    German
   [it]    Italian (Vincenzo Campanella)
   [pl]    Polish (Jakub Bogusz)
-
-# KNOWN BUGS AND WORKAROUNDS
-  (this section floats upwards through the NEWS file so it stays with the
-  current release information - however, it was stuck with 6.3.8 for a while)
-* fetchmail does not handle messages without Message-ID header well
-  (See sourceforge.net bug #780933)
-* BSMTP is mostly untested and errors can cause corrupt output.
-* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
-  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
-  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
-  so compiling 32-bit SPARC code should not cause any difficulties.
-* fetchmail does not track pending deletes over crashes.
-* the command line interface is sometimes a bit stubborn, for instance,
-  fetchmail -s doesn't work with a daemon running.
-* Linux systems may return duplicates of an IP address in some circumstances if
-  no or no global IPv6 addresses are configured.
-  (No workaround. Ubuntu Bug#582585, Novell Bug#606980.)
-* Kerberos 5 may be broken, particularly on Heimdal, and provide bogus error
-  messages. This will not be fixed, because the maintainer has no Kerberos 5
-  server to test against. Use GSSAPI.
 
 
 fetchmail-6.3.18 (released 2010-10-09, 25936 LoC):

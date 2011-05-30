@@ -217,7 +217,7 @@ int UnixOpen(const char *path)
 	return -1;
     }
 
-    /* Socket opened saved. Usefull if connect timeout
+    /* Socket opened saved. Useful if connect timeout
      * because it can be closed.
      */
     mailserver_socket_temp = sock;
