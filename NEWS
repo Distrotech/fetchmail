@@ -65,6 +65,7 @@ fetchmail-6.3.20 (not yet released, 26005 LoC):
      SSL-wrapped connections were unaffected by this timeout, so users of older
   versions can force ssl-wrapped connections -- if supported by the server --
   with the --ssl command line or ssl rcfile option.
+  See fetchmail-SA-2011-01.txt for further details.
 
 # BUG FIXES
 * IMAP: Do not search for UNSEEN messages in ranges. Usually, there are very few

@@ -135,6 +135,7 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		README.packaging README.SSL-SERVER \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
 		Mailbox-Names-UTF7.txt Mailbox-Names-UTF7.html \
+		fetchmail-SA-2011-01.txt \
 		fetchmail-EN-2010-03.txt \
 		fetchmail-SA-2010-02.txt \
 		fetchmail-SA-2010-01.txt \
