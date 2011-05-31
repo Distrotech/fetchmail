@@ -9,7 +9,7 @@ Type:		Unguarded blocking I/O can cause indefinite application hang
 Impact:		Denial of service
 Danger:		low
 
-CVE Name:	
+CVE Name:	CVE-2011-1947
 CVSSv2:		
 CVSS scores:	
 		This is calculated without Environmental Score.
