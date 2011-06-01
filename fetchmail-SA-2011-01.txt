@@ -8,6 +8,7 @@ Announced:	XXX
 Type:		Unguarded blocking I/O can cause indefinite application hang
 Impact:		Denial of service
 Danger:		low
+Acknowledgment:	Thomas Jarosch for sending detailed report
 
 CVE Name:	CVE-2011-1947
 CVSSv2:		
