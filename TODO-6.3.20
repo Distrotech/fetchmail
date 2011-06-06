@@ -1,0 +1,11 @@
+- fix STARTTLS timeouts by setting socket timings
+  possibly using a different structure than an int to save the fd
+  and SSL context -- and then also timeout?
+  Or just make set_timeout take an optional fd, which, when != -1,
+  also sets the socket timeouts?
+
+- make SSLv2 removal dependent on openssl configuration
+  (see Debian FTBFS bug for how to detect that in configure)
+
+- make --with-ssl default?
+
