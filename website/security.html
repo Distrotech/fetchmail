@@ -14,7 +14,7 @@
 <table width="100%" cellpadding="0" summary="Canned page header">
 <tr>
 <td>Fetchmail</td>
-<td align="right"><!-- update date -->2010-05-06</td>
+<td align="right"><!-- update date -->2011-06-06</td>
 </tr>
 </table>
 </div>
@@ -45,6 +45,12 @@
     some of the problems mentioned below, even if they aren't mentioned
     in the security announcements:</p>
     <ul>
+	<li><a name="cve-2011-1947"
+	    href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2011-1947">CVE-2011-1947:</a>
+	Fetchmail <a href="fetchmail-SA-2011-01.txt"> could hang for
+	    indefinite amounts of time during STARTTLS negotiations</a>,
+	causing mail fetches to stall. This was a long-standing bug
+	fixed in release 6.3.20.</li>
 	<li><a name="fetchmail-EN-2010-03">EN-2010-03</a>: Fetchmail <a href="fetchmail-EN-2010-03.txt">fails
 	    POP3/IMAP authentication by not performing SASL AUTH
 	    properly.</a> This was a long-standing bug fixed in release
