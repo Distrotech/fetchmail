@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 fetchmail-SA-2011-01: Denial of service possible in STARTTLS mode
 
 Topics:		fetchmail denial of service in STARTTLS protocol phases
@@ -126,3 +129,10 @@ THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
 Use the information herein at your own risk.
 
 END of fetchmail-SA-2011-01
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.16 (GNU/Linux)
+
+iEYEARECAAYFAk3swwUACgkQvmGDOQUufZWaBACdHHSAiQZ5OIOur3vflKbzbIi2
+WbkAni+ROgf+9IU1rE0j8RJKvzZrJfIP
+=d/Bl
+-----END PGP SIGNATURE-----
