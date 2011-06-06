@@ -6,14 +6,14 @@
 # mise à jour par Thierry Vignaud <tvignaud@mandrakesoft.com>
 # mise à jour par Matthias Andree <matthias.andree@gmx.de>
 # Guy Brand <guybrand@chimie.u-strasbg.fr>, 1999-2000.
-# Frederic Marchal <fmarchal@perso.be>, 2011.
+# Frédéric Marchal <fmarchal@perso.be>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail-6.3.20-pre1\n"
+"Project-Id-Version: fetchmail-6.3.20-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2011-05-29 19:34+0200\n"
-"PO-Revision-Date: 2011-05-25 09:26+0200\n"
-"Last-Translator: Frederic Marchal <fmarchal@perso.be>\n"
+"POT-Creation-Date: 2011-05-29 20:19+0200\n"
+"PO-Revision-Date: 2011-05-31 08:41+0200\n"
+"Last-Translator: Frédéric Marchal <fmarchal@perso.be>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -661,14 +661,14 @@ msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
 "                   Robert M. Funk, Graham Wilson\n"
-"Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
-"Copyright (C) 2005 - 2010 Matthias Andree\n"
+"Copyright (C) 2005 - 2006, 2010 - 2011 Sunil Shetye\n"
+"Copyright (C) 2005 - 2011 Matthias Andree\n"
 msgstr ""
 "Copyright © 2002, 2003 Eric S. Raymond\n"
 "Copyright © 2004 Matthias Andree, Eric S. Raymond,\n"
 "                 Robert M. Funk, Graham Wilson\n"
-"Copyright © 2005 - 2006, 2010 Sunil Shetye\n"
-"Copyright © 2005 - 2010 Matthias Andree\n"
+"Copyright © 2005 - 2006, 2010 - 2011 Sunil Shetye\n"
+"Copyright © 2005 - 2011 Matthias Andree\n"
 
 #: fetchmail.c:143
 msgid ""
