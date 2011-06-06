@@ -1,18 +1,18 @@
 fetchmail-SA-2011-01: Denial of service possible in STARTTLS mode
 
-Topics:		Denial of service in STARTTLS protocol phases
+Topics:		fetchmail denial of service in STARTTLS protocol phases
 
 Author:		Matthias Andree
-Version:	XXX
-Announced:	XXX
+Version:	1.0
+Announced:	2011-06-06
 Type:		Unguarded blocking I/O can cause indefinite application hang
 Impact:		Denial of service
 Danger:		low
 Acknowledgment:	Thomas Jarosch for sending detailed report
 
 CVE Name:	CVE-2011-1947
-CVSSv2:		
-CVSS scores:	
+CVSSv2:		(AV:N/AC:M/Au:S/C:N/I:N/A:C/E:U/RL:O/RC:C)
+CVSS scores:	4.7: Base 6.3 (Impact 6.9 Exploitability 6.8) Temporal 4.7
 		This is calculated without Environmental Score.
 URL:		http://www.fetchmail.info/fetchmail-SA-2011-01.txt
 Project URL:	http://www.fetchmail.info/
@@ -26,13 +26,14 @@ Corrected in:	2011-05-26 Git, among others, see commit
 
 		2011-05-29 fetchmail 6.3.20-rc3 tarball (for testing)
 
-		pending    fetchmail 6.3.20 release tarball
+		2011-06-06 fetchmail 6.3.20 release tarball
 
 
 0. Release history
 ==================
 
 2011-05-30 0.1	first draft (visible in Git and through oss-security)
+2011-06-06 1.0	release
 
 
 1. Background
@@ -71,9 +72,7 @@ can be used as a workaround.
 3. Solution
 ===========
 
-Install fetchmail 6.3.20 or newer after it will have become available.
-(Note that the announcements may be publicly visible quite some time
-before the release is made, particularly for minor bugs.)
+Install fetchmail 6.3.20 or newer.
 
 The fetchmail source code is always available from
 <http://developer.berlios.de/project/showfiles.php?group_id=1824>.
@@ -82,31 +81,28 @@ Distributors are encouraged to review the NEWS file and move forward to
 6.3.20, rather than backport individual security fixes, because doing so
 routinely misses other fixes crucial to fetchmail's proper operation,
 for which no security announcements are issued.  Several such
-(long-standing) bugs were fixed through recent releases.
+(long-standing) bugs were fixed through recent releases, and an erratum
+notice for SASL authentication was issued.
 
 Fetchmail 6.3.X releases have always been made with a focus on unchanged
 user and program interfaces so as to avoid disruptions when upgrading
 from 6.3.X to 6.3.Y with Y > X.  Care was taken to not change the
 interface incompatibly.
 
-There will be NO SUPPORT FOR BACKPORTING bug fixes to older releases!
-
 
 4. Workaround
 =============
 
-A. If supported by the server's configuration, fetchmail can be run in
+If supported by the server's configuration, fetchmail can be run in
 ssl-wrapped rather than starttls mode. To that extent, the "ssl sslproto
 ssl3" option must be configured (possibly replacing sslproto tls1 where
 configured) to the rcfile, or "--ssl --sslproto ssl3" can be given on
 the command line (where it applies to all poll configurations).
-   It is generally advisable to use --sslcertck to enable SSL
-certificate validation.
 
-B. If the operating system supports setting all TCP sockets to keepalive
-mode by default, and possibly lowering the delay until keepalive probes
-start, enabling this configuration can protect against hangs through
-silently broken connections, but not against a malicious server.
+It is generally also advisable to enforce SSL certificate validation, by
+either using --sslcertck on the command line, or using sslcertck in a
+"default" configuration entry of the rcfile, or using sslcertck in
+each of the relevant individual poll descriptions of the rcfile.
 
 
 A. Copyright, License and Non-Warranty
