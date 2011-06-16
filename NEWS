@@ -91,6 +91,12 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   will actively forbid SSLv2 negotiation by means of SSL_OP_NO_SSLv2.
   To fix Debian Bug#622054.
 
+# REGRESSION FIXES
+* The mimedecode feature now properly detects multipart/mixed-type matches, so
+  that quoted-printable-encoded multipart messages can get decoded.
+  (Regression in 5.0.0 on 1999-03-27, as a side effect of a PGP-mimedecode fix
+  attributed to Henrik Storner.)
+
 # CHANGES
 * A foreground fetchmail can now accept a few more options while another copy is
   running in the background.
