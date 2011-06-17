@@ -1,0 +1,92 @@
+This patch logs raw socket data, to assist debugging when discriminating
+between server and fetchmail bugs.
+
+Apply it to socket.c (works as of 6.3.20) and set the environment
+variable FETCHMAIL_RAW_LOGFILE to a log file writable by fetchmail. If
+it's not there, it gets created with mode 0600 (which requires directory
+write permission).
+
+The file gets appended to, so you can log into named pipes, character
+(stream) devices and to the console if you're so inclined.
+
+Note 1: any logging failures cause fetchmail to abort() forcefully.
+
+Note 2: raw control characters persist in the log and are not filtered
+out. In doubt use a pager that filters control characters, or use tools
+such as a binary-capable text edtior, vim's xxd, or hexdump, or od, to
+view the raw log message.
+
+-- Matthias Andree, June 2011
+
+diff --git a/socket.c b/socket.c
+index c8117a5..89847fe 100644
+--- a/socket.c
++++ b/socket.c
+@@ -362,6 +362,49 @@ static	SSL *_ssl_context[FD_SETSIZE];
+ static SSL	*SSLGetContext( int );
+ #endif /* SSL_ENABLE */
+ 
++#include <fcntl.h>
++
++static const char *rawlogfile;
++static FILE *rlogstream;
++
++static int SockLog(void) {
++    static int haveinit;
++    static int wantlog;
++    static int logfd = -1;
++
++    if (!haveinit) {
++	haveinit = 1;
++	if ((rawlogfile = getenv("FETCHMAIL_RAW_LOGFILE"))) {
++	    if ((logfd = open(rawlogfile, O_WRONLY|O_APPEND|O_CREAT, 0600)) == -1) {
++		report(stderr, GT_("FETCHMAIL_RAW_LOGFILE is set, but opening \"%s\" for appending write failed: %s\n"), rawlogfile, strerror(errno));
++		abort();
++	    }
++	    if (!(rlogstream = fdopen(logfd, "a"))) {
++		report(stderr, GT_("FETCHMAIL_RAW_LOGFILE is set, but fdopen(%d) failed: %s\n"), logfd, strerror(errno));
++		abort();
++	    }
++	    setvbuf(rlogstream, NULL, _IOLBF, 0);
++	    wantlog = 1;
++	}
++    }
++    return wantlog;
++}
++
++static void LogPrintf(const char *fmt, ...) {
++    va_list va;
++    const char *locsav;
++    va_start(va, fmt);
++    if (!SockLog()) return;
++    locsav = setlocale(LC_ALL, NULL);
++    (void)setlocale(LC_ALL, "C");
++    if (EOF == vfprintf(rlogstream, fmt, va) || EOF == fflush(rlogstream)) {
++	report(stderr, GT_("FETCHMAIL_RAW_LOGFILE is set, but logging failed: %s\n"), strerror(errno));
++	abort();
++    }
++    (void)setlocale(LC_ALL, locsav);
++    va_end(va);
++}
++
+ int SockWrite(int sock, const char *buf, int len)
+ {
+     int n, wrlen = 0;
+@@ -369,6 +412,8 @@ int SockWrite(int sock, const char *buf, int len)
+     SSL *ssl;
+ #endif
+ 
++    LogPrintf("[>%d-%s count=%04d] %.*s%s", sock, SSLGetContext(sock) ? "crypt" : "plain", len, len, buf, (len < 1 || buf[len - 1] != '\n') ? "\n" : "");
++
+     while (len)
+     {
+ #ifdef SSL_ENABLE
+@@ -471,6 +516,8 @@ int SockRead(int sock, char *buf, int len)
+ 	    (!newline && len);
+     *bp = '\0';
+ 
++    LogPrintf("[<%d-%s count=%04d] %.*s%s", sock, SSLGetContext(sock) ? "crypt" : "plain", bp - buf, bp - buf, buf, newline ? "" : "\n");
++
+     return bp - buf;
+ }
+ 
