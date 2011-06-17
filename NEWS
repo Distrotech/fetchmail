@@ -97,6 +97,14 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   (Regression in 5.0.0 on 1999-03-27, as a side effect of a PGP-mimedecode fix
   attributed to Henrik Storner.)
 
+# BUG FIXES
+* The mimedecode feature failed to ship the last line of the body if it was
+  encoded as quoted-printable and had a MIME soft line break in the very last
+  line.  Reported by Lars Hecking in June 2011.
+  Bug introduced on 1998-03-20 when the mimedecode support was added by ESR
+  before release 4.4.1 through code contributed by Henrik Storner.
+  Workaround for older releases: do not use mimedecode feature.
+
 # CHANGES
 * A foreground fetchmail can now accept a few more options while another copy is
   running in the background.
