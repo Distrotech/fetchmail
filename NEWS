@@ -156,6 +156,14 @@ fetchmail-6.3.23 (released 2012-12-10, 26106 LoC):
 * Clean up logfile vs. syslog handling, and in case logfile overrides
   syslog, send a message to the latter stating where logging goes.
 
+# BUG FIXES
+* The mimedecode feature failed to ship the last line of the body if it was
+  encoded as quoted-printable and had a MIME soft line break in the very last
+  line.  Reported by Lars Hecking in June 2011.
+  Bug introduced on 1998-03-20 when the mimedecode support was added by ESR
+  before release 4.4.1 through code contributed by Henrik Storner.
+  Workaround for older releases: do not use mimedecode feature.
+
 # CHANGES
 * The build process can now be made a bit more silent and concise through
   ./configure --enable-silent-rules, or by adding "V=0" to the make command.
