@@ -99,10 +99,6 @@ These scripts are front ends for fetchmail in daemon mode that can gather
 log statistics and generate text or HTML reports.  See README.getmail for
 details.  Scripts by Thomas Nesges <ThomaNesges@TNT-Computer.de>.
 
-### multidrop:
-
-Martijn Lievaart's sendmail hacks to make multidrop reliable.
-
 ### toprocmail:
 
 John Lim Eng Hooi <jleh@mail.com> wrote this script, yet another 
