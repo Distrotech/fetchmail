@@ -116,12 +116,12 @@ int smtp_setup(struct query *ctl)
 	oldphase = phase;
 	phase = LISTENER_WAIT;
 
+	set_timeout(ctl->server.timeout);
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp;
 	    const char	*portnum = SMTP_PORT;
 
-	    set_timeout(ctl->server.timeout);
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 	    if (ctl->smtphost[0]=='/')
 	    {
@@ -169,7 +169,6 @@ int smtp_setup(struct query *ctl)
 	     * so it's safest not to assume the socket will still be good.
 	     */
 	    smtp_close(ctl, 0);
-	    set_timeout(ctl->server.timeout);
 
 	    /* if opening for ESMTP failed, try SMTP */
 	    if (ctl->smtphost[0]=='/')

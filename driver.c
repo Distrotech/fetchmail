@@ -109,8 +109,14 @@ static void timeout_handler (int signal)
 static int cleanupSockClose (int fd)
 /* close sockets in maximum CLEANUP_TIMEOUT seconds during cleanup */
 {
-    (void)SockTimeout(fd, CLEANUP_TIMEOUT); /* ignore errors */
-    return SockClose(fd);
+    int scerror;
+    SIGHANDLERTYPE alrmsave;
+    alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
+    set_timeout(CLEANUP_TIMEOUT);
+    scerror = SockClose(fd);
+    set_timeout(0);
+    set_signal_handler(SIGALRM, alrmsave);
+    return (scerror);
 }
 
 #ifdef KERBEROS_V5

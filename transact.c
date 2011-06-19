@@ -472,13 +472,13 @@ int readheaders(int sock,
 	    do {
 		char	*sp, *tp;
 
-		SockTimeout(sock, mytimeout);
-		n = SockRead(sock, buf, sizeof(buf) - 1);
-
-		if (n == -1) {
+		set_timeout(mytimeout);
+		if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		    set_timeout(0);
 		    free(line);
 		    return(PS_SOCKET);
 		}
+		set_timeout(0);
 
 		/*
 		 * Smash out any NULs, they could wreak havoc later on.
@@ -603,8 +603,9 @@ eoh:
 	    }
 
 	    /* check for RFC822 continuations */
-	    SockTimeout(sock, mytimeout);
+	    set_timeout(mytimeout);
 	    ch = SockPeek(sock);
+	    set_timeout(0);
 	} while
 	    (ch == ' ' || ch == '\t');	/* continuation to next line? */
 
@@ -1387,16 +1388,17 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
      */
     while (protocol->delimited || len > 0)
     {
-	SockTimeout(sock, mytimeout);
+	set_timeout(mytimeout);
 	/* XXX FIXME: for undelimited protocols that ship the size, such
 	 * as IMAP, we might want to use the count of remaining characters
 	 * instead of the buffer size -- not for fetchmail 6.3.X though */
-	linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf));
-	if (linelen == -1)
+	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	{
+	    set_timeout(0);
 	    release_sink(ctl);
 	    return(PS_SOCKET);
 	}
+	set_timeout(0);
 
 	/* write the message size dots */
 	if (linelen > 0)
@@ -1547,15 +1549,13 @@ int gen_recv(int sock  /** socket to which server is connected */,
 {
     size_t n;
     int oldphase = phase;	/* we don't have to be re-entrant */
-    int retval;
 
     phase = SERVER_WAIT;
-    SockTimeout(sock, mytimeout);
-    retval = SockRead(sock, buf, size);
-    phase = oldphase;
-
-    if (retval == -1)
+    set_timeout(mytimeout);
+    if (SockRead(sock, buf, size) == -1)
     {
+	set_timeout(0);
+	phase = oldphase;
 	if(is_idletimeout())
 	{
 	  resetidletimeout();
@@ -1574,6 +1574,7 @@ int gen_recv(int sock  /** socket to which server is connected */,
 	    buf[--n] = '\0';
 	if (outlevel >= O_MONITOR)
 	    report(stdout, "%s< %s\n", protocol->name, buf);
+	phase = oldphase;
 	return(PS_SUCCESS);
     }
 }

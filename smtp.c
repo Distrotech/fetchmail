@@ -171,15 +171,16 @@ int SMTP_ehlo(int sock, char smtp_mode, const char *host, char *name, char *pass
 {
   struct opt *hp;
   char auth_response[511];
+  SIGHANDLERTYPE alrmsave;
   const int tmout = (mytimeout >= TIMEOUT_HELO ? mytimeout : TIMEOUT_HELO);
-
-  if (SockTimeout(sock, tmout) != 0)
-      return SM_UNRECOVERABLE;
 
   SockPrintf(sock,"%cHLO %s\r\n", (smtp_mode == 'S') ? 'E' : smtp_mode, host);
   if (outlevel >= O_MONITOR)
       report(stdout, "%cMTP> %cHLO %s\n", 
 	    smtp_mode, (smtp_mode == 'S') ? 'E' : smtp_mode, host);
+
+  alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
+  set_timeout(tmout);
 
   *opt = 0;
   while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
@@ -187,6 +188,7 @@ int SMTP_ehlo(int sock, char smtp_mode, const char *host, char *name, char *pass
       size_t n;
 
       set_timeout(0);
+      (void)set_signal_handler(SIGALRM, alrmsave);
 
       n = strlen(smtp_response);
       if (n > 0 && smtp_response[n-1] == '\n')
@@ -212,6 +214,9 @@ int SMTP_ehlo(int sock, char smtp_mode, const char *host, char *name, char *pass
       }
       else if (smtp_response[3] != '-')
 	  return SM_ERROR;
+
+      alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
+      set_timeout(tmout);
   }
   return SM_UNRECOVERABLE;
 }
@@ -306,17 +311,22 @@ int SMTP_ok(int sock, char smtp_mode, int mintimeout)
  * smtp_response, without trailing [CR]LF, but with normalized CRLF
  * between multiple lines of multi-line replies */
 {
+    SIGHANDLERTYPE alrmsave;
     char reply[MSGBUFSIZE], *i;
-    int tmo = mytimeout >= mintimeout ? mytimeout : mintimeout;
+
+    /* set an alarm for smtp ok */
+    alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
+    set_timeout(mytimeout >= mintimeout ? mytimeout : mintimeout);
 
     smtp_response[0] = '\0';
-
-    if (SockTimeout(sock, tmo))
-	return SM_UNRECOVERABLE;
 
     while ((SockRead(sock, reply, sizeof(reply)-1)) != -1)
     {
 	size_t n;
+
+	/* restore alarm */
+	set_timeout(0);
+	set_signal_handler(SIGALRM, alrmsave);
 
 	n = strlen(reply);
 	if (n > 0 && reply[n-1] == '\n')
@@ -353,7 +363,15 @@ int SMTP_ok(int sock, char smtp_mode, int mintimeout)
 	    return SM_ERROR;
 
 	strlcat(smtp_response, "\r\n", sizeof(smtp_response));
+
+	/* set an alarm for smtp ok */
+	set_signal_handler(SIGALRM, null_signal_handler);
+	set_timeout(mytimeout);
     }
+
+    /* restore alarm */
+    set_timeout(0);
+    set_signal_handler(SIGALRM, alrmsave);
 
     if (outlevel >= O_MONITOR)
 	report(stderr, GT_("smtp listener protocol error\n"));

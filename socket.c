@@ -135,10 +135,6 @@ static int handle_plugin(const char *host,
 	report(stderr, GT_("fetchmail: socketpair failed\n"));
 	return -1;
     }
-
-    if (SockTimeout(fds[0], mytimeout)) return -1;
-    if (SockTimeout(fds[1], mytimeout)) return -1;
-
     switch (fork()) {
 	case -1:
 		/* error */
@@ -168,32 +164,6 @@ static int handle_plugin(const char *host,
     /* fds[0] is the child's end; close it for proper EOF detection */
     (void) close(fds[0]);
     return fds[1];
-}
-
-static int setsocktimeout(int sock, int which, int timeout) {
-    struct timeval tv;
-    int rc;
-
-    tv.tv_sec = timeout;
-    tv.tv_usec = 0;
-    rc = setsockopt(sock, SOL_SOCKET, which, &tv, sizeof(tv));
-    if (rc) {
-	report(stderr, GT_("setsockopt(%d, SOL_SOCKET) failed: %s"), sock, strerror(errno));
-    }
-    return rc;
-}
-
-/** Configure socket options such as send/receive timeout at the socket
- * level, to avoid network-induced stalls. \return 0 for success, 1 for
- * error.
- */
-int SockTimeout(int sock, int timeout)
-{
-    int err = 0;
-
-    if (setsocktimeout(sock, SO_RCVTIMEO, timeout)) err = 1;
-    if (setsocktimeout(sock, SO_SNDTIMEO, timeout)) err = 1;
-    return err;
 }
 
 /** Set socket to SO_KEEPALIVE. \return 0 for success. */
