@@ -264,7 +264,6 @@ int SockOpen(const char *host, const char *service,
 	    continue;
 	}
 
-	SockTimeout(i, mytimeout);
 	SockKeepalive(i);
 
 	/* Save socket descriptor.
