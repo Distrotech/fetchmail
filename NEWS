@@ -111,12 +111,11 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
 --------------------------------------------------------------------------------
 
-fetchmail-6.3.20 (not yet released):
-
-fetchmail-6.3.20 (not yet released, 26005 LoC):
+fetchmail-6.3.20 (released 2011-06-06, 26005 LoC):
 
 # SECURITY BUG FIXES
-* STARTTLS: Fetchmail runs the IMAP STARTTLS or POP3 STLS negotiation with the
+* CVE-2011-1947:
+  STARTTLS: Fetchmail runs the IMAP STARTTLS or POP3 STLS negotiation with the
   set timeout (default five minutes) now. This was reported missing, with
   observed fetchmail freezes beyond a week, by Thomas Jarosch.
      SSL-wrapped connections were unaffected by this timeout, so users of older
