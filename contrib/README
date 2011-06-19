@@ -74,13 +74,6 @@ first and feed it to sendmail after you hang up the network link.
 This shellscript aims to do exactly that.  It would be smarter to
 figure out why sendmail is slow, however.
 
-### fetchsetup:
-
-This is a shell script for creating a $HOME/.fetchmailrc file, it will ask
-you some questions and based on your answers it will create a .fetchmailrc
-file. fetchsetup is linux specific so it may not work on another operating
-system.
-
 ### mailqueue.pl:
 
 This script will connect to your ISP (if not already connected),
