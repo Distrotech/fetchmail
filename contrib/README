@@ -74,13 +74,6 @@ program made the connection, it will also break the connection
 when it is done.  By Bill Adams, <bill@evil.inetarena.com>.  The
 latest version is carried at <http://evil.inetarena.com/>.
 
-### redhat_rc:
-
-A fetchmail boot-time init file compatible with RedHat 5.1.  It leaves
-fetchmail in background to get messages when you connect to your ISP.
-The invoked fetchmail expects to find its configuration in
-/etc/fetchmailrc, and must include the proper "interface" directive.
-
 ### start_dynamic_ppp:
 
 An admittedly scratchy ip-up script that Ryan Murray wrote to cope with
