@@ -167,10 +167,6 @@ connections.  You'll have to patch in your username and password.
 Peter 'Rattacresh' Backes sent this patch to improve the behavior of 
 sendmail 8.11.0 with multidrop.
 
-### fetchmailnochda.pl
-
-Watchdog script to check whether fetchmail is working in daemon mode.
-
 ### mold-remover.py
 
 A short python script to remove old read mail from a pop3 mailserver.
