@@ -136,13 +136,6 @@ files.
 
 Martijn Lievaart's sendmail hacks to make multidrop reliable.
 
-### domino:
-
-Gustavo Chaves <gustavo@cpqd.com.br> wrote this script to deal with 
-the boundary-mismatch bug in Domino (see FAQ item X5).  If you use
-this with --mda, the broken boundaries will be fixed and the result
-passed to procmail.
-
 ### toprocmail:
 
 John Lim Eng Hooi <jleh@mail.com> wrote this script, yet another 
