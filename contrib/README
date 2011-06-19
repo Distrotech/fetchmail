@@ -74,11 +74,6 @@ program made the connection, it will also break the connection
 when it is done.  By Bill Adams, <bill@evil.inetarena.com>.  The
 latest version is carried at <http://evil.inetarena.com/>.
 
-### zsh-completion:
-
-These commands set up command completion for fetchmail under zsh.
-Jay Kominek <jay.kominek@colorado.edu>.
-
 ### getmail/gotmail:
 
 These scripts are front ends for fetchmail in daemon mode that can gather
