@@ -106,11 +106,6 @@ mda plugin, to be used with fetchmail in foreground mode.  It displays
 some header lines to stdout in color, passing them (and the rest of the
 message content) to procmail.
 
-### preauth-harness:
-
-Emmanuel Dreyfus's Perl test script for exercising IMAP PREAUTH
-connections.  You'll have to patch in your username and password.
-
 ### sm-hybrid:
 
 Peter 'Rattacresh' Backes sent this patch to improve the behavior of 
