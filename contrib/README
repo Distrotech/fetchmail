@@ -88,22 +88,6 @@ dynamic PPP addressing.  Will need some customizing.
 
 	http://www.inetarena.com/~badams/linux/programs/mailqueue.pl
 
-### getfetchmail:
-
-Here's a script that gets Eric's most recent fetchmail source rpm,
-downloads it and (if the rpm's not broken) rebuilds it.
-
-With fairly simple changes it can be used to download the latest i386 rpm
-or tar.gz.
-
-Those who are addicted to having the latest of everything could filter mail
-from fetchmail announce through it and get new versions as they're
-announced. However, if we all did that, Eric's ftp server might feel a
-little stressed.
-
-The script as written works on bash 2.  By John Summerfield
-<summer@os2.ami.com.au>.
-
 ### zsh-completion:
 
 These commands set up command completion for fetchmail under zsh.
