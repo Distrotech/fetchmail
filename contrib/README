@@ -85,13 +85,6 @@ These scripts are front ends for fetchmail in daemon mode that can gather
 log statistics and generate text or HTML reports.  See README.getmail for
 details.  Scripts by Thomas Nesges <ThomaNesges@TNT-Computer.de>.
 
-### toprocmail:
-
-John Lim Eng Hooi <jleh@mail.com> wrote this script, yet another 
-mda plugin, to be used with fetchmail in foreground mode.  It displays
-some header lines to stdout in color, passing them (and the rest of the
-message content) to procmail.
-
 ### mold-remover.py
 
 A short python script to remove old read mail from a pop3 mailserver.
