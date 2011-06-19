@@ -90,6 +90,7 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   --sslproto. SSLv2 is insecure and had been deprecated 15 years ago. fetchmail
   will actively forbid SSLv2 negotiation by means of SSL_OP_NO_SSLv2.
   To fix Debian Bug#622054.
+* A lot of outdated and/or unsafe-to-use material got dropped from contrib/.
 
 # REGRESSION FIXES
 * The mimedecode feature now properly detects multipart/mixed-type matches, so
