@@ -74,13 +74,6 @@ program made the connection, it will also break the connection
 when it is done.  By Bill Adams, <bill@evil.inetarena.com>.  The
 latest version is carried at <http://evil.inetarena.com/>.
 
-### start_dynamic_ppp:
-
-An admittedly scratchy ip-up script that Ryan Murray wrote to cope with
-dynamic PPP addressing.  Will need some customizing.
-
-	http://www.inetarena.com/~badams/linux/programs/mailqueue.pl
-
 ### zsh-completion:
 
 These commands set up command completion for fetchmail under zsh.
