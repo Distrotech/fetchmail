@@ -96,16 +96,6 @@ fetchmail in background to get messages when you connect to your ISP.
 The invoked fetchmail expects to find its configuration in
 /etc/fetchmailrc, and must include the proper "interface" directive.
 
-### debian_rc:
-
-A fetchmail boot-time init file compatible with Debian.  It leaves
-fetchmail in background to get messages when you connect to your ISP.
-The invoked fetchmail expects to find its configuration in
-/root/.fetchmailrc, and must include the proper "interface" directive.
-
-Matthias Andree adds: note that current Debian packages (as of January
-2007) ship with their own init files.
-
 ### start_dynamic_ppp:
 
 An admittedly scratchy ip-up script that Ryan Murray wrote to cope with
