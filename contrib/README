@@ -66,14 +66,6 @@ A shellscript front end for fetchmail that mails you various statistics on
 the downloaded mail and the state of your folders.  A good example of what
 you can do with your own front end.
 
-### fetchspool:
-
-If you find that the speed of forwarding to port 25 is limited by the
-SMTP listener's speed, it may make sense to locally spool all the mail
-first and feed it to sendmail after you hang up the network link.
-This shellscript aims to do exactly that.  It would be smarter to
-figure out why sendmail is slow, however.
-
 ### mailqueue.pl:
 
 This script will connect to your ISP (if not already connected),
