@@ -157,9 +157,8 @@ class Server:
 	    res = res + (" qvirtual " + str(self.qvirtual) + "\n");
 	if self.auth != ServerDefaults.auth:
 	    res = res + " auth " + self.auth
-	if self.dns != ServerDefaults.dns
-	    res = res + " and options"
 	if self.dns != ServerDefaults.dns:
+	    res = res + " and options"
 	    res = res + flag2str(self.dns, 'dns')
 	if folded:	res = res + "\n    "
 	else:	     res = res + " "
@@ -1494,7 +1493,7 @@ recommend you upgrade to a non-broken IMAP server.
 	    if string.find(greetline, "Domino IMAP4") > 0:
 		warnings = warnings + """
 Your IMAP server appears to be Lotus Domino.  This server, at least up
-to version 4.6.2a, has a bug in its generation of MIME boundaries (see
+to version 5.0.2, has a bug in its generation of MIME boundaries (see
 the details in the fetchmail FAQ).  As a result, even MIME aware MUAs
 will see attachments as part of the message text.  If your Domino server's
 POP3 facility is enabled, we recommend you fall back on it.
@@ -1509,20 +1508,6 @@ POP3 facility is enabled, we recommend you fall back on it.
 It looks like you could use APOP on this server and avoid sending it your
 password in clear.  You should talk to the mailserver administrator about
 this.
-
-"""
-	    if string.find(greetline, "IMAP2bis") > 0:
-		warnings = warnings + """
-IMAP2bis servers have a minor problem; they can't peek at messages without
-marking them seen.  If you take a line hit during the retrieval, the
-interrupted message may get left on the server, marked seen.
-
-To work around this, it is recommended that you set the `fetchall'
-option on all user entries associated with this server, so any stuck
-mail will be retrieved next time around.
-
-To fix this bug, upgrade to an IMAP4 server.  The fetchmail FAQ includes
-a pointer to an open-source implementation.
 
 """
 	    if string.find(greetline, "IMAP4rev1") > 0:
