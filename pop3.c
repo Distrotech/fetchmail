@@ -672,22 +672,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	return(ok);
     }
 
-/* Disable the sleep. Based on patch by Brian Candler 2004-04-19/2004-11-08,
- * accepted by Matthias Andree.
- *
- * Rationale: the server must have locked the spool before returning +OK;
- * this sleep just wastes time and hence, for modem and GSM CSD users, money. */
-#ifdef WANT_BOGUS
-    /*
-     * Empirical experience shows some server/OS combinations
-     * may need a brief pause even after any lockfiles on the
-     * server are released, to give the server time to finish
-     * copying back very large mailfolders from the temp-file...
-     * this is only ever an issue with extremely large mailboxes.
-     */
-    sleep(3); /* to be _really_ safe, probably need sleep(5)! */
-#endif
-
     /* we're approved */
     return(PS_SUCCESS);
 }
