@@ -31,12 +31,14 @@ struct addrinfo;
 #include <libpwmd.h>
 #endif
 
-/* constants designating the various supported protocols */
-#define		P_AUTO		1
-#define		P_POP3		3
-#define		P_IMAP		6
-#define		P_ETRN		7
-#define		P_ODMR		8
+/** constants designating the various supported protocols -- ordered */
+enum protocols {
+    P_AUTO = 1	/**< probe IMAP and POP3 - deprecated */,
+    P_POP3	/**  POP3, including APOP and KPOP, RFC 1939 et al. */,
+    P_IMAP	/**  IMAP4, RFC 3501 */,
+    P_ETRN	/**  ETRN - SMTP Service Extension for Remote Message Queue Starting, "extended TURN", RFC 1985 */,
+    P_ODMR	/**  ODMR/ATRN - On-Demand Mail Relay SMTP with dynamic addresses/Authenticated TURN, RFC 2645 */
+};
 
 #define		SMTP_PORT	"smtp"
 #define		SMTP_PORT_NUM	25
@@ -54,18 +56,20 @@ struct addrinfo;
  */
 #define MAILBOX_PROTOCOL(ctl)	((ctl)->server.protocol < P_ETRN)
 
-/* authentication types */
-#define		A_ANY		0	/* use the first method that works */
-#define		A_PASSWORD	1	/* password authentication */
-#define		A_NTLM		2	/* Microsoft NTLM protocol */
-#define		A_CRAM_MD5	3	/* CRAM-MD5 shrouding (RFC2195) */
-#define		A_OTP		4	/* One-time password (RFC1508) */
-#define		A_APOP		5	/* POP3 APOP */
-#define		A_KERBEROS_V5	6	/* authenticate w/ Kerberos V5 */
-#define 	A_GSSAPI	7	/* authenticate with GSSAPI */
-#define		A_SSH		8	/* authentication at session level */
-#define		A_MSN		9	/* same as NTLM with keyword MSN */
-#define		A_EXTERNAL	10	/* external authentication (client cert) */
+/** authentication types */
+enum authenticators {
+	A_ANY = 0	/**< use the first method that works */,
+	A_PASSWORD	/** password authentication */,
+	A_NTLM		/** Microsoft NTLM protocol */,
+	A_CRAM_MD5	/** CRAM-MD5 shrouding (RFC2195) */,
+	A_OTP		/** One-time password (RFC1508) */,
+	A_APOP		/** POP3 APOP */,
+	A_KERBEROS_V5	/** authenticate w/ Kerberos V5 */,
+	A_GSSAPI	/** authenticate with GSSAPI */,
+	A_SSH		/** authentication at session level */,
+	A_MSN		/** same as NTLM with keyword MSN */,
+	A_EXTERNAL	/** external authentication (client cert) */
+};
 
 /* some protocols or authentication types (KERBEROS, GSSAPI, SSH) don't
  * require a password */
