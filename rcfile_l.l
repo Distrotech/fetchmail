@@ -89,6 +89,7 @@ cram(-md5)?	{ SETSTATE(0); yylval.proto = A_CRAM_MD5; return AUTHTYPE;}
 msn		{ SETSTATE(0); yylval.proto = A_MSN; return AUTHTYPE;}
 ntlm		{ SETSTATE(0); yylval.proto = A_NTLM; return AUTHTYPE;}
 <AUTH>password	{ SETSTATE(0); yylval.proto = A_PASSWORD; return AUTHTYPE;}
+apop		{ SETSTATE(0); yylval.proto = A_APOP; return AUTHTYPE;}
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }
@@ -195,12 +196,11 @@ options		{/* EMPTY */}
 [;:,]		{/* EMPTY */}
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
-(sdps)|(SDPS)   { return SDPS; }
+(sdps)|(SDPS)	{ return SDPS; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
-(apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
-(etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }
-(odmr)|(ODMR)   { yylval.proto = P_ODMR;  return PROTO; }
+(etrn)|(ETRN)	{ yylval.proto = P_ETRN;  return PROTO; }
+(odmr)|(ODMR)	{ yylval.proto = P_ODMR;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */

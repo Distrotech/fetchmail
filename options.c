@@ -330,8 +330,6 @@ int parsecmdline (int argc /** argument count */,
 #endif /* SDPS_ENABLE */
 	    else if (strcasecmp(optarg,"pop3") == 0)
 		ctl->server.protocol = P_POP3;
-	    else if (strcasecmp(optarg,"apop") == 0)
-		ctl->server.protocol = P_APOP;
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
@@ -389,6 +387,8 @@ int parsecmdline (int argc /** argument count */,
 		ctl->server.authenticate = A_ANY;
 	    else if (strcmp(optarg, "msn") == 0)
 		ctl->server.authenticate = A_MSN;
+	    else if (strcmp(optarg, "apop") == 0)
+		ctl->server.authenticate = A_APOP;
 	    else {
 		fprintf(stderr,GT_("Invalid authentication `%s' specified.\n"), optarg);
 		errflag++;

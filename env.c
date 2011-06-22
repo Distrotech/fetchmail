@@ -243,7 +243,6 @@ const char *showproto(int proto)
     case P_AUTO: return("auto");
 #ifdef POP3_ENABLE
     case P_POP3: return("POP3");
-    case P_APOP: return("APOP");
 #endif /* POP3_ENABLE */
 #ifdef IMAP_ENABLE
     case P_IMAP: return("IMAP");

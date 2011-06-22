@@ -262,12 +262,58 @@ static void set_peek_capable(struct query *ctl)
     peek_capable = !ctl->fetchall;
 }
 
+static int do_apop(int sock, struct query *ctl, char *greeting)
+{
+    char *start, *end;
+
+    /* build MD5 digest from greeting timestamp + password */
+    /* find start of timestamp */
+    start = strchr(greeting, '<');
+    if (!start) {
+	report(stderr,
+		GT_("Required APOP timestamp not found in greeting\n"));
+	return PS_AUTHFAIL;
+    }
+
+    /* find end of timestamp */
+    end = strchr(start + 1, '>');
+
+    if (!end || end == start + 1) {
+	report(stderr,
+		GT_("Timestamp syntax error in greeting\n"));
+	return(PS_AUTHFAIL);
+    } else {
+	*++end = '\0';
+    }
+
+    /* SECURITY: 2007-03-17
+     * Strictly validating the presented challenge for RFC-822
+     * conformity (it must be a msg-id in terms of that standard) is
+     * supposed to make attacks against the MD5 implementation
+     * harder[1]
+     *
+     * [1] "Security vulnerability in APOP authentication",
+     *     Gaëtan Leurent, fetchmail-devel, 2007-03-17 */
+    if (!rfc822_valid_msgid((unsigned char *)start)) {
+	report(stderr,
+		GT_("Invalid APOP timestamp.\n"));
+	return PS_AUTHFAIL;
+    }
+
+    /* copy timestamp and password into digestion buffer */
+    char *msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
+    strcpy(msg,start);
+    strcat(msg,ctl->password);
+    strcpy((char *)ctl->digest, MD5Digest((unsigned char *)msg));
+    free(msg);
+
+    return gen_transact(sock, "APOP %s %s", ctl->remotename, (char *)ctl->digest);
+}
+
 static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok;
-    char *start,*end;
-    char *msg;
 #ifdef OPIE_ENABLE
     char *challenge;
 #endif /* OPIE_ENABLE */
@@ -335,8 +381,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
         ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
 
+    /* this is a leftover from the times 6.3.X and older when APOP was a
+     * "protocol" (P_APOP) rather than an authenticator (A_APOP),
+     * however, the switch is still useful because we can break; after
+     * an authenticator failed. */
    switch (ctl->server.protocol) {
-    case P_POP3:
+   case P_POP3:
 #ifdef RPA_ENABLE
 	/* XXX FIXME: AUTH probing (RFC1734) should become global */
 	/* CompuServe POP3 Servers as of 990730 want AUTH first for RPA */
@@ -517,27 +567,35 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE_ENABLE */
 
 #ifdef NTLM_ENABLE
-    /* MSN servers require the use of NTLM (MSN) authentication */
-    if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
-	    ctl->server.authenticate == A_MSN)
-	return (do_pop3_ntlm(sock, ctl, 1) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
-    if (ctl->server.authenticate == A_NTLM || (has_ntlm && ctl->server.authenticate == A_ANY)) {
-	ok = do_pop3_ntlm(sock, ctl, 0);
-        if (ok == 0 || ctl->server.authenticate != A_ANY)
-	    break;
-    }
+	/* MSN servers require the use of NTLM (MSN) authentication */
+	if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
+		ctl->server.authenticate == A_MSN)
+	    return (do_pop3_ntlm(sock, ctl, 1) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
+	if (ctl->server.authenticate == A_NTLM || (has_ntlm && ctl->server.authenticate == A_ANY)) {
+	    ok = do_pop3_ntlm(sock, ctl, 0);
+	    if (ok == 0 || ctl->server.authenticate != A_ANY)
+		break;
+	}
 #else
-    if (ctl->server.authenticate == A_NTLM || ctl->server.authenticate == A_MSN)
-    {
-	report(stderr,
-	   GT_("Required NTLM capability not compiled into fetchmail\n"));
-    }
+	if (ctl->server.authenticate == A_NTLM || ctl->server.authenticate == A_MSN)
+	{
+	    report(stderr,
+		    GT_("Required NTLM capability not compiled into fetchmail\n"));
+	}
 #endif
 
- 	if (ctl->server.authenticate == A_CRAM_MD5 || 
-	    (has_cram && ctl->server.authenticate == A_ANY))
+	if (ctl->server.authenticate == A_CRAM_MD5 ||
+		(has_cram && ctl->server.authenticate == A_ANY))
 	{
 	    ok = do_cram_md5(sock, "AUTH", ctl, NULL);
+	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
+		break;
+	}
+
+	if (ctl->server.authenticate == A_APOP
+		    || ctl->server.authenticate == A_ANY)
+	{
+	    ok = do_apop(sock, ctl, greeting);
 	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
 		break;
 	}
@@ -597,52 +655,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 	memset(shroud, 0x55, sizeof(shroud));
 	shroud[0] = '\0';
-	break;
-
-    case P_APOP:
-	/* build MD5 digest from greeting timestamp + password */
-	/* find start of timestamp */
-	for (start = greeting;  *start != 0 && *start != '<';  start++)
-	    continue;
-	if (*start == 0) {
-	    report(stderr,
-		   GT_("Required APOP timestamp not found in greeting\n"));
-	    return(PS_AUTHFAIL);
-	}
-
-	/* find end of timestamp */
-	for (end = start;  *end != 0  && *end != '>';  end++)
-	    continue;
-	if (*end == 0 || end == start + 1) {
-	    report(stderr, 
-		   GT_("Timestamp syntax error in greeting\n"));
-	    return(PS_AUTHFAIL);
-	}
-	else
-	    *++end = '\0';
-
-	/* SECURITY: 2007-03-17
-	 * Strictly validating the presented challenge for RFC-822
-	 * conformity (it must be a msg-id in terms of that standard) is
-	 * supposed to make attacks against the MD5 implementation
-	 * harder[1]
-	 *
-	 * [1] "Security vulnerability in APOP authentication",
-	 *     Gaëtan Leurent, fetchmail-devel, 2007-03-17 */
-	if (!rfc822_valid_msgid((unsigned char *)start)) {
-	    report(stderr,
-		    GT_("Invalid APOP timestamp.\n"));
-	    return PS_AUTHFAIL;
-	}
-
-	/* copy timestamp and password into digestion buffer */
-	msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
-	strcpy(msg,start);
-	strcat(msg,ctl->password);
-	strcpy((char *)ctl->digest, MD5Digest((unsigned char *)msg));
-	free(msg);
-
-	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, (char *)ctl->digest);
 	break;
 
     default:

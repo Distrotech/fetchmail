@@ -34,7 +34,6 @@ struct addrinfo;
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP3		3
-#define		P_APOP		4
 #define		P_IMAP		6
 #define		P_ETRN		7
 #define		P_ODMR		8
@@ -61,6 +60,7 @@ struct addrinfo;
 #define		A_NTLM		2	/* Microsoft NTLM protocol */
 #define		A_CRAM_MD5	3	/* CRAM-MD5 shrouding (RFC2195) */
 #define		A_OTP		4	/* One-time password (RFC1508) */
+#define		A_APOP		5	/* POP3 APOP */
 #define		A_KERBEROS_V5	6	/* authenticate w/ Kerberos V5 */
 #define 	A_GSSAPI	7	/* authenticate with GSSAPI */
 #define		A_SSH		8	/* authentication at session level */

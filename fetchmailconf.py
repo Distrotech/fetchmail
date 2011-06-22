@@ -446,14 +446,13 @@ ianaservices = {"pop3":110,
 # fetchmail protocol to IANA service name
 defaultports = {"auto":None,
 		"POP3":"pop3",
-		"APOP":"pop3",
 		"KPOP":"1109",
 		"IMAP":"imap",
 		"ETRN":"smtp",
 		"ODMR":"odmr"}
 
 authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp",
-	    "msn", "ntlm")
+	    "msn", "ntlm", "apop", "cram-md5")
 
 listboxhelp = {
     'title' : 'List Selection Help',
@@ -1162,7 +1161,7 @@ class ServerEdit(Frame, MyWidget):
 	# Compute the available protocols from the compile-time options
 	protolist = ['auto']
 	if 'pop3' in feature_options:
-	    protolist = protolist + ["POP3", "APOP", "KPOP"]
+	    protolist = protolist + ["POP3", "KPOP"]
 	if 'sdps' in feature_options:
 	    protolist.append("SDPS")
 	if 'imap' in feature_options:

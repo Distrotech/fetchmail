@@ -267,9 +267,6 @@ Tries IMAP and POP3 (skipping any of these for which support
 has not been compiled in).
 .IP POP3
 Post Office Protocol 3
-.IP APOP
-Use POP3 with old-fashioned MD5-challenge authentication.
-Considered not resistant to man-in-the-middle attacks.
 .IP KPOP
 Use POP3 with Kerberos V5 authentication on port 1109.
 .IP SDPS
@@ -1103,7 +1100,8 @@ time to the server, which can verify it by checking its authorization
 database.
 
 \fBNote that APOP is no longer considered resistant against
-man-in-the-middle attacks.\fP
+man-in-the-middle attacks, and should not be used without a verified
+SSL/TLS connection.\fP
 .SS RETR or TOP
 \fBfetchmail\fP makes some efforts to make the server believe messages
 had not been retrieved, by using the TOP command with a large number of
@@ -1697,7 +1695,7 @@ Specify DNS name of mailserver, overriding poll name
 T}
 proto[col]	\-p	\&	T{
 Specify protocol (case insensitive):
-POP3, IMAP, APOP, KPOP
+POP3, IMAP, KPOP
 T}
 local[domains]	\&	m	T{
 Specify domain(s) to be regarded as local
@@ -2165,20 +2163,20 @@ Legal protocol identifiers for use with the 'protocol' keyword are:
 .sp
 .nf
     auto (or AUTO) (legacy, to be removed from future release)
+
     pop3 (or POP3)
-    sdps (or SDPS)
+      sdps (or SDPS) (a POP3 variant specific to Demon)
+      kpop (or KPOP) (a Kerberos-based variant)
+
     imap (or IMAP)
-    apop (or APOP)
-    kpop (or KPOP)
 .fi
 .sp
 .PP
-Legal authentication types are 'any', 'password',
-\&'kerberos_v5' and 'gssapi', 'cram\-md5', 'otp', 'msn'
-(only for POP3), 'ntlm', 'ssh', 'external' (only IMAP).
+Legal authentication types are 'any', 'password', 'apop' (only for
+POP3), \&'kerberos_v5' and 'gssapi', 'cram\-md5', 'otp', 'msn'
+(only for POP3), 'ntlm', 'ssh', 'external' (only for IMAP).
 The 'password' type specifies
-authentication by normal transmission of a password (the password may be
-plain text or subject to protocol-specific encryption as in CRAM-MD5);
+authentication by normal transmission of a password;
 \&'kerberos_v5' tells \fBfetchmail\fP to try to get a Kerberos ticket at the
 start of each query instead, and send an arbitrary string as the
 password; and 'gssapi' tells fetchmail to use GSSAPI authentication.

@@ -68,6 +68,7 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   option will also mark the message with errors as seen.
   The default policy is to abort the session whenever a server error occurs.
   Contributed by Craig Brown.
+* Fetchmailconf offers cram-md5 and apop authentication.
 
 # REMOVED FEATURES
 * IMAP2 protocol support was removed.
@@ -109,6 +110,10 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 # CHANGES
 * A foreground fetchmail can now accept a few more options while another copy is
   running in the background.
+* APOP is no longer a protocol, but an authentication method. In order to use
+  it, use protocol POP3 auth APOP, or on the commandline, -p pop3 --auth apop.
+  If no authentication method is specified, APOP is automatically tried if
+  offered by the server before we resort to sending the password as clear text.
 
 --------------------------------------------------------------------------------
 

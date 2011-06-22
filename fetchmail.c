@@ -1815,7 +1815,6 @@ static int query_host(struct query *ctl)
 	ctl->server.protocol = P_AUTO;
 	break;
     case P_POP3:
-    case P_APOP:
 #ifdef POP3_ENABLE
 	do {
 	    st = doPOP3(ctl);
@@ -1939,12 +1938,8 @@ static void dump_params (struct runctl *runp,
 		printf(GT_("  Password will be prompted for.\n"));
 	    else if (outlevel >= O_VERBOSE)
 	    {
-		if (ctl->server.protocol == P_APOP)
-		    printf(GT_("  APOP secret = \"%s\".\n"),
-			   visbuf(ctl->password));
-		else
-		    printf(GT_("  Password = \"%s\".\n"),
-							visbuf(ctl->password));
+	        printf(GT_("  Password = \"%s\".\n"),
+				    visbuf(ctl->password));
 	    }
 	}
 
@@ -1990,6 +1985,11 @@ static void dump_params (struct runctl *runp,
 	case A_SSH:
 	    printf(GT_("  End-to-end encryption assumed.\n"));
 	    break;
+	case A_APOP:
+	    printf(GT_("  APOP authentication will be forced.\n"));
+	    break;
+	default:
+	    abort();
 	}
 	if (ctl->server.principal != (char *) NULL)
 	    printf(GT_("  Mail service principal is: %s\n"), ctl->server.principal);

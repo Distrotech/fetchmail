@@ -368,7 +368,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	 * could be "auto". */
 	switch (ctl->server.protocol)
 	{
-	    case P_POP3: case P_APOP:
+	    case P_POP3:
 	    fetchsizelimit = 1;
 	}
 

@@ -258,26 +258,27 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    numdump("envskip", ctl->server.envskip);
 	    stringdump("qvirtual", ctl->server.qvirtual);
  
-	    if (ctl->server.authenticate == A_ANY)
-		stringdump("auth", "any");
-	    else if (ctl->server.authenticate == A_PASSWORD)
-		stringdump("auth", "password");
-	    else if (ctl->server.authenticate == A_OTP)
-		stringdump("auth", "otp");
-	    else if (ctl->server.authenticate == A_NTLM)
-		stringdump("auth", "ntlm");
-	    else if (ctl->server.authenticate == A_CRAM_MD5)
-		stringdump("auth", "cram-md5");
-	    else if (ctl->server.authenticate == A_GSSAPI)
-		stringdump("auth", "gssapi");
-	    else if (ctl->server.authenticate == A_KERBEROS_V5)
-		stringdump("auth", "kerberos_v5");
-	    else if (ctl->server.authenticate == A_SSH)
-		stringdump("auth", "ssh");
-	    else if (ctl->server.authenticate == A_OTP)
-		stringdump("auth", "otp");
-	    else if (ctl->server.authenticate == A_MSN)
-		stringdump("auth", "msn");
+	    switch (ctl->server.authenticate) {
+		case A_ANY:
+		    stringdump("auth", "any"); break;
+		case A_PASSWORD:
+		    stringdump("auth", "password"); break;
+		case A_OTP:
+		    stringdump("auth", "otp"); break;
+		case A_NTLM:
+		    stringdump("auth", "ntlm"); break;
+		case A_CRAM_MD5:
+		    stringdump("auth", "cram-md5"); break;
+		case A_GSSAPI:
+		    stringdump("auth", "gssapi"); break;
+		case A_KERBEROS_V5:
+		    stringdump("auth", "kerberos_v5"); break;
+		case A_SSH:
+		    stringdump("auth", "ssh"); break;
+		case A_MSN:
+		    stringdump("auth", "msn"); break;
+		default: abort();
+	    }
 
 #ifdef HAVE_RES_SEARCH
 	    booldump("dns", ctl->server.dns);
