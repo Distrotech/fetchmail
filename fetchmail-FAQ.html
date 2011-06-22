@@ -1595,11 +1595,20 @@ so broken that it's unusable. One symptom is that messages without
 a terminating newline get the POP3 message termination dot emitted
 -- you guessed it -- right after the last character of the message,
 with no terminating newline added. This will hang fetchmail or any
-other RFC-compliant server. IMAP is alleged to work OK, though.</p>
+other RFC-compliant client. IMAP is alleged to work OK, though.</p>
 
-<p>Older versions of Exchange are semi-usable.  They randomly drop
-attachments on the floor, though.  Microsoft acknowledges this
-as a known bug and apparently has no plans to fix it.</p>
+<p>Exchange 2003 SP2 has been observed to alter MIME boundary
+lines in multipart messages between one IMAP FETCH command and the next
+under some circumstances -- for instance, when the top-level
+Content-Transfer-Encoding is "binary" (which is commonplace with Perl's
+MIME::Lite module).  This causes MUAs to not detect attachments, but
+render the whole message body as one lump of hardly legible to
+unintelligible text, rather than nicely presenting text part and
+attachments or images separately.  The cause is that Exchange uses its
+own message store and needs to convert back to MIME message format
+on-the-fly, and apparently this is sometimes subject to such
+inconsistencies.
+</p>
 
 <p>Fetchmail using IMAP usually supports the proprietary NTLM mode used
 with Microsoft Exchange servers. "Usually" here means that it fails on some
@@ -1718,9 +1727,6 @@ usernames and mailbox names are the same.</li>
 explicitly to your mailbox name.</li>
 </ul>
 </blockquote>
-
-<p>But, the best option involves finding a server that runs better
-software.</p>
 
 <h2><a id="S3" name="S3">S3. How can I use fetchmail with HP
 OpenMail?</a></h2>
