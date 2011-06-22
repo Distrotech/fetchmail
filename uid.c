@@ -1,24 +1,9 @@
 /**
- * \file uid.c -- UID list handling (currently, only for POP3)
+ * \file uid.c
+ * UID list handling (currently, only for POP3)
  *
  * For license terms, see the file COPYING in this directory.
- */
-
-#include "config.h"
-
-#include <sys/stat.h>
-#include <errno.h>
-#include <stdio.h>
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "fetchmail.h"
-#include "gettext.h"
-#include "sdump.h"
-
-/*
+ *
  * Machinery for handling UID lists live here.  This is currently used
  * by POP3, but may also be useful for making the IMAP4 querying logic
  * UID-oriented.
@@ -96,13 +81,26 @@
  * Note: some comparisons (those used for DNS address lists) are caseblind!
  */
 
+#include "config.h"
+
+#include <sys/stat.h>
+#include <errno.h>
+#include <stdio.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "fetchmail.h"
+#include "gettext.h"
+#include "sdump.h"
+
 int dofastuidl = 0;
 
 #ifdef POP3_ENABLE
 /** UIDs associated with un-queried hosts */
 static struct idlist *scratchlist;
 
-/** Read saved IDs from \a idfile and attach to each host in \a hostlist. */
 static int dump_saved_uid(struct uid_db_record *rec, void *unused)
 {
     char *t;
@@ -116,6 +114,7 @@ static int dump_saved_uid(struct uid_db_record *rec, void *unused)
     return 0;
 }
 
+/** Read saved IDs from \a idfile and attach to each host in \a hostlist. */
 void initialize_saved_lists(struct query *hostlist, const char *idfile)
 {
     struct stat statbuf;
@@ -277,8 +276,6 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     }
 }
 
-/** Assert that all UIDs marked deleted in query \a ctl have actually been
-expunged. */
 static int mark_as_expunged_if(struct uid_db_record *rec, void *unused)
 {
     (void)unused;
@@ -287,6 +284,8 @@ static int mark_as_expunged_if(struct uid_db_record *rec, void *unused)
     return 0;
 }
 
+/** Assert that all UIDs marked deleted in query \a ctl have actually been
+expunged. */
 void expunge_uids(struct query *ctl)
 {
     traverse_uid_db(dofastuidl ? &ctl->oldsaved : &ctl->newsaved,
@@ -342,7 +341,7 @@ static void dump_uid_db(struct uid_db *db)
 	traverse_uid_db(db, dump_uid_db_record, &n_recs);
 }
 
-/* finish a query */
+/** Finish a successful query */
 void uid_swap_lists(struct query *ctl)
 {
     /* debugging code */
@@ -385,7 +384,7 @@ void uid_swap_lists(struct query *ctl)
 	report(stdout, GT_("not swapping UID lists, no UIDs seen this query\n"));
 }
 
-/* finish a query which had errors */
+/** Finish a query which had errors */
 void uid_discard_new_list(struct query *ctl)
 {
     /* debugging code */
@@ -441,6 +440,7 @@ static int write_uid_db_record(struct uid_db_record *rec, void *arg)
     return rc < 0 ? -1 : 0;
 }
 
+/** Write new list of UIDs (state) to \a idfile. */
 void write_saved_lists(struct query *hostlist, const char *idfile)
 {
     long	idcount;
@@ -497,7 +497,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 bailout:
 	    (void)fflush(tmpfp); /* return code ignored, we check ferror instead */
 	    errflg |= ferror(tmpfp);
-	    fclose(tmpfp);
+	    errflg |= fclose(tmpfp);
 	    /* if we could write successfully, move into place;
 	     * otherwise, drop */
 	    if (errflg) {
