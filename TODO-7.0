@@ -1,9 +1,13 @@
 review retrieveerrorsemantic contribution to avoid mail loss (cf. POP3
 LAST)
 
-clean up APOP, KPOP, SSL options
+clean up KPOP, SSL options
 
 fix versions in features.html (6.4 vs. 7.0)
+
+update README
+
+check for other 6.2/6.3-specific documentation
 
 merge libpwmd updates
 
