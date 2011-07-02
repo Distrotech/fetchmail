@@ -13,3 +13,11 @@ merge libpwmd updates
 
 fix versions 7.0/6.4/6.3.20 in fetchmail.man, want 7.0 for this release,
 and 8.0 for C++
+
+SSL fixes:
+- write .man documentation, adjust FAQ (check diffs for what needs to be
+  documented)
+- debug sslcertck default (gets disabled somehow)
+
+Debian #632479 - doesn't accept -f and --pidfile options when waking up
+BG daemon (watch out for idfile though!)
