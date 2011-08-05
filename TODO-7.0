@@ -21,3 +21,15 @@ SSL fixes:
 
 Debian #632479 - doesn't accept -f and --pidfile options when waking up
 BG daemon (watch out for idfile though!)
+
+- debug mode fix: one switch to kill running daemon and enable -Nvvv -d0
+  --nosyslog options
+
+- write email to flat files? (variant of bsmtp)
+
+- probably 8.0 stuff: IMAP sink
+
+- remove bouncemail feature?
+
+- validate addresses to avoid invalid address issues
+    + consider if a bad-header interaction is desired
