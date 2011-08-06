@@ -61,7 +61,9 @@ rfc2047e
 rfc822
 rfc822valid
 stamp-h1
+t.*.log
 tags
+test-suite.log
 TODO
 unmime
 x509_name_match
