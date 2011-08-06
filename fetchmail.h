@@ -27,6 +27,7 @@ struct addrinfo;
 #include <sys/socket.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "fm_strl.h"
 

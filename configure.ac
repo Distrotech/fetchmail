@@ -391,6 +391,7 @@ AM_CONDITIONAL(NEED_GETNAMEINFO, test "$fm_cv_getnameinfo"   != yes)
 
 AC_CHECK_FUNCS(inet_ntop)
 dnl Check if getaddrinfo is async-signal-safe - most implementations aren't
+
 if test "$fm_cv_getaddrinfo" = yes ; then
     AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
     gai_ts=no
@@ -407,7 +408,7 @@ if test "$fm_cv_getaddrinfo" = yes ; then
     fi
 fi
 
-# This version of the Kerberos 5 options addresses the follwing issues:
+# This version of the Kerberos 5 options addresses the following issues:
 # 
 # * Build correctly under Heimdal kerberos if it is compiled with db2 and
 #   OpenSSL support (Debian's is)

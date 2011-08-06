@@ -1247,7 +1247,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     list_merge(&h2->domainlist, &h1->domainlist, force);
     list_merge(&h2->antispam, &h1->antispam, force);
 
-#define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
+#define FLAG_MERGE(fld) do { if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld; } while (0)
     FLAG_MERGE(server.via);
     FLAG_MERGE(server.protocol);
     FLAG_MERGE(server.service);
@@ -1879,6 +1879,7 @@ static int query_host(struct query *ctl)
     default:
 	report(stderr, GT_("unsupported protocol selected.\n"));
 	st = PS_PROTOCOL;
+	break;
     }
 
     /*
@@ -2015,6 +2016,7 @@ static void dump_params (struct runctl *runp,
 	    break;
 	default:
 	    abort();
+	    break;
 	}
 	if (ctl->server.principal != (char *) NULL)
 	    printf(GT_("  Mail service principal is: %s\n"), ctl->server.principal);
