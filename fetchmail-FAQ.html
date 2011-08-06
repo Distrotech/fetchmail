@@ -2127,18 +2127,19 @@ SSL?</a></h2>
 <p>You'll need to have the <a
 href="http://www.openssl.org/">OpenSSL</a> libraries installed, and they
 should at least be version 0.9.7.
-Configure with --with-ssl. If you have the OpenSSL libraries
-installed in commonly-used default locations, this will
-suffice. If you have them installed in a non-default location,
+Configure with --with-ssl (default since fetchmail v7.0.0). If you
+have the OpenSSL libraries installed in commonly-used default locations,
+this will suffice. If you have them installed in a non-default location,
 you'll need to specify the OpenSSL installation directory as an argument
 to --with-ssl after an equal sign.</p>
 
-<p>Fetchmail binaries built this way support <code>ssl</code>,
-<code>sslkey</code>, and <code>sslcert</code> options that control
-SSL encryption, and will automatically use <code>tls</code> if the
-server offers it. You will need to have an SSL-enabled mailserver to
-use these options. See the manual page for details and some words
-of care on the limited security provided.</p>
+<p>Fetchmail binaries built this way supports various options all starting with <code>ssl</code>
+that control SSL encryption, and will automatically use <code>STARTTLS</code>
+if the server offers it. v7.0.0 and newer fetchmail versions will
+automatically fail (unless overridden) if the certificate cannot be
+validated. You will need to have an SSL-enabled mailserver to use these
+options. See the manual page for details and some words of care on the
+limited security provided.</p>
 
 <p>If your open OpenSSL session dies with a message that complains
 "PRNG not seeded", update or improve your operating system. This

@@ -39,8 +39,10 @@ enum {
     LA_SSL,
     LA_SSLKEY,
     LA_SSLCERT,
-    LA_SSLPROTO,
+    LA_SSLMODE,
+    LA_SSLPROTOVER,
     LA_SSLCERTCK,
+    LA_NOSSLCERTCK,
     LA_SSLCERTFILE,
     LA_SSLCERTPATH,
     LA_SSLCOMMONNAME,
@@ -136,8 +138,10 @@ static const struct option longoptions[] = {
   {"ssl",	no_argument,	   (int *) 0, LA_SSL },
   {"sslkey",	required_argument, (int *) 0, LA_SSLKEY },
   {"sslcert",	required_argument, (int *) 0, LA_SSLCERT },
-  {"sslproto",	 required_argument, (int *) 0, LA_SSLPROTO },
+  {"sslmode",	required_argument, (int *) 0, LA_SSLMODE },
+  {"sslprotocolver",	 required_argument, (int *) 0, LA_SSLPROTOVER },
   {"sslcertck", no_argument,	   (int *) 0, LA_SSLCERTCK },
+  {"nosslcertck", no_argument,	   (int *) 0, LA_NOSSLCERTCK },
   {"sslcertfile",   required_argument, (int *) 0, LA_SSLCERTFILE },
   {"sslcertpath",   required_argument, (int *) 0, LA_SSLCERTPATH },
   {"sslcommonname",    required_argument, (int *) 0, LA_SSLCOMMONNAME },
@@ -525,7 +529,9 @@ int parsecmdline (int argc /** argument count */,
 
 #ifdef SSL_ENABLE
 	case LA_SSL:
-	    ctl->use_ssl = FLAG_TRUE;
+	    ctl->sslmode = TLSM_WRAPPED;
+	    if (outlevel > O_SILENT)
+		report(stderr, GT_("Warning: --ssl is obsolescent, please use --sslmode=wrapped instead.\n"));
 	    break;
 
 	case LA_SSLKEY:
@@ -536,12 +542,28 @@ int parsecmdline (int argc /** argument count */,
 	    ctl->sslcert = prependdir (optarg, currentwd);
 	    break;
 
-	case LA_SSLPROTO:
+	case LA_SSLMODE:
+	{
+	    e_sslmode e = tlsm_parse(optarg);
+
+	    if (e != TLSM_INVALID) {
+		ctl->sslmode = e;
+	    } else {
+		report(stderr, GT_("Invalid argument to --sslmode \"%s\" specified.\n"), optarg);
+		errflag = 1;
+	    }
+	    break;
+	}
+	case LA_SSLPROTOVER:
 	    ctl->sslproto = xstrdup(optarg);
 	    break;
 
 	case LA_SSLCERTCK:
 	    ctl->sslcertck = FLAG_TRUE;
+	    break;
+
+	case LA_NOSSLCERTCK:
+	    ctl->sslcertck = FLAG_FALSE;
 	    break;
 
 	case LA_SSLCERTFILE:
@@ -644,13 +666,16 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --ssl         enable ssl encrypted session\n"));
 	P(GT_("      --sslkey      ssl private key file\n"));
 	P(GT_("      --sslcert     ssl client certificate\n"));
+	P(GT_("      --nosslcertck INSECURE disable server certificate check (discouraged)\n"));
 	P(GT_("      --sslcertck   do strict server certificate check (recommended)\n"));
 	P(GT_("      --sslcertfile path to trusted-CA ssl certificate file\n"));
 	P(GT_("      --sslcertpath path to trusted-CA ssl certificate directory\n"));
 	P(GT_("      --sslcommonname  expect this CommonName from server (discouraged)\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
-	P(GT_("      --sslproto    force ssl protocol (SSL23/SSL3/TLS1)\n"));
+	P(GT_("      --sslmode     force ssl mode (none/wrapped/starttls=may/starttls=must)\n")); // see tls.c
+	P(GT_("      --sslprotocolver  force ssl version (often unneeded, see manual page!)\n"));
 #endif
+
 	P(GT_("      --plugin      specify external command to open connection\n"));
 	P(GT_("      --plugout     specify external command to open smtp connection\n"));
 	P(GT_("      --bad-header {reject|accept}\n"

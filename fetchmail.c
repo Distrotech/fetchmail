@@ -74,6 +74,8 @@ static int activecount;		/* count number of active entries */
 static struct runctl cmd_run;	/* global options set from command line */
 static time_t parsetime;	/* time of last parse */
 
+struct query cmd_opts;		/* where to put command-line info */
+
 static void terminate_run(int);
 static void terminate_poll(int);
 
@@ -1304,9 +1306,9 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(fastuidl);
     FLAG_MERGE(batchlimit);
 #ifdef	SSL_ENABLE
-    FLAG_MERGE(use_ssl);
     FLAG_MERGE(sslkey);
     FLAG_MERGE(sslcert);
+    FLAG_MERGE(sslmode);
     FLAG_MERGE(sslproto);
     FLAG_MERGE(sslcertck);
     FLAG_MERGE(sslcertfile);
@@ -1348,6 +1350,10 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.listener = SMTP_MODE;
     def_opts.fetchsizelimit = 100;
     def_opts.fastuidl = 4;
+#ifdef SSL_ENABLE
+    def_opts.sslcertck = FLAG_TRUE;
+    def_opts.sslmode = TLSM_STLS_MAY;
+#endif
 
     /* get the location of rcfile */
     rcfiledir[0] = 0;
@@ -1621,15 +1627,14 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->mimedecode, FALSE);
 	    DEFAULT(ctl->idle, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
-	    DEFAULT(ctl->use_ssl, FALSE);
-	    DEFAULT(ctl->sslcertck, FALSE);
+	    DEFAULT(ctl->sslcertck, TRUE);
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #ifndef SSL_ENABLE
 	    /*
 	     * XXX FIXME: do we need this check or can we rely on the .y
 	     * parser handling this?
 	     */
-	    if (ctl->use_ssl) 
+	    if (ctl->sslmode != TLSM_NONE)
 	    {
 		report(stderr, GT_("SSL support is not compiled in.\n"));
 		exit(PS_SYNTAX);
@@ -2021,10 +2026,10 @@ static void dump_params (struct runctl *runp,
 	if (ctl->server.principal != (char *) NULL)
 	    printf(GT_("  Mail service principal is: %s\n"), ctl->server.principal);
 #ifdef	SSL_ENABLE
-	if (ctl->use_ssl)
-	    printf(GT_("  SSL encrypted sessions enabled.\n"));
+	if (ctl->sslmode)
+	    printf(GT_("  SSL mode: %s.\n"), tlsm_string(ctl->sslmode));
 	if (ctl->sslproto)
-	    printf(GT_("  SSL protocol: %s.\n"), ctl->sslproto);
+	    printf(GT_("  SSL protocol version: %s.\n"), ctl->sslproto);
 	if (ctl->sslcertck) {
 	    printf(GT_("  SSL server certificate checking enabled.\n"));
 	}

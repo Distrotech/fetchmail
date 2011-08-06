@@ -1015,7 +1015,7 @@ static int do_session(
 	if (ctl->server.plugin)
 	    (void)sleep(1);
 	if ((mailserver_socket = SockOpen(realhost, 
-			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
+			     ctl->server.service ? ctl->server.service : ( ctl->sslmode == TLSM_WRAPPED ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
 			     ctl->server.plugin, &ai0)) == -1)
 	{
 	    char	errbuf[BUFSIZ];
@@ -1047,7 +1047,7 @@ static int do_session(
 	set_timeout(mytimeout);
 
 	/* perform initial SSL handshake on open connection */
-	if (ctl->use_ssl &&
+	if (ctl->sslmode == TLSM_WRAPPED &&
 		SSLOpen(mailserver_socket, ctl->sslcert, ctl->sslkey,
 		    ctl->sslproto, ctl->sslcertck,
 		    ctl->sslcertfile, ctl->sslcertpath,

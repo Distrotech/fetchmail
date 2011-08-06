@@ -5,29 +5,65 @@
 
 #include "fetchmail.h"
 
+#include <stdbool.h>
 #include <strings.h>
 
-/** return true if user allowed TLS */
-int maybe_tls(struct query *ctl) {
+#include "gettext.h"
+
+static const char *const tlsm_names[] = {
+ [TLSM_NONE] = "none",
+ [TLSM_WRAPPED] = "wrapped",
+ [TLSM_STLS_MAY] = "starttls=may",
+ [TLSM_STLS_MUST] = "starttls=must"
+};
+enum { TLSM_NAMESCOUNT = sizeof(tlsm_names) / sizeof(tlsm_names[0]) };
+
+/** return true if user allowed STARTTLS */
+bool maybe_starttls(const struct query *ctl) {
+         /* opportunistic or forced STARTTLS */
 #ifdef SSL_ENABLE
-         /* opportunistic  or forced TLS */
-    return (!ctl->sslproto || !strcasecmp(ctl->sslproto,"tls1"))
-	&& !ctl->use_ssl;
+    return ctl->sslmode != TLSM_NONE && ctl->sslmode != TLSM_WRAPPED;
 #else
     (void)ctl;
-    return 0;
+    return false;
 #endif
 }
 
-/** return true if user requires TLS, note though that this code must
- * always use a logical AND with maybe_tls(). */
-int must_tls(struct query *ctl) {
+/** return true if user requires STARTTLS, note though that this code must
+ * always use a logical AND with maybe_starttls(). */
+bool must_starttls(const struct query *ctl) {
 #ifdef SSL_ENABLE
-    return maybe_tls(ctl)
+    return maybe_starttls(ctl)
 	&& (ctl->sslfingerprint || ctl->sslcertck
-		|| (ctl->sslproto && !strcasecmp(ctl->sslproto, "tls1")));
+		|| ctl->sslmode == TLSM_STLS_MUST);
 #else
     (void)ctl;
-    return 0;
+    return false;
 #endif
+}
+
+/** return true if use requires TLS-wrapped mode (dedicated port) */
+bool must_wrap_tls(const struct query *ctl) {
+#ifdef SSL_ENABLE
+    return ctl->sslmode == TLSM_WRAPPED;
+#else
+    (void)ctl;
+    return false;
+#endif
+}
+
+const char *tlsm_string(const e_sslmode tlsm) {
+    if (tlsm >= 0 && tlsm < TLSM_NAMESCOUNT)
+	return tlsm_names[tlsm];
+    else
+	return GT_("(invalid)");
+}
+
+e_sslmode tlsm_parse(const char *s) {
+    for (int i = 0; i < TLSM_NAMESCOUNT; i++) {
+	if (tlsm_names[i] // we may not have names for all options
+		&& 0 == strcasecmp(tlsm_names[i], s))
+	    return i;
+    }
+    return TLSM_INVALID;
 }

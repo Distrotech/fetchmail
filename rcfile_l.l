@@ -178,7 +178,8 @@ uidl		{ return UIDL; }
 ssl		{ return SSL_; }
 sslkey		{ return SSLKEY; }
 sslcert		{ return SSLCERT; }
-sslproto	{ return SSLPROTO; }
+sslmode		{ return SSLMODE; }
+sslprotocolver	{ return SSLPROTOVER; }
 sslcertck	{ return SSLCERTCK; }
 sslcertfile	{ return SSLCERTFILE; }
 sslcertpath	{ return SSLCERTPATH; }

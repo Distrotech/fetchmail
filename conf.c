@@ -371,10 +371,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("fastuidl", ctl->fastuidl);
 	numdump("batchlimit", ctl->batchlimit);
 #ifdef SSL_ENABLE
-	booldump("ssl", ctl->use_ssl);
 	stringdump("sslkey", ctl->sslkey);
 	stringdump("sslcert", ctl->sslcert);
-	stringdump("sslproto", ctl->sslproto);
+	stringdump("sslmode", tlsm_string(ctl->sslmode));
+	stringdump("sslprotocolversion", ctl->sslproto);
 	booldump("sslcertck", ctl->sslcertck);
 	stringdump("sslcertpath", ctl->sslcertpath);
 	stringdump("sslcommonname", ctl->sslcommonname);

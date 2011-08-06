@@ -43,6 +43,19 @@ fetchmail-7.0.0 (not yet released):
 
 NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
+# INCOMPATIBLE CHANGES
+* The SSL/TLS options were massively changed and disentangled, to be clearer.
+* --sslcertck is now the default, to aggressively request and validate X.509
+  (SSL/TLS) certificates of the servers.
+  Note: Several distributions offer ca-roots or ca-root-certificates
+  or similarly named packages that contain the CA certificates of major trust
+  agencies such as Verisign, Equifax, Thawte, and Deutsche Telekom. These are
+  convenient to install if you're pulling mail from major freemailer sites.
+* --sslmode starttls=must is now the default as a consequence of the
+  previous sslcertck default.
+  If you need an unencrypted connection, use --sslmode none.
+* See the REMOVED FEATURES section below for further incompatibilities.
+
 # MAJOR CHANGES
 * The UIDL handler code is now much faster, especially noticable with lots of
   mail kept on a POP3 server. Where the 6.3.X code was of O(n^2) complexity,
@@ -71,6 +84,11 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   The default policy is to abort the session whenever a server error occurs.
   Contributed by Craig Brown.
 * Fetchmailconf offers cram-md5 and apop authentication.
+* The SSL/TLS/STARTTLS operation mode is now selected through a new --sslmode
+  option, which cleans up the incomprehensible --ssl and --sslproto mess of
+  fetchmail versions before v7.0.0. Valid 
+* The SSL/TLS/STARTTLS protocol version can now be selected through a new
+  --sslprotocolversion switch.
 
 # REMOVED FEATURES
 * IMAP2 protocol support was removed.
@@ -89,10 +107,13 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   never supported IPv6 (including IPv6-mapped IPv4) either.
   Non-DNS based alias keywords such as "aka" remain.
 * Kerberos IV support was removed.
-* fetchmail no longer supports SSL v2, nor the corresponding SSL2 option to
-  --sslproto. SSLv2 is insecure and had been deprecated 15 years ago. fetchmail
-  will actively forbid SSLv2 negotiation by means of SSL_OP_NO_SSLv2.
-  To fix Debian Bug#622054.
+* fetchmail no longer supports SSL v2. SSLv2 is insecure and had been deprecated
+  15 years ago. fetchmail will actively forbid SSLv2 negotiation by means of
+  SSL_OP_NO_SSLv2.  To fix Debian Bug#622054.
+* The --ssl option is obsolescent and triggers a warning that users should use
+  --sslmode wrapped instead. It is understood as an alias for --sslmode wrapped.
+* The --sslproto option was removed. Two new options were added in its place,
+  --sslmode and --sslprotocolversion.
 * A lot of outdated and/or unsafe-to-use material got dropped from contrib/.
 
 # REGRESSION FIXES

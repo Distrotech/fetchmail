@@ -204,10 +204,10 @@ struct idlist
 
 /** List of possible values for idlist::mark */
 enum {
-UID_UNSEEN=	0,		/**< id hasn't been seen */
-UID_SEEN=	1,		/**< id was seen, but not deleted */
-UID_DELETED=	2,		/**< this message has been marked deleted */
-UID_EXPUNGED=	3		/**< this message has been expunged */
+    UID_UNSEEN=	0,		/**< id hasn't been seen */
+    UID_SEEN=	1,		/**< id was seen, but not deleted */
+    UID_DELETED=	2,	/**< this message has been marked deleted */
+    UID_EXPUNGED=	3	/**< this message has been expunged */
 };
 /*@}*/
 
@@ -314,6 +314,16 @@ struct hostdata		/* shared among all user connections to given server */
  */
 #define WKA_TOP (1L << 0)		/* Maillennium TOP -> RETR override warning */
 
+/** Enumerate possible SSL/TLS modes. TODO: autoprobe WRAPPED vs. STLS? */
+typedef enum {
+    TLSM_INVALID = -1,	/**< invalid setting, for error returns in tls.c */
+    TLSM_UNSPEC = 0,	/**< unspecified (for default/override settings) */
+    TLSM_NONE = 1,	/**< no (START)TLS */
+    TLSM_WRAPPED,	/**< SSL/TLS-wrapped mode on separate port (like 993/995 for IMAP/POP3) */
+    TLSM_STLS_MAY,	/**< optional STARTTLS/STLS in-band negotiation on base port (like 143/110 for IMAP/POP3) */
+    TLSM_STLS_MUST	/**< ditto, but mandatory */
+} e_sslmode;
+
 struct query
 {
     /* mailserver connection controls */
@@ -366,9 +376,9 @@ struct query
     int fastuidlcount;		/* internal count for frequency of binary search */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
-    flag use_ssl;		/* use SSL encrypted session */
     char *sslkey;		/* optional SSL private key file */
     char *sslcert;		/* optional SSL certificate file */
+    e_sslmode sslmode;		/* determine SSL operation mode */
     char *sslproto;		/** force transport protocol (ssl2|ssl3|ssl23|tls1) - if NULL,
 				  use ssl23 for SSL and opportunistic tls1 for non-SSL connections. */
     char *sslcertfile;		/* Trusted certificate file for checking the server cert */
@@ -728,8 +738,11 @@ int fm_getaddrinfo(const char *node, const char *serv, const struct addrinfo *hi
 void fm_freeaddrinfo(struct addrinfo *ai);
 
 /* prototypes from tls.c */
-int maybe_tls(struct query *ctl);
-int must_tls(struct query *ctl);
+bool maybe_starttls(const struct query *ctl);
+bool must_starttls(const struct query *ctl);
+bool must_wrap_tls(const struct query *ctl);
+const char *tlsm_string(const e_sslmode tlsm);
+e_sslmode tlsm_parse(const char *s);
 
 /* prototype from rfc822valid.c */
 int rfc822_valid_msgid(const unsigned char *);

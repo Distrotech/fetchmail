@@ -477,7 +477,7 @@ int SockPeek(int sock)
 #endif
 
 #ifdef	SSL_ENABLE
-	if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
+    if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
 		n = SSL_peek(ssl, &ch, 1);
 		if (n < 0) {
 			(void)SSL_get_error(ssl, n);
@@ -853,26 +853,30 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 
 	/* Make sure a connection referring to an older context is not left */
 	_ssl_context[sock] = NULL;
-	if(myproto) {
+	if (myproto) {
 		if(!strcasecmp("ssl3",myproto)) {
-			_ctx[sock] = SSL_CTX_new(SSLv3_client_method());
+		    _ctx[sock] = SSL_CTX_new(SSLv3_client_method());
 		} else if(!strcasecmp("tls1",myproto)) {
-			_ctx[sock] = SSL_CTX_new(TLSv1_client_method());
-		} else if (!strcasecmp("ssl23",myproto)) {
-			myproto = NULL;
+		    _ctx[sock] = SSL_CTX_new(TLSv1_client_method());
 		} else {
-			report(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
-			myproto = NULL;
+		    if (!strcasecmp("auto",myproto))
+			report(stderr,GT_("Invalid SSL protocol '%s' specified, using default (autonegotiate SSLv3/TLSv1 or newer).\n"), myproto);
+		    myproto = NULL;
 		}
 	}
-	if(!myproto) {
+	// do not combine into an else { } as myproto may be nulled
+	// above!
+	if (!myproto) {
 		_ctx[sock] = SSL_CTX_new(SSLv23_client_method());
+		// Important: clear SSLv2 below!
 	}
+
 	if(_ctx[sock] == NULL) {
 		ERR_print_errors_fp(stderr);
 		return(-1);
 	}
 
+	// DO NOT REMOVE the next line or the SSL_OP_NO_SSLv2!!
 	SSL_CTX_set_options(_ctx[sock], (SSL_OP_ALL | SSL_OP_NO_SSLv2) & ~SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
 	SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_verify_callback);
 

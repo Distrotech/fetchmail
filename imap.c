@@ -421,7 +421,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
 #ifdef SSL_ENABLE
-    if (maybe_tls(ctl)) {
+    if (maybe_starttls(ctl)) {
 	char *commonname;
 
 	commonname = ctl->server.pollname;
@@ -431,14 +431,14 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    commonname = ctl->sslcommonname;
 
 	if (strstr(capabilities, "STARTTLS")
-		|| must_tls(ctl)) /* if TLS is mandatory, ignore capabilities */
+		|| must_starttls(ctl)) /* if TLS is mandatory, ignore capabilities */
 	{
 	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
 	     * protocol that will work with STARTTLS.  Don't need to worry
 	     * whether TLS is mandatory or opportunistic unless SSLOpen() fails
 	     * (see below). */
 	    if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
-		    && (set_timeout(mytimeout), SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+		    && (set_timeout(mytimeout), SSLOpen(sock, ctl->sslcert, ctl->sslkey, NULL, ctl->sslcertck,
 			ctl->sslcertfile, ctl->sslcertpath, ctl->sslfingerprint, commonname,
 			ctl->server.pollname, &ctl->remotename)) != -1)
 	    {
@@ -461,7 +461,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		{
 		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
 		}
-	    } else if (must_tls(ctl)) {
+	    } else if (must_starttls(ctl)) {
 		/* Config required TLS but we couldn't guarantee it, so we must
 		 * stop. */
 		set_timeout(0);
@@ -477,7 +477,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 		if (gen_transact(sock, "NOOP") != PS_SUCCESS) {
 		    /* Not usable.  Empty sslproto to force an unencrypted
 		     * connection on the next attempt, and repoll. */
-		    ctl->sslproto = xstrdup("");
+		    ctl->sslmode = TLSM_NONE;
 		    return PS_REPOLL;
 		}
 		/* Usable.  Proceed with authenticating insecurely. */

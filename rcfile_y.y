@@ -41,6 +41,8 @@ static void record_current(void);
 static void user_reset(void);
 static void reset_server(const char *name, int skip);
 
+static void yywarn(const char *);
+
 /* these should be of size PATH_MAX */
 char currentwd[1024] = "", rcfiledir[1024] = "";
 
@@ -73,7 +75,7 @@ extern char * yytext;
 %token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
-%token SSL_ SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTFILE SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
+%token SSL_ SSLKEY SSLCERT SSLMODE SSLPROTOVER SSLCERTCK SSLCERTFILE SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 
@@ -340,19 +342,25 @@ user_option	: TO mapping_list HERE
 
 		| SSL_ 	                {
 #ifdef SSL_ENABLE
-		    current.use_ssl = FLAG_TRUE;
+		    current.sslmode = TLSM_WRAPPED;
+		    if (outlevel > O_SILENT)
+		    yywarn(GT_("WARNING: ssl is obsolescent. Please use sslmode wrapped instead."));
 #else
 		    yyerror(GT_("SSL is not enabled"));
 #endif 
 		}
 		| SSLKEY STRING		{current.sslkey = prependdir ($2, rcfiledir); free($2);}
 		| SSLCERT STRING	{current.sslcert = prependdir ($2, rcfiledir); free($2);}
-		| SSLPROTO STRING	{current.sslproto = $2;}
-		| SSLCERTCK             {current.sslcertck = FLAG_TRUE;}
-		| SSLCERTFILE STRING    {current.sslcertfile = prependdir($2, rcfiledir); free($2);}
-		| SSLCERTPATH STRING    {current.sslcertpath = prependdir($2, rcfiledir); free($2);}
-		| SSLCOMMONNAME STRING  {current.sslcommonname = $2;}
-		| SSLFINGERPRINT STRING {current.sslfingerprint = $2;}
+		| SSLMODE STRING	{e_sslmode e = tlsm_parse($2);
+					 if (e != TLSM_INVALID) current.sslmode = e;
+					 else yyerror(GT_("Invalid sslmode specified."));
+					 free($2); }
+		| SSLPROTOVER STRING	{current.sslproto = $2;}
+		| SSLCERTCK		{current.sslcertck = FLAG_TRUE;}
+		| SSLCERTFILE STRING	{current.sslcertfile = prependdir($2, rcfiledir); free($2);}
+		| SSLCERTPATH STRING	{current.sslcertpath = prependdir($2, rcfiledir); free($2);}
+		| SSLCOMMONNAME STRING	{current.sslcommonname = $2;}
+		| SSLFINGERPRINT STRING	{current.sslfingerprint = $2;}
 
 		| NO KEEP		{current.keep        = FLAG_FALSE;}
 		| NO FLUSH		{current.flush       = FLAG_FALSE;}
@@ -367,7 +375,8 @@ user_option	: TO mapping_list HERE
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 		| NO IDLE		{current.idle        = FLAG_FALSE;}
 
-		| NO SSL_ 	        {current.use_ssl     = FLAG_FALSE;}
+		| NO SSL_		{current.sslmode     = TLSM_NONE;}
+		| NO SSLCERTCK		{current.sslcertck   = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit       = NUM_VALUE_IN($2);}
 		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE_IN($2);}
@@ -405,11 +414,17 @@ extern FILE *yyin;
 
 static struct query *hosttail;	/* where to add new elements */
 
-void yyerror (const char *s)
-/* report a syntax error */
+static void yywarn(const char *s)
 {
     report_at_line(stderr, 0, rcfile, prc_lineno, GT_("%s at %s"), s, 
 		   (yytext && yytext[0]) ? yytext : GT_("end of input"));
+}
+
+
+void yyerror (const char *s)
+/* report a syntax error */
+{
+    yywarn(s);
     prc_errflag++;
 }
 
