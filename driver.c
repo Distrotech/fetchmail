@@ -1467,7 +1467,7 @@ is restored."));
 	msg = GT_("socket");
 	break;
     case PS_SYNTAX:
-	msg = GT_("missing or bad RFC822 header");
+	msg = GT_("missing or bad RFC822 header or command line option");
 	break;
     case PS_IOERR:
 	msg = GT_("MDA");

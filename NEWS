@@ -103,6 +103,8 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   Bug introduced on 1998-03-20 when the mimedecode support was added by ESR
   before release 4.4.1 through code contributed by Henrik Storner.
   Workaround for older releases: do not use mimedecode feature.
+* Fetchmail now detects singly-quoted % expansions in the mda option and refuses
+  to deliver for safety reasons. Fixes Debian Bug#347909.
 
 # CHANGES
 * A foreground fetchmail can now accept a few more options while another copy is

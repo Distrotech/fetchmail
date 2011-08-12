@@ -1150,6 +1150,16 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	for (dp = after, sp = before; (*dp = *sp); dp++, sp++) {
 	    if (sp[0] != '%')	continue;
 
+	    if (sp > before && sp[-1] == '\'') {
+		report(stderr, GT_("MDA option contains single-quoted %%%c expansion.\n"), sp[1]);
+		report(stderr, GT_("Refusing to deliver. Check the manual and fix your mda option.\n"));
+		free(before);
+		free(after);
+		if (from) free(from);
+		if (names) free(names);
+		return PS_SYNTAX;
+	    }
+
 	    /* need to expand? BTW, no here overflow, because in
 	    ** the worst case (end of string) sp[1] == '\0' */
 	    if (sp[1] == 's' || sp[1] == 'T') {
