@@ -33,3 +33,11 @@ BG daemon (watch out for idfile though!)
 
 - validate addresses to avoid invalid address issues
     + consider if a bad-header interaction is desired
+
+MAPI:
+
+- check sources and build
+
+- clean up integration with rest of code (f. i. SockRead/MapiRead)
+
+- document options in manual page

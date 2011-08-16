@@ -1335,7 +1335,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.fetchsizelimit = 100;
     def_opts.fastuidl = 4;
 #ifdef MAPI_ENABLE
-    def_opts.mapi_lcid = "0x409";	/* language code ID: en-US */
+    def_opts.mapi_lcid = "0x0409";	/* language code ID: en-US */
 #endif
 
     /* get the location of rcfile */
@@ -1680,13 +1680,11 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
 	    /* sanity checks */
-/* sanity checks */
 #ifdef	MAPI_ENABLE
 	    if(ctl->server.protocol == P_MAPI) {
 		if(ctl->use_ssl || ctl->sslkey || ctl->sslcert || ctl->sslproto || ctl->sslcertpath || ctl->sslcertck || ctl->sslfingerprint) {
-		    (void) fprintf(stderr,
-				   GT_
-				   ("fetchmail: %s configuration invalid, SSL is not supported in MAPI. \
+		    report(stderr,
+				   GT_("fetchmail: %s configuration invalid, SSL is not supported in MAPI. \
 fetchmail will run ignoring SSL related options\n"),
 				   ctl->server.pollname);
 		    ctl->use_ssl = FALSE;
@@ -1694,9 +1692,8 @@ fetchmail will run ignoring SSL related options\n"),
 
 		if(ctl->server.service)
 		{
-		    (void) fprintf(stderr,
-				   GT_
-				   ("fetchmail: %s configuration invalid, service is no use in MAPI.\
+		    report(stderr,
+				   GT_("fetchmail: %s configuration invalid, service is no use in MAPI.\
 fetchmail will run ignoring --service option\n"),
 				   ctl->server.pollname);
 		}

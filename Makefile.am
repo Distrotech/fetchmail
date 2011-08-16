@@ -83,9 +83,7 @@ if ODMR_ENABLE
 fetchmail_SOURCES += odmr.c
 endif
 if MAPI_ENABLE
-fetchmail_SOURCES += mapi.c
-fetchmail_SOURCES += openchange-tools.h
-fetchmail_SOURCES += openchange-tools.c
+fetchmail_SOURCES += mapi.c openchange-tools.h openchange-tools.c
 endif
 if RPA_ENABLE
 fetchmail_SOURCES += rpa.c

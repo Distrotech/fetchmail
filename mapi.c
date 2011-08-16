@@ -65,6 +65,7 @@ static int g_mapi_initialized = FALSE;
 static char g_mapi_profdb[PATH_MAX]; /* mapi profiles databse */
 static char g_password[128];
 static struct mapi_session * g_mapi_session = NULL;
+static struct mapi_context *mapi_ctx;
 
 
 static DATA_BLOB g_mapi_buffer;
@@ -163,20 +164,20 @@ static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_att
 	uint16_t		read_bytes = 0;
 	magic_t		cookie = NULL;
 
-	if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> mapi_get_base64_attachment(): size=%u\n"), size);
+	if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> mapi_get_base64_attachment(): size=%lu\n"), (const unsigned long)size);
 
 	if (OpenStream(&obj_attach, PR_ATTACH_DATA_BIN, 0, &obj_stream) != MAPI_E_SUCCESS) return NULL;
 	if (GetStreamSize(&obj_stream, &data.length) != MAPI_E_SUCCESS) return NULL;
 
 	data.data = talloc_size(mem_ctx, data.length);
-	if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> allocated size=%u\n"), data.length);
+	if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> allocated size=%lu\n"), (unsigned long)data.length);
 
 	do {
 		if (ReadStream(&obj_stream, data.data + data_pos, MSGBUFSIZE, &read_bytes) != MAPI_E_SUCCESS) return NULL;
 		data_pos += read_bytes;
 	} while (data_pos < data.length);
 
-	if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> All data received: data_pos=%u\n"), data_pos);
+	if (outlevel >= O_MONITOR) report(stdout, GT_("MAPI> All data received: data_pos=%lu\n"), (unsigned long)data_pos);
 
 	cookie = magic_open(MAGIC_MIME);
 	if (cookie == NULL) {
@@ -267,7 +268,7 @@ static void mapi_clean()
 	mapi_object_release(&g_mapi_obj_table);
 	mapi_object_release(&g_mapi_obj_folder);
 	mapi_object_release(&g_mapi_obj_store);
-	MAPIUninitialize();
+	MAPIUninitialize(mapi_ctx);
 	talloc_free(g_mapi_mem_ctx);
 
 	g_mapi_initialized = FALSE;
@@ -352,7 +353,7 @@ static int mapi_init(const char *folder)
 	/*-----------------------------------------------------------------------------
 	 *	Initialize MAPI subsystem
 	 *-----------------------------------------------------------------------------*/
-	retval = MAPIInitialize(g_mapi_profdb);
+	retval = MAPIInitialize(&mapi_ctx, g_mapi_profdb);
 	if (retval != MAPI_E_SUCCESS) {
 		report(stderr, GT_("MAPI: MAPIInitialize failed\n"));
 		mapi_clean();
@@ -362,14 +363,14 @@ static int mapi_init(const char *folder)
 	/*-----------------------------------------------------------------------------
 	 *	use the default mapi_profile
 	 *-----------------------------------------------------------------------------*/
-	retval = GetDefaultProfile(&profname);
+	retval = GetDefaultProfile(mapi_ctx, &profname);
 	if (retval != MAPI_E_SUCCESS) {
 		report(stderr, GT_("MAPI: GetDefaultProfile failed\n"));
 		mapi_clean();
 		return GetLastError();
 	}
 
-	retval = MapiLogonEx(&g_mapi_session, profname, g_password);
+	retval = MapiLogonEx(mapi_ctx, &g_mapi_session, profname, g_password);
 	if (retval != MAPI_E_SUCCESS) {
 		report(stderr, GT_("MAPI: MapiLogonEx failed\n"));
 		mapi_clean();
@@ -460,7 +461,7 @@ static int mapi_init(const char *folder)
 		return GetLastError();
 	}
 
-	mapi_id_array_init(&g_mapi_deleted_ids);
+	mapi_id_array_init(mapi_ctx, &g_mapi_deleted_ids);
 	g_mapi_initialized = TRUE;
 	return MAPI_E_SUCCESS;
 }
@@ -719,12 +720,12 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 		if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI mapi_profile database %s created\n"), g_mapi_profdb);
 	}
 
-	retval = MAPIInitialize(g_mapi_profdb);
+	retval = MAPIInitialize(&mapi_ctx, g_mapi_profdb);
 	if (retval != MAPI_E_SUCCESS) goto clean;
 	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI initialized\n"));
 
 	memset(&proftable, 0, sizeof(struct SRowSet));
-	retval = GetProfileTable(&proftable);
+	retval = GetProfileTable(mapi_ctx, &proftable);
 	if (retval != MAPI_E_SUCCESS) goto clean;
 	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI GetProfiletable\n"));
 
@@ -736,30 +737,30 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	if (profcount == proftable.cRows)
 	{
 		flags = 0;		/* do not save g_password in the mapi_profile */
-		retval = CreateProfile(profname, ctl->remotename, g_password, flags);
+		retval = CreateProfile(mapi_ctx, profname, ctl->remotename, g_password, flags);
 		if (retval != MAPI_E_SUCCESS) goto clean;
 
-		mapi_profile_add_string_attr(profname, "binding", realhost);
-		mapi_profile_add_string_attr(profname, "workstation", workstation);
-		mapi_profile_add_string_attr(profname, "domain", ctl->mapi_domain);
-		mapi_profile_add_string_attr(profname, "codepage", "0x4e4");
-		mapi_profile_add_string_attr(profname, "language", ctl->mapi_lcid);
-		mapi_profile_add_string_attr(profname, "method", "0x409");
+		mapi_profile_add_string_attr(mapi_ctx, profname, "binding", realhost);
+		mapi_profile_add_string_attr(mapi_ctx, profname, "workstation", workstation);
+		mapi_profile_add_string_attr(mapi_ctx, profname, "domain", ctl->mapi_domain);
+		mapi_profile_add_string_attr(mapi_ctx, profname, "codepage", "0x4e4");
+		mapi_profile_add_string_attr(mapi_ctx, profname, "language", ctl->mapi_lcid);
+		mapi_profile_add_string_attr(mapi_ctx, profname, "method", "0x409");
 		if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI mapi_profile %s created\n"), profname);
 	}
 	else
 	{
-		mapi_profile_modify_string_attr(profname, "binding", realhost);
-		mapi_profile_modify_string_attr(profname, "workstation", workstation);
-		mapi_profile_modify_string_attr(profname, "domain", ctl->mapi_domain);
-		mapi_profile_modify_string_attr(profname, "codepage", "0x4e4");
-		mapi_profile_modify_string_attr(profname, "language", ctl->mapi_lcid);
-		mapi_profile_modify_string_attr(profname, "method", "0x409");
+		mapi_profile_modify_string_attr(mapi_ctx, profname, "binding", realhost);
+		mapi_profile_modify_string_attr(mapi_ctx, profname, "workstation", workstation);
+		mapi_profile_modify_string_attr(mapi_ctx, profname, "domain", ctl->mapi_domain);
+		mapi_profile_modify_string_attr(mapi_ctx, profname, "codepage", "0x4e4");
+		mapi_profile_modify_string_attr(mapi_ctx, profname, "language", ctl->mapi_lcid);
+		mapi_profile_modify_string_attr(mapi_ctx, profname, "method", "0x409");
 
 		if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI mapi_profile %s updated\n"), profname);
 	}
 
-	retval = MapiLogonProvider(&session, profname, g_password, PROVIDER_ID_NSPI);
+	retval = MapiLogonProvider(mapi_ctx, &session, profname, g_password, PROVIDER_ID_NSPI);
 	if (retval != MAPI_E_SUCCESS) goto clean;
 	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MapiLogonProvider\n"));
 
@@ -767,16 +768,16 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	if (retval != MAPI_E_SUCCESS) goto clean;
 	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> processed a full and automated MAPI mapi_profile creation\n"));
 
-	retval = SetDefaultProfile(profname);
+	retval = SetDefaultProfile(mapi_ctx, profname);
 	if (retval != MAPI_E_SUCCESS) goto clean;
 	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> set default mapi_profile to %s\n"), profname);
 
-	MAPIUninitialize();
+	MAPIUninitialize(mapi_ctx);
 	talloc_free(g_mapi_mem_ctx);
 	return PS_SUCCESS;
 
 clean:
-	MAPIUninitialize();
+	MAPIUninitialize(mapi_ctx);
 	talloc_free(g_mapi_mem_ctx);
 	return translate_mapi_error(GetLastError());
 }
@@ -1514,7 +1515,7 @@ static int mapi_delete(int sock, struct query *ctl, int number)
 
 			msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
 			if (msgid) {
-				retval = mapi_profile_delete_string_attr(profname, "Message-ID", msgid);
+				retval = mapi_profile_delete_string_attr(mapi_ctx, profname, "Message-ID", msgid);
 				if (retval == MAPI_E_SUCCESS) {
 					if (outlevel == O_DEBUG) report(stdout, "MAPI> message %d with Message-ID=%s will be deleted\n", number, msgid);
 					status = PS_SUCCESS;
@@ -1596,7 +1597,7 @@ static int mapi_mark_seen(int sock, struct query *ctl, int number)
 				 *-----------------------------------------------------------------------------*/
 				if (!ctl->mapi_profname) profname = ctl->remotename;	/* use the remotename as the profile name */
 				else profname = ctl->mapi_profname;
-				mapi_profile_add_string_attr(profname, "Message-ID", msgid);
+				mapi_profile_add_string_attr(mapi_ctx, profname, "Message-ID", msgid);
 				if (retval == MAPI_E_SUCCESS) {
 					if (outlevel == O_DEBUG) report(stdout, "MAPI> marked message %d with Message-ID=%s seen\n", number, msgid);
 					status = TRUE;

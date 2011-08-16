@@ -2,6 +2,15 @@ Fetchmail MAPI Support
 ======================
 
 
+!NOTE: This stuff is HIGHLY EXPERIMENTAL, UNSUPPORTED and NEEDS HELP OF
+VOLUNTEERS in order to test, clean up the code, make it C++ compatible,
+and thereabouts.  The fetchmail maintainer MAY REMOVE this code at any
+time.
+
+(Not that you had other warranties unless you were to do it yourself in
+any Free/Open Source Software project :-))
+
+
 Background
 ==========
 
@@ -29,11 +38,13 @@ does from those POP3 or IMAP servers.
 
 Requirements
 ============
-This project is based on libmapi 0.8 and libmagic is needed, too.
+
+This project is based on libmapi (openchange) 0.11 and requires libmagic.
 
 
-How it works?
-=============
+How does it work?
+=================
+
 As mentioned in the "IMAP support and the method table" section of "Eric S.
 Raymond's former Design Notes On Fetchmail", fetchmail abstracts all the
 protocol-independent setup logic and flow of control in the driver, and the
@@ -55,7 +66,8 @@ SockRead.
 
 How to turn on MAPI support in fetchmail?
 =========================================
-configure with option --enable-MAPI.
+
+Run configure with option --enable-MAPI.
 
 
 Compatibility with existing options
@@ -159,6 +171,7 @@ the profile will be updated to the values specified by the current options.
 
 Client-side state
 =================
+
 When function mark_seen is invoked, the message id of the email is added to
 the profile mapi_profname. Function is_old searches if the message id is in the
 profile mapi_profname to check if it's old. Delete a message will delete its
@@ -167,6 +180,7 @@ message id from the profile mapi_profname.
 
 Bugs and known problems
 =======================
+
 1. When fetchmail is not running in daemon mode, it's useful to give a chance
 for the user to choose an account while multiple accounts match the user name.
 However, I am not aware of how to check in the callback function whether

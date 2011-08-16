@@ -208,11 +208,7 @@ options		{/* EMPTY */}
 (etrn)|(ETRN)	{ yylval.proto = P_ETRN;  return PROTO; }
 (odmr)|(ODMR)	{ yylval.proto = P_ODMR;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }
-(mapi)|(MAPI)	{
-		#ifdef MAPI_ENABLE
-		  yylval.proto = P_MAPI;  return PROTO;
-		#endif
-		}
+(mapi)|(MAPI)	{ yylval.proto = P_MAPI; return PROTO; }
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 

@@ -39,7 +39,6 @@ enum protocols {
     P_ETRN	/**  ETRN - SMTP Service Extension for Remote Message Queue Starting, "extended TURN", RFC 1985 */,
     P_ODMR	/**  ODMR/ATRN - On-Demand Mail Relay SMTP with dynamic addresses/Authenticated TURN, RFC 2645 */,
     P_MAPI	/**  MAPI - through OpenChange's libmapi */
-
 };
 
 #define		SMTP_PORT	"smtp"

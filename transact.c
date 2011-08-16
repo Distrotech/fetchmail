@@ -421,7 +421,7 @@ int readheaders(int sock,
     int			env_offs;
     char		*received_for, *rcv, *cp;
     static char		*delivered_to = NULL;
-    int 		n, oldlen, ch, remaining, skipcount;
+    int 		n = 0, oldlen, ch = 0, remaining, skipcount;
     size_t		linelen;
     int			delivered_to_count;
     struct idlist 	*idp;
@@ -489,6 +489,8 @@ int readheaders(int sock,
 		        free(line);
 		        return(PS_SOCKET);
 		    }
+#else
+		    abort();
 #endif
 		}
 		set_timeout(0);
@@ -625,6 +627,8 @@ eoh:
 	    {
 #ifdef MAPI_ENABLE
 	        ch = MapiPeek(sock);
+#else
+		abort();
 #endif
 	    }
 	    set_timeout(0);
@@ -1393,7 +1397,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 /** \param forward	TRUE to forward */
 /** \param len		length of message */
 {
-    int	linelen;
+    int	linelen = 0;
     char buf[MSGBUFSIZE+4];
     char *inbufp = buf;
     flag issoftline = FALSE;
@@ -1432,6 +1436,8 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 	        release_sink(ctl);
 	        return(PS_SOCKET);
 	    }
+#else
+	    abort();
 #endif
 	}
 	set_timeout(0);

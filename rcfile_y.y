@@ -412,7 +412,6 @@ user_option	: TO mapping_list HERE
 		}
 		| MAPI_DOMAIN STRING	{
 #ifdef MAPI_ENABLE
-
 /*-----------------------------------------------------------------------------
  *  TODO: check to see if mapi_domain is specified since mapi_domain is a
  *        required option if MAPI is enabled.
@@ -424,6 +423,8 @@ user_option	: TO mapping_list HERE
 		}
 		| MAPI_LCID STRING	{
 #ifdef MAPI_ENABLE
+		uint32_t u;
+
 		current.mapi_lcid = ($2);
 		if (strncmp(current.mapi_lcid, "0x", 2) != 0) {
 			char tmp[8];
@@ -431,13 +432,20 @@ user_option	: TO mapping_list HERE
 	 		 * a string name (like "English_Australian" to a language code
 	 		 * ID string (like "0x0c09")
 			 */
-			snprintf(tmp, sizeof(tmp), "0x%04x", lcid_lang2lcid(current.mapi_lcid));
+
+			u = mapi_get_lcid_from_language(current.mapi_lcid);
+			if (u == 0)
+			    u = mapi_get_lcid_from_locale(current.mapi_lcid);
+
 			xfree(current.mapi_lcid);
+			snprintf(tmp, sizeof(tmp), "0x%04x", u);
 			current.mapi_lcid = xstrdup(tmp);
- 		}
-		if (!lcid_valid_locale(strtoul(current.mapi_lcid, 0, 16))) {
-		printf ("Language code not recognised, using default \"en-US\" instead\n");
-    }
+		}
+
+		u = strtol(current.mapi_lcid, NULL, 16);
+		if (NULL == mapi_get_locale_from_lcid(u)) {
+			printf ("Language code not recognised, using default \"en-US\" instead\n");
+		}
 #else
 		yyerror(GT_("MAPI is supported, but not compiled in"));
 #endif

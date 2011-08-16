@@ -3,7 +3,7 @@ dnl Autoconfigure input file for fetchmail
 # Fetchmail automatic configuration support
 #
 # Eric S. Raymond <esr@thyrsus.com>
-# 2004 - 2010 Matthias Andree <matthias.andree@gmx.de>
+# 2004 - 2011 Matthias Andree <matthias.andree@gmx.de>
 #
 dnl Process this file with autoconf to produce a configure script.
 dnl
@@ -287,13 +287,19 @@ AC_ARG_ENABLE(MAPI,
 	      [with_MAPI=$enableval],
 	      [with_MAPI=no])
 if test "$with_MAPI" != "no" ; then
+    AC_MSG_WARN([WARNING: The MAPI feature is untested.])
+    sleep 2
+    AC_MSG_WARN([WARNING: The MAPI feature is unsupported.])
+    sleep 2
+    AC_MSG_WARN([WARNING: YOU need to contribute to MAPI!])
+    sleep 2
     AC_DEFINE(MAPI_ENABLE,1,Define if you want MAPI support compiled in)
     ###    Check for libmagic
     AC_CHECK_LIB([magic], [magic_open],
 		 [
 		  AC_DEFINE(HAVE_LIBMAGIC, 1, [Define if you want to use libmagic])
-		  CFLAGS="$CFLAGS $(pkg-config libmapi --cflags)"
-		  LIBS="-lmagic -lz `pkg-config libmapi --libs` $LIBS"
+		  CFLAGS="$CFLAGS $(pkg-config libmapi samba-util ldb --cflags)"
+		  LIBS="-lmagic -lz $(pkg-config libmapi samba-util ldb --libs) $LIBS"
 		  ],
 		  [
 		   AC_MSG_ERROR([libmagic is missing - can't enable MAPI support])

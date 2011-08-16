@@ -360,7 +360,7 @@ int parsecmdline (int argc /** argument count */,
 		ctl->server.protocol = P_ODMR;
 #ifdef MAPI_ENABLE
 	    else if (strcasecmp (optarg, "mapi") == 0)
-	ctl->server.protocol = P_MAPI;
+		ctl->server.protocol = P_MAPI;
 #endif
 	    else {
 		fprintf(stderr,GT_("Invalid protocol `%s' specified.\n"), optarg);
@@ -620,17 +620,18 @@ int parsecmdline (int argc /** argument count */,
 		fprintf(stderr,GT_("Invalid retrieve-error policy `%s' specified.\n"), optarg);
 		errflag++;
 	    }
+
 #ifdef MAPI_ENABLE
 	case LA_MAPI_WORKSTATION:
 	    ctl->mapi_workstation = xstrdup(optarg);
 	    break;
-        case LA_MAPI_DOMAIN:
+	case LA_MAPI_DOMAIN:
 	  ctl->mapi_domain = xstrdup(optarg);
-          break;
+	  break;
 
-        case LA_MAPI_LCID:
+	case LA_MAPI_LCID:
 	  ctl->mapi_lcid = xstrdup(optarg);
-          break;
+	  break;
 
 	case LA_MAPI_LDIF:
 	  ctl->mapi_ldif = xstrdup(optarg);
@@ -643,8 +644,8 @@ int parsecmdline (int argc /** argument count */,
 	case LA_MAPI_PROFNAME:
 	  ctl->mapi_profname = xstrdup(optarg);
 	  break;
-
 #endif
+
 	case '?':
 	    helpflag = 1;
 	default:
@@ -742,8 +743,8 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --showdots    show progress dots even in logfiles\n"));
 #ifdef MAPI_ENABLE
 	P (GT_ ("      --mapi_workstation set local computer name\n"));
-        P (GT_ ("      --mapi_domain set the Windows domain name\n"));
-        P (GT_ ("      --mapi_lcid   set the language to use, this can be specified as a code (in hexadecimal) or as a name\n"));
+	P (GT_ ("      --mapi_domain set the Windows domain name\n"));
+	P (GT_ ("      --mapi_lcid   set the language to use, this can be specified as a code (in hexadecimal) or as a name\n"));
 	P (GT_ ("      --mapi_ldif   set the path to the ldif files\n"));
 	P (GT_ ("      --mapi_profdb specify the MAPI profiles database file\n"));
 	P (GT_ ("      --mapi_profname specify the MAPI profile name\n"));
