@@ -51,6 +51,8 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   Contributed by Rainer Weikusat, MAD Partners Ltd./MSS GmbH.
 * The POP3 code now always uses UIDL, except if "fetchall" is in effect.
   Fixes BerliOS Bug #16172. Fixes Debian Bug#345788.
+* Fetchmail now enables SSL support by default. If this is undesired,
+  ./configure --without-ssl should help.
 
 # FEATURES ADDED
 * Fetchmail can now retrieve credentials from PWMD. This needs to be enabled at

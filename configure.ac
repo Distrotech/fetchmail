@@ -503,7 +503,7 @@ fi
 AC_ARG_WITH(ssl,
 	[  --with-ssl=[DIR]        enable SSL support using libraries in DIR],
 	[with_ssl=$withval],
-	[with_ssl=no])
+	[with_ssl=yes])
 test "$with_ssl" != "no" && AC_DEFINE(SSL_ENABLE,1,Define if you want SSL support compiled in)
 
 if test "$with_ssl" = "yes"
