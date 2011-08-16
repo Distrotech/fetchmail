@@ -30,7 +30,7 @@ to repeatedly poll one or more systems at a specified interval.
 .PP
 The \fBfetchmail\fP program can gather mail from servers supporting any
 of the common mail-retrieval protocols: POP3, IMAP2bis, IMAP4, and IMAP4rev1.
-It can also use the ESMTP ETRN extension and ODMR.  (The RFCs describing all
+It can also use OpenChange's MAPI support, the ESMTP ETRN extension, and ODMR.  (The RFCs describing all
 these protocols are listed at the end of this manual page.)
 .PP
 While \fBfetchmail\fP is primarily intended to be used over on-demand
@@ -1091,6 +1091,7 @@ a mailbox on the server.  Contact your server administrator if you don't know
 the correct user-id and password for your mailbox account.
 .SH POP3 VARIANTS
 .PP
+
 RFC1460 introduced APOP authentication.  In this variant of POP3,
 you register an APOP password on your server host (on some servers, the
 program to do this is called \fBpopauth\fP(8)).  You put the same

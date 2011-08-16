@@ -507,6 +507,9 @@ int main(int argc, char **argv)
     if (versioninfo)
     {
 	const char *features = 
+#ifdef MAPI_ENABLE
+	    "+MAPI"
+#endif /* MAPI_ENABLE */
 #ifndef POP3_ENABLE
 	"-POP3"
 #endif /* POP3_ENABLE */
@@ -1291,6 +1294,15 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(expunge);
 
     FLAG_MERGE(properties);
+
+#ifdef MAPI_ENABLE
+    FLAG_MERGE(mapi_workstation);
+    FLAG_MERGE(mapi_domain);
+    FLAG_MERGE(mapi_lcid);
+    FLAG_MERGE(mapi_ldif);
+    FLAG_MERGE(mapi_profdb);
+    FLAG_MERGE(mapi_profname);
+#endif
 #undef FLAG_MERGE
 }
 
@@ -1322,6 +1334,9 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.listener = SMTP_MODE;
     def_opts.fetchsizelimit = 100;
     def_opts.fastuidl = 4;
+#ifdef MAPI_ENABLE
+    def_opts.mapi_lcid = "0x409";	/* language code ID: en-US */
+#endif
 
     /* get the location of rcfile */
     rcfiledir[0] = 0;
@@ -1665,6 +1680,28 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
 	    /* sanity checks */
+/* sanity checks */
+#ifdef	MAPI_ENABLE
+	    if(ctl->server.protocol == P_MAPI) {
+		if(ctl->use_ssl || ctl->sslkey || ctl->sslcert || ctl->sslproto || ctl->sslcertpath || ctl->sslcertck || ctl->sslfingerprint) {
+		    (void) fprintf(stderr,
+				   GT_
+				   ("fetchmail: %s configuration invalid, SSL is not supported in MAPI. \
+fetchmail will run ignoring SSL related options\n"),
+				   ctl->server.pollname);
+		    ctl->use_ssl = FALSE;
+		}
+
+		if(ctl->server.service)
+		{
+		    (void) fprintf(stderr,
+				   GT_
+				   ("fetchmail: %s configuration invalid, service is no use in MAPI.\
+fetchmail will run ignoring --service option\n"),
+				   ctl->server.pollname);
+		}
+	    }
+#endif
 	    if (ctl->server.service) {
 		int port = servport(ctl->server.service);
 		if (port < 0)
@@ -1849,6 +1886,14 @@ static int query_host(struct query *ctl)
 #else
 	st = doODMR(ctl);
 #endif /* ODMR_ENABLE */
+	break;
+    case P_MAPI:
+#ifdef MAPI_ENABLE
+	st = doMAPI(ctl);
+#else
+	report(stderr, GT_("MAPI support is not configured.\n"));
+	st = PS_PROTOCOL;
+#endif /* MAPI_ENABLE */
 	break;
     default:
 	report(stderr, GT_("unsupported protocol selected.\n"));
@@ -2312,6 +2357,33 @@ static void dump_params (struct runctl *runp,
 	if (ctl->properties)
 	    printf(GT_("  Pass-through properties \"%s\".\n"),
 		   visbuf(ctl->properties));
+#ifdef MAPI_ENABLE
+	if (ctl->mapi_workstation)
+	    printf(GT_("  Local computer name \"%s\".\n"),
+		   visbuf(ctl->mapi_workstation));
+
+	if (ctl->mapi_domain)
+	    printf(GT_("  Windows domain name \"%s\".\n"),
+		   visbuf(ctl->mapi_domain));
+
+/*TODO: to dump language as name, not as code.*/
+	if (ctl->mapi_lcid)
+	    printf(GT_("  Language to use \"%s\".\n"),
+		   visbuf(ctl->mapi_lcid));
+
+	if (ctl->mapi_ldif)
+	    printf(GT_("  Path to ldif files \"%s\".\n"),
+		   visbuf(ctl->mapi_lcid));
+
+	if (ctl->mapi_profdb)
+		printf(GT_("  Path to MAPI profiles database file \"%s\".\n"),
+		   visbuf(ctl->mapi_profdb));
+
+	if (ctl->mapi_profname)
+		printf(GT_("  MAPI profile name \"%s\".\n"),
+		   visbuf(ctl->mapi_profname));
+
+#endif
     }
 }
 

@@ -1215,7 +1215,6 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	    *lenp = 0;
 	    return PS_SUCCESS;
     }
-
     /*
      * Try to extract a length from the FETCH response.  RFC2060 requires
      * it to be present, but at least one IMAP server (Novell GroupWise)

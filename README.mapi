@@ -1,0 +1,178 @@
+Fetchmail MAPI Support
+======================
+
+
+Background
+==========
+
+This is a project of Google Summer of Code (GSoC) 2008 with OpenChange as
+the mentoring organization, by GSoC student Yangyan Li and his mentor
+Jelmer Vernooij.
+
+OpenChange aims to provide a portable Open Source implementation of Microsoft
+Exchange Server and Exchange protocols. Exchange is a groupware server
+designed to work with Microsoft Outlook, and providing features such as a
+messaging server, shared calendars, contact databases, public folders, notes
+and tasks.
+
+OpenChange provide interoperability with Exchange protocols. This is the MAPI
+library development purpose (libmapi). MAPI stands for Messaging Application
+Programming Interface and is used within Microsoft Exchange. The OpenChange
+implementation provides a client-side library which can be used in existing
+messaging clients and offer native compatibility with Microsoft's Exchange
+server.
+
+This project aims to add MAPI support into fetchmail, then fetchmail will be
+able to fetch mail from Microsoft's Exchange server with MAPI as well as it
+does from those POP3 or IMAP servers.
+
+
+Requirements
+============
+This project is based on libmapi 0.8 and libmagic is needed, too.
+
+
+How it works?
+=============
+As mentioned in the "IMAP support and the method table" section of "Eric S.
+Raymond's former Design Notes On Fetchmail", fetchmail abstracts all the
+protocol-independent setup logic and flow of control in the driver, and the
+protocol-specific stuff in the method table. So most of the task in this
+project is to implement the methods in the method table with MAPI.
+
+The main difference between MAPI and IMAP or POP is that the connection
+between client and server is handled by libmapi, while IMAP or POP connects
+to server via socket. The "fetch" methods of IMAP or POP just send those
+"fetch" commands, then the driver will invoke those "read" methods (readheaders
+and readbody in transact.c), which finally invoke SockRead function in
+transact.c to read from a socket. In MAPI, when "fetch" methods are invoked,
+they will buffer the to be fetched data, then when the driver invoke these
+"read" methods, they will invoke a function called MapiRead to read the buffer
+filled by the "fetch" methods. So changes are only made to these "read"
+methods: when the current protocol is MAPI, they will invoke MapiRead but not
+SockRead.
+
+
+How to turn on MAPI support in fetchmail?
+=========================================
+configure with option --enable-MAPI.
+
+
+Compatibility with existing options
+===================================
+
+General Options
+	-V | --version	support. a new version should be shown (TODO)
+	-c | --check	support.
+	-s | --silent	support.
+	-v | --verbose	support.
+
+Disposal Options
+	-a | --all | (since v6.3.3) --fetchall	support.
+	-k | --keep	support.
+	-K | --nokeep	support.
+	-F | --flush	support.
+	--limitflush	support. Note: message size in MAPI indicates
+			the approximate number of bytes transferred
+			when the message is moved from one message
+			store to another. Being the sum of the sizes
+			of all properties on the message object, it
+			is usually considerably greater than the
+			message text alone.
+
+Protocol and Query Options
+	-p <proto> | --proto <proto> | --protocol <proto>
+		MAPI is added to proto
+	-U | --uidl	not support.
+	--idle		not support.
+	-P <portnumber> | --service <servicename>	not support.
+	--port <portnumber>	not support.
+	--principal <principal>	not support.
+	-t <seconds> | --timeout <seconds>	support.
+	--plugin <command>	not support.
+	--plugout <command>	support. untouched.
+	-r <name> | --folder <name>	support. Note: it only searches
+			in the top level, i.e. it's not recursive.
+	--tracepolls	support.
+	--ssl		not support.
+	--sslcert <name>	not support.
+	--sslkey <name>	not support.
+	--sslproto <name>	not support.
+	--sslcertck		not support.
+	--sslcertpath <directory>	not support.
+	--sslfingerprint <fingerprint>	not support.
+
+Delivery Control Options (untouched)
+
+Resource Limit Control Options
+	-l <maxbytes> | --limit <maxbytes> support. Note: message size
+			in MAPI indicates the approximate number of
+			bytes transferred when the message is moved
+			from one message store to another. Being the
+			sum of the sizes of all properties on the
+			message object, it is usually considerably
+			greater than the message text alone.
+	-w <interval> | --warnings <interval>	support.
+	-b <count> | --batchlimit <count>	support.
+	-B <number> | --fetchlimit <number>	support.
+	--fetchsizelimit <number>	support.
+	--fastuidl <number>		not support.
+	-e <count> | --expunge <count>	support.
+
+Authentication Options
+	-u <name> | --user <name> | --username <name> support.
+	-I <specification> | --interface <specification> not support.
+	-M <interface> | --monitor <interface>	not support.
+	--auth <type> not support
+
+Miscellaneous Options (untouched)
+
+
+New options
+===========
+
+Several options are added to set MAPI profiles. Before fetchmail logon Exchange
+server, it will create/update the profile specified by the following options:
+
+	--mapi_workstation	set local computer name
+				(default value: local host name)
+
+	--mapi_domain	set the Windows domain name (required option)
+
+	--mapi_lcid	set the language to use, this can be specified as a
+			code (in hexadecimal) or as a name
+			(default value: 0x409, i.e. en-US)
+
+	--mapi_ldif	set the path to the ldif files
+			(default value: DEFAULT_LDIF)
+
+	--mapi_profdb	specify the MAPI profiles database file
+			(default value: ~/.fetchmail_mapi_profiles.ldb)
+	--mapi_profname	specify the MAPI profile name
+			(default value: remotename of the user)
+
+Note: If mapi profile database mapi_profdb does not exsit, it will be created.
+If the profile mapi_profname doesn't exsit, it will be created in mapi_profdb.
+If the profile mapi_profname is already in mapi_profdb, the options related to
+the profile will be updated to the values specified by the current options.
+
+
+Client-side state
+=================
+When function mark_seen is invoked, the message id of the email is added to
+the profile mapi_profname. Function is_old searches if the message id is in the
+profile mapi_profname to check if it's old. Delete a message will delete its
+message id from the profile mapi_profname.
+
+
+Bugs and known problems
+=======================
+1. When fetchmail is not running in daemon mode, it's useful to give a chance
+for the user to choose an account while multiple accounts match the user name.
+However, I am not aware of how to check in the callback function whether
+fetchmail is running in daemon mode and how to produce the circumstance that
+multiple accounts match the user name.
+
+2. When function fetch_body is invoked, it buffers the whole email (including
+it's attachments) into memory, which may take too much memory if the email is
+too large. It's better for MapiRead to read directly from the data stream.

@@ -82,6 +82,11 @@ endif
 if ODMR_ENABLE
 fetchmail_SOURCES += odmr.c
 endif
+if MAPI_ENABLE
+fetchmail_SOURCES += mapi.c
+fetchmail_SOURCES += openchange-tools.h
+fetchmail_SOURCES += openchange-tools.c
+endif
 if RPA_ENABLE
 fetchmail_SOURCES += rpa.c
 endif
@@ -117,6 +122,7 @@ fetchmail.spec: Makefile.in specgen.sh
 DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		design-notes.html esrs-design-notes.html todo.html \
 		fetchmail-features.html README.SSL README.NTLM \
+		README.mapi \
 		README.packaging README.SSL-SERVER \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
 		Mailbox-Names-UTF7.txt Mailbox-Names-UTF7.html \

@@ -37,7 +37,9 @@ enum protocols {
     P_POP3	/**  POP3, including APOP and KPOP, RFC 1939 et al. */,
     P_IMAP	/**  IMAP4, RFC 3501 */,
     P_ETRN	/**  ETRN - SMTP Service Extension for Remote Message Queue Starting, "extended TURN", RFC 1985 */,
-    P_ODMR	/**  ODMR/ATRN - On-Demand Mail Relay SMTP with dynamic addresses/Authenticated TURN, RFC 2645 */
+    P_ODMR	/**  ODMR/ATRN - On-Demand Mail Relay SMTP with dynamic addresses/Authenticated TURN, RFC 2645 */,
+    P_MAPI	/**  MAPI - through OpenChange's libmapi */
+
 };
 
 #define		SMTP_PORT	"smtp"
@@ -371,6 +373,15 @@ struct query
     char *sslcommonname;	/* CommonName to expect from server */
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
+#ifdef MAPI_ENABLE
+    char *mapi_workstation;	/* local computer name */
+    char *mapi_domain;	/* Windows domain name */
+    char *mapi_lcid;	/* language to use, specified as a 
+				   code (in hexadecimal) or as a name */
+    char *mapi_ldif;    /* path to the ldif files */
+    char *mapi_profdb;  /* where to store MAPI profiles database */
+    char *mapi_profname;/* MAPI profile name */ 
+#endif
 
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */
@@ -638,6 +649,7 @@ int doPOP3 (struct query *);
 int doIMAP (struct query *);
 int doETRN (struct query *);
 int doODMR (struct query *);
+int doMAPI (struct query *);
 
 /* authentication functions */
 int do_cram_md5(int sock, const char *command, struct query *ctl, const char *strip);
@@ -734,6 +746,13 @@ int name_match(const char *p1, const char *p2);
 /* prototype from ntlmsubr.c */
 #ifdef NTLM_ENABLE
 int ntlm_helper(int sock, struct query *ctl, const char *protocol);
+#endif
+
+#ifdef MAPI_ENABLE
+/* virtual socket for mapi. MapiRead matches interface of SockRead
+ * and MapiPeek matches interface of SockPeek */
+int MapiRead(int sock, char *buf, int len);
+int MapiPeek(int sock);
 #endif
 
 /* macro to determine if we want to spam progress to stdout */

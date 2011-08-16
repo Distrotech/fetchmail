@@ -253,6 +253,9 @@ const char *showproto(int proto)
 #ifdef ODMR_ENABLE
     case P_ODMR: return("ODMR");
 #endif /* ODMR_ENABLE */
+#ifdef MAPI_ENABLE
+    case P_MAPI: return("MAPI");
+#endif /* MAPI_ENABLE */
     default: return("unknown?!?");
     }
 }

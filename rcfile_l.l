@@ -131,6 +131,12 @@ fastuidl	{ return FASTUIDL; }
 expunge		{ return EXPUNGE; }
 properties	{ return PROPERTIES; }
 
+mapi_workstation	{ return MAPI_WORKSTATION; }
+mapi_domain	{ return MAPI_DOMAIN; }
+mapi_lcid	{ return MAPI_LCID; }
+mapi_ldif	{ return MAPI_LDIF; }
+mapi_profdb	{ return MAPI_PROFDB; }
+mapi_profname	{ return MAPI_PROFNAME; }
 is		{ SETSTATE(NAME); return IS; }
 here		{ return HERE; }
 there		{ return THERE; }
@@ -202,6 +208,11 @@ options		{/* EMPTY */}
 (etrn)|(ETRN)	{ yylval.proto = P_ETRN;  return PROTO; }
 (odmr)|(ODMR)	{ yylval.proto = P_ODMR;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }
+(mapi)|(MAPI)	{
+		#ifdef MAPI_ENABLE
+		  yylval.proto = P_MAPI;  return PROTO;
+		#endif
+		}
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 

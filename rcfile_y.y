@@ -6,6 +6,11 @@
  */
 
 #include "config.h"
+
+#ifdef MAPI_ENABLE
+#include <libmapi/libmapi.h>
+#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/file.h>
@@ -22,7 +27,7 @@
 
 #include "fetchmail.h"
 #include "gettext.h"
-  
+
 /* parser reads these */
 char *rcfile;			/* path name of rc file */
 struct query cmd_opts;		/* where to put command-line info */
@@ -70,12 +75,14 @@ extern char * yytext;
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
+%token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS
 %token DROPSTATUS DROPDELIVERED
-%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
+%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS
 %token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTFILE SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
+/* MAPI tokens */
+%token MAPI_WORKSTATION MAPI_DOMAIN MAPI_LCID MAPI_LDIF MAPI_PROFDB MAPI_PROFNAME
 
 %expect 2
 
@@ -120,11 +127,11 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = prependdir ($4, rcfiledir);
 #endif
 		    }
 
-/* 
+/*
  * The way the next two productions are written depends on the fact that
  * userspecs cannot be empty.  It's a kluge to deal with files that set
  * up a load of defaults and then have poll statements following with no
- * user options at all. 
+ * user options at all.
  */
 		| define_server serverspecs		{record_current();}
 		| define_server serverspecs userspecs
@@ -267,7 +274,7 @@ user1opts	: user_option
 		| user1opts user_option
 		;
 
-mapping_list	: mapping		
+mapping_list	: mapping
 		| mapping_list mapping
 		;
 
@@ -343,7 +350,7 @@ user_option	: TO mapping_list HERE
 		    current.use_ssl = FLAG_TRUE;
 #else
 		    yyerror(GT_("SSL is not enabled"));
-#endif 
+#endif
 		}
 		| SSLKEY STRING		{current.sslkey = prependdir ($2, rcfiledir); free($2);}
 		| SSLCERT STRING	{current.sslcert = prependdir ($2, rcfiledir); free($2);}
@@ -381,7 +388,7 @@ user_option	: TO mapping_list HERE
 
 		| PWMD_SOCKET STRING	{
 #ifdef HAVE_LIBPWMD
-		    current.pwmd_socket = xstrdup($2);
+		    current.pwmd_socket = ($2);
 #else
 		    yyerror(GT_("pwmd not enabled"));
 #endif
@@ -389,11 +396,73 @@ user_option	: TO mapping_list HERE
 
 		| PWMD_FILE STRING	{
 #ifdef HAVE_LIBPWMD
-		    current.pwmd_file = xstrdup($2);
+		    current.pwmd_file = ($2);
 #else
 		    yyerror(GT_("pwmd not enabled"));
 #endif
 					}
+
+		/* MAPI options */
+		| MAPI_WORKSTATION STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_workstation = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_DOMAIN STRING	{
+#ifdef MAPI_ENABLE
+
+/*-----------------------------------------------------------------------------
+ *  TODO: check to see if mapi_domain is specified since mapi_domain is a
+ *        required option if MAPI is enabled.
+ *-----------------------------------------------------------------------------*/
+		current.mapi_domain = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_LCID STRING	{
+#ifdef MAPI_ENABLE
+		current.mapi_lcid = ($2);
+		if (strncmp(current.mapi_lcid, "0x", 2) != 0) {
+			char tmp[8];
+			/* it doesn't look like a hex id, so try to convert it from
+	 		 * a string name (like "English_Australian" to a language code
+	 		 * ID string (like "0x0c09")
+			 */
+			snprintf(tmp, sizeof(tmp), "0x%04x", lcid_lang2lcid(current.mapi_lcid));
+			xfree(current.mapi_lcid);
+			current.mapi_lcid = xstrdup(tmp);
+ 		}
+		if (!lcid_valid_locale(strtoul(current.mapi_lcid, 0, 16))) {
+		printf ("Language code not recognised, using default \"en-US\" instead\n");
+    }
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_LDIF STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_ldif = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_PROFDB STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_profdb = prependdir ($2, rcfiledir);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_PROFNAME STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_profname = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
 		;
 %%
 
@@ -408,7 +477,7 @@ static struct query *hosttail;	/* where to add new elements */
 void yyerror (const char *s)
 /* report a syntax error */
 {
-    report_at_line(stderr, 0, rcfile, prc_lineno, GT_("%s at %s"), s, 
+    report_at_line(stderr, 0, rcfile, prc_lineno, GT_("%s at %s"), s,
 		   (yytext && yytext[0]) ? yytext : GT_("end of input"));
     prc_errflag++;
 }
@@ -429,12 +498,12 @@ int prc_filecheck(const char *pathname,
     if (strcmp("-", pathname) == 0)
 	return(PS_SUCCESS);
 
-    /* the run control file must have the same uid as the REAL uid of this 
-       process, it must have permissions no greater than 600, and it must not 
+    /* the run control file must have the same uid as the REAL uid of this
+       process, it must have permissions no greater than 600, and it must not
        be a symbolic link.  We check these conditions here. */
 
     if (stat(pathname, &statbuf) < 0) {
-	if (errno == ENOENT) 
+	if (errno == ENOENT)
 	    return(PS_SUCCESS);
 	else {
 	    report(stderr, "lstat: %s: %s\n", pathname, strerror(errno));
@@ -455,7 +524,7 @@ int prc_filecheck(const char *pathname,
 #endif /* __CYGWIN__ */
     if (statbuf.st_mode & (S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH | S_IXOTH))
     {
-	fprintf(stderr, GT_("File %s must have no more than -rwx------ (0700) permissions.\n"), 
+	fprintf(stderr, GT_("File %s must have no more than -rwx------ (0700) permissions.\n"),
 		pathname);
 	return(PS_IOERR);
     }
@@ -505,7 +574,7 @@ int prc_parse_file (const char *pathname, const flag securecheck)
 
     fclose(yyin);	/* not checking this should be safe, file mode was r */
 
-    if (prc_errflag) 
+    if (prc_errflag)
 	return(PS_SYNTAX);
     else
 	return(PS_SUCCESS);

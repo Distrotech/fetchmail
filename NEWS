@@ -68,6 +68,11 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   The default policy is to abort the session whenever a server error occurs.
   Contributed by Craig Brown.
 * Fetchmailconf offers cram-md5 and apop authentication.
+* EXPERIMENTAL/UNSUPPORTED:
+  MAPI support through OpenChange. Yang-Yan Li, Google Summer of Code 2008.
+  With fixes from Mojmir Svoboda.
+  Note the code requires further cleanups and fixes and has not yet been audited
+  for security. Do not use as privileged user. Use at your own risk.
 
 # REMOVED FEATURES
 * IMAP2 protocol support was removed.

@@ -473,10 +473,23 @@ int readheaders(int sock,
 		char	*sp, *tp;
 
 		set_timeout(mytimeout);
-		if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
-		    set_timeout(0);
-		    free(line);
-		    return(PS_SOCKET);
+		if (ctl->server.protocol != P_MAPI)
+		{
+		    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		        set_timeout(0);
+		        free(line);
+		        return(PS_SOCKET);
+		    }
+		}
+		else
+		{
+#ifdef MAPI_ENABLE
+		    if ((n = MapiRead(sock, buf, sizeof(buf)-1)) == -1) {
+		        set_timeout(0);
+		        free(line);
+		        return(PS_SOCKET);
+		    }
+#endif
 		}
 		set_timeout(0);
 
@@ -604,7 +617,16 @@ eoh:
 
 	    /* check for RFC822 continuations */
 	    set_timeout(mytimeout);
-	    ch = SockPeek(sock);
+	    if (ctl->server.protocol != P_MAPI)
+	    {
+	        ch = SockPeek(sock);
+	    }
+	    else
+	    {
+#ifdef MAPI_ENABLE
+	        ch = MapiPeek(sock);
+#endif
+	    }
 	    set_timeout(0);
 	} while
 	    (ch == ' ' || ch == '\t');	/* continuation to next line? */
@@ -1392,11 +1414,25 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 	/* XXX FIXME: for undelimited protocols that ship the size, such
 	 * as IMAP, we might want to use the count of remaining characters
 	 * instead of the buffer size -- not for fetchmail 6.3.X though */
-	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
+	if(ctl->server.protocol != P_MAPI)
 	{
-	    set_timeout(0);
-	    release_sink(ctl);
-	    return(PS_SOCKET);
+	    if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
+	    {
+	        set_timeout(0);
+	        release_sink(ctl);
+	        return(PS_SOCKET);
+	    }
+	}
+	else
+	{
+#ifdef MAPI_ENABLE
+	    if ((linelen = MapiRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
+	    {
+	        set_timeout(0);
+	        release_sink(ctl);
+	        return(PS_SOCKET);
+	    }
+#endif
 	}
 	set_timeout(0);
 
