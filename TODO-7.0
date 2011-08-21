@@ -1,3 +1,6 @@
+fix NUL generation (see 6.3.21 release) and possibly string length
+handling
+
 review retrieveerrorsemantic contribution to avoid mail loss (cf. POP3
 LAST)
 
