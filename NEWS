@@ -118,6 +118,18 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
 --------------------------------------------------------------------------------
 
+fetchmail-6.3.21 (not yet released):
+
+# CRITICAL BUG FIX
+* The IMAP client no longer inserts NUL bytes into the last line of a message
+  when it is not closed with a LF or CRLF sequence. Reported by Antoine Levitt.
+  As a side effect of the fix, and in order to avoid a full rewrite, fetchmail
+  will now CRLF-terminate the last line fetched through IMAP, even if it is
+  originally not terminated by LF or CRLF. This bears no relevance if your
+  messages end up in mbox, but adds line termination for storages (like Maildir)
+  that do not require that the last line be LF- or CRLF-terminated.
+
+
 fetchmail-6.3.20 (released 2011-06-06, 26005 LoC):
 
 # SECURITY BUG FIXES
