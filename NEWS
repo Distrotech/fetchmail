@@ -56,7 +56,7 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail-6.3.21 (not yet released):
+fetchmail-6.3.21 (released 2011-08-21, 26011 LoC):
 
 # CRITICAL BUG FIX
 * The IMAP client no longer inserts NUL bytes into the last line of a message
