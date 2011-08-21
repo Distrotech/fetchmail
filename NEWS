@@ -67,6 +67,11 @@ fetchmail-6.3.21 (not yet released):
   messages end up in mbox, but adds line termination for storages (like Maildir)
   that do not require that the last line be LF- or CRLF-terminated.
 
+# CONTRIB/ addition
+* There is a patch against fetchnews's source, contrib/rawlog.patch, that can
+  log (and hexdump non-printing characters) raw socket data to a file. It proved
+  useful to debug Antoine's bug described above.
+
 
 fetchmail-6.3.20 (released 2011-06-06, 26005 LoC):
 
