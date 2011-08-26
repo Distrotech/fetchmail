@@ -460,7 +460,7 @@ struct uid_db_record *last_uid_in_db(struct uid_db *db, char const *id)
 /**  destruction */
 static void free_uid_list(struct uid_db_record *rec)
 {
-    if (!rec) return NULL;
+    if (!rec) return;
 
     /*
       Free the list of uid_db_records starting with
