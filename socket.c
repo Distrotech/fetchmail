@@ -101,6 +101,7 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	if (!argvec)
 	{
 		report(stderr, GT_("fetchmail: malloc failed\n"));
+		free(plugin_copy);
 		return NULL;
 	}
 	memset(argvec, 0, s);
