@@ -53,12 +53,9 @@ enum {
     LA_SOFTBOUNCE,
     LA_BADHEADER,
     LA_RETRIEVEERROR,
-    LA_MAPI_WORKSTATION,
+    LA_MAPI_REALM,
     LA_MAPI_DOMAIN,
-    LA_MAPI_LCID,
-    LA_MAPI_LDIF,
-    LA_MAPI_PROFDB,
-    LA_MAPI_PROFNAME
+    LA_MAPI_LANGUAGE,
 };
 
 static const char *shortoptions =
@@ -166,12 +163,9 @@ static const struct option longoptions[] = {
   {"tracepolls",no_argument,	   (int *) 0, LA_TRACEPOLLS },
 
 #ifdef MAPI_ENABLE
-  {"mapi_workstation", required_argument, (int *) 0, LA_MAPI_WORKSTATION},
+  {"mapi_realm", required_argument, (int *) 0, LA_MAPI_REALM},
   {"mapi_domain", required_argument, (int *) 0, LA_MAPI_DOMAIN},
-  {"mapi_lcid", required_argument, (int *) 0, LA_MAPI_LCID},
-  {"mapi_ldif", required_argument, (int *) 0, LA_MAPI_LDIF},
-  {"mapi_profdb", required_argument, (int *) 0, LA_MAPI_PROFDB},
-  {"mapi_profname", required_argument, (int *) 0, LA_MAPI_PROFNAME},
+  {"mapi_language", required_argument, (int *) 0, LA_MAPI_LANGUAGE},
 #endif
 
   {(char *) 0,	no_argument,	   (int *) 0, 0 }
@@ -622,27 +616,15 @@ int parsecmdline (int argc /** argument count */,
 	    }
 
 #ifdef MAPI_ENABLE
-	case LA_MAPI_WORKSTATION:
-	    ctl->mapi_workstation = xstrdup(optarg);
+	case LA_MAPI_REALM:
+	    ctl->mapi_realm = xstrdup(optarg);
 	    break;
 	case LA_MAPI_DOMAIN:
 	  ctl->mapi_domain = xstrdup(optarg);
 	  break;
 
-	case LA_MAPI_LCID:
-	  ctl->mapi_lcid = xstrdup(optarg);
-	  break;
-
-	case LA_MAPI_LDIF:
-	  ctl->mapi_ldif = xstrdup(optarg);
-	  break;
-
-	case LA_MAPI_PROFDB:
-	  ctl->mapi_profdb = xstrdup(optarg);
-	  break;
-
-	case LA_MAPI_PROFNAME:
-	  ctl->mapi_profname = xstrdup(optarg);
+	case LA_MAPI_LANGUAGE:
+	  ctl->mapi_language = xstrdup(optarg);
 	  break;
 #endif
 
@@ -742,12 +724,9 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("  -r, --folder      specify remote folder name\n"));
 	P(GT_("      --showdots    show progress dots even in logfiles\n"));
 #ifdef MAPI_ENABLE
-	P (GT_ ("      --mapi_workstation set local computer name\n"));
-	P (GT_ ("      --mapi_domain set the Windows domain name\n"));
-	P (GT_ ("      --mapi_lcid   set the language to use, this can be specified as a code (in hexadecimal) or as a name\n"));
-	P (GT_ ("      --mapi_ldif   set the path to the ldif files\n"));
-	P (GT_ ("      --mapi_profdb specify the MAPI profiles database file\n"));
-	P (GT_ ("      --mapi_profname specify the MAPI profile name\n"));
+	P (GT_ ("      --mapi_realm set the Windows realm your Exchange server belongs to\n"));
+	P (GT_ ("      --mapi_domain set the Windows domain your Exchange server belongs to\n"));
+	P (GT_ ("      --mapi_language set the user's language (if different from system one)\n"));
 #endif
 #undef P
 	/* undocumented:

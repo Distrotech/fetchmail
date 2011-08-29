@@ -120,6 +120,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
     struct query *ctl;
     struct idlist *idp;
     const char *features;
+#ifdef MAPI_ENABLE
+    const char *languages;
+#endif /* MAPI_ENABLE */
+
 
     indent_level = 0;
 
@@ -147,9 +151,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
      * in fetchmail.c.
      */
     features = "feature_options = ("
-#ifdef MAPI_ENABLE
-    "'mapi',"
-#endif /* MAPI_ENABLE */
 #ifdef POP3_ENABLE
     "'pop3',"
 #endif /* POP3_ENABLE */
@@ -180,6 +181,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef HAVE_SOCKS
     "'socks',"
 #endif /* HAVE_SOCKS */
+#ifdef MAPI_ENABLE
+    "'mapi',"
+#endif /* MAPI_ENABLE */
     ")\n";
     fputs(features, stdout);
 
@@ -246,6 +250,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("pollname", ctl->server.pollname); 
 	    booldump("active", !ctl->server.skip); 
 	    stringdump("via", ctl->server.via); 
+#ifdef MAPI_ENABLE
+	    stringdump("mapi_domain", ctl->mapi_domain);
+	    stringdump("mapi_realm", ctl->mapi_realm);
+#endif
 	    stringdump("protocol", 
 		       using_kpop ? "KPOP" : showproto(ctl->server.protocol));
 	    stringdump("service",  ctl->server.service);
@@ -386,12 +394,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);
 #ifdef MAPI_ENABLE
-	stringdump("mapi_workstation", ctl->mapi_workstation);
-	stringdump("mapi_domain", ctl->mapi_domain);
-	stringdump("mapi_lcid", ctl->mapi_lcid);
-	stringdump("mapi_ldif", ctl->mapi_ldif);
-	stringdump("mapi_profdb", ctl->mapi_profdb);
-	stringdump("mapi_profname", ctl->mapi_profname);
+	stringdump("mapi_language", ctl->mapi_language);
 #endif
 	listdump("smtphunt", ctl->smtphunt);
 	listdump("fetchdomains", ctl->domainlist);
@@ -424,6 +427,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
  alldone:
     /* end top-level dictionary */
     indent('}');
+
+#ifdef MAPI_ENABLE
+    languages = "languages=['Afrikaans',\n 'Albanian',\n 'Amharic (Ethiopia)',\n 'Arabic (Algeria)',\n 'Arabic (Bahrain)',\n 'Arabic (Egypt)',\n 'Arabic (Iraq)',\n 'Arabic (Jordan)',\n 'Arabic (Kuwait)',\n 'Arabic (Lebanon)',\n 'Arabic (Libya)',\n 'Arabic (Morocco)',\n 'Arabic (Oman)',\n 'Arabic (Qatar)',\n 'Arabic (Saudi Arabia)',\n 'Arabic (Syria)',\n 'Arabic (Tunisia)',\n 'Arabic (U.A.E.)',\n 'Arabic (Yemen)',\n 'Armenian',\n 'Assamese',\n 'Azeri (Cyrillic)',\n 'Azeri (Latin)',\n 'Basque',\n 'Belarusian',\n 'Bengali (India)',\n 'Bosnian (Bosnia/Herzegovina)',\n 'Breton (France)',\n 'Bulgarian',\n 'Catalan',\n 'Chinese (Hong Kong S.A.R.)',\n 'Chinese (Macau S.A.R.)',\n 'Chinese (PRC)',\n 'Chinese (Singapore)',\n 'Chinese (Taiwan)',\n 'Croatian',\n 'Croatian (Bosnia/Herzegovina)',\n 'Czech',\n 'Danish',\n 'Dari (Afghanistan)',\n 'Divehi',\n 'Dutch (Belgium)',\n 'Dutch (Netherlands)',\n 'English (Australia)',\n 'English (Belize)',\n 'English (Canada)',\n 'English (Caribbean)',\n 'English (India)',\n 'English (Ireland)',\n 'English (Jamaica)',\n 'English (New Zealand)',\n 'English (Philippines)',\n 'English (South Africa)',\n 'English (Trinidad)',\n 'English (United Kingdom)',\n 'English (United States)',\n 'English (Zimbabwe)',\n 'Estonian',\n 'Faroese',\n 'Farsi',\n 'Filipino',\n 'Finnish',\n 'French (Belgium)',\n 'French (Cameroon)',\n 'French (Canada)',\n 'French (Congo,DRC)',\n 'French (Cote d\\'Ivoire)',\n 'French (France)',\n 'French (Luxembourg)',\n 'French (Mali)',\n 'French (Monaco)',\n 'French (Morocco)',\n 'French (Senegal)',\n 'French (Switzerland)',\n 'French (West Indies)',\n 'Frisian (Netherlands)',\n 'FYRO Macedonian',\n 'Gaelic Ireland',\n 'Galician (Spain)',\n 'Georgian',\n 'German (Austria)',\n 'German (Germany)',\n 'German (Liechtenstein)',\n 'German (Luxembourg)',\n 'German (Switzerland)',\n 'Greek',\n 'Gujarati',\n 'Hebrew',\n 'Hindi',\n 'Hungarian',\n 'Icelandic',\n 'Igbo (Nigeria)',\n 'Indonesian',\n 'Italian (Italy)',\n 'Italian (Switzerland)',\n 'Japanese',\n 'Kannada',\n 'Kazakh',\n 'Khmer',\n 'Konkani',\n 'Korean',\n 'Kyrgyz (Cyrillic)',\n 'Lao',\n 'Latvian',\n 'Lithuanian',\n 'Macedonian',\n 'Malay (Brunei Darussalam)',\n 'Malay (Malaysia)',\n 'Malayalam',\n 'Maltese',\n 'Maori (New Zealand)',\n 'Marathi',\n 'Mongolian (Cyrillic)',\n 'Mongolian (Mongolia)',\n 'Nepali',\n 'Norwegian (Bokmal)',\n 'Norwegian (Nynorsk)',\n 'Oriya',\n 'Polish',\n 'Portuguese (Brazil)',\n 'Portuguese (Portugal)',\n 'Punjabi',\n 'Rhaeto-Romanic',\n 'Romanian',\n 'Romanian (Moldova)',\n 'Russian',\n 'Sami Lappish',\n 'Sanskrit',\n 'Serbian (Cyrillic)',\n 'Serbian (Latin)',\n 'Sindhi',\n 'Sinhalese (Sri Lanka)',\n 'Slovak',\n 'Slovenian',\n 'Spanish (Argentina)',\n 'Spanish (Bolivia)',\n 'Spanish (Chile)',\n 'Spanish (Colombia)',\n 'Spanish (Costa Rica)',\n 'Spanish (Dominican Republic)',\n 'Spanish (Ecuador)',\n 'Spanish (El Salvador)',\n 'Spanish (Guatemala)',\n 'Spanish (Honduras)',\n 'Spanish (International Sort)',\n 'Spanish (Mexico)',\n 'Spanish (Nicaragua)',\n 'Spanish (Panama)',\n 'Spanish (Paraguay)',\n 'Spanish (Peru)',\n 'Spanish (Puerto Rico)',\n 'Spanish (Traditional Sort)',\n 'Spanish (Uruguay)',\n 'Spanish (Venezuela)',\n 'Swahili',\n 'Swedish',\n 'Swedish (Finland)',\n 'Tajik',\n 'Tamil',\n 'Tatar',\n 'Telegu',\n 'Thai',\n 'Tibetan',\n 'Tsonga',\n 'Twana',\n 'Turkish',\n 'Turkmen',\n 'Ukrainian',\n 'Urdu',\n 'Uzbek (Cyrillic)',\n 'Uzbek (Latin)',\n 'Venda',\n 'Vietnamese',\n 'Welsh',\n 'Wolof (Senegal)',\n 'Xhosa',\n 'Zulu']\n";
+    fputs(languages, stdout);
+#endif /* MAPI_ENABLE */
+  
     fputs("# End of initializer\n", stdout);
 }
 

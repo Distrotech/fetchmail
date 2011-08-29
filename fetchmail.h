@@ -373,13 +373,9 @@ struct query
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
 #ifdef MAPI_ENABLE
-    char *mapi_workstation;	/* local computer name */
-    char *mapi_domain;	/* Windows domain name */
-    char *mapi_lcid;	/* language to use, specified as a 
-				   code (in hexadecimal) or as a name */
-    char *mapi_ldif;    /* path to the ldif files */
-    char *mapi_profdb;  /* where to store MAPI profiles database */
-    char *mapi_profname;/* MAPI profile name */ 
+    char *mapi_realm;		/* The Windows realm your Exchange server belongs to*/
+    char *mapi_domain;		/* The Windows domain your Exchange server belongs to*/
+    char *mapi_language;	/* Language to use, for example, French */
 #endif
 
     /* internal use -- per-poll state */

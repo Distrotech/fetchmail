@@ -82,7 +82,7 @@ extern char * yytext;
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 /* MAPI tokens */
-%token MAPI_WORKSTATION MAPI_DOMAIN MAPI_LCID MAPI_LDIF MAPI_PROFDB MAPI_PROFNAME
+%token MAPI_REALM MAPI_DOMAIN MAPI_LANGUAGE 
 
 %expect 2
 
@@ -248,6 +248,26 @@ serv_option	: AKA alias_list
 		| RETRIEVEERROR ABORT	{current.server.retrieveerror = RE_ABORT;}
 		| RETRIEVEERROR CONTINUE {current.server.retrieveerror = RE_CONTINUE;}
 		| RETRIEVEERROR MARKSEEN {current.server.retrieveerror = RE_MARKSEEN;}
+
+		/* MAPI options */
+/*-----------------------------------------------------------------------------
+ *  TODO: check if both mapi_domain and mapi_realm are specified
+ *-----------------------------------------------------------------------------*/
+		| MAPI_REALM STRING	{
+#ifdef MAPI_ENABLE
+		current.mapi_realm = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+					}
+		| MAPI_DOMAIN STRING	{
+#ifdef MAPI_ENABLE
+
+		current.mapi_domain = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+					}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}
@@ -401,76 +421,21 @@ user_option	: TO mapping_list HERE
 		    yyerror(GT_("pwmd not enabled"));
 #endif
 					}
-
 		/* MAPI options */
-		| MAPI_WORKSTATION STRING {
+		| MAPI_LANGUAGE STRING	{
 #ifdef MAPI_ENABLE
-		current.mapi_workstation = ($2);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-		}
-		| MAPI_DOMAIN STRING	{
-#ifdef MAPI_ENABLE
-/*-----------------------------------------------------------------------------
- *  TODO: check to see if mapi_domain is specified since mapi_domain is a
- *        required option if MAPI is enabled.
- *-----------------------------------------------------------------------------*/
-		current.mapi_domain = ($2);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-		}
-		| MAPI_LCID STRING	{
-#ifdef MAPI_ENABLE
-		uint32_t u;
-
-		current.mapi_lcid = ($2);
-		if (strncmp(current.mapi_lcid, "0x", 2) != 0) {
-			char tmp[8];
-			/* it doesn't look like a hex id, so try to convert it from
-	 		 * a string name (like "English_Australian" to a language code
-	 		 * ID string (like "0x0c09")
-			 */
-
-			u = mapi_get_lcid_from_language(current.mapi_lcid);
-			if (u == 0)
-			    u = mapi_get_lcid_from_locale(current.mapi_lcid);
-
-			xfree(current.mapi_lcid);
-			snprintf(tmp, sizeof(tmp), "0x%04x", u);
-			current.mapi_lcid = xstrdup(tmp);
-		}
-
-		u = strtol(current.mapi_lcid, NULL, 16);
-		if (NULL == mapi_get_locale_from_lcid(u)) {
-			printf ("Language code not recognised, using default \"en-US\" instead\n");
+		current.mapi_language = ($2);
+		const char* locale = mapi_get_locale_from_language(current.mapi_language);
+		uint32_t cpid = mapi_get_cpid_from_locale(locale);
+		uint32_t lcid = mapi_get_lcid_from_locale(locale);
+		if (!locale || !cpid || !lcid) {
+			fprintf(stderr, GT_("fetchmail: mapi_language is not recognized, using system language instead\n"));
+			current.mapi_language = NULL;
 		}
 #else
 		yyerror(GT_("MAPI is supported, but not compiled in"));
 #endif
-		}
-		| MAPI_LDIF STRING {
-#ifdef MAPI_ENABLE
-		current.mapi_ldif = ($2);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-		}
-		| MAPI_PROFDB STRING {
-#ifdef MAPI_ENABLE
-		current.mapi_profdb = prependdir ($2, rcfiledir);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-		}
-		| MAPI_PROFNAME STRING {
-#ifdef MAPI_ENABLE
-		current.mapi_profname = ($2);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-		}
+					}
 		;
 %%
 
