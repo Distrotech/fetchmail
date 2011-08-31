@@ -230,7 +230,6 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	struct ifaddr		ifaddr;
 	unsigned long		ifaddr_addr;
 	struct sockaddr		sa;
-	unsigned long		sa_addr;
 	uint			i;
 	
 	if (if_egid)

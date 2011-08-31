@@ -101,6 +101,7 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	if (!argvec)
 	{
 		report(stderr, GT_("fetchmail: malloc failed\n"));
+		free(plugin_copy);
 		return NULL;
 	}
 	memset(argvec, 0, s);
@@ -535,7 +536,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 
 	if (outlevel >= O_VERBOSE) {
 		if (depth == 0 && SSLverbose)
-			report(stderr, GT_("Server certificate:\n"));
+			report(stdout, GT_("Server certificate:\n"));
 		else {
 			if (_firstrun) {
 				_firstrun = 0;

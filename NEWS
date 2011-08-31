@@ -117,6 +117,8 @@ NOTE THAT THE MAPI FEATURE IS ENTIRELY UNTESTED AND UNSUPPORTED!
   Workaround for older releases: do not use mimedecode feature.
 * Fetchmail now detects singly-quoted % expansions in the mda option and refuses
   to deliver for safety reasons. Fixes Debian Bug#347909.
+* The Server certificate: message in verbose mode now appears on stdout like the
+  remainder of the output. Reported by Henry Jensen, to fix Debian Bug #639807.
 
 # CHANGES
 * A foreground fetchmail can now accept a few more options while another copy is
@@ -127,6 +129,18 @@ NOTE THAT THE MAPI FEATURE IS ENTIRELY UNTESTED AND UNSUPPORTED!
   offered by the server before we resort to sending the password as clear text.
 
 --------------------------------------------------------------------------------
+
+fetchmail-6.3.21 (not yet released):
+
+# CRITICAL BUG FIX
+* The IMAP client no longer inserts NUL bytes into the last line of a message
+  when it is not closed with a LF or CRLF sequence. Reported by Antoine Levitt.
+  As a side effect of the fix, and in order to avoid a full rewrite, fetchmail
+  will now CRLF-terminate the last line fetched through IMAP, even if it is
+  originally not terminated by LF or CRLF. This bears no relevance if your
+  messages end up in mbox, but adds line termination for storages (like Maildir)
+  that do not require that the last line be LF- or CRLF-terminated.
+
 
 fetchmail-6.3.20 (released 2011-06-06, 26005 LoC):
 
