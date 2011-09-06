@@ -2812,7 +2812,7 @@ it).
 Running \fBfetchmail\fP in foreground while a background fetchmail is
 running will do whichever of these is appropriate to wake it up.
 
-.SH BUGS AND KNOWN PROBLEMS
+.SH BUGS, LIMITATIONS, AND KNOWN PROBLEMS
 .PP
 Please check the \fBNEWS\fP file that shipped with fetchmail for more
 known bugs than those listed here.
@@ -2821,6 +2821,10 @@ Fetchmail cannot handle user names that contain blanks after a "@"
 character, for instance "demonstr@ti on". These are rather uncommon and
 only hurt when using UID-based \-\-keep setups, so the 6.3.X versions of
 fetchmail won't be fixed.
+.PP
+Fetchmail cannot handle configurations where you have multiple accounts
+that use the same server name and the same login. Any user@server
+combination must be unique.
 .PP
 The assumptions that the DNS and in particular the checkalias options
 make are not often sustainable. For instance, it has become uncommon for
