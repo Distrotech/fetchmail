@@ -248,26 +248,6 @@ serv_option	: AKA alias_list
 		| RETRIEVEERROR ABORT	{current.server.retrieveerror = RE_ABORT;}
 		| RETRIEVEERROR CONTINUE {current.server.retrieveerror = RE_CONTINUE;}
 		| RETRIEVEERROR MARKSEEN {current.server.retrieveerror = RE_MARKSEEN;}
-
-		/* MAPI options */
-/*-----------------------------------------------------------------------------
- *  TODO: check if both mapi_domain and mapi_realm are specified
- *-----------------------------------------------------------------------------*/
-		| MAPI_REALM STRING	{
-#ifdef MAPI_ENABLE
-		current.mapi_realm = ($2);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-					}
-		| MAPI_DOMAIN STRING	{
-#ifdef MAPI_ENABLE
-
-		current.mapi_domain = ($2);
-#else
-		yyerror(GT_("MAPI is supported, but not compiled in"));
-#endif
-					}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}
@@ -422,6 +402,24 @@ user_option	: TO mapping_list HERE
 #endif
 					}
 		/* MAPI options */
+/*-----------------------------------------------------------------------------
+ *  TODO: check if both mapi_domain and mapi_realm are specified
+ *-----------------------------------------------------------------------------*/
+		| MAPI_REALM STRING	{
+#ifdef MAPI_ENABLE
+		current.mapi_realm = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+					}
+		| MAPI_DOMAIN STRING	{
+#ifdef MAPI_ENABLE
+
+		current.mapi_domain = ($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+					}
 		| MAPI_LANGUAGE STRING	{
 #ifdef MAPI_ENABLE
 		current.mapi_language = ($2);

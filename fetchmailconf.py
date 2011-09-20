@@ -107,8 +107,7 @@ class Server:
 	self.badheader = FALSE		# Pass messages with bad headers on?
 	self.retrieveerror = 'abort'	# Policy when message retrieval errors encountered
 	self.users = []			# List of user entries for site
-	self.mapi_domain = None		# The Windows domain your Exchange server belongs to
-	self.mapi_realm = None		# The Windows realm your Exchange server belongs to
+
 	Server.typemap = (
 	    ('pollname',  'String'),
 	    ('via',	  'String'),
@@ -133,9 +132,7 @@ class Server:
 	    ('principal', 'String'),
 	    ('tracepolls','Boolean'),
 	    ('badheader', 'Boolean'),
-	    ('retrieveerror', 'String'),
-	    ('mapi_domain', 'String'),
-	    ('mapi_realm', 'String'))
+	    ('retrieveerror', 'String'))
 
     def dump(self, folded):
 	res = ""
@@ -144,11 +141,6 @@ class Server:
 	res = res + (" " + self.pollname)
 	if self.via:
 	    res = res + (" via " + str(self.via) + "\n");
-
-	if self.mapi_domain:
-	    res = res + " mapi_domain " + `self.mapi_domain`
-	if self.mapi_realm:
-	    res = res + " mapi_realm " + `self.mapi_realm`
 
 	if self.protocol != ServerDefaults.protocol:
 	    res = res + " with proto " + self.protocol
@@ -288,6 +280,8 @@ class User:
 	self.sslcommonname = None	# SSL CommonName to expect
 	self.sslfingerprint = None	# SSL key fingerprint to check
 	self.properties = None	# Extension properties
+	self.mapi_domain = None		# The Windows domain your Exchange server belongs to
+	self.mapi_realm = None		# The Windows realm your Exchange server belongs to
 	self.mapi_language = None	# The user's language 
 	User.typemap = (
 	    ('remote',	    'String'),
@@ -329,6 +323,8 @@ class User:
 	    ('sslcommonname', 'String'),
 	    ('sslfingerprint', 'String'),
 	    ('properties',  'String'),
+	    ('mapi_domain', 'String'),
+	    ('mapi_realm', 'String'),
 	    ('mapi_language', 'String'))
 
     def __repr__(self):
@@ -337,6 +333,10 @@ class User:
 	if self.password:
 	    res = res + "with password " + `self.password` + " "
 
+	if self.mapi_domain:
+	    res = res + " mapi_domain " + `self.mapi_domain`
+	if self.mapi_realm:
+	    res = res + " mapi_realm " + `self.mapi_realm`
 	if self.mapi_language:
 	    res = res + " mapi_language " + `self.mapi_language` + " "
 
@@ -1244,13 +1244,6 @@ class ServerEdit(Frame, MyWidget):
 	       command=lambda: helpwin(protohelp)).pack(side=RIGHT)
 	protwin.pack(fill=X)
 
-	if 'mapi' in feature_options:
-	    mapiwin = Frame(leftwin, relief=RAISED, bd=5)
-	    Label(mapiwin, text="MAPI Options").pack(side=TOP)
-	    LabeledEntry(mapiwin, 'Windows Domain:', self.mapi_domain, '14', leftwidth).pack(side=TOP, fill=X)
-	    LabeledEntry(mapiwin, 'Windows Realm:', self.mapi_realm, '14', leftwidth).pack(side=TOP, fill=X)
-	    mapiwin.pack(fill=X, anchor=N)
-
 	userwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(userwin, text="User entries for " + host).pack(side=TOP)
 	ListEdit("New user: ",
@@ -1698,6 +1691,21 @@ class UserEdit(Frame, MyWidget):
 			"User options for " + self.user.remote + " querying " + servername,
 			userhelp)
 
+        # use a seperated parameter UI for MAPI
+	if 'mapi' in feature_options and self.parent.server.protocol == 'MAPI':
+	    leftwin = self
+
+	    mapiwin = Frame(leftwin, relief=RAISED, bd=5)
+	    LabeledEntry(mapiwin, 'Windows Domain:', self.mapi_domain, '14', '25').pack(side=TOP, fill=X)
+	    LabeledEntry(mapiwin, 'Windows Realm:', self.mapi_realm, '14', '25').pack(side=TOP, fill=X)
+	    LabeledListbox(mapiwin, 'Language:', self.mapi_language, languages, '14', '25').pack(side=TOP, fill=X)
+	    mapiwin.pack(fill=X, anchor=N)
+
+	    self.pack()
+
+	    return
+
+
 	if mode != 'novice':
 	    leftwin = Frame(self);
 	else:
@@ -1726,12 +1734,6 @@ class UserEdit(Frame, MyWidget):
 	    LabeledEntry(sslwin, 'SSL key fingerprint:',
 			 self.sslfingerprint, '14').pack(side=TOP, fill=X)
 	    sslwin.pack(fill=X, anchor=N)
-
-	if 'mapi' in feature_options:
-	    mapiwin = Frame(leftwin, relief=RAISED, bd=5)
-	    Label(mapiwin, text="MAPI Options").pack(side=TOP)
-	    LabeledListbox(mapiwin, 'Language:', self.mapi_language, languages, '12', '25').pack(side=TOP, fill=X)
-	    mapiwin.pack(fill=X, anchor=N)
 
 	names = Frame(leftwin, relief=RAISED, bd=5)
 	Label(names, text="Local names").pack(side=TOP)
@@ -2030,8 +2032,7 @@ def copy_instance(toclass, fromdict):
     optional = ('interface', 'monitor',
 		'esmtpname', 'esmtppassword',
 		'ssl', 'sslkey', 'sslcert', 'sslproto', 'sslcertck',
-		'sslcertpath', 'sslcommonname', 'sslfingerprint', 'showdots',
-		'mapi_domain', 'mapi_realm')
+		'sslcertpath', 'sslcommonname', 'sslfingerprint', 'showdots')
 
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()

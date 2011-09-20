@@ -250,10 +250,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("pollname", ctl->server.pollname); 
 	    booldump("active", !ctl->server.skip); 
 	    stringdump("via", ctl->server.via); 
-#ifdef MAPI_ENABLE
-	    stringdump("mapi_domain", ctl->mapi_domain);
-	    stringdump("mapi_realm", ctl->mapi_realm);
-#endif
 	    stringdump("protocol", 
 		       using_kpop ? "KPOP" : showproto(ctl->server.protocol));
 	    stringdump("service",  ctl->server.service);
@@ -394,6 +390,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);
 #ifdef MAPI_ENABLE
+	stringdump("mapi_domain", ctl->mapi_domain);
+	stringdump("mapi_realm", ctl->mapi_realm);
 	stringdump("mapi_language", ctl->mapi_language);
 #endif
 	listdump("smtphunt", ctl->smtphunt);

@@ -740,6 +740,7 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	mapi_profile_add_string_attr(mapi_ctx, profname, "binding", realhost);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "realm", ctl->mapi_realm);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "domain", ctl->mapi_domain);
+        mapi_profile_add_string_attr(mapi_ctx, profname, "seal", "true");
 
 	cpid_str = talloc_asprintf(g_mapi_mem_ctx, "%d", cpid);
 	lcid_str = talloc_asprintf(g_mapi_mem_ctx, "%d", lcid);
