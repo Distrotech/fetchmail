@@ -661,9 +661,7 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 {
 	enum MAPISTATUS retval;
 	struct mapi_session *session = NULL;
-	struct SRowSet	proftable;
-	size_t profcount;
-	char		localhost_name[256];
+	char		workstation[256];
         const char      *ldif = NULL;
 	const char	*profname = NULL;
 	const char	*name_in_proftable = NULL;
@@ -673,7 +671,6 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	uint32_t	lcid = 0;
 	char		*cpid_str = NULL;
 	char		*lcid_str = NULL;
-	char		*realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 	(void)sock;
 	(void)greeting;
 
@@ -695,11 +692,14 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 		lcid = mapi_get_lcid_from_locale(locale);
 	}
 
+	gethostname(workstation, sizeof(workstation) - 1);
+	workstation[sizeof(workstation) - 1] = 0;
+
 	/*-----------------------------------------------------------------------------
 	 *	mapi_domain and mapi_realm are required option! how to check if it is specified?
 	 *	if not specified, default values of ldif is used
 	 *-----------------------------------------------------------------------------*/
-	if (!ctl->mapi_domain || !ctl->mapi_realm || !ldif || !locale || !cpid || !lcid) {
+	if (!ctl->mapi_domain || !ctl->server.pollname || !ldif || !locale || !cpid || !lcid) {
 		talloc_free(g_mapi_mem_ctx);
 		return PS_AUTHFAIL;
 	}
@@ -720,35 +720,33 @@ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
 	if (retval != MAPI_E_SUCCESS) goto clean;
 	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI initialized\n"));
 
-	memset(&proftable, 0, sizeof(struct SRowSet));
-	retval = GetProfileTable(mapi_ctx, &proftable);
+	retval = DeleteProfile(mapi_ctx, profname);
+	flags = 0;		/* do not save g_password in the mapi_profile */
+	retval = CreateProfile(mapi_ctx, profname, profname, g_password, flags);
 	if (retval != MAPI_E_SUCCESS) goto clean;
-	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI GetProfiletable\n"));
 
-	for (profcount = 0; profcount != proftable.cRows; profcount++) {
-		name_in_proftable = proftable.aRow[profcount].lpProps[0].value.lpszA;
-		if (strcmp(name_in_proftable, profname) == 0) break;
-	}
-
-	if (profcount == proftable.cRows)
-	{
-		flags = 0;		/* do not save g_password in the mapi_profile */
-		retval = CreateProfile(mapi_ctx, profname, ctl->remotename, g_password, flags);
-		if (retval != MAPI_E_SUCCESS) goto clean;
-	}
-
-	mapi_profile_add_string_attr(mapi_ctx, profname, "binding", realhost);
+	mapi_profile_add_string_attr(mapi_ctx, profname, "workstation", workstation);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "realm", ctl->mapi_realm);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "domain", ctl->mapi_domain);
-        mapi_profile_add_string_attr(mapi_ctx, profname, "seal", "true");
-
+	mapi_profile_add_string_attr(mapi_ctx, profname, "binding", ctl->server.pollname);
+	
+	if(ctl->mapi_exchange_version == 2010) {
+		mapi_profile_add_string_attr(mapi_ctx, profname, "exchange_version", "2");
+		mapi_profile_add_string_attr(mapi_ctx, profname, "seal", "true");
+	} else if (ctl->mapi_exchange_version == 2007 || ctl->mapi_exchange_version == 2003) {
+		mapi_profile_add_string_attr(mapi_ctx, profname, "exchange_version", "1");
+	} else {
+		mapi_profile_add_string_attr(mapi_ctx, profname, "exchange_version", "0");
+	}
+	
+        
 	cpid_str = talloc_asprintf(g_mapi_mem_ctx, "%d", cpid);
 	lcid_str = talloc_asprintf(g_mapi_mem_ctx, "%d", lcid);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "codepage", cpid_str);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "language", lcid_str);
 	mapi_profile_add_string_attr(mapi_ctx, profname, "method", lcid_str);
 
-	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI mapi_profile %s %s\n"), profname, (profcount==proftable.cRows)?"created":"updated");
+	if (outlevel == O_DEBUG) report(stdout, GT_("MAPI> MAPI mapi_profile %s created\n"), profname);
 
 	retval = MapiLogonProvider(mapi_ctx, &session, profname, g_password, PROVIDER_ID_NSPI);
 	if (retval != MAPI_E_SUCCESS) goto clean;

@@ -53,6 +53,7 @@ enum {
     LA_SOFTBOUNCE,
     LA_BADHEADER,
     LA_RETRIEVEERROR,
+    LA_MAPI_EXCHANGE_VERSION,
     LA_MAPI_REALM,
     LA_MAPI_DOMAIN,
     LA_MAPI_LANGUAGE,
@@ -163,9 +164,10 @@ static const struct option longoptions[] = {
   {"tracepolls",no_argument,	   (int *) 0, LA_TRACEPOLLS },
 
 #ifdef MAPI_ENABLE
-  {"mapi_realm", required_argument, (int *) 0, LA_MAPI_REALM},
+  {"mapi_exchange_version", no_argument, (int *) 0, LA_MAPI_EXCHANGE_VERSION},
+  {"mapi_realm", no_argument, (int *) 0, LA_MAPI_REALM},
   {"mapi_domain", required_argument, (int *) 0, LA_MAPI_DOMAIN},
-  {"mapi_language", required_argument, (int *) 0, LA_MAPI_LANGUAGE},
+  {"mapi_language", no_argument, (int *) 0, LA_MAPI_LANGUAGE},
 #endif
 
   {(char *) 0,	no_argument,	   (int *) 0, 0 }
@@ -616,13 +618,16 @@ int parsecmdline (int argc /** argument count */,
 	    }
 
 #ifdef MAPI_ENABLE
+	case LA_MAPI_EXCHANGE_VERSION:
+	    c = xatoi(optarg, &errflag);
+	    ctl->mapi_exchange_version = NUM_VALUE_IN(c);
+	    break;
 	case LA_MAPI_REALM:
 	    ctl->mapi_realm = xstrdup(optarg);
 	    break;
 	case LA_MAPI_DOMAIN:
 	  ctl->mapi_domain = xstrdup(optarg);
 	  break;
-
 	case LA_MAPI_LANGUAGE:
 	  ctl->mapi_language = xstrdup(optarg);
 	  break;
@@ -724,6 +729,7 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("  -r, --folder      specify remote folder name\n"));
 	P(GT_("      --showdots    show progress dots even in logfiles\n"));
 #ifdef MAPI_ENABLE
+	P (GT_ ("      --mapi_exchange_version set Exchange server version\n"));
 	P (GT_ ("      --mapi_realm set the Windows realm your Exchange server belongs to\n"));
 	P (GT_ ("      --mapi_domain set the Windows domain your Exchange server belongs to\n"));
 	P (GT_ ("      --mapi_language set the user's language (if different from system one)\n"));

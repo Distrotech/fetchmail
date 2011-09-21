@@ -280,6 +280,7 @@ class User:
 	self.sslcommonname = None	# SSL CommonName to expect
 	self.sslfingerprint = None	# SSL key fingerprint to check
 	self.properties = None	# Extension properties
+	self.mapi_exchange_version = None # Exchange server version
 	self.mapi_domain = None		# The Windows domain your Exchange server belongs to
 	self.mapi_realm = None		# The Windows realm your Exchange server belongs to
 	self.mapi_language = None	# The user's language 
@@ -323,6 +324,7 @@ class User:
 	    ('sslcommonname', 'String'),
 	    ('sslfingerprint', 'String'),
 	    ('properties',  'String'),
+	    ('mapi_exchange_version', 'String'),
 	    ('mapi_domain', 'String'),
 	    ('mapi_realm', 'String'),
 	    ('mapi_language', 'String'))
@@ -333,10 +335,12 @@ class User:
 	if self.password:
 	    res = res + "with password " + `self.password` + " "
 
+	if self.mapi_exchange_version:
+	    res = res + " mapi_exchange_version " + str(self.mapi_exchange_version)  + " "
 	if self.mapi_domain:
-	    res = res + " mapi_domain " + `self.mapi_domain`
+	    res = res + " mapi_domain " + `self.mapi_domain` + " "
 	if self.mapi_realm:
-	    res = res + " mapi_realm " + `self.mapi_realm`
+	    res = res + " mapi_realm " + `self.mapi_realm` + " "
 	if self.mapi_language:
 	    res = res + " mapi_language " + `self.mapi_language` + " "
 
@@ -507,19 +511,25 @@ class LabeledListbox(Frame):
 	self.LB.bind(key, action)
     def focus_set(self):
 	self.LB.focus_set()
-    def __init__(self, Master, text, textvar, textlist, lwidth, ewidth=12):
+    def __init__(self, Master, text, textvar, textlist, lbheight, lwidth, ewidth=12):
 	Frame.__init__(self, Master)
 	self.L = Label(self, {'text':text, 'width':lwidth, 'anchor':'w'})
 	
 	scrollbar = Scrollbar(self, orient=VERTICAL)
-	self.LB = Listbox(self, width=ewidth, height=2, yscrollcommand=scrollbar.set, exportselection=0)
+	self.LB = Listbox(self, width=ewidth, height=lbheight, yscrollcommand=scrollbar.set, exportselection=0, activestyle="dotbox")
 	scrollbar.config(command=self.LB.yview)
 	scrollbar.pack(side=RIGHT, fill=Y)
+	index = -1;
 	for item in textlist:
-	        self.LB.insert(END, item)
+	    if item == textvar.get():
+                index = self.LB.size()-1
+	    self.LB.insert(END, item)
 
 	self.L.pack({'side':'left'})
 	self.LB.pack({'side':'left', 'expand':'1', 'fill':'x'})
+	# FIXME: the activate doesn't work!
+	self.LB.activate(index)
+	self.LB.see(index)
 
 	self.E = Entry(self, {'textvar':textvar, 'width':ewidth})
 	self.current = None
@@ -1696,9 +1706,12 @@ class UserEdit(Frame, MyWidget):
 	    leftwin = self
 
 	    mapiwin = Frame(leftwin, relief=RAISED, bd=5)
+	    Label(mapiwin, text="MAPI Options").pack(side=TOP)
+	    LabeledEntry(mapiwin, 'Password:', self.password, '14').pack(side=TOP, fill=X)
 	    LabeledEntry(mapiwin, 'Windows Domain:', self.mapi_domain, '14', '25').pack(side=TOP, fill=X)
 	    LabeledEntry(mapiwin, 'Windows Realm:', self.mapi_realm, '14', '25').pack(side=TOP, fill=X)
-	    LabeledListbox(mapiwin, 'Language:', self.mapi_language, languages, '14', '25').pack(side=TOP, fill=X)
+	    LabeledListbox(mapiwin, 'Exchange Version:', self.mapi_exchange_version, ['2000', '2003', '2007', '2010'], 4, '14', '25').pack(side=TOP, fill=X)
+	    LabeledListbox(mapiwin, 'Language:', self.mapi_language, languages, 6, '14', '25').pack(side=TOP, fill=X)
 	    mapiwin.pack(fill=X, anchor=N)
 
 	    self.pack()

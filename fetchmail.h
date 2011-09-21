@@ -373,9 +373,10 @@ struct query
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
 #ifdef MAPI_ENABLE
-    char *mapi_realm;		/* The Windows realm your Exchange server belongs to*/
-    char *mapi_domain;		/* The Windows domain your Exchange server belongs to*/
-    char *mapi_language;	/* Language to use, for example, French */
+    int  mapi_exchange_version;	/* Exchange server version, 2000/2003/2007/2010 */
+    char *mapi_realm;		/* Windows realm your Exchange server belongs to */
+    char *mapi_domain;		/* Windows domain your Exchange server belongs to */
+    char *mapi_language;	/* Language to use, for example, English (United States) */
 #endif
 
     /* internal use -- per-poll state */

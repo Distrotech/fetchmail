@@ -1296,6 +1296,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(properties);
 
 #ifdef MAPI_ENABLE
+    FLAG_MERGE(mapi_exchange_version);
     FLAG_MERGE(mapi_realm);
     FLAG_MERGE(mapi_domain);
     FLAG_MERGE(mapi_language);
@@ -1332,6 +1333,9 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.fetchsizelimit = 100;
     def_opts.fastuidl = 4;
 #ifdef MAPI_ENABLE
+    def_opts.mapi_exchange_version = 2010;
+    def_opts.mapi_realm = NULL;
+    def_opts.mapi_domain = NULL;
     def_opts.mapi_language = NULL;
 #endif
 
@@ -2352,15 +2356,18 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  Pass-through properties \"%s\".\n"),
 		   visbuf(ctl->properties));
 #ifdef MAPI_ENABLE
+	if (ctl->mapi_exchange_version)
+	    printf(GT_("  Exchange server version \"%d\".\n"),
+		   ctl->mapi_exchange_version);
+
 	if (ctl->mapi_realm)
-	    printf(GT_("  Local computer name \"%s\".\n"),
+	    printf(GT_("  Windows realm \"%s\".\n"),
 		   visbuf(ctl->mapi_realm));
 
 	if (ctl->mapi_domain)
-	    printf(GT_("  Windows domain name \"%s\".\n"),
+	    printf(GT_("  Windows domain  \"%s\".\n"),
 		   visbuf(ctl->mapi_domain));
 
-/*TODO: to dump language as name, not as code.*/
 	if (ctl->mapi_language)
 	    printf(GT_("  Language to use \"%s\".\n"),
 		   visbuf(ctl->mapi_language));

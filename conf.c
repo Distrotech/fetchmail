@@ -390,6 +390,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);
 #ifdef MAPI_ENABLE
+	numdump("mapi_exchange_version", ctl->mapi_exchange_version);
 	stringdump("mapi_domain", ctl->mapi_domain);
 	stringdump("mapi_realm", ctl->mapi_realm);
 	stringdump("mapi_language", ctl->mapi_language);

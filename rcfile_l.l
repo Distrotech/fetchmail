@@ -131,6 +131,7 @@ fastuidl	{ return FASTUIDL; }
 expunge		{ return EXPUNGE; }
 properties	{ return PROPERTIES; }
 
+mapi_exchange_version	{ return MAPI_EXCHANGE_VERSION; }
 mapi_realm	{ return MAPI_REALM; }
 mapi_domain	{ return MAPI_DOMAIN; }
 mapi_language	{ return MAPI_LANGUAGE; }

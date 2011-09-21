@@ -82,7 +82,7 @@ extern char * yytext;
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 /* MAPI tokens */
-%token MAPI_REALM MAPI_DOMAIN MAPI_LANGUAGE 
+%token MAPI_EXCHANGE_VERSION MAPI_REALM MAPI_DOMAIN MAPI_LANGUAGE 
 
 %expect 2
 
@@ -405,6 +405,13 @@ user_option	: TO mapping_list HERE
 /*-----------------------------------------------------------------------------
  *  TODO: check if both mapi_domain and mapi_realm are specified
  *-----------------------------------------------------------------------------*/
+		| MAPI_EXCHANGE_VERSION NUMBER	{
+#ifdef MAPI_ENABLE
+		current.mapi_exchange_version = NUM_VALUE_IN($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+					}
 		| MAPI_REALM STRING	{
 #ifdef MAPI_ENABLE
 		current.mapi_realm = ($2);
