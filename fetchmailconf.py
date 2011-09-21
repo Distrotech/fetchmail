@@ -107,6 +107,7 @@ class Server:
 	self.badheader = FALSE		# Pass messages with bad headers on?
 	self.retrieveerror = 'abort'	# Policy when message retrieval errors encountered
 	self.users = []			# List of user entries for site
+
 	Server.typemap = (
 	    ('pollname',  'String'),
 	    ('via',	  'String'),
@@ -140,6 +141,7 @@ class Server:
 	res = res + (" " + self.pollname)
 	if self.via:
 	    res = res + (" via " + str(self.via) + "\n");
+
 	if self.protocol != ServerDefaults.protocol:
 	    res = res + " with proto " + self.protocol
 	if self.service and self.protocol and self.service != defaultports[self.protocol] and defaultports[self.protocol] and self.service != ianaservices[defaultports[self.protocol]]:
@@ -278,12 +280,10 @@ class User:
 	self.sslcommonname = None	# SSL CommonName to expect
 	self.sslfingerprint = None	# SSL key fingerprint to check
 	self.properties = None	# Extension properties
-	self.mapi_workstation = None
-	self.mapi_domain = None
-	self.mapi_lcid = None
-	self.mapi_ldif = None
-	self.mapi_profdb = None
-	self.mapi_profname = None
+	self.mapi_exchange_version = None # Exchange server version
+	self.mapi_domain = None		# The Windows domain your Exchange server belongs to
+	self.mapi_realm = None		# The Windows realm your Exchange server belongs to
+	self.mapi_language = None	# The user's language 
 	User.typemap = (
 	    ('remote',	    'String'),
 	    # leave out mailboxes and localnames
@@ -324,18 +324,26 @@ class User:
 	    ('sslcommonname', 'String'),
 	    ('sslfingerprint', 'String'),
 	    ('properties',  'String'),
-	    ('mapi_workstation', 'String'),
+	    ('mapi_exchange_version', 'String'),
 	    ('mapi_domain', 'String'),
-	    ('mapi_lcid', 'String'),
-	    ('mapi_ldif', 'String'),
-	    ('mapi_profdb', 'String'),
-	    ('mapi_profname', 'String'))
+	    ('mapi_realm', 'String'),
+	    ('mapi_language', 'String'))
 
     def __repr__(self):
 	res = "    "
 	res = res + "user " + `self.remote` + " there ";
 	if self.password:
 	    res = res + "with password " + `self.password` + " "
+
+	if self.mapi_exchange_version:
+	    res = res + " mapi_exchange_version " + str(self.mapi_exchange_version)  + " "
+	if self.mapi_domain:
+	    res = res + " mapi_domain " + `self.mapi_domain` + " "
+	if self.mapi_realm:
+	    res = res + " mapi_realm " + `self.mapi_realm` + " "
+	if self.mapi_language:
+	    res = res + " mapi_language " + `self.mapi_language` + " "
+
 	if self.localnames:
 	    res = res + "is"
 	    for x in self.localnames:
@@ -439,6 +447,7 @@ class User:
 	    res = res + flag2str(self.lmtp, 'lmtp')
 	if self.antispam != UserDefaults.antispam:
 	    res = res + "    antispam " + self.antispam + "\n"
+
 	return res;
 
     def __str__(self):
@@ -495,6 +504,50 @@ class LabeledEntry(Frame):
 	self.E = Entry(self, {'textvar':textvar, 'width':ewidth})
 	self.L.pack({'side':'left'})
 	self.E.pack({'side':'left', 'expand':'1', 'fill':'x'})
+
+class LabeledListbox(Frame):
+# widget consisting of listbox with caption to left
+    def bind(self, key, action):
+	self.LB.bind(key, action)
+    def focus_set(self):
+	self.LB.focus_set()
+    def __init__(self, Master, text, textvar, textlist, lbheight, lwidth, ewidth=12):
+	Frame.__init__(self, Master)
+	self.L = Label(self, {'text':text, 'width':lwidth, 'anchor':'w'})
+	
+	scrollbar = Scrollbar(self, orient=VERTICAL)
+	self.LB = Listbox(self, width=ewidth, height=lbheight, yscrollcommand=scrollbar.set, exportselection=0, activestyle="dotbox")
+	scrollbar.config(command=self.LB.yview)
+	scrollbar.pack(side=RIGHT, fill=Y)
+	index = -1;
+	for item in textlist:
+	    if item == textvar.get():
+                index = self.LB.size()-1
+	    self.LB.insert(END, item)
+
+	self.L.pack({'side':'left'})
+	self.LB.pack({'side':'left', 'expand':'1', 'fill':'x'})
+	# FIXME: the activate doesn't work!
+	self.LB.activate(index)
+	self.LB.see(index)
+
+	self.E = Entry(self, {'textvar':textvar, 'width':ewidth})
+	self.current = None
+	self.textlist = textlist
+	self.poll() # start polling the list
+
+    def poll(self):
+        selection = self.LB.curselection()
+	selectValue = None;
+	if len(selection) != 0:
+	   selectValue = self.textlist[int(selection[0])]
+
+        if selectValue != self.current:
+            self.current = selectValue
+	    self.E.delete(0, END)
+	    self.E.insert(END, self.current)
+        self.after(250, self.poll)
+
 
 def ButtonBar(frame, legend, ref, alternatives, depth, command):
 # array of radio buttons, caption to left, picking from a string list
@@ -1648,6 +1701,24 @@ class UserEdit(Frame, MyWidget):
 			"User options for " + self.user.remote + " querying " + servername,
 			userhelp)
 
+        # use a seperated parameter UI for MAPI
+	if 'mapi' in feature_options and self.parent.server.protocol == 'MAPI':
+	    leftwin = self
+
+	    mapiwin = Frame(leftwin, relief=RAISED, bd=5)
+	    Label(mapiwin, text="MAPI Options").pack(side=TOP)
+	    LabeledEntry(mapiwin, 'Password:', self.password, '14').pack(side=TOP, fill=X)
+	    LabeledEntry(mapiwin, 'Windows Domain:', self.mapi_domain, '14', '25').pack(side=TOP, fill=X)
+	    LabeledEntry(mapiwin, 'Windows Realm:', self.mapi_realm, '14', '25').pack(side=TOP, fill=X)
+	    LabeledListbox(mapiwin, 'Exchange Version:', self.mapi_exchange_version, ['2000', '2003', '2007', '2010'], 4, '14', '25').pack(side=TOP, fill=X)
+	    LabeledListbox(mapiwin, 'Language:', self.mapi_language, languages, 6, '14', '25').pack(side=TOP, fill=X)
+	    mapiwin.pack(fill=X, anchor=N)
+
+	    self.pack()
+
+	    return
+
+
 	if mode != 'novice':
 	    leftwin = Frame(self);
 	else:
@@ -1975,6 +2046,7 @@ def copy_instance(toclass, fromdict):
 		'esmtpname', 'esmtppassword',
 		'ssl', 'sslkey', 'sslcert', 'sslproto', 'sslcertck',
 		'sslcertpath', 'sslcommonname', 'sslfingerprint', 'showdots')
+
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()
     dict_keys = setdiff(fromdict.keys(), optional)

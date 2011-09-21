@@ -9,20 +9,19 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 3 of the License, or
    (at your option) any later version.
-
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <libmapi/libmapi.h>
+#include "libmapi/libmapi.h"
 #include "openchange-tools.h"
 
-/*
 static void popt_openchange_version_callback(poptContext con,
 					     enum poptCallbackReason reason,
 					     const struct poptOption *opt,
@@ -37,44 +36,44 @@ static void popt_openchange_version_callback(poptContext con,
 }
 
 struct poptOption popt_openchange_version[] = {
-	{ NULL, 0, POPT_ARG_CALLBACK, (void *)popt_openchange_version_callback	},
-	{ "version", 'V', POPT_ARG_NONE, NULL, 'V', "Print version "		},
-	{ NULL }
+	{ NULL, '\0', POPT_ARG_CALLBACK, (void *)popt_openchange_version_callback, '\0', NULL, NULL },
+	{ "version", 'V', POPT_ARG_NONE, NULL, 'V', "Print version ", NULL },
+	POPT_TABLEEND
 };
-*/
+
 
 /*
- * Retrieve the property value for a given SRow and property tag.
+ * Retrieve the property value for a given SRow and property tag.  
  *
- * If the property type is a string: fetch PT_STRING8 then PT_UNICODE
+ * If the property type is a string: fetch PT_UNICODE then PT_STRING8
  * in case the desired property is not available in first choice.
  *
  * Fetch property normally for any others properties
  */
-_PUBLIC_ const void * octool_get_propval(struct SRow *aRow, uint32_t proptag)
+_PUBLIC_ void *octool_get_propval(struct SRow *aRow, uint32_t proptag)
 {
 	const char	*str;
 
 	if (((proptag & 0xFFFF) == PT_STRING8) ||
 	    ((proptag & 0xFFFF) == PT_UNICODE)) {
-		proptag = (proptag & 0xFFFF0000) | PT_STRING8;
-		str = find_SPropValue_data(aRow, proptag);
-		if (str) return str;
-
 		proptag = (proptag & 0xFFFF0000) | PT_UNICODE;
-		str = find_SPropValue_data(aRow, proptag);
-		return str;
-	}
+		str = (const char *) find_SPropValue_data(aRow, proptag);
+		if (str) return (void *)str;
 
-	return find_SPropValue_data(aRow, proptag);
+		proptag = (proptag & 0xFFFF0000) | PT_STRING8;
+		str = (const char *) find_SPropValue_data(aRow, proptag);
+		return (void *)str;
+	} 
+
+	return (void *)find_SPropValue_data(aRow, proptag);
 }
 
 
 /*
  * Read a stream and store it in a DATA_BLOB
  */
-static enum MAPISTATUS octool_get_stream(TALLOC_CTX *mem_ctx,
-					 mapi_object_t *obj_stream,
+_PUBLIC_ enum MAPISTATUS octool_get_stream(TALLOC_CTX *mem_ctx,
+					 mapi_object_t *obj_stream, 
 					 DATA_BLOB *body)
 {
 	enum MAPISTATUS	retval;
@@ -111,8 +110,8 @@ _PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *mem_ctx,
 	enum MAPISTATUS			retval;
 	const struct SBinary_short	*bin;
 	mapi_object_t			obj_stream;
-	char const * data;
-	uint8_t	format = 0;
+	char				*data;
+	uint8_t				format;
 
 	/* Sanity checks */
 	MAPI_RETVAL_IF(!obj_message, MAPI_E_INVALID_PARAMETER, NULL);
@@ -126,18 +125,18 @@ _PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *mem_ctx,
 
 	switch (format) {
 	case olEditorText:
-		data = octool_get_propval(aRow, PR_BODY);
+		data = octool_get_propval(aRow, PR_BODY_UNICODE);
 		if (data) {
 			body->data = talloc_memdup(mem_ctx, data, strlen(data));
 			body->length = strlen(data);
 		} else {
 			mapi_object_init(&obj_stream);
-			retval = OpenStream(obj_message, PR_BODY, 0, &obj_stream);
+			retval = OpenStream(obj_message, PR_BODY_UNICODE, 0, &obj_stream);
 			MAPI_RETVAL_IF(retval, GetLastError(), NULL);
-
+			
 			retval = octool_get_stream(mem_ctx, &obj_stream, body);
 			MAPI_RETVAL_IF(retval, GetLastError(), NULL);
-
+			
 			mapi_object_release(&obj_stream);
 		}
 		break;
@@ -155,7 +154,7 @@ _PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *mem_ctx,
 			MAPI_RETVAL_IF(retval, GetLastError(), NULL);
 
 			mapi_object_release(&obj_stream);
-		}
+		}			
 		break;
 	case olEditorRTF:
 		mapi_object_init(&obj_stream);
@@ -220,7 +219,7 @@ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *mem_ctx,
 					  PR_HASATTACH,
 					  PR_MESSAGE_CODEPAGE);
 	lpProps = talloc_zero(mem_ctx, struct SPropValue);
-	retval = GetProps(obj_message, SPropTagArray, &lpProps, &count);
+	retval = GetProps(obj_message, MAPI_UNICODE, SPropTagArray, &lpProps, &count);
 	MAPIFreeBuffer(SPropTagArray);
 	MAPI_RETVAL_IF(retval, retval, NULL);
 
@@ -238,11 +237,11 @@ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *mem_ctx,
 		printf("Invalid Message: %s\n", msgid ? msgid : "");
 		MAPI_RETVAL_IF(retval, GetLastError(), NULL);
 	}
-
+	
 	from = (const char *) octool_get_propval(&aRow, PR_SENT_REPRESENTING_NAME);
-	to = (const char *) octool_get_propval(&aRow, PR_DISPLAY_TO);
-	cc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_CC);
-	bcc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_BCC);
+	to = (const char *) octool_get_propval(&aRow, PR_DISPLAY_TO_UNICODE);
+	cc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_CC_UNICODE);
+	bcc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_BCC_UNICODE);
 
 	has_attach = (const uint8_t *) octool_get_propval(&aRow, PR_HASATTACH);
 	cp = (const uint32_t *) octool_get_propval(&aRow, PR_MESSAGE_CODEPAGE);
@@ -288,7 +287,7 @@ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *mem_ctx,
 		len = write(1, "\n", 1);
 		fflush(0);
 		talloc_free(body.data);
-	}
+	} 
 	return MAPI_E_SUCCESS;
 }
 
@@ -296,20 +295,21 @@ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *mem_ctx,
 /*
  * OpenChange MAPI programs initialization routine
  */
-/*_PUBLIC_ struct mapi_session *octool_init_mapi(const char *opt_profname,
+_PUBLIC_ struct mapi_session *octool_init_mapi(struct mapi_context *mapi_ctx,
+					       const char *opt_profname,
 					       const char *opt_password,
 					       uint32_t provider)
 {
 	enum MAPISTATUS		retval;
-	char * profname = NULL;
+	char			*profname = NULL;
 	struct mapi_session	*session = NULL;
 	TALLOC_CTX		*mem_ctx = NULL;
 
 	mem_ctx = talloc_named(NULL, 0, "octool_init_mapi");
 	if (opt_profname) {
-		profname = talloc_strdup(mem_ctx, opt_profname);
+		profname = talloc_strdup(mem_ctx, (char *)opt_profname);
 	} else {
-		retval = GetDefaultProfile(&profname);
+		retval = GetDefaultProfile(mapi_ctx, &profname);
 		if (retval != MAPI_E_SUCCESS) {
 			mapi_errstr("GetDefaultProfile", GetLastError());
 			talloc_free(mem_ctx);
@@ -318,11 +318,11 @@ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *mem_ctx,
 	}
 
 	if (!provider) {
-		retval = MapiLogonEx(&session, profname, opt_password);
+		retval = MapiLogonEx(mapi_ctx, &session, profname, opt_password);
 	} else {
-		retval = MapiLogonProvider(&session, profname, opt_password, provider);
+		retval = MapiLogonProvider(mapi_ctx, &session, profname, opt_password, provider);
 	}
-	MAPIFreeBuffer(profname);
+	MAPIFreeBuffer((char *)profname);
 
 	if (retval != MAPI_E_SUCCESS) {
 		mapi_errstr("MapiLogonEx", GetLastError());
@@ -332,4 +332,4 @@ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *mem_ctx,
 
 	talloc_free(mem_ctx);
 	return session;
-}*/
+}

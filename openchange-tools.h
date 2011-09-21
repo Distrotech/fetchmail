@@ -9,12 +9,12 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 3 of the License, or
    (at your option) any later version.
-
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -52,9 +52,13 @@ extern struct poptOption popt_openchange_version[];
 
 __BEGIN_DECLS
 _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *, mapi_object_t *);
-_PUBLIC_ const void * octool_get_propval(struct SRow *, uint32_t);
-_PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *, mapi_object_t *, struct SRow *, DATA_BLOB *);
-/*_PUBLIC_ struct mapi_session * octool_init_mapi(const char *, const char *, uint32_t);*/
+_PUBLIC_ void *octool_get_propval(struct SRow *, uint32_t);
+_PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *, mapi_object_t *,
+					 struct SRow *, DATA_BLOB *);
+_PUBLIC_ enum MAPISTATUS octool_get_stream(TALLOC_CTX *mem_ctx,
+					 mapi_object_t *obj_stream, 
+					 DATA_BLOB *body);
+_PUBLIC_ struct mapi_session *octool_init_mapi(struct mapi_context *, const char *, const char *, uint32_t);
 __END_DECLS
 
 #endif /*!__OPENCHANGETOOLS_H__ */

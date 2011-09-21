@@ -131,12 +131,10 @@ fastuidl	{ return FASTUIDL; }
 expunge		{ return EXPUNGE; }
 properties	{ return PROPERTIES; }
 
-mapi_workstation	{ return MAPI_WORKSTATION; }
+mapi_exchange_version	{ return MAPI_EXCHANGE_VERSION; }
+mapi_realm	{ return MAPI_REALM; }
 mapi_domain	{ return MAPI_DOMAIN; }
-mapi_lcid	{ return MAPI_LCID; }
-mapi_ldif	{ return MAPI_LDIF; }
-mapi_profdb	{ return MAPI_PROFDB; }
-mapi_profname	{ return MAPI_PROFNAME; }
+mapi_language	{ return MAPI_LANGUAGE; }
 is		{ SETSTATE(NAME); return IS; }
 here		{ return HERE; }
 there		{ return THERE; }
