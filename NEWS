@@ -53,6 +53,10 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   Fixes BerliOS Bug #16172. Fixes Debian Bug#345788.
 * Fetchmail now enables SSL support by default. If this is undesired,
   ./configure --without-ssl should help.
+* The OpenSSL code now excludes the SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS option.
+  This can cause interoperability problems with certain buggy servers, but is
+  required to defang chosen-plaintext attacks against AES.  While probably hard
+  to mount against fetchmail, let's play it safe rather than be sorry later.
 
 # FEATURES ADDED
 * Fetchmail can now retrieve credentials from PWMD. This needs to be enabled at

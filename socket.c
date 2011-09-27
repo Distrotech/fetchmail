@@ -826,7 +826,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 		return(-1);
 	}
 
-	SSL_CTX_set_options(_ctx[sock], SSL_OP_ALL | SSL_OP_NO_SSLv2);
+	SSL_CTX_set_options(_ctx[sock], (SSL_OP_ALL | SSL_OP_NO_SSLv2) & ~SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
 
 	if (certck) {
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
