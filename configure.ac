@@ -799,6 +799,11 @@ else
   AC_MSG_NOTICE(Disabling SSL support.)
 fi
 
+case "$LIBS" in *-lssl*)
+	AC_CHECK_DECLS([SSLv2_client_method],,,[#include <openssl/ssl.h>])
+	;;
+esac
+
 ###	use option --with-socks=DIR to point at SOCKS library
 AC_ARG_WITH(socks,
 	[  --with-socks[=DIR]      add built-in SOCKS firewall access],

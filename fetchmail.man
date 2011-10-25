@@ -474,7 +474,8 @@ Also see \-\-sslcert above.
 (Keyword: sslproto)
 .br
 Forces an SSL/TLS protocol. Possible values are \fB''\fP,
-\&'\fBSSL2\fP', '\fBSSL23\fP', (use of these two values is discouraged
+\&'\fBSSL2\fP' (not supported on all systems),
+\&'\fBSSL23\fP', (use of these two values is discouraged
 and should only be used as a last resort) \&'\fBSSL3\fP', and
 \&'\fBTLS1\fP'.  The default behaviour if this option is unset is: for
 connections without \-\-ssl, use \&'\fBTLS1\fP' so that fetchmail will
