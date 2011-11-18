@@ -1166,7 +1166,8 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 
 	/* try to recover for some responses */
 	if (!strncmp(buf, "* NO", 4) ||
-		!strncmp(buf, "* BAD", 5))
+		!strncmp(buf, "* BAD", 5) ||
+		strstr(buf, "FETCH ()"))
 	{
 	    return(PS_TRANSIENT);
 	}
