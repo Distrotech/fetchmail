@@ -67,6 +67,11 @@ removed from a 6.4.0 or newer release.)
   does not support SSLv2. Fixes Debian Bug #622054, but note that that bug
   report has a more thorough patch that does away with SSLv2 altogether.
 
+# WORKAROUND
+* Some servers, notably Zimbra, return A1234 987 FETCH () in response to
+  a header request, in the face of message corruption.  fetchmail now treats
+  these as temporary errors. Report and Patch by Mikulas Patocka, Red Hat.
+
 
 fetchmail-6.3.21 (released 2011-08-21, 26011 LoC):
 
