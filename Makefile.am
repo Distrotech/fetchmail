@@ -50,7 +50,7 @@ DEPENDENCIES=		libfm.a $(LIBOBJS)
 
 check_PROGRAMS=
 
-TESTS=			t.smoke t.validate-xhtml t.x509_name_match
+TESTS=			t.smoke t.validate-xhtml10 t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 if NEED_TRIO
