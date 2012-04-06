@@ -92,15 +92,22 @@ A. Copyright, License and Warranty
 (C) Copyright 2007 by Matthias Andree, <matthias.andree@gmx.de>.
 Some rights reserved.
 
-This work is licensed under the Creative Commons
-Attribution-NonCommercial-NoDerivs German License. To view a copy of
-this license, visit http://creativecommons.org/licenses/by-nc-nd/2.0/de/
-or send a letter to Creative Commons; 559 Nathan Abbott Way;
-Stanford, California 94305; USA.
+This work is licensed under the
+Creative Commons Attribution-NoDerivs 3.0 Germany License (CC BY-ND 3.0).
+
+To view a copy of this license, visit
+http://creativecommons.org/licenses/by-nd/3.0/de/deed.en
+or send a letter to:
+
+Creative Commons
+444 Castro Street
+Suite 900
+MOUNTAIN VIEW, CALIFORNIA 94041
+USA
+
 
 THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
 Use the information herein at your own risk.
-
 
 
 B. Patch to remedy the problem
@@ -122,9 +129,9 @@ Index: sink.c
 
 END OF fetchmail-SA-2007-02.txt
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iD8DBQFIV7WXvmGDOQUufZURAr8+AKC7GpAFvCTaHD69n+g39lWtPIheCwCglj/O
-yh3P8bOmEn3a54h4aH2BFLA=
-=NBQZ
+iEYEARECAAYFAk9/Yg4ACgkQvmGDOQUufZWWKwCfX4Ri89SzzUcXYxughs1CdnAk
+Z6IAniD4DzayVUR6UxA5K1OqX1CUDOhM
+=+YME
 -----END PGP SIGNATURE-----
