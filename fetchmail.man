@@ -2781,6 +2781,16 @@ then that name is used as the default local name.  Otherwise
 session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
+.IP \fBFETCHMAIL_DISABLE_CBC_IV_COUNTERMEASURE\fP
+(since v6.3.22):
+If this environment variable is set and not empty, fetchmail will disable
+a countermeasure against an SSL CBC IV attack (by setting 
+SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS).  This is a security risk, but may be
+necessary for connecting to certain non-standards-conforming servers.
+See fetchmail's NEWS file and fetchmail-SA-2012-01.txt for details.
+Earlier fetchmail versions (v6.3.21 and older) used to disable this 
+countermeasure, but v6.3.22 no longer does that as a safety precaution.
+
 .IP \fBFETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS\fP
 (since v6.3.17):
 If this environment variable is set and not empty, fetchmail will always load

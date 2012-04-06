@@ -901,6 +901,12 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 
 	SSL_CTX_set_options(_ctx[sock], SSL_OP_ALL);
 
+	{
+	    char *tmp = getenv("FETCHMAIL_DISABLE_CBC_IV_COUNTERMEASURE");
+	    if (tmp == NULL || *tmp == '\0' || strspn(tmp, " \t") == strlen(tmp))
+		SSL_CTX_clear_options(_ctx[sock], SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
+	}
+
 	if (certck) {
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
 	} else {

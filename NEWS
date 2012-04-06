@@ -56,6 +56,28 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail-6.3.22 (not yet released):
+
+# SECURITY FIX
+* CVE-2011-3389:
+  SSL/TLS (wrapped and STARTTLS): fetchmail used to disable a countermeasure 
+  against a certain kind of attack against cipher block chaining initialization 
+  vectors (SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS).
+  Whether this creates an exploitable situation, depends on the server and the 
+  negotiated ciphers.
+  As a precaution, fetchmail 6.3.22 enables the countermeasure, by clearing 
+  SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS.
+
+  NOTE that this can cause connections to certain non-conforming servers to 
+  fail, in which case you can set the environment variable 
+  FETCHMAIL_DISABLE_CBC_IV_COUNTERMEASURE to any non-empty value when starting
+  fetchmail to re-instate the compatibility option at the expense of security.
+
+  Reported by Apple Product Security.
+
+  For technical details, refer to <http://www.openssl.org/~bodo/tls-cbc.txt>.
+  See fetchmail-SA-2012-01.txt for further details.
+
 # BUG FIX
 * The Server certificate: message in verbose mode now appears on stdout like the
   remainder of the output. Reported by Henry Jensen, to fix Debian Bug #639807.
@@ -63,9 +85,10 @@ removed from a 6.4.0 or newer release.)
 # CHANGE
 * On systems where SSLv2_client_method isn't defined in OpenSSL (such as
   newer Debian, and Ubuntu starting with 11.10 oneiric ocelot), don't
-  reference it (to fix the build) and print a run-time error that the OS
-  does not support SSLv2. Fixes Debian Bug #622054, but note that that bug
-  report has a more thorough patch that does away with SSLv2 altogether.
+  reference it (to fix the build) and if configured, print a run-time error 
+  that the OS does not support SSLv2. Fixes Debian Bug #622054, 
+  but note that that bug report has a more thorough patch that does away with
+  SSLv2 altogether.
 
 # WORKAROUND
 * Some servers, notably Zimbra, return A1234 987 FETCH () in response to
