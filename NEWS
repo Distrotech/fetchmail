@@ -123,6 +123,12 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   offered by the server before we resort to sending the password as clear text.
 
 --------------------------------------------------------------------------------
+fetchmail-6.3.22 (not yet released):
+* Some servers, notably Microsoft Exchange, return "A0009 OK FETCH completed."
+  without any header in response to a header request for meeting reminder
+  messages (with a "meeting.ics" attachment). fetchmail now treats these as
+  transient errors.  Report by John Connett, Patch by Sunil Shetye.
+
 
 fetchmail-6.3.21 (not yet released):
 

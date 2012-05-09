@@ -352,7 +352,8 @@ static int eat_trailer(int sock, struct query *ctl)
 
 static int fetch_messages(int mailserver_socket, struct query *ctl, 
 			  int count, int **msgsizes, int maxfetch,
-			  int *fetches, int *dispatches, int *deletions)
+			  int *fetches, int *dispatches, int *deletions,
+			  int *transient_errors)
 /* fetch messages in lockstep mode */
 {
     flag force_retrieval;
@@ -526,6 +527,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			     GT_("couldn't fetch headers, message %s@%s:%d (%d octets)\n"),
 			     ctl->remotename, ctl->server.truename, num,
 			     msgsize);
+		(*transient_errors)++;
 		continue;
 	    }
 	    else if (err != 0)
@@ -567,7 +569,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    if (err == PS_RETAINED)
 		suppress_forward = suppress_delete = retained = TRUE;
 	    else if (err == PS_TRANSIENT)
+	    {
 		suppress_delete = suppress_forward = TRUE;
+		(*transient_errors)++;
+	    }
 	    else if (err == PS_REFUSED)
 		suppress_forward = TRUE;
 	    else if (err)
@@ -664,7 +669,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			      len);
 
 		if (err == PS_TRANSIENT)
+		{
 		    suppress_delete = suppress_forward = TRUE;
+		    (*transient_errors)++;
+		}
 		else if (err)
 		    return(err);
 
@@ -890,7 +898,7 @@ static int do_session(
 	/* sigsetjmp returned zero -> normal operation */
 	char buf[MSGBUFSIZE+1], *realhost;
 	int count, newm, bytes;
-	int fetches, dispatches, oldphase;
+	int fetches, dispatches, transient_errors, oldphase;
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
@@ -1235,6 +1243,7 @@ is restored."));
 	    pass = 0;
 	    do {
 		dispatches = 0;
+		transient_errors = 0;
 		++pass;
 
 		/* reset timeout, in case we did an IDLE */
@@ -1364,9 +1373,19 @@ is restored."));
 		    err = fetch_messages(mailserver_socket, ctl, 
 					 count, &msgsizes,
 					 maxfetch,
-					 &fetches, &dispatches, &deletions);
+					 &fetches, &dispatches, &deletions,
+					 &transient_errors);
 		    if (err != PS_SUCCESS && err != PS_MAXFETCH)
 			goto cleanUp;
+
+		    if (transient_errors > MAX_TRANSIENT_ERRORS)
+		    {
+			if (outlevel > O_SILENT)
+			{
+			    report(stderr, GT_("Too many mails skipped (%d > %d) due to transient errors for %s\n"),
+				    transient_errors, MAX_TRANSIENT_ERRORS, buf);
+			}
+		    }
 
 		    if (!check_only && ctl->skipped
 			&& run.poll_interval > 0 && !nodetach)
