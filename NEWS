@@ -95,6 +95,11 @@ fetchmail-6.3.22 (not yet released):
   a header request, in the face of message corruption.  fetchmail now treats
   these as temporary errors. Report and Patch by Mikulas Patocka, Red Hat.
 
+* Some servers, notably Microsoft Exchange, return "A0009 OK FETCH completed."
+  without any header in response to a header request for meeting reminder
+  messages (with a "meeting.ics" attachment). fetchmail now treats these as
+  transient errors.  Report by John Connett, Patch by Sunil Shetye.
+
 
 fetchmail-6.3.21 (released 2011-08-21, 26011 LoC):
 

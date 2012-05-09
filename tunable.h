@@ -21,3 +21,6 @@
 
 /* default skipped message warning interval in seconds */
 #define WARNING_INTERVAL	3600
+
+/* maximum transient errors to accept */
+#define MAX_TRANSIENT_ERRORS	20
