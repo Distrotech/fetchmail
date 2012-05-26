@@ -320,6 +320,7 @@ int SockPrintf(int sock, const char* format, ...)
 }
 
 #ifdef SSL_ENABLE
+#define OPENSSL_NO_SSL_INTERN 1
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
