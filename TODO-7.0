@@ -1,3 +1,6 @@
+Return PS_ERROR, not PS_SYNTAX, on failures for preconnect/postconnect.
+Credit to Gene Heskett, 2012-07-31, fetchmail-users@ list.
+
 support SHA1 (and possibly other algorithm) finger prints
 (grarpamp, fetchmail-users 2012-06-23)
 
