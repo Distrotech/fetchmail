@@ -82,13 +82,17 @@ fetchmail-6.3.22 (not yet released):
 * The Server certificate: message in verbose mode now appears on stdout like the
   remainder of the output. Reported by Henry Jensen, to fix Debian Bug #639807.
 
-# CHANGE
+# CHANGES
 * On systems where SSLv2_client_method isn't defined in OpenSSL (such as
   newer Debian, and Ubuntu starting with 11.10 oneiric ocelot), don't
   reference it (to fix the build) and if configured, print a run-time error 
   that the OS does not support SSLv2. Fixes Debian Bug #622054, 
   but note that that bug report has a more thorough patch that does away with
   SSLv2 altogether.
+
+* The security and errata notices fetchmail-{EN,SA}-20??-??.txt are now
+  under the more relaxed CC BY-ND 3.0 license (the noncommercial clause
+  was dropped). The Creative Commons address was updated.
 
 # WORKAROUND
 * Some servers, notably Zimbra, return A1234 987 FETCH () in response to
