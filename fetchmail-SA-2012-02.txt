@@ -1,4 +1,4 @@
-fetchmail-SA-2012-01: DoS possible with NTLM authentication in debug mode
+fetchmail-SA-2012-02: DoS possible with NTLM authentication in debug mode
 
 Topics:		fetchmail denial of service in NTLM protocol phase
 
