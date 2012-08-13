@@ -112,6 +112,9 @@ fetchmail-6.3.22 (not yet released):
   messages (with a "meeting.ics" attachment). fetchmail now treats these as
   transient errors.  Report by John Connett, Patch by Sunil Shetye.
 
+# TRANSLATION UPDATES
+* New Swedish [sv] translation, courtesy of Göran Uddeborg.
+
 
 fetchmail-6.3.21 (released 2011-08-21, 26011 LoC):
 
