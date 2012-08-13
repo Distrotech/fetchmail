@@ -51,8 +51,9 @@ Fetchmail version 5.0.8 added NTLM support. This code sent the NTLM
 authentication request, but never checked if the received response was
 NTLM protocol exchange, or a server-side error message.  Instead,
 fetchmail tried to decode the error message as though it were
-base64-encoded protocol exchange, and could then segfault depending of
-buffer contents, while reading data from bad memory locations.
+base64-encoded protocol exchange, and could then segfault, subject to
+verbosity and other circumstances, while reading data from bad memory
+locations.
 
 
 3. Solution
