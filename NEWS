@@ -66,6 +66,7 @@ fetchmail-6.3.22 (not yet released):
   Fix: Detect base64 decoding errors and abort NTLM authentication.
   See fetchmail-SA-2012-02.txt for further details.
   Reported by J. Porter Clark.
+
 * CVE-2011-3389:
   SSL/TLS (wrapped and STARTTLS): fetchmail used to disable a countermeasure 
   against a certain kind of attack against cipher block chaining initialization 
