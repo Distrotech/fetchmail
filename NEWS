@@ -59,15 +59,19 @@ removed from a 6.4.0 or newer release.)
 fetchmail-6.3.22 (not yet released):
 
 # SECURITY FIXES
-* CVE-2012-(not yet assigned):
+* for CVE-2012-3482:
   NTLM: fetchmail mistook an error message that the server sent in response to
   an NTLM request for protocol exchange, tried to decode it, and crashed while
   reading from a bad memory location.
-  Fix: Detect base64 decoding errors and abort NTLM authentication.
+  Also, with a carefully crafted NTLM challenge packet sent from the server, it
+  would be possible that fetchmail conveyed confidential data not meant for the
+  server through the NTLM response packet.
+  Fix: Detect base64 decoding errors, validate the NTLM challenge, and abort
+  NTLM authentication in case of error.
   See fetchmail-SA-2012-02.txt for further details.
   Reported by J. Porter Clark.
 
-* CVE-2011-3389:
+* for CVE-2011-3389:
   SSL/TLS (wrapped and STARTTLS): fetchmail used to disable a countermeasure 
   against a certain kind of attack against cipher block chaining initialization 
   vectors (SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS).
