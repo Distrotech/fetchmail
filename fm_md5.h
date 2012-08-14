@@ -16,7 +16,10 @@ typedef unsigned long int uint32;
 struct MD5Context {
 	uint32 buf[4];
 	uint32 bits[2];
-	unsigned char in[64];
+	union {
+	    unsigned char in[64];
+	    uint32	  in32[16];
+	} u;
 };
 
 void MD5Init(struct MD5Context *context);
