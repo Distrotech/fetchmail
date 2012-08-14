@@ -384,7 +384,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
     char		iname[16];
     int			mib[6];
 
-    memset(ifinfo, 0, sizeof(ifinfo));
+    memset(ifinfo, 0, sizeof(*ifinfo));
 
     /* trim interface name */
 
