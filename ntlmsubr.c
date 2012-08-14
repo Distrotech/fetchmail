@@ -55,8 +55,12 @@ int ntlm_helper(int sock, struct query *ctl, const char *proto)
     if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
 	goto cancelfail;
 
+    /*
+     * < 0: decoding error
+     * >= 0 < 32: too short to be plausible
+     */
     if ((result = from64tobits (&challenge, msgbuf, sizeof(challenge))) < 0
-	    || result < ((void *)&challenge.context - (void *)&challenge))
+	    || result < 32)
     {
 	report (stderr, GT_("could not decode BASE64 challenge\n"));
 	/* We do not goto cancelfail; the server has already sent the
@@ -73,9 +77,9 @@ int ntlm_helper(int sock, struct query *ctl, const char *proto)
      * - that offset + length is not bigger than buffer */
     if (0 != memcmp("NTLMSSP", challenge.ident, 8)
 	    || challenge.msgType != 2
-	    || challenge.uDomain.offset > result
-	    || challenge.uDomain.offset + challenge.uDomain.len < challenge.uDomain.offset
-	    || challenge.uDomain.offset + challenge.uDomain.len > result)
+	    || challenge.uDomain.offset > (unsigned)result
+	    || (challenge.uDomain.offset + challenge.uDomain.len) < challenge.uDomain.offset
+	    || (challenge.uDomain.offset + challenge.uDomain.len) > (unsigned)result)
     {
 	report (stderr, GT_("NTLM challenge contains invalid data.\n"));
 	result = PS_AUTHFAIL;
