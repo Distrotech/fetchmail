@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 fetchmail-SA-2012-02: DoS possible with NTLM authentication in debug mode
 
 Topics:		fetchmail denial of service in NTLM protocol phase
@@ -10,7 +13,7 @@ Impact:		fetchmail segfaults and aborts, stalling inbound mail
 Danger:		low
 Acknowledgment:	J. Porter Clark
 
-CVE Name:	(TBD)
+CVE Name:	CVE-2012-3482
 URL:		http://www.fetchmail.info/fetchmail-SA-2012-02.txt
 Project URL:	http://www.fetchmail.info/
 
@@ -30,6 +33,7 @@ Corrected in:	2012-08-13 Git, among others, see commit
 ==================
 
 2012-08-13 0.1	draft
+2012-08-14 0.2	added CVE ID
 
 
 1. Background
@@ -99,3 +103,10 @@ THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
 Use the information herein at your own risk.
 
 END of fetchmail-SA-2012-02
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEARECAAYFAlAp5g0ACgkQvmGDOQUufZXtLwCg54tPXJZAXauGxJ77oRGox49g
+WUIAnizjQ4AvBSzk3Oraqv+WCS+8wiMb
+=NEZ4
+-----END PGP SIGNATURE-----
