@@ -94,6 +94,10 @@ fetchmail-6.3.22 (not yet released):
 * The Server certificate: message in verbose mode now appears on stdout like the
   remainder of the output. Reported by Henry Jensen, to fix Debian Bug #639807.
 
+* The GSSAPI-related autoconf code now matches gssapi.c better, and uses
+  a different check to look for GSS_C_NT_HOSTBASED_SERVICE.
+  This fixes the GSSAPI-enabled build on NetBSD 6 Beta.
+
 # CHANGES
 * On systems where SSLv2_client_method isn't defined in OpenSSL (such as
   newer Debian, and Ubuntu starting with 11.10 oneiric ocelot), don't

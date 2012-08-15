@@ -898,11 +898,20 @@ then
     CPPFLAGS="$CPPFLAGS -I$with_gssapi/include"
   fi
   AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
-  if test "$ac_cv_header_gssapi_h" = "yes"; then
-    AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE,1,Define if you have MIT kerberos))
-  else
-    AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi/gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
-  fi
+  AC_CHECK_DECLS(GSS_C_NT_HOSTBASED_SERVICE,,,[
+    AC_INCLUDES_DEFAULT
+    #if HAVE_GSS_H
+    #include <gss.h>
+    #endif
+    #if HAVE_GSSAPI_GSSAPI_H
+    #include <gssapi/gssapi.h>
+    #elif HAVE_GSSAPI_H
+    #include <gssapi.h>
+    #endif
+    #if HAVE_GSSAPI_GSSAPI_GENERIC_H
+    #include <gssapi/gssapi_generic.h>
+    #endif
+    ])
 fi])
 
 dnl ,------------------------------------------------------------------
