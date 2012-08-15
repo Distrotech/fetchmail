@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.20\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2012-08-13 21:02+0200\n"
+"POT-Creation-Date: 2012-08-14 22:55+0200\n"
 "PO-Revision-Date: 2012-08-13 21:05+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -447,7 +447,9 @@ msgstr "ungültige Nachrichtenanzahl!"
 #: driver.c:1447
 #, c-format
 msgid "Too many mails skipped (%d > %d) due to transient errors for %s\n"
-msgstr "Zu viele Nachrichten (%d > %d) wegen vorübergehender Fehler auf %s übersprungen.\n"
+msgstr ""
+"Zu viele Nachrichten (%d > %d) wegen vorübergehender Fehler auf %s "
+"übersprungen.\n"
 
 #: driver.c:1548
 msgid "socket"
