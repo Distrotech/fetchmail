@@ -110,6 +110,9 @@ fetchmail-6.3.22 (not yet released):
   under the more relaxed CC BY-ND 3.0 license (the noncommercial clause
   was dropped). The Creative Commons address was updated.
 
+* The Python-related Makefile.am parts were simplified to avoid an automake
+  1.11.X bug around noinst_PYTHON, Automake Bug #10995.
+
 # WORKAROUND
 * Some servers, notably Zimbra, return A1234 987 FETCH () in response to
   a header request, in the face of message corruption.  fetchmail now treats

@@ -16,15 +16,9 @@ dist_man1_MANS=		fetchmail.man
 pys=			fetchmailconf.py
 pym=			fetchmailconf.man
 
-if HAVE_PYTHON
 nodist_bin_SCRIPTS=	fetchmailconf
 python_PYTHON=		$(pys)
 dist_man1_MANS+=	$(pym)
-EXTRA_DIST=
-else
-noinst_PYTHON=		$(pys)
-EXTRA_DIST=		$(pym)
-endif
 
 CLEANFILES=		$(nodist_bin_SCRIPTS)
 
@@ -155,7 +149,7 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 # extra directories to ship
 distdirs = rh-config contrib beos
 
-EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
+EXTRA_DIST=	$(DISTDOCS) $(distdirs) \
 		fetchmail.spec fetchmail.xpm \
 		trio/CHANGES trio/README \
 		strlcpy.3 bighand.png \
