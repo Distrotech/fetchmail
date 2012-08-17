@@ -796,7 +796,8 @@ then
   dnl XXX FIXME: use pkg-config if available!
   AC_DEFINE(SSL_ENABLE)
 else
-  AC_MSG_NOTICE(Disabling SSL support.)
+  AC_MSG_WARN(Disabling SSL support.)
+  AC_MSG_WARN(Consider re-running configure --with-ssl.)
 fi
 
 case "$LIBS" in *-lssl*)
