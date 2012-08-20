@@ -127,7 +127,33 @@ fetchmail-6.3.22 (not yet released):
   transient errors.  Report by John Connett, Patch by Sunil Shetye.
 
 # TRANSLATION UPDATES
-* New Swedish [sv] translation, courtesy of Göran Uddeborg.
+* [cs]    Czech, by Petr Pisar
+* [de]    German
+* [fr]    French, by Frédéric Marchal
+* [ja]    Japanese, by Takeshi Hamasaki
+* [pl]    Polish, by Jakub Bogusz
+* [sv]    Swedish, by Göran Uddeborg --- NEW TRANSLATION - Thank you!
+* [vi]    Vietnamese, by Trần Ngọc Quân
+
+# KNOWN BUGS AND WORKAROUNDS
+  (This section floats upwards through the NEWS file so it stays with the
+  current release information)
+* Fetchmail does not handle messages without Message-ID header well
+  (See sourceforge.net bug #780933)
+* BSMTP is mostly untested and errors can cause corrupt output.
+* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
+  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
+  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
+  so compiling 32-bit SPARC code should not cause any difficulties.
+* Fetchmail does not track pending deletes across crashes.
+* The command line interface is sometimes a bit stubborn, for instance,
+  fetchmail -s doesn't work with a daemon running.
+* Linux systems may return duplicates of an IP address in some circumstances if
+  no or no global IPv6 addresses are configured.
+  (No workaround. Ubuntu Bug#582585, Novell Bug#606980.)
+* Kerberos 5 may be broken, particularly on Heimdal, and provide bogus error
+  messages. This will not be fixed, because the maintainer has no Kerberos 5
+  server to test against. Use GSSAPI.
 
 
 fetchmail-6.3.21 (released 2011-08-21, 26011 LoC):
@@ -187,26 +213,6 @@ fetchmail-6.3.20 (released 2011-06-06, 26005 LoC):
   [ja]    Japanese (Takeshi Hamasaki)
   [pl]    Polish (Jakub Bogusz)
   [sk]    Slovak (Marcel Telka)
-
-# KNOWN BUGS AND WORKAROUNDS
-  (this section floats upwards through the NEWS file so it stays with the
-  current release information - however, it was stuck with 6.3.8 for a while)
-* fetchmail does not handle messages without Message-ID header well
-  (See sourceforge.net bug #780933)
-* BSMTP is mostly untested and errors can cause corrupt output.
-* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
-  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
-  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
-  so compiling 32-bit SPARC code should not cause any difficulties.
-* fetchmail does not track pending deletes over crashes.
-* the command line interface is sometimes a bit stubborn, for instance,
-  fetchmail -s doesn't work with a daemon running.
-* Linux systems may return duplicates of an IP address in some circumstances if
-  no or no global IPv6 addresses are configured.
-  (No workaround. Ubuntu Bug#582585, Novell Bug#606980.)
-* Kerberos 5 may be broken, particularly on Heimdal, and provide bogus error
-  messages. This will not be fixed, because the maintainer has no Kerberos 5
-  server to test against. Use GSSAPI.
 
 
 fetchmail-6.3.19 (released 2010-12-10, 25945 LoC):
