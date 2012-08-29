@@ -7,7 +7,7 @@ Topics:		Information disclosure under active attack with block ciphers
 
 Author:		Matthias Andree
 Version:	1.0
-Announced:	2012-xx-xx
+Announced:	2012-08-29
 Type:		information disclosure under active attack
 Impact:		chosen plaintext attack theoretically possible
 Danger:		low
@@ -34,13 +34,13 @@ Not affected:	- fetchmail releases 5.1.3 up to and including 6.3.8
 Corrected in:	2012-04-06 Git, among others, see commit
 		4af941d4a4318ba3149316aaa7ffaf24bb959e93
 
-		2012-xx-xx fetchmail 6.3.22 release tarball
+		2012-08-29 fetchmail 6.3.22 release tarball
 
 
 0. Release history
 ==================
 
-2012-xx-xx 1.0	release
+2012-08-29 1.0	release
 
 
 1. Background
@@ -120,7 +120,7 @@ END of fetchmail-SA-2012-01
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAlAq3PsACgkQvmGDOQUufZW9SgCfRlOMwbhIVFWyAf14Bi5L0rHo
-6roAn04SSSZ5CNSkNXpgE8mNhzLL2zd0
-=+01n
+iEUEARECAAYFAlA+h6EACgkQvmGDOQUufZVxcQCWJ4Oza6u2OtWZErSf415uBneQ
+0gCfbaE1JSkrd0uXzwWDMAbBnSqY9lY=
+=2BVL
 -----END PGP SIGNATURE-----

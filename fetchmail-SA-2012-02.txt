@@ -28,15 +28,13 @@ Not affected:	- fetchmail releases compiled with NTLM support disabled
 Corrected in:	2012-08-13 Git, among others, see commit
 		3fbc7cd331602c76f882d1b507cd05c1d824ba8b
 
-		2012-08-xx fetchmail 6.3.22 release tarball
+		2012-08-29 fetchmail 6.3.22 release tarball
 
 
 0. Release history
 ==================
 
-2012-08-13 0.1	draft
-2012-08-14 0.2	added CVE ID
-2012-08-14 0.3	mention data theft
+2012-08-29 1.0	release
 
 
 1. Background
@@ -113,7 +111,7 @@ END of fetchmail-SA-2012-02
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAlAqnJ0ACgkQvmGDOQUufZURKQCgtarBW3fr0uR/ANpNma7QiAd0
-dFMAoPMNVYwTitZG/gkvwhr7QBGB59pj
-=HBRo
+iEYEARECAAYFAlA+h8oACgkQvmGDOQUufZW+ZgCeIQ8r3kU3kFgVGNj9WzZfX1Lk
+xggAoI3C0sbh8Si/HQrT1yHSV/+af0Ad
+=lQpP
 -----END PGP SIGNATURE-----
