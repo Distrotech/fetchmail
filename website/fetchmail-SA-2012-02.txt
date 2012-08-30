@@ -1,0 +1,1 @@
+../fetchmail-SA-2012-02.txt

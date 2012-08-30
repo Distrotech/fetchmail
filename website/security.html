@@ -14,7 +14,7 @@
 <table width="100%" cellpadding="0" summary="Canned page header">
 <tr>
 <td>Fetchmail</td>
-<td align="right"><!-- update date -->2011-06-06</td>
+<td align="right"><!-- update date -->2012-08-30</td>
 </tr>
 </table>
 </div>
@@ -45,6 +45,18 @@
     some of the problems mentioned below, even if they aren't mentioned
     in the security announcements:</p>
     <ul>
+	<li><a name="cve-2012-3482"
+	    href="http://web.nvd.dist.gov/view/vuln/Detail?vulnId=CVE-2012-3482">CVE-2012-3482:</a>
+	Fetchmail could <a href="fetchmail-SA-2012-02.txt">crash and
+	    possibly reveal fragments of confidential data</a> during
+	NTLM authentication.</li>
+	<li><a name="cve-2011-3389"
+	    href="http://web.nvd.dist.gov/view/vuln/Detail?vulnId=CVE-2011-3389">CVE-2011-3389:</a>
+	    <a href="fetchmail-SA-2012-01.txt">Fetchmail was vulnerable
+		to chosen-plaintext attacks against cipher block
+		chaining initialization vectors because it disabled an
+		OpenSSL countermeasure against this attack.</a>
+	</li>
 	<li><a name="cve-2011-1947"
 	    href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2011-1947">CVE-2011-1947:</a>
 	Fetchmail <a href="fetchmail-SA-2011-01.txt"> could hang for
