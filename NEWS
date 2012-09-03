@@ -58,6 +58,11 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.23 (not yet released)
 
+# NOTE THAT THE RELEASE OF FUTURE FETCHMAIL 6.3.X VERSIONS IS UNCLEAR.
+Should a 7.0 release be made earlier, chances are that the 6.3.X branch
+is abandoned and its changes be folded into the 7.0 release, with changes
+after 6.3.22 not available on their own in a newer 6.3.X release.
+
 # REGRESSION FIXES
 * Fix compilation with OpenSSL implementations before 0.9.8m that lack
   SSL_CTX_clear_options. Patch by Earl Chew.
