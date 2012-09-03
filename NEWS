@@ -64,6 +64,10 @@ fetchmail-6.3.23 (not yet released)
   Note that the use of older OpenSSL versions with fetchmail is unsupported and
   *not* recommended.
 
+# BUG FIXES
+* Fix combination of --plugin and -f -. Patch by Alexander Zangerl,
+  to fix Debian Bug#671294.
+
 
 fetchmail-6.3.22 (released 2012-08-29, 26077 LoC):
 
