@@ -779,7 +779,6 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 {
         struct stat randstat;
         int i;
-	long sslopts = SSL_OP_ALL;
 
 	SSL_load_error_strings();
 	SSL_library_init();
