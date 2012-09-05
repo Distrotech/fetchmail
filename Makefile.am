@@ -21,7 +21,6 @@ CFLAGS += @libpwmd_CFLAGS@
 LDFLAGS += @libpwmd_LIBS@
 endif
 
-if HAVE_PYTHON
 nodist_bin_SCRIPTS=	fetchmailconf
 python_PYTHON=		$(pys)
 dist_man1_MANS+=	$(pym)

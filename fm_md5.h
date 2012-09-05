@@ -12,7 +12,7 @@ struct MD5Context {
 	uint32_t bits[2];
 	union {
 	    unsigned char in[64];
-	    uint32	  in32[16];
+	    uint32_t	  in32[16];
 	} u;
 };
 
