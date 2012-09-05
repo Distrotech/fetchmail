@@ -449,9 +449,9 @@ Also see \-\-sslcert above.
 (Keyword: sslproto)
 .br
 Forces an SSL/TLS protocol. Possible values are \fB''\fP,
-\&'\fBSSL2\fP' (not supported on all systems),
-\&'\fBSSL23\fP', (use of these two values is discouraged
-and should only be used as a last resort) \&'\fBSSL3\fP', and
+\&'\fBSSL23\fP' (note however that fetchmail, since v7.0.0, prohibits
+negotiation of SSLv2 -- it has been deprecated for 15 years and is
+insecure), \&'\fBSSL3\fP', and
 \&'\fBTLS1\fP'.  The default behaviour if this option is unset is: for
 connections without \-\-ssl, use \&'\fBTLS1\fP' so that fetchmail will
 opportunistically try STARTTLS negotiation with TLS1. You can configure
@@ -1189,8 +1189,8 @@ connection after negotiating an SSL session, and the connection fails if
 SSL cannot be negotiated.  Some services, such as POP3 and IMAP, have
 different well known ports defined for the SSL encrypted services.  The
 encrypted ports will be selected automatically when SSL is enabled and
-no explicit port is specified. The \-\-sslproto 'SSL3' option should be
-used to select the SSLv3 protocol (default if unset: v2 or v3).  Also,
+no explicit port is specified. The \-\-sslproto 'SSL3' need no longer be
+used to avoid the SSLv2 protocol. Also,
 the \-\-sslcertck command line or sslcertck run control file option
 should be used to force strict certificate checking - see below.
 .PP
