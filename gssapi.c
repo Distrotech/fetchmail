@@ -31,7 +31,7 @@
 #  ifdef HAVE_GSSAPI_GSSAPI_GENERIC_H
 #    include <gssapi/gssapi_generic.h>
 #  endif
-#  ifndef HAVE_GSS_C_NT_HOSTBASED_SERVICE
+#  if HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE + 0 == 0
 #    define GSS_C_NT_HOSTBASED_SERVICE gss_nt_service_name
 #  endif
 #  endif

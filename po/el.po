@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-12-05 01:17+0100\n"
+"POT-Creation-Date: 2012-08-14 22:55+0200\n"
 "PO-Revision-Date: 2003-05-06 01:03+0300\n"
 "Last-Translator: Dokianakis Theofanis <madf@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-7\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,90 +51,90 @@ msgstr "αδυναμία αποκωδικοποίησης της BASE64 πρόκλησης\n"
 msgid "decoded as %s\n"
 msgstr "αποκωδικοποιήθηκε σαν %s\n"
 
-#: driver.c:193
+#: driver.c:199
 #, c-format
 msgid "kerberos error %s\n"
 msgstr "σφάλμα kerberos %s\n"
 
-#: driver.c:253 driver.c:259
+#: driver.c:259 driver.c:265
 #, fuzzy, c-format
 msgid "krb5_sendauth: %s [server says '%s']\n"
 msgstr "krb5_sendauth: %s [ο διαχειριστής λέει '%*s'] \n"
 
-#: driver.c:339
+#: driver.c:345
 msgid "Subject: Fetchmail oversized-messages warning"
 msgstr ""
 
-#: driver.c:343
+#: driver.c:349
 #, fuzzy, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
 msgstr ""
 "σε όριο λήψης %d; %d μηνύματα έμειναν στον διαχειριστή %s λογαριασμό%s\n"
 
-#: driver.c:347
+#: driver.c:353
 #, fuzzy, c-format
 msgid "The following oversized messages remain on server %s account %s:"
 msgstr ""
 "σε όριο λήψης %d; %d μηνύματα έμειναν στον διαχειριστή %s λογαριασμό%s\n"
 
-#: driver.c:366
+#: driver.c:372
 #, fuzzy, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
 msgstr[0] "\t%d μνμ %d μήκους octet παραβλέθηκαν από το fetchmail.\n"
 msgstr[1] "\t%d μνμ %d μήκους octet παραβλέθηκαν από το fetchmail.\n"
 
-#: driver.c:371
+#: driver.c:377
 #, fuzzy, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
 msgstr[0] "\t%d μνμ %d μήκους octet παραβλέθηκαν από το fetchmail.\n"
 msgstr[1] "\t%d μνμ %d μήκους octet παραβλέθηκαν από το fetchmail.\n"
 
-#: driver.c:518
+#: driver.c:522
 #, fuzzy, c-format
 msgid "skipping message %s@%s:%d"
 msgstr "παράληψη μηνύματος %s@%s:%d (%d octets)"
 
-#: driver.c:572
+#: driver.c:576
 #, c-format
 msgid "skipping message %s@%s:%d (%d octets)"
 msgstr "παράληψη μηνύματος %s@%s:%d (%d octets)"
 
-#: driver.c:588
+#: driver.c:592
 msgid " (length -1)"
 msgstr " (μήκος -1)"
 
-#: driver.c:591
+#: driver.c:595
 msgid " (oversized)"
 msgstr " (υπερφυσικό μέγεθος)"
 
-#: driver.c:609
+#: driver.c:613
 #, c-format
 msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
 msgstr "αδυναμία λήψης επικεφαλίδων, μήνυμα %s@%s:%d (%d octets)\n"
 
-#: driver.c:626
+#: driver.c:631
 #, c-format
 msgid "reading message %s@%s:%d of %d"
 msgstr "ανάγνωση μηνύματος %s@%s:%d από %d"
 
-#: driver.c:631
+#: driver.c:636
 #, fuzzy, c-format
 msgid " (%d octets)"
-msgstr " (%d %soctets)"
+msgstr " (%d octets).\n"
 
-#: driver.c:632
+#: driver.c:637
 #, fuzzy, c-format
 msgid " (%d header octets)"
 msgstr " (%d octets σώματος) "
 
-#: driver.c:699
+#: driver.c:707
 #, fuzzy, c-format
 msgid " (%d body octets)"
 msgstr " (%d octets σώματος) "
 
-#: driver.c:758
+#: driver.c:769
 #, c-format
 msgid ""
 "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
@@ -141,19 +142,19 @@ msgstr ""
 "το μήνυμα %s@%s:%d δεν είχε το αναμενόμενο μήκος(%d πραγματικο !=%d "
 "αναμενόμενο)\n"
 
-#: driver.c:790
+#: driver.c:801
 msgid " retained\n"
 msgstr "συγκρατήθηκε\n"
 
-#: driver.c:800
+#: driver.c:811
 msgid " flushed\n"
 msgstr "διαγράφτηκε\n"
 
-#: driver.c:817
+#: driver.c:823
 msgid " not flushed\n"
 msgstr "δεν διαγράφτηκε\n"
 
-#: driver.c:835
+#: driver.c:841
 #, fuzzy, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
@@ -163,47 +164,47 @@ msgstr[0] ""
 msgstr[1] ""
 "σε όριο λήψης %d; %d μηνύματα έμειναν στον διαχειριστή %s λογαριασμό%s\n"
 
-#: driver.c:892
+#: driver.c:898
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
 msgstr "λήξη χρόνου μετά από %d δεύτερα αναμονής για σύνδεση στον %s.\n"
 
-#: driver.c:896
+#: driver.c:902
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
 msgstr "λήξη χρόνου μετά από %d δεύτερα αναμονής για τον διαχειριστή %s.\n"
 
-#: driver.c:900
+#: driver.c:906
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
 msgstr "λήξη χρόνου μετά από %d δεύτερα αναμονής για το %s.\n"
 
-#: driver.c:905
+#: driver.c:911
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
 msgstr ""
 "λήξη χρόνου μετά από %d δεύτερα αναμονής για την απάντηση του ακροατή.\n"
 
-#: driver.c:908
+#: driver.c:914
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "λήξη χρόνου μετά από %d δεύτερα.\n"
 
-#: driver.c:920
+#: driver.c:926
 #, fuzzy
 msgid "Subject: fetchmail sees repeated timeouts"
 msgstr "Subject: το fetchmail βλέπει επαναλαμβανόμενες λήξεις ορίων χρόνου\n"
 
-#: driver.c:923
+#: driver.c:929
 #, c-format
 msgid ""
-"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
-"s.\n"
+"Fetchmail saw more than %d timeouts while attempting to get mail from %s@"
+"%s.\n"
 msgstr ""
 "Το fetchmail είδε περισσότερα από %d λήξεις ορίων χρόνου κατα την προσπάθεια "
 "για παραλαβή αλληλογραφίας από το %s@%s.\n"
 
-#: driver.c:927
+#: driver.c:933
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -220,86 +221,73 @@ msgstr ""
 "Το fetchmail δεν θα ξαναρωτήσει αυτό το γραμματοκιβώτιο μέχρι να το\n"
 "επανεκκινήσετε.\n"
 
-#: driver.c:953
+#: driver.c:959
 #, fuzzy, c-format
 msgid "pre-connection command terminated with signal %d\n"
 msgstr "η εντολή προ-σύνδεσης απέτυχε με κατάσταση %d\n"
 
-#: driver.c:956
+#: driver.c:962
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "η εντολή προ-σύνδεσης απέτυχε με κατάσταση %d\n"
 
-#: driver.c:980
+#: driver.c:986
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "αδυναμία εύρεσης HESIOD ταχ. θυρίδας για το %s\n"
 
-#: driver.c:1001
+#: driver.c:1007
 msgid "Lead server has no name.\n"
 msgstr "Ο επικεφαλής διαχειριστής δεν έχει όνομα.\n"
 
-#: driver.c:1028
+#: driver.c:1034
 #, fuzzy, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
 msgstr "αδυναμία εύρεσης κανονικού ονόματος DNS του %s\n"
 
-#: driver.c:1075
+#: driver.c:1081
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "%s σύνδεση στο %s απέτυχε"
 
-#: driver.c:1091
-#, fuzzy
-msgid "Subject: Fetchmail unreachable-server warning."
-msgstr ""
-"Subject: Προειδοποίηση απροσπέλαστου-διακομιστή στο fetchmail.\n"
-"\n"
-"Το fetchmail αδυνατεί να προσεγγίσει το διακομιστή αλληλογραφίας %s:"
-
-#: driver.c:1093
-#, fuzzy, c-format
-msgid "Fetchmail could not reach the mail server %s:"
-msgstr "Αδυναμία του fetchmail λήψης αλληλογραφίας από το %s@%s.\n"
-
-#: driver.c:1122
+#: driver.c:1110
 msgid "SSL connection failed.\n"
 msgstr "η σύνδεση SSL απέτυχε.\n"
 
-#: driver.c:1177
+#: driver.c:1165
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Σφάλμα lock-busy στον %s@%s\n"
 
-#: driver.c:1181
+#: driver.c:1169
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Σφάλμα busy διακομιστή στον %s@%s\n"
 
-#: driver.c:1186
+#: driver.c:1174
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Αποτυχία εξουσιοδότησης στον %s@%s%s\n"
 
-#: driver.c:1189
+#: driver.c:1177
 msgid " (previously authorized)"
 msgstr " (προηγουμένως εξουσιοδοτήθηκε)"
 
-#: driver.c:1192
+#: driver.c:1180
 msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
 msgstr ""
 
-#: driver.c:1213
+#: driver.c:1201
 #, fuzzy, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subject: fetchmail αποτυχία εξουσιοδότησης στο %s@%s\n"
 
-#: driver.c:1217
+#: driver.c:1205
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Αδυναμία του fetchmail λήψης αλληλογραφίας από το %s@%s.\n"
 
-#: driver.c:1221
+#: driver.c:1209
 #, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
@@ -322,7 +310,7 @@ msgstr ""
 "σε κάθε κύκλο. Δε θα σταλθούν μελλοντικές ειδοποιήσεις μέχρι να \n"
 "αποκατασταθεί η υπηρεσία."
 
-#: driver.c:1227
+#: driver.c:1215
 #, fuzzy
 msgid ""
 "\n"
@@ -348,7 +336,7 @@ msgstr ""
 "σε κάθε κύκλο. Δε θα σταλθούν μελλοντικές ειδοποιήσεις μέχρι να \n"
 "αποκατασταθεί η υπηρεσία."
 
-#: driver.c:1237
+#: driver.c:1225
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -368,174 +356,179 @@ msgstr ""
 "σε κάθε κύκλο. Δε θα σταλθούν μελλοντικές ειδοποιήσεις μέχρι να\n"
 "αποκατασταθεί η υπηρεσία."
 
-#: driver.c:1253
+#: driver.c:1241
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Ξαναερώτηση αμέσως στο %s@%s\n"
 
-#: driver.c:1258
+#: driver.c:1246
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Άγνωστο σφάλμα εισόδου ή εξουσιοδότησης στο %s@%s\n"
 
-#: driver.c:1282
+#: driver.c:1270
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Εξουσιοδότηση πέτυχε στον %s@%s\n"
 
-#: driver.c:1288
+#: driver.c:1276
 #, fuzzy, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subject: εξουσιοδότηση του fetchmail πέτυχε στο %s@%s\n"
 
-#: driver.c:1292
+#: driver.c:1280
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Αδυναμία εισόδου του fetchmail στο %s@%s.\n"
 
-#: driver.c:1296
+#: driver.c:1284
 msgid "Service has been restored.\n"
 msgstr "Η υπηρεσία αποκαταστάθηκε.\n"
 
-#: driver.c:1328
+#: driver.c:1317
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "επιλογή ή επανα-συγκέντρωση φακέλου %s\n"
 
-#: driver.c:1330
+#: driver.c:1319
 msgid "selecting or re-polling default folder\n"
 msgstr "επιλογή ή επανα-συγκέντρωση εξ'ορισμού φακέλου\n"
 
-#: driver.c:1342
+#: driver.c:1331
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s στο  %s (φάκελος %s)"
 
-#: driver.c:1345 rcfile_y.y:390
+#: driver.c:1334 rcfile_y.y:390
 #, c-format
 msgid "%s at %s"
 msgstr "%s στο  %s"
 
-#: driver.c:1350
+#: driver.c:1339
 #, c-format
 msgid "Polling %s\n"
 msgstr "Συγκέντρωση από %s\n"
 
-#: driver.c:1354
+#: driver.c:1343
 #, fuzzy, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d %s (είδε %d) για το %s"
 msgstr[1] "%d %s (είδε %d) για το %s"
 
-#: driver.c:1357
+#: driver.c:1346
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] ""
 msgstr[1] ""
 
-#: driver.c:1360
+#: driver.c:1349
 #, fuzzy, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d %s για το %s"
 msgstr[1] "%d %s για το %s"
 
-#: driver.c:1367
+#: driver.c:1356
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d octets).\n"
 
-#: driver.c:1373
+#: driver.c:1362
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Δεν υπάρχει αλληλογραφία για το %s\n"
 
-#: driver.c:1406
+#: driver.c:1395
 msgid "bogus message count!"
 msgstr "εσφαλμένη μέτρηση μηνυμάτων!"
 
-#: driver.c:1549
+#: driver.c:1447
+#, c-format
+msgid "Too many mails skipped (%d > %d) due to transient errors for %s\n"
+msgstr ""
+
+#: driver.c:1548
 msgid "socket"
 msgstr "socket"
 
-#: driver.c:1552
+#: driver.c:1551
 msgid "missing or bad RFC822 header"
 msgstr "χαμένη ή κακιά επικεφαλίδα RFC822"
 
-#: driver.c:1555
+#: driver.c:1554
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1558
+#: driver.c:1557
 msgid "client/server synchronization"
 msgstr "συγχρονισμός πελάτη/εξυπηρετητή"
 
-#: driver.c:1561
+#: driver.c:1560
 msgid "client/server protocol"
 msgstr "προτόκολο πελάτη/εξυπηρετητή"
 
-#: driver.c:1564
+#: driver.c:1563
 msgid "lock busy on server"
 msgstr "απασχολημένο κλείδομα στο διαχειριστή"
 
-#: driver.c:1567
+#: driver.c:1566
 msgid "SMTP transaction"
 msgstr "συναλλαγή SMTP"
 
-#: driver.c:1570
+#: driver.c:1569
 msgid "DNS lookup"
 msgstr "αναζήτηση DNS"
 
-#: driver.c:1573
+#: driver.c:1572
 #, fuzzy
 msgid "undefined"
 msgstr "μη ορισμένο σφάλμα\n"
 
-#: driver.c:1579
+#: driver.c:1578
 #, fuzzy, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr "%s σφάλμα κατά την αποστολή στο διακομιστή SMTP %s\n"
 
-#: driver.c:1581
+#: driver.c:1580
 #, fuzzy
 msgid "unknown"
 msgstr "άγνωστος διακομιστής."
 
-#: driver.c:1583
+#: driver.c:1582
 #, fuzzy, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "%s σφάλμα κατά την λήψη από το %s\n"
 
-#: driver.c:1595
+#: driver.c:1594
 #, fuzzy, c-format
 msgid "post-connection command terminated with signal %d\n"
 msgstr "η εντολή προ-σύνδεσης απέτυχε με κατάσταση %d\n"
 
-#: driver.c:1597
+#: driver.c:1596
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "η εντολή προ-σύνδεσης απέτυχε με κατάσταση %d\n"
 
-#: driver.c:1616
+#: driver.c:1615
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Η υποστήριξη για Kerberos V4 δεν έχει συνδεθεί.\n"
 
-#: driver.c:1624
+#: driver.c:1623
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Η υποστήριξη για Kerberos V5 δεν έχει συνδεθεί.\n"
 
-#: driver.c:1635
+#: driver.c:1634
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Η επιλογή --flush δεν υποστηρίζεται με το %s\n"
 
-#: driver.c:1641
+#: driver.c:1640
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Η επιλογή --all δεν υποστηρίζεται με το %s\n"
 
-#: driver.c:1650
+#: driver.c:1649
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Η επιλογή --limit δεν υποστηρίζεται με το %s\n"
@@ -669,8 +662,8 @@ msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
 "                   Robert M. Funk, Graham Wilson\n"
-"Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
-"Copyright (C) 2005 - 2010 Matthias Andree\n"
+"Copyright (C) 2005 - 2006, 2010 - 2011 Sunil Shetye\n"
+"Copyright (C) 2005 - 2011 Matthias Andree\n"
 msgstr ""
 
 #: fetchmail.c:143
@@ -749,8 +742,8 @@ msgstr ""
 #: fetchmail.c:491
 #, fuzzy, c-format
 msgid ""
-"fetchmail: can't poll specified hosts with another fetchmail running at %"
-"ld.\n"
+"fetchmail: can't poll specified hosts with another fetchmail running at "
+"%ld.\n"
 msgstr ""
 "fetchmail: αδυναμία ερώτησης των ορισμένων διακομιστών ενώ τρέχει άλλο\n"
 "           fetchmail στο %d.\n"
@@ -1414,8 +1407,8 @@ msgstr "  Κανένα όριο μεγέθους μηνύματος (--limit 0).\n"
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
 msgstr ""
-"  Περίοδος προειδοποίησης μεγέθους μηνύματος είναι %d δεύτερα (--warnings %"
-"d).\n"
+"  Περίοδος προειδοποίησης μεγέθους μηνύματος είναι %d δεύτερα (--warnings "
+"%d).\n"
 
 #: fetchmail.c:1752
 msgid "  Size warnings on every poll (--warnings 0).\n"
@@ -1782,50 +1775,50 @@ msgstr "εσφαλμένη μέτρηση μηνυμάτων!"
 msgid "bogus EXPUNGE count in \"%s\"!"
 msgstr ""
 
-#: imap.c:344
+#: imap.c:348
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Ταυτοποίηση πρωτοκόλλου σαν IMAP4 rev 1\n"
 
-#: imap.c:350
+#: imap.c:354
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Ταυτοποίηση πρωτοκόλλου σαν IMAP4 rev 0\n"
 
-#: imap.c:357
+#: imap.c:361
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Ταυτοποίηση πρωτοκόλλου σαν IMAP2 ή IMAP2BIS\n"
 
-#: imap.c:372
+#: imap.c:378
 msgid "will idle after poll\n"
 msgstr "θα ηρεμήσει μετά την ερώτηση\n"
 
-#: imap.c:461 pop3.c:475
+#: imap.c:471 pop3.c:476
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr ""
 
-#: imap.c:466 pop3.c:480
+#: imap.c:477 pop3.c:482
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr ""
 
-#: imap.c:470
+#: imap.c:482
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 
-#: imap.c:586
+#: imap.c:598
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Απαιτούμενη ικανότητα OTP δεν μεταγλωττίστηκε στο fetchmail\n"
 
-#: imap.c:606 pop3.c:555
+#: imap.c:618 pop3.c:558
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Απαιτούμενη ικανότητα NTLM δεν μεταγλωττίστηκε στο fetchmail\n"
 
-#: imap.c:615
+#: imap.c:627
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Απαιτούμενη ικανότητα LOGIN δεν μεταγλωττίστηκε στο fetchmail\n"
 
-#: imap.c:679
+#: imap.c:691
 #, fuzzy, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
@@ -1837,59 +1830,59 @@ msgstr ""
 msgid "%lu is unseen\n"
 msgstr "%u δεν έχει ειδωθεί\n"
 
-#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
+#: imap.c:868 pop3.c:844 pop3.c:856 pop3.c:1095 pop3.c:1102
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u δεν έχει ειδωθεί\n"
 
-#: imap.c:917 imap.c:976
+#: imap.c:903 imap.c:962
 msgid "re-poll failed\n"
 msgstr "επανερώτηση απέτυχε\n"
 
-#: imap.c:925 imap.c:981
+#: imap.c:911 imap.c:967
 #, fuzzy, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d μηνύματα αναμένουν μετά την απανερώτηση\n"
 msgstr[1] "%d μηνύματα αναμένουν μετά την απανερώτηση\n"
 
-#: imap.c:942
+#: imap.c:928
 msgid "mailbox selection failed\n"
 msgstr "η επιλογή γραμματοκιβωτίου απέτυχε\n"
 
-#: imap.c:946
+#: imap.c:932
 #, fuzzy, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d μηνύματα αναμένουν μετά την πρώτη ερώτηση\n"
 msgstr[1] "%d μηνύματα αναμένουν μετά την πρώτη ερώτηση\n"
 
-#: imap.c:960
+#: imap.c:946
 msgid "expunge failed\n"
 msgstr "εξάλειψη απέτυχε\n"
 
-#: imap.c:964
+#: imap.c:950
 #, fuzzy, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d μηνύματα αναμένουν μετά την εξάλειψη\n"
 msgstr[1] "%d μηνύματα αναμένουν μετά την εξάλειψη\n"
 
-#: imap.c:1003
+#: imap.c:989
 msgid "search for unseen messages failed\n"
 msgstr "αναζήτηση για μη ιδωμένα μηνύματα απέτυχε\n"
 
-#: imap.c:1008 pop3.c:861
+#: imap.c:994 pop3.c:865
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u είναι το πρώτο μη ιδωμένο\n"
 
-#: imap.c:1092
+#: imap.c:1078
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
 
-#: imap.c:1190 imap.c:1197
+#: imap.c:1177 imap.c:1184
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
 msgstr ""
@@ -2088,7 +2081,7 @@ msgstr "διαχειριστής έλαβε θανάσιμο\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Αδυναμία αποκωδικοποίησης πρόκλησης OTP\n"
 
-#: opie.c:64 pop3.c:582
+#: opie.c:64 pop3.c:585
 msgid "Secret pass phrase: "
 msgstr "Μυστική φράση κλειδί: "
 
@@ -2445,67 +2438,67 @@ msgstr ""
 msgid "The CAPA command is however necessary for TLS.\n"
 msgstr ""
 
-#: pop3.c:491
+#: pop3.c:494
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
 
-#: pop3.c:618
+#: pop3.c:621
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 
-#: pop3.c:632
+#: pop3.c:635
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Δε βρέθηκε η απαιτούμενη χρονολόγηση στο χαιρετισμό\n"
 
-#: pop3.c:641
+#: pop3.c:644
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Συντακτικό σφάλμα χρονολόγησης στο χαιρετισμό\n"
 
-#: pop3.c:657
+#: pop3.c:660
 msgid "Invalid APOP timestamp.\n"
 msgstr ""
 
-#: pop3.c:681
+#: pop3.c:684
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Μη ορισμένη αίτηση πρωτοκόλλου στο POP3_auth\n"
 
-#: pop3.c:702
+#: pop3.c:705
 msgid "lock busy!  Is another session active?\n"
 msgstr "απασχολημένο κλείδωμα!  Είναι ενεργή κάποια άλλη συνεδρία;\n"
 
-#: pop3.c:781
+#: pop3.c:784
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:804
+#: pop3.c:807
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:831
+#: pop3.c:835
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:937
+#: pop3.c:941
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Τα μηνύματα εισέρχονται σε λίστα στο διαχειριστή. Αδυναμία χειρισμού αυτού.\n"
 
-#: pop3.c:1033
+#: pop3.c:1037
 msgid "protocol error\n"
 msgstr "σφάλμα πρωτοκόλλου\n"
 
-#: pop3.c:1049
+#: pop3.c:1053
 msgid "protocol error while fetching UIDLs\n"
 msgstr "σφάλμα πρωτοκόλλου κατά τη λήψη UIDL\n"
 
-#: pop3.c:1081
+#: pop3.c:1086
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr ""
 
-#: pop3.c:1419
+#: pop3.c:1424
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Η επιλογή --remote δεν υποστηρίζεται με το POP3\n"
@@ -2961,185 +2954,185 @@ msgstr "εκτελείτε %s (διακομιστής %s υπηρεσία %s)\n"
 msgid "execvp(%s) failed\n"
 msgstr "execvp(%s) απέτυχε\n"
 
-#: socket.c:283
+#: socket.c:265
 #, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
 msgstr ""
 
-#: socket.c:286
+#: socket.c:268
 msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr ""
 
-#: socket.c:300 socket.c:303
+#: socket.c:282 socket.c:285
 #, c-format
 msgid "unknown (%s)"
 msgstr ""
 
-#: socket.c:306
+#: socket.c:288
 #, c-format
 msgid "Trying to connect to %s/%s..."
 msgstr ""
 
-#: socket.c:315
-#, fuzzy, c-format
+#: socket.c:297
+#, c-format
 msgid "cannot create socket: %s\n"
-msgstr "αδυναμία αποστολής ακόμα και στο %s!\n"
+msgstr ""
 
-#: socket.c:317
+#: socket.c:299
 #, c-format
 msgid "name %d: cannot create socket family %d type %d: %s\n"
 msgstr ""
 
-#: socket.c:333
+#: socket.c:317
 #, fuzzy
 msgid "connection failed.\n"
 msgstr "η σύνδεση SSL απέτυχε.\n"
 
-#: socket.c:335
+#: socket.c:319
 #, fuzzy, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
 msgstr "%s σύνδεση στο %s απέτυχε"
 
-#: socket.c:336
+#: socket.c:320
 #, fuzzy, c-format
 msgid "name %d: connection to %s:%s [%s/%s] failed: %s.\n"
 msgstr "%s σύνδεση στο %s απέτυχε"
 
-#: socket.c:342
+#: socket.c:326
 #, fuzzy
 msgid "connected.\n"
 msgstr "η σύνδεση SSL απέτυχε.\n"
 
-#: socket.c:355
+#: socket.c:339
 #, c-format
 msgid ""
 "Connection errors for this poll:\n"
 "%s"
 msgstr ""
 
-#: socket.c:621
+#: socket.c:605
 #, fuzzy
 msgid "Server certificate:\n"
 msgstr "Δεν έχει οριστεί όνομα διακομιστή στο πιστοποιητικό!\n"
 
-#: socket.c:626
+#: socket.c:610
 #, c-format
 msgid "Certificate chain, from root to peer, starting at depth %d:\n"
 msgstr ""
 
-#: socket.c:629
+#: socket.c:613
 #, c-format
 msgid "Certificate at depth %d:\n"
 msgstr ""
 
-#: socket.c:635
+#: socket.c:619
 #, c-format
 msgid "Issuer Organization: %s\n"
 msgstr "Οργανισμός Εκδότη: %s\n"
 
-#: socket.c:638
+#: socket.c:622
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
 msgstr ""
 "Προειδοποίηση: υπερβολικά μεγάλο Όνομα Οργανισμού Εκδότη (πιθανά κομμένο).\n"
 
-#: socket.c:640
+#: socket.c:624
 msgid "Unknown Organization\n"
 msgstr "Άγνωστος Οργανισμός\n"
 
-#: socket.c:642
+#: socket.c:626
 #, c-format
 msgid "Issuer CommonName: %s\n"
 msgstr "ΚοινόΌνομα Εκδότη: %s\n"
 
-#: socket.c:645
+#: socket.c:629
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
 msgstr ""
 "Προειδοποίηση: ΚοινόΌνομα Εκδότη είναι υπερβολικά μεγάλο (πιθανά κομμένο).\n"
 
-#: socket.c:647
+#: socket.c:631
 msgid "Unknown Issuer CommonName\n"
 msgstr "Άγνωστο ΚοινόΌνομα Εκδότη\n"
 
-#: socket.c:653
+#: socket.c:637
 #, fuzzy, c-format
 msgid "Subject CommonName: %s\n"
 msgstr "ΚοινόΌνομα Εκδότη: %s\n"
 
-#: socket.c:659
+#: socket.c:643
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Κακό πιστοποιητικό: Subject ΚοινόΌνομα υπερβολικά μεγάλο!\n"
 
-#: socket.c:665
+#: socket.c:649
 #, fuzzy
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
 msgstr "Κακό πιστοποιητικό: Subject ΚοινόΌνομα υπερβολικά μεγάλο!\n"
 
-#: socket.c:693
+#: socket.c:677
 #, c-format
 msgid "Subject Alternative Name: %s\n"
 msgstr ""
 
-#: socket.c:699
+#: socket.c:683
 #, fuzzy
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
 msgstr "Κακό πιστοποιητικό: Subject ΚοινόΌνομα υπερβολικά μεγάλο!\n"
 
-#: socket.c:716
+#: socket.c:700
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Μη ταίριασμα ΚοινούΟνόματος Διακομιστή: %s != %s\n"
 
-#: socket.c:723
+#: socket.c:707
 msgid "Server name not set, could not verify certificate!\n"
 msgstr ""
 "Δεν έχει οριστεί όνομα διαχειριστή, αδυναμία επαλήθευσης πιστοποιητικού!\n"
 
-#: socket.c:728
+#: socket.c:712
 msgid "Unknown Server CommonName\n"
 msgstr "Άγνωστο ΚοινόΌνομα Διακομιστή\n"
 
-#: socket.c:730
+#: socket.c:714
 msgid "Server name not specified in certificate!\n"
 msgstr "Δεν έχει οριστεί όνομα διακομιστή στο πιστοποιητικό!\n"
 
-#: socket.c:742
+#: socket.c:726
 msgid "EVP_md5() failed!\n"
 msgstr "EVP_md5() απέτυχε!\n"
 
-#: socket.c:746
+#: socket.c:730
 msgid "Out of memory!\n"
 msgstr "Σώθηκε η μνήμη!\n"
 
-#: socket.c:754
+#: socket.c:738
 msgid "Digest text buffer too small!\n"
 msgstr "Η προσωρινή μνήμη κειμένου περίληψης είναι υπερβολικά μικρή!\n"
 
-#: socket.c:760
+#: socket.c:744
 #, c-format
 msgid "%s key fingerprint: %s\n"
 msgstr "%s αποτύπωμα κλειδιού: %s\n"
 
-#: socket.c:764
+#: socket.c:748
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "%s αποτυπώματα ταιριάζουν.\n"
 
-#: socket.c:766
+#: socket.c:750
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "%s αποτυπώματα δεν ταιριάζουν!\n"
 
-#: socket.c:776
+#: socket.c:760
 #, fuzzy, c-format
 msgid "Server certificate verification error: %s\n"
 msgstr "Προειδοποίηση: επαλήθευση πιστοποιητικού διακομιστή: %s\n"
 
-#: socket.c:783
+#: socket.c:767
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "άγνωστος εκδότης (πρώτοι %d χαρακτήρες): %s\n"
 
-#: socket.c:784
+#: socket.c:768
 msgid ""
 "This error usually happens when the server provides an incomplete "
 "certificate chain, which is nothing fetchmail could do anything about.  For "
@@ -3147,7 +3140,7 @@ msgid ""
 "fetchmail.\n"
 msgstr ""
 
-#: socket.c:793
+#: socket.c:777
 #, c-format
 msgid ""
 "This means that the root signing certificate (issued for %s) is not in the "
@@ -3156,137 +3149,146 @@ msgid ""
 "sslcertpath and --sslcertfile in the manual page.\n"
 msgstr ""
 
-#: socket.c:885
+#: socket.c:869
 msgid "File descriptor out of range for SSL"
 msgstr "Ο περιγραφέας αρχείου εκτός κλίμακας για το SSL"
 
-#: socket.c:901
+#: socket.c:880
+msgid "Your operating system does not support SSLv2.\n"
+msgstr ""
+
+#: socket.c:890
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Καθορίστηκε άκυρο προτόκολλο SSL '%s', χρήση εξ ορισμού (SSLv23).\n"
 
-#: socket.c:994
+#: socket.c:989
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "Επαλήθευση πιστοποιητικού/αποτυπώματος κάπως παραλήφθηκε!\n"
 
-#: socket.c:1011
+#: socket.c:1006
 msgid ""
 "Warning: the connection is insecure, continuing anyways. (Better use --"
 "sslcertck!)\n"
 msgstr ""
 
-#: socket.c:1077
+#: socket.c:1048
 msgid "Cygwin socket read retry\n"
 msgstr "Επαναπροσπάθεια ανάγνωσης υποδοχής Cygwin\n"
 
-#: socket.c:1080
+#: socket.c:1051
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Επαναπροσπάθεια ανάγνωσης υποδοχής Cygwin απέτυχε!\n"
 
-#: transact.c:71
+#: transact.c:79
 #, fuzzy, c-format
 msgid "mapped address %s to local %s\n"
 msgstr "αντιστοίχηση του %s στο τοπικό %s\n"
 
-#: transact.c:93
+#: transact.c:101
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "αντιστοίχηση του %s στο τοπικό %s\n"
 
-#: transact.c:160
+#: transact.c:168
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "πέρασε μέσα από %s ταιριάζοντας το %s\n"
 
-#: transact.c:230
+#: transact.c:240
 #, c-format
 msgid ""
 "analyzing Received line:\n"
 "%s"
 msgstr "ανάλυση γραμμής Received:%s"
 
-#: transact.c:269
+#: transact.c:279
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "δεκτή γραμμή, το %s είναι ψευδόνημο του διαχ. αλληλογραφίας\n"
 
-#: transact.c:275
+#: transact.c:285
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "μη δεκτή γραμμή, το %s δεν είναι ψευδόνημο του διαχ. αλληλογραφίας\n"
 
-#: transact.c:349
+#: transact.c:359
 msgid "no Received address found\n"
 msgstr "δεν βρέθηκαν διευθύνσεις Received\n"
 
-#: transact.c:358
+#: transact.c:368
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "βρέθηκαν διευθύνσεις Received `%s'\n"
 
-#: transact.c:601
+#: transact.c:613
 #, fuzzy
 msgid "incorrect header line found - see manpage for bad-header option\n"
 msgstr "βρέθηκε λάθος γραμμή επικεφαλίδας κατα τον έλεγχο επικεφαλίδων\n"
 
-#: transact.c:603
-#, fuzzy, c-format
+#: transact.c:615
+#, c-format
 msgid "line: %s"
-msgstr "Συγκέντρωση από %s\n"
+msgstr ""
 
-#: transact.c:1095 transact.c:1105
+#: transact.c:1107 transact.c:1117
 #, c-format
 msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
 msgstr ""
 
-#: transact.c:1120
+#: transact.c:1132
 #, fuzzy, c-format
 msgid "Parsing Received names \"%-.*s\"\n"
 msgstr "ανάλυση γραμμής Received:%s"
 
-#: transact.c:1132
+#: transact.c:1144
 msgid "No envelope recipient found, resorting to header guessing.\n"
 msgstr ""
 
-#: transact.c:1150
+#: transact.c:1162
 #, c-format
 msgid "Guessing from header \"%-.*s\".\n"
 msgstr ""
 
-#: transact.c:1165
+#: transact.c:1177
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "δεν υπάρχουν τοπικά όμοια, προώθηση στο %s\n"
 
-#: transact.c:1180
+#: transact.c:1192
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "καταστολή προώθησης και διαγραφής λόγω σφαλμάτων του DNS\n"
 
-#: transact.c:1291
+#: transact.c:1303
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "εγγραφή RFC822 msgblk.headers\n"
 
-#: transact.c:1310
+#: transact.c:1322
 msgid "no recipient addresses matched declared local names"
 msgstr "καμμιά διεύθυνση παραλήπτη δε ταιριάζει με τα ορισμένα τοπικά ονόματα"
 
-#: transact.c:1317
+#: transact.c:1329
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "διεύθυνση παραλήπτη %s δεν ταιριάζει με κανένα τοπικό όνομα"
 
-#: transact.c:1326
+#: transact.c:1338
 msgid "message has embedded NULs"
 msgstr "το μήνυμα περιέχει ενθετημένα NULs"
 
-#: transact.c:1334
+#: transact.c:1346
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Ο ακροατής SMTP απέρριψε τις διευθύνσεις τοπικών παραληπτών: "
 
-#: transact.c:1473
+#: transact.c:1493
 #, fuzzy
 msgid "error writing message text\n"
 msgstr "εγγραφή κειμένου μηνύματος\n"
+
+#: transact.c:1641
+#, c-format
+msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
+msgstr ""
 
 #: uid.c:249
 #, c-format
@@ -3374,6 +3376,9 @@ msgstr "απέτυχε το realloc\n"
 #~ "\n"
 #~ "Τα ακόλουθα υπερβολικού μεγέθους μηνύματα παραμένουν στο διαχειριστή %s:"
 
+#~ msgid " (%d %soctets)"
+#~ msgstr " (%d %soctets)"
+
 #~ msgid "header "
 #~ msgstr "επικεφαλίδας "
 
@@ -3394,6 +3399,15 @@ msgstr "απέτυχε το realloc\n"
 
 #~ msgid "unknown DNS error %d."
 #~ msgstr "άγνωστο σφάλμα DNS %d."
+
+#~ msgid ""
+#~ "Subject: Fetchmail unreachable-server warning.\n"
+#~ "\n"
+#~ "Fetchmail could not reach the mail server %s:"
+#~ msgstr ""
+#~ "Subject: Προειδοποίηση απροσπέλαστου-διακομιστή στο fetchmail.\n"
+#~ "\n"
+#~ "Το fetchmail αδυνατεί να προσεγγίσει το διακομιστή αλληλογραφίας %s:"
 
 #~ msgid "messages"
 #~ msgstr "μηνύματα"

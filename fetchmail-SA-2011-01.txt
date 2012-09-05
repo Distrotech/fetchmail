@@ -114,15 +114,17 @@ A. Copyright, License and Non-Warranty
 (C) Copyright 2011 by Matthias Andree, <matthias.andree@gmx.de>.
 Some rights reserved.
 
-This work is licensed under the Creative Commons
-Attribution-Noncommercial-No Derivative Works 3.0 Germany License.
+This work is licensed under the
+Creative Commons Attribution-NoDerivs 3.0 Germany License (CC BY-ND 3.0).
+
 To view a copy of this license, visit
-http://creativecommons.org/licenses/by-nc-nd/3.0/de/ or send a letter to
+http://creativecommons.org/licenses/by-nd/3.0/de/deed.en
+or send a letter to:
 
 Creative Commons
-171 Second Street
-Suite 300
-SAN FRANCISCO, CALIFORNIA 94105
+444 Castro Street
+Suite 900
+MOUNTAIN VIEW, CALIFORNIA 94041
 USA
 
 
@@ -131,9 +133,9 @@ Use the information herein at your own risk.
 
 END of fetchmail-SA-2011-01
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.16 (GNU/Linux)
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAk3swwUACgkQvmGDOQUufZWaBACdHHSAiQZ5OIOur3vflKbzbIi2
-WbkAni+ROgf+9IU1rE0j8RJKvzZrJfIP
-=d/Bl
+iEYEARECAAYFAk9/Yg4ACgkQvmGDOQUufZUICACg5GqwtyAFuOamJ3JtribzMe9U
+k20AnRLlwx4HBC/Gk3AX1dWSrrQc8WYB
+=GFzg
 -----END PGP SIGNATURE-----

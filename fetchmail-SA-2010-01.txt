@@ -95,15 +95,17 @@ A. Copyright, License and Warranty
 (C) Copyright 2010 by Matthias Andree, <matthias.andree@gmx.de>.
 Some rights reserved.
 
-This work is licensed under the Creative Commons
-Attribution-Noncommercial-No Derivative Works 3.0 Germany License.
+This work is licensed under the
+Creative Commons Attribution-NoDerivs 3.0 Germany License (CC BY-ND 3.0).
+
 To view a copy of this license, visit
-http://creativecommons.org/licenses/by-nc-nd/3.0/de/ or send a letter to
+http://creativecommons.org/licenses/by-nd/3.0/de/deed.en
+or send a letter to:
 
 Creative Commons
-171 Second Street
-Suite 300
-SAN FRANCISCO, CALIFORNIA 94105
+444 Castro Street
+Suite 900
+MOUNTAIN VIEW, CALIFORNIA 94041
 USA
 
 
@@ -136,9 +138,9 @@ so try this if the patch does not apply.
 
 END OF fetchmail-SA-2010-01.txt
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.12 (GNU/Linux)
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAktxLWcACgkQvmGDOQUufZUGBQCg8AU5mXRaGBo+tETsGYjFX10m
-6SYAnA6IVIeoTjKvspD8BnLLd0yGU2iw
-=b7ry
+iEYEARECAAYFAk9/Yg4ACgkQvmGDOQUufZX0pACg7jUxqFQzdhdVDXk/izXBNkfg
+ZBgAnAhDK4mYPoCzoiaJhEHM6rET4W+v
+=AX1N
 -----END PGP SIGNATURE-----

@@ -779,6 +779,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 {
         struct stat randstat;
         int i;
+	long sslopts = SSL_OP_ALL;
 
 	SSL_load_error_strings();
 	SSL_library_init();
@@ -808,14 +809,21 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	/* Make sure a connection referring to an older context is not left */
 	_ssl_context[sock] = NULL;
 	if(myproto) {
-		if(!strcasecmp("ssl3",myproto)) {
+		if(!strcasecmp("ssl2",myproto)) {
+#if HAVE_DECL_SSLV2_CLIENT_METHOD + 0 > 0
+			_ctx[sock] = SSL_CTX_new(SSLv2_client_method());
+#else
+			report(stderr, GT_("Your operating system does not support SSLv2.\n"));
+			return -1;
+#endif
+		} else if(!strcasecmp("ssl3",myproto)) {
 			_ctx[sock] = SSL_CTX_new(SSLv3_client_method());
 		} else if(!strcasecmp("tls1",myproto)) {
 			_ctx[sock] = SSL_CTX_new(TLSv1_client_method());
 		} else if (!strcasecmp("ssl23",myproto)) {
 			myproto = NULL;
 		} else {
-			fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSL23).\n"), myproto);
+			fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
 			myproto = NULL;
 		}
 	}

@@ -105,24 +105,27 @@ A. Copyright, License and Warranty
 (C) Copyright 2010 by Matthias Andree, <matthias.andree@gmx.de>.
 Some rights reserved.
 
-This work is licensed under the Creative Commons
-Attribution-Noncommercial-No Derivative Works 3.0 Germany License.
+This work is licensed under the
+Creative Commons Attribution-NoDerivs 3.0 Germany License (CC BY-ND 3.0).
+
 To view a copy of this license, visit
-http://creativecommons.org/licenses/by-nc-nd/3.0/de/ or send a letter to
+http://creativecommons.org/licenses/by-nd/3.0/de/deed.en
+or send a letter to:
 
 Creative Commons
-171 Second Street
-Suite 300
-SAN FRANCISCO, CALIFORNIA 94105
+444 Castro Street
+Suite 900
+MOUNTAIN VIEW, CALIFORNIA 94041
 USA
+
 
 
 THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
 Use the information herein at your own risk.
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.15 (GNU/Linux)
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEARECAAYFAky5ZbwACgkQvmGDOQUufZUxtACg6+ZeL9nFx8+wBrBE4u5B8Bz1
-zYsAn2THGpJx72t9tjPRYFBY9PJggj6G
-=QqR7
+iEYEARECAAYFAk9/YgsACgkQvmGDOQUufZWwQwCgvBxomOVufQuUh96nEq95Mnz4
+5m8AoKkBIERmVh9MzN4aJBKbqRQX+2Hq
+=GwOi
 -----END PGP SIGNATURE-----

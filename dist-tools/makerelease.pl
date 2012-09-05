@@ -96,7 +96,7 @@ if (system("autoreconf -ifs" . ($verbose ? 'v' : ''))) {
 print "### configure\n";
 
 if (system("mkdir -p autobuild && cd autobuild " 
-	. " && ../configure -C --silent ")) { die("Configuration failure\n"); }
+	. " && ../configure -C --silent --with-ssl")) { die("Configuration failure\n"); }
 
 print "### Test-building the software...\n";
 if (system("cd autobuild && make -s clean"

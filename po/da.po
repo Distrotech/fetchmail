@@ -1,18 +1,30 @@
-# Danish messages for fetchmail
-# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-# Byrial Ole Jensen <byrial@image.dk>, 2000-2003
+# Danish translation of fetchmail.
+# Copyright (C) 2011 Eric S. Raymond (msgids)
+# This file is distributed under the same license as the fetchmail package.
+# Byrial Ole Jensen <byrial@image.dk>, 2000-2003.
+# Joe Hansen <joedalton2@yahoo.dk>, 2011.
+#
+# alias -> alias (husk dobbelt s i aliasser)
+# detach -> frigÃ¸r
+# expunge -> sletning
+# message -> brev/besked (lidt blandet brug i den her).
+# oversized -> for lange
+# poll -> prÃ¸ve/prÃ¸vning
+# subject -> emne
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.2.4\n"
+"Project-Id-Version: fetchmail 6.3.20-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2010-12-05 01:17+0100\n"
-"PO-Revision-Date: 2003-09-02 20:21+0200\n"
-"Last-Translator: Byrial Ole Jensen <byrial@image.dk>\n"
-"Language-Team: Danish <dansk@klid.dk>\n"
+"POT-Creation-Date: 2012-08-14 22:55+0200\n"
+"PO-Revision-Date: 2011-10-22 07:50+0200\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: checkalias.c:179
 #, c-format
@@ -28,171 +40,170 @@ msgid "No, their IP addresses don't match\n"
 msgstr "Nej, deres IP-adresser stemmer ikke overens\n"
 
 #: checkalias.c:203
-#, fuzzy, c-format
+#, c-format
 msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
-msgstr "navneserverfejl ved opslag på \"%s\" ved prøvning af %s.\n"
+msgstr "navneserverfejl ved opslag pÃ¥ \"%s\" ved prÃ¸vning af %s: %s\n"
 
 #: checkalias.c:228
 #, c-format
 msgid "nameserver failure while looking for `%s' during poll of %s.\n"
-msgstr "navneserverfejl ved opslag på \"%s\" ved prøvning af %s.\n"
+msgstr "navneserverfejl ved opslag pÃ¥ \"%s\" ved prÃ¸vning af %s.\n"
 
 #: cram.c:95
 msgid "could not decode BASE64 challenge\n"
-msgstr "kunne ikke afkode BASE64-anråb\n"
+msgstr "kunne ikke afkode BASE64-anrÃ¥b\n"
 
 #: cram.c:103
 #, c-format
 msgid "decoded as %s\n"
 msgstr "afkodet som %s\n"
 
-#: driver.c:193
+#: driver.c:199
 #, c-format
 msgid "kerberos error %s\n"
 msgstr "kerberosfejl %s\n"
 
-#: driver.c:253 driver.c:259
-#, fuzzy, c-format
+#: driver.c:259 driver.c:265
+#, c-format
 msgid "krb5_sendauth: %s [server says '%s']\n"
-msgstr "krb5_sendauth: %s [server siger '%*s']\n"
+msgstr "krb5_sendauth: %s [server siger \"%s\"]\n"
 
-#: driver.c:339
+#: driver.c:345
 msgid "Subject: Fetchmail oversized-messages warning"
-msgstr ""
+msgstr "Emne: Fetchmailadvarsel vedrÃ¸rende for lange breve"
 
-#: driver.c:343
-#, fuzzy, c-format
+#: driver.c:349
+#, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
-msgstr "afhentningsgrænse %d nået; %d breve tilbage på server %s konto %s\n"
+msgstr "De fÃ¸lgende for lange breve blev slettet pÃ¥ server %s konto %s:"
 
-#: driver.c:347
-#, fuzzy, c-format
+#: driver.c:353
+#, c-format
 msgid "The following oversized messages remain on server %s account %s:"
-msgstr "afhentningsgrænse %d nået; %d breve tilbage på server %s konto %s\n"
+msgstr "De fÃ¸lgende for lange breve bliver pÃ¥ server %s konto %s:"
 
-#: driver.c:366
-#, fuzzy, c-format
+#: driver.c:372
+#, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
-msgstr[0] "\t%d. brev, %d oktetter lang, sprunget over af fetchmail.\n"
-msgstr[1] "\t%d. brev, %d oktetter lang, sprunget over af fetchmail.\n"
+msgstr[0] "  %d. brev, %d oktetter lang, slettet af fetchmail."
+msgstr[1] "  %d. breve, %d oktetter lang, slettet af fetchmail."
 
-#: driver.c:371
-#, fuzzy, c-format
+#: driver.c:377
+#, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
-msgstr[0] "\t%d. brev, %d oktetter lang, sprunget over af fetchmail.\n"
-msgstr[1] "\t%d. brev, %d oktetter lang, sprunget over af fetchmail.\n"
+msgstr[0] "  %d. brev, %d oktetter lang, sprunget over af fetchmail."
+msgstr[1] "  %d. breve, %d oktetter lang, sprunget over af fetchmail."
 
-#: driver.c:518
-#, fuzzy, c-format
+#: driver.c:522
+#, c-format
 msgid "skipping message %s@%s:%d"
-msgstr "Springer brev %s@%s:%d over (%d oktetter)"
+msgstr "springer brev %s@%s:%d over"
 
-#: driver.c:572
+#: driver.c:576
 #, c-format
 msgid "skipping message %s@%s:%d (%d octets)"
-msgstr "Springer brev %s@%s:%d over (%d oktetter)"
+msgstr "springer brev %s@%s:%d over (%d oktetter)"
 
-#: driver.c:588
+#: driver.c:592
 msgid " (length -1)"
-msgstr " (længde -1)"
+msgstr " (lÃ¦ngde -1)"
 
-#: driver.c:591
+#: driver.c:595
 msgid " (oversized)"
 msgstr " (for langt)"
 
-#: driver.c:609
+#: driver.c:613
 #, c-format
 msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
 msgstr "kunne ikke hente brevhoveder, brev %s@%s:%d (%d oktetter)\n"
 
-#: driver.c:626
+#: driver.c:631
 #, c-format
 msgid "reading message %s@%s:%d of %d"
-msgstr "læser brev %s@%s:%d af %d"
+msgstr "lÃ¦ser brev %s@%s:%d af %d"
 
-#: driver.c:631
-#, fuzzy, c-format
+#: driver.c:636
+#, c-format
 msgid " (%d octets)"
-msgstr " (%d %soktetter)"
+msgstr " (%d oktetter)"
 
-#: driver.c:632
-#, fuzzy, c-format
+#: driver.c:637
+#, c-format
 msgid " (%d header octets)"
-msgstr " (%d oktetter i brevkrop)"
+msgstr " (%d oktetter i brevhoved)"
 
-#: driver.c:699
-#, fuzzy, c-format
+#: driver.c:707
+#, c-format
 msgid " (%d body octets)"
 msgstr " (%d oktetter i brevkrop)"
 
-#: driver.c:758
+#: driver.c:769
 #, c-format
 msgid ""
 "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
-msgstr "brev %s@%s:%d havde ikke den forventede længde (%d != %d forventet)\n"
+msgstr "brev %s@%s:%d havde ikke den forventede lÃ¦ngde (%d != %d forventet)\n"
 
-#: driver.c:790
+#: driver.c:801
 msgid " retained\n"
 msgstr " bevaret\n"
 
-#: driver.c:800
+#: driver.c:811
 msgid " flushed\n"
 msgstr " slettet\n"
 
-#: driver.c:817
+#: driver.c:823
 msgid " not flushed\n"
 msgstr " ikke slettet\n"
 
-#: driver.c:835
-#, fuzzy, c-format
+#: driver.c:841
+#, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
 "fetchlimit %d reached; %d messages left on server %s account %s\n"
-msgstr[0] "afhentningsgrænse %d nået; %d breve tilbage på server %s konto %s\n"
-msgstr[1] "afhentningsgrænse %d nået; %d breve tilbage på server %s konto %s\n"
+msgstr[0] "afhentningsgrÃ¦nse %d nÃ¥et; %d brev tilbage pÃ¥ server %s konto %s\n"
+msgstr[1] "afhentningsgrÃ¦nse %d nÃ¥et; %d breve tilbage pÃ¥ server %s konto %s\n"
 
-#: driver.c:892
+#: driver.c:898
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
-msgstr "tidsafbrud efter %d sekunders venten på forbindelse til server %s.\n"
+msgstr "tidsafbrud efter %d sekunders venten pÃ¥ forbindelse til server %s.\n"
 
-#: driver.c:896
+#: driver.c:902
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
-msgstr "tidsafbrud efter %d sekunders venten på server %s.\n"
+msgstr "tidsafbrud efter %d sekunders venten pÃ¥ server %s.\n"
 
-#: driver.c:900
+#: driver.c:906
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
-msgstr "tidsafbrud efter %d sekunders venten på %s.\n"
+msgstr "tidsafbrud efter %d sekunders venten pÃ¥ %s.\n"
 
-#: driver.c:905
+#: driver.c:911
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
-msgstr "tidsafbrud efter %d sekunders venten på svar fra modtager.\n"
+msgstr "tidsafbrud efter %d sekunders venten pÃ¥ svar fra modtager.\n"
 
-#: driver.c:908
+#: driver.c:914
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "tidsafbrud efter %d sekunder.\n"
 
-#: driver.c:920
-#, fuzzy
+#: driver.c:926
 msgid "Subject: fetchmail sees repeated timeouts"
-msgstr "Subject: fetchmail har gentagne tidsafbrud\n"
+msgstr "Emne: fetchmail har gentagne tidsafbrud"
 
-#: driver.c:923
+#: driver.c:929
 #, c-format
 msgid ""
-"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
-"s.\n"
+"Fetchmail saw more than %d timeouts while attempting to get mail from %s@"
+"%s.\n"
 msgstr ""
-"Fetchmail fik mere end %d tidsafbrud ved forsoeg paa at hente post fra %s@%"
-"s.\n"
+"Fetchmail fik mere end %d tidsafbrud ved forsoeg paa at hente post fra %s@"
+"%s.\n"
 
-#: driver.c:927
+#: driver.c:933
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -207,87 +218,74 @@ msgstr ""
 "\n"
 "Fetchmail vil ikke proeve den brevbakke igen foer du genstarter den.\n"
 
-#: driver.c:953
-#, fuzzy, c-format
+# ser ud til at det er bevidst at pre ikke er med i oversÃ¦ttelse.
+#: driver.c:959
+#, c-format
 msgid "pre-connection command terminated with signal %d\n"
-msgstr "forbindelseskommando mislykkedes med status %d\n"
+msgstr "forbindelseskommando mislykkedes med signal %d\n"
 
-#: driver.c:956
+#: driver.c:962
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "forbindelseskommando mislykkedes med status %d\n"
 
-#: driver.c:980
+#: driver.c:986
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "kunne ikke finde HESIOD-postboks for %s\n"
 
-#: driver.c:1001
+#: driver.c:1007
 msgid "Lead server has no name.\n"
-msgstr "Fører-server har ikke noget navn.\n"
+msgstr "FÃ¸rer-server har ikke noget navn.\n"
 
-#: driver.c:1028
-#, fuzzy, c-format
+#: driver.c:1034
+#, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
-msgstr "kunne ikke finde kanonisk DNS-navn for %s (%s)\n"
+msgstr "kunne ikke finde kanonisk DNS-navn for %s (%s): %s\n"
 
-#: driver.c:1075
+#: driver.c:1081
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "%s-forbindelse til %s mislykkedes"
 
-#: driver.c:1091
-#, fuzzy
-msgid "Subject: Fetchmail unreachable-server warning."
-msgstr ""
-"Subject: Fetchmail-advarsel om utilgaengelig server.\n"
-"\n"
-"Fetchmail kunne ikke naa postserveren %s:"
-
-#: driver.c:1093
-#, fuzzy, c-format
-msgid "Fetchmail could not reach the mail server %s:"
-msgstr "Fetchmail kunne ikke hente post fra %s@%s.\n"
-
-#: driver.c:1122
+#: driver.c:1110
 msgid "SSL connection failed.\n"
 msgstr "SSL-forbindelse mislykkedes.\n"
 
-#: driver.c:1177
+#: driver.c:1165
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
-msgstr "Lås optaget-fejl på %s@%s\n"
+msgstr "LÃ¥s optaget-fejl pÃ¥ %s@%s\n"
 
-#: driver.c:1181
+#: driver.c:1169
 #, c-format
 msgid "Server busy error on %s@%s\n"
-msgstr "Server optaget-fejl på %s@%s\n"
+msgstr "Server optaget-fejl pÃ¥ %s@%s\n"
 
-#: driver.c:1186
+#: driver.c:1174
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
-msgstr "Godkendelsesfejl på %s@%s%s\n"
+msgstr "Godkendelsesfejl pÃ¥ %s@%s%s\n"
 
-#: driver.c:1189
+#: driver.c:1177
 msgid " (previously authorized)"
 msgstr " (tidligere godkendt)"
 
-#: driver.c:1192
+#: driver.c:1180
 msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
-msgstr ""
+msgstr "For hjÃ¦lp, sÃ¥ se http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
 
-#: driver.c:1213
-#, fuzzy, c-format
+#: driver.c:1201
+#, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
-msgstr "Subject: fetchmail - godkendelse mislykkedes paa %s@%s\n"
+msgstr "Emne: fetchmail - godkendelse mislykkedes pÃ¥ %s@%s"
 
-#: driver.c:1217
+#: driver.c:1205
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail kunne ikke hente post fra %s@%s.\n"
 
-#: driver.c:1221
-#, fuzzy
+#: driver.c:1209
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -295,21 +293,13 @@ msgid ""
 "that fetchmail cannot distinguish because the server didn't send a useful\n"
 "error message."
 msgstr ""
-"Forsoeget paa at opnaa adgangstilladelse mislykkedes.\n"
-"Da der tidligere er opnaaet adgangstilladelelse for denne forbindelse,\n"
-"skyldes dette sandsynligvis en anden fejl (saasom optaget server) som\n"
+"ForsÃ¸get pÃ¥ at opnÃ¥ adgangstilladelse mislykkedes.\n"
+"Da der tidligere er opnÃ¥et adgangstilladelelse for denne forbindelse,\n"
+"skyldes dette sandsynligvis en anden fejl (sÃ¥som optaget server) som\n"
 "fetchmail ikke kan se fordi serveren ikke sendte en ordentlig fejl-\n"
-"meddelelse.\n"
-"\n"
-"Hvis du imidlertid HAR aendret din kontoopsaetning efter at fetchmail-\n"
-"daemonen blev startet, er det noedvendigt at stoppe daemonen, aendre din\n"
-"opsaetning og så genstarte daemonen.\n"
-"\n"
-"Fetchmail-daemonen vil fortsat koere og forsoege at lave forbindelse.\n"
-"Der vil ikke blive flere meddelelser foer servicen er genetableret."
+"meddelelse."
 
-#: driver.c:1227
-#, fuzzy
+#: driver.c:1215
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -320,20 +310,16 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"Forsoeget paa at opnaa adgangstilladelse mislykkedes.\n"
-"Da der tidligere er opnaaet adgangstilladelelse for denne forbindelse,\n"
-"skyldes dette sandsynligvis en anden fejl (saasom optaget server) som\n"
-"fetchmail ikke kan se fordi serveren ikke sendte en ordentlig fejl-\n"
-"meddelelse.\n"
 "\n"
-"Hvis du imidlertid HAR aendret din kontoopsaetning efter at fetchmail-\n"
-"daemonen blev startet, er det noedvendigt at stoppe daemonen, aendre din\n"
-"opsaetning og så genstarte daemonen.\n"
+"Hvis du imidlertid HAR Ã¦ndret din kontoopsÃ¦tning efter at fetchmail-\n"
+"dÃ¦monen blev startet, er det nÃ¸dvendigt at stoppe dÃ¦monen, Ã¦ndre din\n"
+"opsÃ¦tning og sÃ¥ genstarte dÃ¦monen.\n"
 "\n"
-"Fetchmail-daemonen vil fortsat koere og forsoege at lave forbindelse.\n"
-"Der vil ikke blive flere meddelelser foer servicen er genetableret."
+"Fetchmail-dÃ¦monen vil fortsat kÃ¸re og forsÃ¸ge at lave forbindelse.\n"
+"Der vil ikke blive sendt flere pÃ¥mindelser fÃ¸r at tjenesten er\n"
+"genetableret."
 
-#: driver.c:1237
+#: driver.c:1225
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -344,186 +330,189 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"Forsoeget paa at opnaa adgangstilladelse mislykkedes.\n"
+"ForsÃ¸get pÃ¥ at opnÃ¥ adgangstilladelse mislykkedes.\n"
 "Det betyder sandsynligvis at dit kodeord er ugyldigt, men nogle servere\n"
-"har ogsaa andre fejltilstande som fetchmail ikke kan skelne fra dette,\n"
+"har ogsÃ¥ andre fejltilstande som fetchmail ikke kan skelne fra dette,\n"
 "fordi de ikke sender brugbare fejlmeddelelser ved indlogningsfejl.\n"
 "\n"
-"Fetchmail-daemonen vil fortsat koere og forsoege at lave forbindelse.\n"
-"Der vil ikke blive flere meddelelser foer servicen er genetableret."
+"Fetchmail-dÃ¦monen vil fortsat kÃ¸re og forsÃ¸ge at lave forbindelse.\n"
+"Der vil ikke blive sendt flere pÃ¥ pÃ¥mindelser fÃ¸r at tjenesten er\n"
+"genetableret."
 
-#: driver.c:1253
+#: driver.c:1241
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
-msgstr "Prøver straks igen %s@%s\n"
+msgstr "PrÃ¸ver straks igen %s@%s\n"
 
-#: driver.c:1258
+#: driver.c:1246
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
-msgstr "Ukendt indlognings- eller godkendelsesfejl på %s@%s\n"
+msgstr "Ukendt indlognings- eller godkendelsesfejl pÃ¥ %s@%s\n"
 
-#: driver.c:1282
+#: driver.c:1270
 #, c-format
 msgid "Authorization OK on %s@%s\n"
-msgstr "Godkendelse i orden på %s@%s\n"
+msgstr "Godkendelse i orden pÃ¥ %s@%s\n"
 
-#: driver.c:1288
-#, fuzzy, c-format
+#: driver.c:1276
+#, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
-msgstr "Subject: fetchmail - godkendelse i orden paa %s@%s\n"
+msgstr "Emne: fetchmail - godkendelse i orden pÃ¥ %s@%s"
 
-#: driver.c:1292
+#: driver.c:1280
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
-msgstr "Fetchmail var i stand til at logge ind på %s@%s.\n"
+msgstr "Fetchmail var i stand til at logge ind pÃ¥ %s@%s.\n"
 
-#: driver.c:1296
+#: driver.c:1284
 msgid "Service has been restored.\n"
 msgstr "Servicen er blevet reetableret.\n"
 
-#: driver.c:1328
+#: driver.c:1317
 #, c-format
 msgid "selecting or re-polling folder %s\n"
-msgstr "vælger eller prøver igen brevbakke %s\n"
+msgstr "vÃ¦lger eller prÃ¸ver igen brevbakke %s\n"
 
-#: driver.c:1330
+#: driver.c:1319
 msgid "selecting or re-polling default folder\n"
-msgstr "vælger eller prøver igen indbakken\n"
+msgstr "vÃ¦lger eller prÃ¸ver igen indbakken\n"
 
-#: driver.c:1342
+#: driver.c:1331
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s ved %s (brevbakke %s)"
 
-#: driver.c:1345 rcfile_y.y:390
+#: driver.c:1334 rcfile_y.y:390
 #, c-format
 msgid "%s at %s"
 msgstr "%s ved %s"
 
-#: driver.c:1350
+#: driver.c:1339
 #, c-format
 msgid "Polling %s\n"
-msgstr "Prøver %s\n"
+msgstr "PrÃ¸ver %s\n"
 
-#: driver.c:1354
-#, fuzzy, c-format
+#: driver.c:1343
+#, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
-msgstr[0] "%d %s (%d %s) til %s"
-msgstr[1] "%d %s (%d %s) til %s"
+msgstr[0] "%d besked (%d %s) til %s"
+msgstr[1] "%d beskeder (%d %s) til %s"
 
-#: driver.c:1357
-#, fuzzy
+#: driver.c:1346
 msgid "seen"
 msgid_plural "seen"
-msgstr[0] "gamle"
+msgstr[0] "gammel"
 msgstr[1] "gamle"
 
-#: driver.c:1360
-#, fuzzy, c-format
+#: driver.c:1349
+#, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
-msgstr[0] "%d %s til %s"
-msgstr[1] "%d %s til %s"
+msgstr[0] "%d besked til %s"
+msgstr[1] "%d beskeder til %s"
 
-#: driver.c:1367
+#: driver.c:1356
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d oktetter).\n"
 
-#: driver.c:1373
+#: driver.c:1362
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Ingen post til %s\n"
 
-#: driver.c:1406
+#: driver.c:1395
 msgid "bogus message count!"
 msgstr "falsk brev-tal!"
 
-#: driver.c:1549
+#: driver.c:1447
+#, c-format
+msgid "Too many mails skipped (%d > %d) due to transient errors for %s\n"
+msgstr ""
+
+#: driver.c:1548
 msgid "socket"
 msgstr "sokkel"
 
-#: driver.c:1552
+#: driver.c:1551
 msgid "missing or bad RFC822 header"
 msgstr "manglende eller forkert RFC 822-brevhoved-"
 
-#: driver.c:1555
+#: driver.c:1554
 msgid "MDA"
 msgstr "MDA-"
 
-#: driver.c:1558
+#: driver.c:1557
 msgid "client/server synchronization"
 msgstr "klient/server-synkroniserings"
 
-#: driver.c:1561
+#: driver.c:1560
 msgid "client/server protocol"
 msgstr "klient/server-protokol"
 
-#: driver.c:1564
+#: driver.c:1563
 msgid "lock busy on server"
-msgstr "server låst-"
+msgstr "server lÃ¥st-"
 
-#: driver.c:1567
+#: driver.c:1566
 msgid "SMTP transaction"
 msgstr "SMTP-transaktions"
 
-#: driver.c:1570
+#: driver.c:1569
 msgid "DNS lookup"
 msgstr "DNS-opslags"
 
-#: driver.c:1573
-#, fuzzy
+#: driver.c:1572
 msgid "undefined"
-msgstr "udefineret fejl\n"
+msgstr "udefineret"
 
-#: driver.c:1579
-#, fuzzy, c-format
+#: driver.c:1578
+#, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
-msgstr "%sfejl ved levering til SMTP-vært fra %s\n"
+msgstr "%s fejl under hentning fra %s@%s og levering til SMTP-vÃ¦rt fra %s\n"
 
-#: driver.c:1581
-#, fuzzy
+#: driver.c:1580
 msgid "unknown"
-msgstr "værten er ukendt."
+msgstr "ukendt"
 
-#: driver.c:1583
-#, fuzzy, c-format
+#: driver.c:1582
+#, c-format
 msgid "%s error while fetching from %s@%s\n"
-msgstr "%sfejl ved hentning fra %s\n"
+msgstr "%s fejl ved hentning fra %s@%s\n"
 
-#: driver.c:1595
-#, fuzzy, c-format
+#: driver.c:1594
+#, c-format
 msgid "post-connection command terminated with signal %d\n"
-msgstr "afslutningskommando fejlede med kode %d\n"
+msgstr "afslutningskommando fejlede med signal %d\n"
 
-#: driver.c:1597
+#: driver.c:1596
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "afslutningskommando fejlede med kode %d\n"
 
-#: driver.c:1616
+#: driver.c:1615
 msgid "Kerberos V4 support not linked.\n"
-msgstr "ikke oversat med Kerberos V4-støtte.\n"
+msgstr "ikke oversat med Kerberos V4-stÃ¸tte.\n"
 
-#: driver.c:1624
+#: driver.c:1623
 msgid "Kerberos V5 support not linked.\n"
-msgstr "ikke oversat med Kerberos V5-støtte.\n"
+msgstr "ikke oversat med Kerberos V5-stÃ¸tte.\n"
 
-#: driver.c:1635
+#: driver.c:1634
 #, c-format
 msgid "Option --flush is not supported with %s\n"
-msgstr "Tilvalg --flush er ikke understøttet med %s\n"
+msgstr "Tilvalg --flush er ikke understÃ¸ttet med %s\n"
 
-#: driver.c:1641
+#: driver.c:1640
 #, c-format
 msgid "Option --all is not supported with %s\n"
-msgstr "Tilvalg --all er ikke understøttet med %s\n"
+msgstr "Tilvalg --all er ikke understÃ¸ttet med %s\n"
 
-#: driver.c:1650
+#: driver.c:1649
 #, c-format
 msgid "Option --limit is not supported with %s\n"
-msgstr "Tilvalg --limit er ikke understøttet med %s\n"
+msgstr "Tilvalg --limit er ikke understÃ¸ttet med %s\n"
 
 #: env.c:61
 #, c-format
@@ -534,10 +523,10 @@ msgid ""
 "Try \"env QMAILINJECT= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
-"%s: QMAILINJECT-miljøvariablen er sat.\n"
-"Det er farligt da det kan få qmail-inject eller qmails sendmail-omslag\n"
+"%s: QMAILINJECT-miljÃ¸variablen er sat.\n"
+"Det er farligt da det kan fÃ¥ qmail-inject eller qmails sendmail-omslag\n"
 "til at rette i dine From:- eller Message-ID:-brevhoveder.\n"
-"Prøv \"env QMAILINJECT= %s DINE ARGUMENTER HER\"\n"
+"PrÃ¸v \"env QMAILINJECT= %s DINE ARGUMENTER HER\"\n"
 "%s: afbryder.\n"
 
 #: env.c:73
@@ -550,11 +539,11 @@ msgid ""
 "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
-"%s: NULLMAILER_FLAGS-miljøvariablen er sat.\n"
-"Det er farligt da det kan få mullmailer-inject eller nullmailers\n"
+"%s: NULLMAILER_FLAGS-miljÃ¸variablen er sat.\n"
+"Det er farligt da det kan fÃ¥ mullmailer-inject eller nullmailers\n"
 "sendmail-omslag til at rette i dine From:-, Message-ID: eller\n"
 "Return-Path:-brevhoveder.\n"
-"Prøv \"env NULLMAILER_FLAGS= %s DINE ARGUMENTER HER\"\n"
+"PrÃ¸v \"env NULLMAILER_FLAGS= %s DINE ARGUMENTER HER\"\n"
 "%s: afbryder.\n"
 
 #: env.c:85
@@ -565,7 +554,7 @@ msgstr "%s: Du findes ikke.  Fjern dig.\n"
 #: env.c:149
 #, c-format
 msgid "%s: can't determine your host!"
-msgstr "%s: kan ikke bestemme din værtsmaskine!"
+msgstr "%s: kan ikke bestemme din vÃ¦rtsmaskine!"
 
 #: env.c:172
 #, c-format
@@ -575,6 +564,7 @@ msgstr "gethostbyname fejlede for %s\n"
 #: env.c:174
 msgid "Cannot find my own host in hosts database to qualify it!\n"
 msgstr ""
+"Kan ikke finde min egen vÃ¦rt i vÃ¦rtsdatabasen for at kvalificere den!\n"
 
 #: env.c:178
 msgid ""
@@ -583,26 +573,31 @@ msgid ""
 "problems!\n"
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
+"ForsÃ¸ger at fortsÃ¦tte med ukvalificeret vÃ¦rtsnavn.\n"
+"Rapporter IKKE Ã¸delagt Received: brevhoveder, HELO/EHLO-linjer eller "
+"lignende\n"
+"problemer\n"
+"Reparer I STEDET FOR din /etc/hosts, DNS, NIS eller LDAP.\n"
 
 #: etrn.c:49 odmr.c:61
 #, c-format
 msgid "%s's SMTP listener does not support ESMTP\n"
-msgstr "%s's SMTP-modtager understøtter ikke ESMTP\n"
+msgstr "%s's SMTP-modtager understÃ¸tter ikke ESMTP\n"
 
 #: etrn.c:55
 #, c-format
 msgid "%s's SMTP listener does not support ETRN\n"
-msgstr "%s's SMTP-modtager understøtter ikke ETRN\n"
+msgstr "%s's SMTP-modtager understÃ¸tter ikke ETRN\n"
 
 #: etrn.c:79
 #, c-format
 msgid "Queuing for %s started\n"
-msgstr "Kø for %s startet\n"
+msgstr "KÃ¸ for %s startet\n"
 
 #: etrn.c:84
 #, c-format
 msgid "No messages waiting for %s\n"
-msgstr "Ingen breve venter på %s\n"
+msgstr "Ingen breve venter pÃ¥ %s\n"
 
 #: etrn.c:90
 #, c-format
@@ -612,7 +607,7 @@ msgstr "Ikke-leverede breve til %s gjort klar\n"
 #: etrn.c:94
 #, c-format
 msgid "Unable to queue messages for node %s\n"
-msgstr "Kan ikke stille breve i kø til maskine %s\n"
+msgstr "Kan ikke stille breve i kÃ¸ til maskine %s\n"
 
 #: etrn.c:98
 #, c-format
@@ -634,29 +629,33 @@ msgstr "Ukendt ETRN-fejl %d\n"
 
 #: etrn.c:154
 msgid "Option --keep is not supported with ETRN\n"
-msgstr "Tilvalg --keep er ikke understøttet med ETRN\n"
+msgstr "Tilvalg --keep er ikke understÃ¸ttet med ETRN\n"
 
 #: etrn.c:158
 msgid "Option --flush is not supported with ETRN\n"
-msgstr "Tilvalg --flush er ikke understøttet med ETRN\n"
+msgstr "Tilvalg --flush er ikke understÃ¸ttet med ETRN\n"
 
 #: etrn.c:162
-#, fuzzy
 msgid "Option --folder is not supported with ETRN\n"
-msgstr "Tilvalg --flush er ikke understøttet med ETRN\n"
+msgstr "Tilvalg --folder er ikke understÃ¸ttet med ETRN\n"
 
 #: etrn.c:166
 msgid "Option --check is not supported with ETRN\n"
-msgstr "Tilvalg --check er ikke understøttet med ETRN\n"
+msgstr "Tilvalg --check er ikke understÃ¸ttet med ETRN\n"
 
 #: fetchmail.c:137
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond,\n"
 "                   Robert M. Funk, Graham Wilson\n"
-"Copyright (C) 2005 - 2006, 2010 Sunil Shetye\n"
-"Copyright (C) 2005 - 2010 Matthias Andree\n"
+"Copyright (C) 2005 - 2006, 2010 - 2011 Sunil Shetye\n"
+"Copyright (C) 2005 - 2011 Matthias Andree\n"
 msgstr ""
+"Ophavsret 2002, 2003 Eric S. Raymond\n"
+"Ophavsret 2004 Matthias Andree, Eric S. Raymond,\n"
+"               Robert M. Funk, Graham Wilson\n"
+"Ophavsret 2005 - 2006, 2010 - 2011 Sunil Shetye\n"
+"Ophavsret 2005 - 2011 Matthias Andree\n"
 
 #: fetchmail.c:143
 msgid ""
@@ -664,10 +663,13 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
+"Fetchmail har ABSOLUT INGEN GARANTI. Dette er fri software, og du er\n"
+"velkommen til at videredistribuere den under visse betingelser. For\n"
+"detaljer sÃ¥ se venligst filen COPYING i kilde- eller dokumentationsmappen.\n"
 
 #: fetchmail.c:181
 msgid "WARNING: Running as root is discouraged.\n"
-msgstr ""
+msgstr "ADVARSEL: KÃ¸rsel som administrator (root) frarÃ¥des.\n"
 
 #: fetchmail.c:193
 msgid "fetchmail: invoked with"
@@ -675,7 +677,7 @@ msgstr "fetchmail: kaldt med"
 
 #: fetchmail.c:217
 msgid "could not get current working directory\n"
-msgstr "kunne ikke få det nuværende arbejdskatalog\n"
+msgstr "kunne ikke fÃ¥ det nuvÃ¦rende arbejdskatalog\n"
 
 #: fetchmail.c:288
 #, c-format
@@ -694,7 +696,7 @@ msgstr " og "
 #: fetchmail.c:414
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
-msgstr "Ingen postservere sat op - måske mangler %s?\n"
+msgstr "Ingen postservere sat op - mÃ¥ske mangler %s?\n"
 
 #: fetchmail.c:435
 msgid "fetchmail: no mailservers have been specified.\n"
@@ -702,12 +704,12 @@ msgstr "fetchmail: ingen postservere er blevet specificeret.\n"
 
 #: fetchmail.c:447
 msgid "fetchmail: no other fetchmail is running\n"
-msgstr "fetchmail: ingen anden fetchmail kører\n"
+msgstr "fetchmail: ingen anden fetchmail kÃ¸rer\n"
 
 #: fetchmail.c:453
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error killing %s fetchmail at %ld; bailing out.\n"
-msgstr "fetchmail: fejl ved drab af %sfetchmail på %d; jeg trækker mig.\n"
+msgstr "fetchmail: fejl ved drab af %s fetchmail pÃ¥ %ld; jeg trÃ¦kker mig.\n"
 
 #: fetchmail.c:454 fetchmail.c:463
 msgid "background"
@@ -718,46 +720,46 @@ msgid "foreground"
 msgstr "forgrunds"
 
 #: fetchmail.c:462
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: %s fetchmail at %ld killed.\n"
-msgstr "fetchmail: %sfetchmail på %d dræbt.\n"
+msgstr "fetchmail: %s fetchmail pÃ¥ %ld drÃ¦bt.\n"
 
 #: fetchmail.c:485
 msgid ""
 "fetchmail: can't check mail while another fetchmail to same host is "
 "running.\n"
 msgstr ""
-"fetchmail: kan ikke tjekke post mens en anden fetchmail til samme vært "
-"kører.\n"
+"fetchmail: kan ikke tjekke post mens en anden fetchmail til samme vÃ¦rt "
+"kÃ¸rer.\n"
 
 #: fetchmail.c:491
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"fetchmail: can't poll specified hosts with another fetchmail running at %"
-"ld.\n"
+"fetchmail: can't poll specified hosts with another fetchmail running at "
+"%ld.\n"
 msgstr ""
-"fetchmail: kan ikke prøve de specificerede værter mens en anden fetchmail "
-"kører på %d.\n"
+"fetchmail: kan ikke prÃ¸ve de specificerede vÃ¦rter mens en anden fetchmail "
+"kÃ¸rer pÃ¥ %ld.\n"
 
 #: fetchmail.c:498
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: another foreground fetchmail is running at %ld.\n"
-msgstr "fetchmail: en anden forgrundsfetchmail kører på %d.\n"
+msgstr "fetchmail: en anden forgrundsfetchmail kÃ¸rer pÃ¥ %ld.\n"
 
 #: fetchmail.c:508
 msgid ""
 "fetchmail: can't accept options while a background fetchmail is running.\n"
-msgstr "fetchmail: kan ikke tage tilvalg mens en baggrundsfetchmail kører.\n"
+msgstr "fetchmail: kan ikke tage tilvalg mens en baggrundsfetchmail kÃ¸rer.\n"
 
 #: fetchmail.c:514
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: background fetchmail at %ld awakened.\n"
-msgstr "fetchmail: baggrunds fetchmail på %d vækket.\n"
+msgstr "fetchmail: baggrundsfetchmail pÃ¥ %ld vÃ¦kket.\n"
 
 #: fetchmail.c:526
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: elder sibling at %ld died mysteriously.\n"
-msgstr "fetchmail: ældre søskende på %d døde på mystisk vis.\n"
+msgstr "fetchmail: Ã¦ldre sÃ¸skende pÃ¥ %ld dÃ¸de pÃ¥ mystisk vis.\n"
 
 #: fetchmail.c:541
 #, c-format
@@ -767,148 +769,145 @@ msgstr "fetchmail: kan ikke finde et kodeord for %s@%s.\n"
 #: fetchmail.c:545
 #, c-format
 msgid "Enter password for %s@%s: "
-msgstr "Angiv kodeord for %s@%s: "
+msgstr "Angiv adgangskode for %s@%s: "
 
 #: fetchmail.c:587
-#, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: ingen anden fetchmail kører\n"
+msgstr "fetchmail: Kan ikke frigÃ¸re til baggrunden. Afbryder.\n"
 
 #: fetchmail.c:591
-#, fuzzy, c-format
+#, c-format
 msgid "starting fetchmail %s daemon\n"
-msgstr "starter fetchmail %s-dæmon\n"
+msgstr "starter fetchmail %s-dÃ¦mon\n"
 
 #: fetchmail.c:607 fetchmail.c:609
-#, fuzzy, c-format
+#, c-format
 msgid "could not open %s to append logs to\n"
-msgstr "kunne ikke åbne %s for at tilføje logs til \n"
+msgstr "kunne ikke Ã¥bne %s for at tilfÃ¸je logge til\n"
 
 #: fetchmail.c:611
-#, fuzzy
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
 msgstr ""
-"fetchmail: advarsel: DNS er ikke tilgængelig til at tjekke flermodtager-"
-"afhentninger fra %s\n"
+"fetchmail: Advarsel: syslog og logfil er sat. Kontroller begge for logge!\n"
 
 #: fetchmail.c:630
 msgid "--check mode enabled, not fetching mail\n"
-msgstr ""
+msgstr "tilstanden --check aktiveret, henter ikke post\n"
 
 #: fetchmail.c:652
 #, c-format
 msgid "couldn't time-check %s (error %d)\n"
-msgstr "kunne ikke tidsfæste %s (fejl %d)\n"
+msgstr "kunne ikke tidsfÃ¦ste %s (fejl %d)\n"
 
 #: fetchmail.c:657
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
-msgstr "genstarter fetchmail (%s ændret)\n"
+msgstr "genstarter fetchmail (%s Ã¦ndret)\n"
 
 #: fetchmail.c:662
 msgid "attempt to re-exec may fail as directory has not been restored\n"
 msgstr ""
-"forsøg på at genstarte kan mislykkes da kataloget ikke er genoprettet\n"
+"forsÃ¸g pÃ¥ at genstarte kan mislykkes da kataloget ikke er genoprettet\n"
 
 #: fetchmail.c:689
 msgid "attempt to re-exec fetchmail failed\n"
-msgstr "forsøg på at genstarte fetchmail fejlede\n"
+msgstr "forsÃ¸g pÃ¥ at genstarte fetchmail fejlede\n"
 
 #: fetchmail.c:719
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
 msgstr ""
-"prøve af %s droppet (mislykket godkendelse eller for mange tidsafbrud)\n"
+"prÃ¸ve af %s droppet (mislykket godkendelse eller for mange tidsafbrud)\n"
 
 #: fetchmail.c:731
 #, c-format
 msgid "interval not reached, not querying %s\n"
-msgstr "interval ikke nået, spørger ikke %s\n"
+msgstr "interval ikke nÃ¥et, spÃ¸rger ikke %s\n"
 
 #: fetchmail.c:769
 msgid "Query status=0 (SUCCESS)\n"
-msgstr "Spørgestatus=0 (succes)\n"
+msgstr "SpÃ¸rgestatus=0 (succes)\n"
 
 #: fetchmail.c:771
 msgid "Query status=1 (NOMAIL)\n"
-msgstr "Spørgestatus=1 (ingen post)\n"
+msgstr "SpÃ¸rgestatus=1 (ingen post)\n"
 
 #: fetchmail.c:773
 msgid "Query status=2 (SOCKET)\n"
-msgstr "Spørgestatus=2 (sokkelfejl)\n"
+msgstr "SpÃ¸rgestatus=2 (sokkelfejl)\n"
 
 #: fetchmail.c:775
 msgid "Query status=3 (AUTHFAIL)\n"
-msgstr "Spørgestatus=3 (godkendelsesfejl)\n"
+msgstr "SpÃ¸rgestatus=3 (godkendelsesfejl)\n"
 
 #: fetchmail.c:777
 msgid "Query status=4 (PROTOCOL)\n"
-msgstr "Spørgestatus=4 (protokolfejl)\n"
+msgstr "SpÃ¸rgestatus=4 (protokolfejl)\n"
 
 #: fetchmail.c:779
 msgid "Query status=5 (SYNTAX)\n"
-msgstr "Spørgestatus=5 (syntaksfejl)\n"
+msgstr "SpÃ¸rgestatus=5 (syntaksfejl)\n"
 
 #: fetchmail.c:781
 msgid "Query status=6 (IOERR)\n"
-msgstr "Spørgestatus=6 (I/O-fejl)\n"
+msgstr "SpÃ¸rgestatus=6 (I/O-fejl)\n"
 
 #: fetchmail.c:783
 msgid "Query status=7 (ERROR)\n"
-msgstr "Spørgestatus=7 (serverfejl)\n"
+msgstr "SpÃ¸rgestatus=7 (serverfejl)\n"
 
 #: fetchmail.c:785
 msgid "Query status=8 (EXCLUDE)\n"
-msgstr "Spørgestatus=8 (eksklusionsfejl)\n"
+msgstr "SpÃ¸rgestatus=8 (eksklusionsfejl)\n"
 
 #: fetchmail.c:787
 msgid "Query status=9 (LOCKBUSY)\n"
-msgstr "Spørgestatus=9 (lås optaget)\n"
+msgstr "SpÃ¸rgestatus=9 (lÃ¥s optaget)\n"
 
 #: fetchmail.c:789
 msgid "Query status=10 (SMTP)\n"
-msgstr "Spørgestatus=10 (SMTP-fejl)\n"
+msgstr "SpÃ¸rgestatus=10 (SMTP-fejl)\n"
 
 #: fetchmail.c:791
 msgid "Query status=11 (DNS)\n"
-msgstr "Spørgestatus=11 (DNS-fejl)\n"
+msgstr "SpÃ¸rgestatus=11 (DNS-fejl)\n"
 
 #: fetchmail.c:793
 msgid "Query status=12 (BSMTP)\n"
-msgstr "Spørgestatus=12 (BSMTP-fejl)\n"
+msgstr "SpÃ¸rgestatus=12 (BSMTP-fejl)\n"
 
 #: fetchmail.c:795
 msgid "Query status=13 (MAXFETCH)\n"
-msgstr "Spørgestatus=13 (afhentningsgrænse nået)\n"
+msgstr "SpÃ¸rgestatus=13 (afhentningsgrÃ¦nse nÃ¥et)\n"
 
 #: fetchmail.c:797
 #, c-format
 msgid "Query status=%d\n"
-msgstr "Spørgestatus=%d\n"
+msgstr "SpÃ¸rgestatus=%d\n"
 
 #: fetchmail.c:839
 msgid "All connections are wedged.  Exiting.\n"
 msgstr "Alle forbindelser er afbrudte.  Afbryder.\n"
 
 #: fetchmail.c:847
-#, fuzzy, c-format
+#, c-format
 msgid "sleeping at %s for %d seconds\n"
-msgstr "sover %s\n"
+msgstr "sover %s for %d sekunder\n"
 
 #: fetchmail.c:871
 #, c-format
 msgid "awakened by %s\n"
-msgstr "vækket af %s\n"
+msgstr "vÃ¦kket af %s\n"
 
 #: fetchmail.c:874
 #, c-format
 msgid "awakened by signal %d\n"
-msgstr "vækket af signal %d\n"
+msgstr "vÃ¦kket af signal %d\n"
 
 #: fetchmail.c:882
 #, c-format
 msgid "awakened at %s\n"
-msgstr "vækket %s\n"
+msgstr "vÃ¦kket %s\n"
 
 #: fetchmail.c:887
 #, c-format
@@ -917,65 +916,64 @@ msgstr "normal afslutning, status %d\n"
 
 #: fetchmail.c:1046
 msgid "couldn't time-check the run-control file\n"
-msgstr "kunne ikke tidsfæste kørselskontrolfilen\n"
+msgstr "kunne ikke tidsfÃ¦ste kÃ¸rselskontrolfilen\n"
 
 #: fetchmail.c:1080
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
-msgstr "Advarsel: flere forekomster af vært %s i konfigurationsfil\n"
+msgstr "Advarsel: flere forekomster af vÃ¦rt %s i konfigurationsfil\n"
 
 #: fetchmail.c:1119
-#, fuzzy
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
-msgstr "Advarsel: flere forekomster af vært %s i konfigurationsfil\n"
+msgstr "fetchmail: Fejl: flere \"standardposter\" i konfigurationsfil.\n"
 
 #: fetchmail.c:1241
 msgid "SSL support is not compiled in.\n"
-msgstr "ikke konfigureret med SSL-understøttelse.\n"
+msgstr "ikke konfigureret med SSL-understÃ¸ttelse.\n"
 
 #: fetchmail.c:1248
-#, fuzzy
 msgid "KERBEROS v4 support is configured, but not compiled in.\n"
-msgstr "ikke konfigureret med SSL-understøttelse.\n"
+msgstr "KERBEROS v4-understÃ¸ttelse er konfigureret, men ikke kompileret ind.\n"
 
 #: fetchmail.c:1254
-#, fuzzy
 msgid "KERBEROS v5 support is configured, but not compiled in.\n"
-msgstr "ikke konfigureret med SSL-understøttelse.\n"
+msgstr "KERBEROS v5-understÃ¸ttelse er konfigureret, men ikke kompileret ind.\n"
 
 #: fetchmail.c:1260
-#, fuzzy
 msgid "GSSAPI support is configured, but not compiled in.\n"
-msgstr "ikke konfigureret med SSL-understøttelse.\n"
+msgstr "GSSAPI-understÃ¸ttelse er konfigureret, men ikke kompileret ind.\n"
 
 #: fetchmail.c:1290
 #, c-format
 msgid ""
 "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
 msgstr ""
-"fetchmail: advarsel: DNS er ikke tilgængelig til at tjekke flermodtager-"
+"fetchmail: advarsel: ingen DNS er tilgÃ¦ngelig til at kontrollere "
 "afhentninger fra %s\n"
 
 #: fetchmail.c:1301
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
-msgstr ""
+msgstr "advarsel: flerdrop for %s krÃ¦ver kuverttilvalg!\n"
 
 #: fetchmail.c:1302
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
-msgstr ""
+msgstr "advarsel: SpÃ¸rg ikke om hjÃ¦lp hvis al post gÃ¥r til postmesteren!\n"
 
 #: fetchmail.c:1319
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
 "service or port\n"
-msgstr "konfiguration af %s forkert, portnummer kan ikke være negativt\n"
+msgstr ""
+"fetchmail: konfiguration af %s er forkert, angiv positivt portnummer for "
+"tjeneste eller port\n"
 
 #: fetchmail.c:1326
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
-msgstr "konfiguration af %s forkert, RPOP kræver en privilegeret port\n"
+msgstr ""
+"fetchmail: konfiguration af %s er forkert, RPOP krÃ¦ver en privilegeret port\n"
 
 #: fetchmail.c:1344
 #, c-format
@@ -983,9 +981,9 @@ msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
 msgstr "konfiguration af %s forkert, LMTP kan ikke bruge standard SMTP-port\n"
 
 #: fetchmail.c:1358
-#, fuzzy
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
-msgstr "Brug af både fetchall og keep som dæmon er en fejl!\n"
+msgstr ""
+"Brug af bÃ¥de fetchall og keep i dÃ¦mon- eller ledig tilstand er en fejl!\n"
 
 #: fetchmail.c:1383
 #, c-format
@@ -995,41 +993,41 @@ msgstr "afsluttet med signal %d\n"
 #: fetchmail.c:1456
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
-msgstr "%s-forespørgsel til %s (protokol %s) begyndt %s\n"
+msgstr "%s-forespÃ¸rgsel til %s (protokol %s) begyndt %s\n"
 
 #: fetchmail.c:1481
 msgid "POP2 support is not configured.\n"
-msgstr "ikke konfigureret med POP2-understøttelse.\n"
+msgstr "ikke konfigureret med POP2-understÃ¸ttelse.\n"
 
 #: fetchmail.c:1493
 msgid "POP3 support is not configured.\n"
-msgstr "ikke konfigureret med POP3-understøttelse.\n"
+msgstr "ikke konfigureret med POP3-understÃ¸ttelse.\n"
 
 #: fetchmail.c:1503
 msgid "IMAP support is not configured.\n"
-msgstr "ikke konfigureret med IMAP-understøttelse.\n"
+msgstr "ikke konfigureret med IMAP-understÃ¸ttelse.\n"
 
 #: fetchmail.c:1509
 msgid "ETRN support is not configured.\n"
-msgstr "ikke konfigureret med ETRN-understøttelse.\n"
+msgstr "ikke konfigureret med ETRN-understÃ¸ttelse.\n"
 
 #: fetchmail.c:1517
 msgid "ODMR support is not configured.\n"
-msgstr "ikke konfigureret med ODMR-understøttelse.\n"
+msgstr "ikke konfigureret med ODMR-understÃ¸ttelse.\n"
 
 #: fetchmail.c:1524
 msgid "unsupported protocol selected.\n"
-msgstr "ikke-understøttet protokol valgt.\n"
+msgstr "ikke-understÃ¸ttet protokol valgt.\n"
 
 #: fetchmail.c:1534
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
-msgstr "%s-forespørgsel til %s (protokol %s) afsluttet %s\n"
+msgstr "%s-forespÃ¸rgsel til %s (protokol %s) afsluttet %s\n"
 
 #: fetchmail.c:1551
 #, c-format
 msgid "Poll interval is %d seconds\n"
-msgstr "Prøvemellemrum er %d sekunder\n"
+msgstr "PrÃ¸vemellemrum er %d sekunder\n"
 
 #: fetchmail.c:1553
 #, c-format
@@ -1043,7 +1041,7 @@ msgstr "Id-fil er %s\n"
 
 #: fetchmail.c:1558
 msgid "Progress messages will be logged via syslog\n"
-msgstr "Forløbsbeskeder vil blive logget vha. syslog\n"
+msgstr "ForlÃ¸bsbeskeder vil blive logget vha. syslog\n"
 
 #: fetchmail.c:1561
 msgid "Fetchmail will masquerade and will not generate Received\n"
@@ -1051,7 +1049,7 @@ msgstr "Fetchmail vil forstille sig og ikke generere Received\n"
 
 #: fetchmail.c:1563
 msgid "Fetchmail will show progress dots even in logfiles.\n"
-msgstr "Fetchmail vil vise forløbsprikker selv i logfiler.\n"
+msgstr "Fetchmail vil vise forlÃ¸bsprikker selv i logfiler.\n"
 
 #: fetchmail.c:1565
 #, c-format
@@ -1068,15 +1066,13 @@ msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail vil rette fejlbreve til afsenderen.\n"
 
 #: fetchmail.c:1574
-#, fuzzy
 msgid "Fetchmail will treat permanent errors as permanent (drop messages).\n"
-msgstr ""
-"Fetchmail vil i flermodtager-tilstand levere fejladresserede breve til %s.\n"
+msgstr "Fetchmail vil opfatte permanente fejl som permanent (drop beskeder).\n"
 
 #: fetchmail.c:1576
-#, fuzzy
 msgid "Fetchmail will treat permanent errors as temporary (keep messages).\n"
-msgstr "Fetchmail vil rette fejlbreve til afsenderen.\n"
+msgstr ""
+"Fetchmail vil opfatte permanente fejl som midlertidig (bevar beskeder).\n"
 
 #: fetchmail.c:1583
 #, c-format
@@ -1089,11 +1085,11 @@ msgid "  Mail will be retrieved via %s\n"
 msgstr "  Post vil blive modtaget via %s\n"
 
 #: fetchmail.c:1590
-#, fuzzy, c-format
+#, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
-msgstr[0] "  Prøvning af denne server vil ske hvert %d. sekund.\n"
-msgstr[1] "  Prøvning af denne server vil ske hvert %d. sekund.\n"
+msgstr[0] "  PrÃ¸vning af denne server vil ske hvert %d. sekund.\n"
+msgstr[1] "  PrÃ¸vning af denne server vil ske hvert %d. sekund.\n"
 
 #: fetchmail.c:1594
 #, c-format
@@ -1101,14 +1097,13 @@ msgid "  True name of server is %s.\n"
 msgstr "  Serverens sande navn er %s.\n"
 
 #: fetchmail.c:1597
-#, fuzzy
 msgid "  This host will not be queried when no host is specified.\n"
-msgstr "  Denne vært %s blive forespurgt når ingen vært er specificeret.\n"
+msgstr ""
+"  Denne vÃ¦rt vil ikke blive forespurgt nÃ¥r ingen vÃ¦rt er specificeret.\n"
 
 #: fetchmail.c:1598
-#, fuzzy
 msgid "  This host will be queried when no host is specified.\n"
-msgstr "  Denne vært %s blive forespurgt når ingen vært er specificeret.\n"
+msgstr "  Denne vÃ¦rt vil blive forespurgt nÃ¥r ingen vÃ¦rt er specificeret.\n"
 
 #: fetchmail.c:1602
 msgid "  Password will be prompted for.\n"
@@ -1154,41 +1149,39 @@ msgstr " (fremtvinger UIDL-brug)"
 
 #: fetchmail.c:1636
 msgid "  All available authentication methods will be tried.\n"
-msgstr "  Alle tilgængelige godkendelsesmetoder vil blive forsøgt.\n"
+msgstr "  Alle tilgÃ¦ngelige godkendelsesmetoder vil blive forsÃ¸gt.\n"
 
 #: fetchmail.c:1639
 msgid "  Password authentication will be forced.\n"
-msgstr "  Kodeordsgodkendelse er påkrævet.\n"
+msgstr "  Kodeordsgodkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1642
-#, fuzzy
 msgid "  MSN authentication will be forced.\n"
-msgstr "  NTLM-godkendelse er påkrævet.\n"
+msgstr "  MSN-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1645
 msgid "  NTLM authentication will be forced.\n"
-msgstr "  NTLM-godkendelse er påkrævet.\n"
+msgstr "  NTLM-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1648
 msgid "  OTP authentication will be forced.\n"
-msgstr "  OTP-godkendelse er påkrævet.\n"
+msgstr "  OTP-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1651
-#, fuzzy
 msgid "  CRAM-MD5 authentication will be forced.\n"
-msgstr "  CRAM-Md5-godkendelse er påkrævet.\n"
+msgstr "  CRAM-MD5-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1654
 msgid "  GSSAPI authentication will be forced.\n"
-msgstr "  GSSAPI-godkendelse er påkrævet.\n"
+msgstr "  GSSAPI-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1657
 msgid "  Kerberos V4 authentication will be forced.\n"
-msgstr "  Kerberos V4-godkendelse er påkrævet.\n"
+msgstr "  Kerberos V4-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1660
 msgid "  Kerberos V5 authentication will be forced.\n"
-msgstr "  Kerberos V5-godkendelse er påkrævet.\n"
+msgstr "  Kerberos V5-godkendelse er pÃ¥krÃ¦vet.\n"
 
 #: fetchmail.c:1663
 msgid "  End-to-end encryption assumed.\n"
@@ -1213,9 +1206,9 @@ msgid "  SSL server certificate checking enabled.\n"
 msgstr "  SSL-servercertifikat tjekkes.\n"
 
 #: fetchmail.c:1677
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL trusted certificate file: %s\n"
-msgstr "  Katalog for SSL-certifikater: %s\n"
+msgstr "  SSL-certifikatfil: %s\n"
 
 #: fetchmail.c:1679
 #, c-format
@@ -1223,19 +1216,19 @@ msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  Katalog for SSL-certifikater: %s\n"
 
 #: fetchmail.c:1681
-#, fuzzy, c-format
+#, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "Servers almennavn %s\n"
+msgstr "  SSL-servers almennavn %s\n"
 
 #: fetchmail.c:1683
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
-msgstr "  SSL-nøgle-fingeraftryk (tjekket mod servernøglen): %s\n"
+msgstr "  SSL-nÃ¸gle-fingeraftryk (tjekket mod servernÃ¸glen): %s\n"
 
 #: fetchmail.c:1686
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
-msgstr "  Venter på svar fra server i højst %d sekunder"
+msgstr "  Venter pÃ¥ svar fra server i hÃ¸jst %d sekunder"
 
 #: fetchmail.c:1688
 msgid " (default).\n"
@@ -1250,149 +1243,140 @@ msgid "  Selected mailboxes are:"
 msgstr "  Udvalgte brevbakker er:"
 
 #: fetchmail.c:1706
-#, fuzzy
 msgid "  All messages will be retrieved (--all on).\n"
-msgstr "  %s breve vil blive hentet (--all %s).\n"
+msgstr "  Alle breve vil blive hentet (--all aktiveret).\n"
 
 #: fetchmail.c:1707
-#, fuzzy
 msgid "  Only new messages will be retrieved (--all off).\n"
-msgstr "  %s breve vil blive hentet (--all %s).\n"
+msgstr "  Kun nye breve vil blive hentet (--all deaktiveret).\n"
 
 #: fetchmail.c:1709
-#, fuzzy
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
-msgstr "  Hentede breve %s blive gemt på serveren (--keep %s).\n"
+msgstr "  Hentede breve vil blive gemt pÃ¥ serveren (--keep aktiveret).\n"
 
 #: fetchmail.c:1710
-#, fuzzy
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
-msgstr "  Hentede breve %s blive gemt på serveren (--keep %s).\n"
+msgstr ""
+"  Hentede breve vil ikke blive gemt pÃ¥ serveren (--keep deaktiveret).\n"
 
 #: fetchmail.c:1712
-#, fuzzy
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
-msgstr "  Gamle breve %s blive slettede før afhentning (--flush %s).\n"
+msgstr "  Gamle breve vil blive slettet fÃ¸r afhentning (--flush aktiveret).\n"
 
 #: fetchmail.c:1713
-#, fuzzy
 msgid ""
 "  Old messages will not be flushed before message retrieval (--flush off).\n"
-msgstr "  Gamle breve %s blive slettede før afhentning (--flush %s).\n"
+msgstr ""
+"  Gamle breve vil ikke blive slettet fÃ¸r afhentning (--flush deaktiveret).\n"
 
 #: fetchmail.c:1715
-#, fuzzy
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
-msgstr "  Gamle breve %s blive slettede før afhentning (--flush %s).\n"
+msgstr ""
+"  For lange breve vil blive slettet fÃ¸r hentning (--limitflush aktiveret).\n"
 
 #: fetchmail.c:1716
-#, fuzzy
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
-msgstr "  Gamle breve %s blive slettede før afhentning (--flush %s).\n"
+msgstr ""
+"  For lange breve vil blive slettet fÃ¸r hentning (--limitflush "
+"deaktiveret).\n"
 
 #: fetchmail.c:1718
-#, fuzzy
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
-msgstr "  Omskrivning af serverlokale adresser er %s (--norewrite %s).\n"
+msgstr ""
+"  Omskrivning af serverlokale adresser er aktiveret (--norewrite "
+"deaktiveret).\n"
 
 #: fetchmail.c:1719
-#, fuzzy
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
-msgstr "  Omskrivning af serverlokale adresser er %s (--norewrite %s).\n"
+msgstr ""
+"  Omskrivning af serverlokale adresser er deaktiveret (--norewrite "
+"aktiveret).\n"
 
 #: fetchmail.c:1721
-#, fuzzy
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
-msgstr "  Fjernelse af vognreturtegn er %s (stripcr %s).\n"
+msgstr "  Fjernelse af vognreturtegn er aktiveret (stripcr aktiveret).\n"
 
 #: fetchmail.c:1722
-#, fuzzy
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
-msgstr "  Fjernelse af vognreturtegn er %s (stripcr %s).\n"
+msgstr "  Fjernelse af vognreturtegn er deaktiveret (stripcr deaktiveret).\n"
 
 #: fetchmail.c:1724
-#, fuzzy
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
-msgstr "  Indsættelse af vognreturtegn er %s (forcecr %s).\n"
+msgstr "  IndsÃ¦ttelse af vognreturtegn er aktiveret (forcecr aktiveret).\n"
 
 #: fetchmail.c:1725
-#, fuzzy
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
-msgstr "  Indsættelse af vognreturtegn er %s (forcecr %s).\n"
+msgstr "  IndsÃ¦ttelse af vognreturtegn er deaktiveret (forcecr deaktiveret).\n"
 
 #: fetchmail.c:1727
-#, fuzzy
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
-msgstr "  Fortolkning af Content-Transfer-Encoding er %s (pass8bit %s).\n"
+msgstr ""
+"  Fortolkning af Content-Transfer-Encoding er deaktiveret (pass8bit "
+"aktiveret).\n"
 
 #: fetchmail.c:1728
-#, fuzzy
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
-msgstr "  Fortolkning af Content-Transfer-Encoding er %s (pass8bit %s).\n"
+msgstr ""
+"  Fortolkning af Content-Transfer-Encoding er aktiveret (pass8bit "
+"deaktiveret).\n"
 
 #: fetchmail.c:1730
-#, fuzzy
 msgid "  MIME decoding is enabled (mimedecode on).\n"
-msgstr "  MIME-afkodning er %s (mimedecode %s).\n"
+msgstr "  MIME-afkodning er aktiveret (mimedecode aktiveret).\n"
 
 #: fetchmail.c:1731
-#, fuzzy
 msgid "  MIME decoding is disabled (mimedecode off).\n"
-msgstr "  MIME-afkodning er %s (mimedecode %s).\n"
+msgstr "  MIME-afkodning er deaktiveret (mimedecode deaktiveret).\n"
 
 #: fetchmail.c:1733
-#, fuzzy
 msgid "  Idle after poll is enabled (idle on).\n"
-msgstr "  Tomgang efter prøvning er %s (idle %s).\n"
+msgstr "  Tomgang efter prÃ¸vning er aktiveret (idle aktiveret).\n"
 
 #: fetchmail.c:1734
-#, fuzzy
 msgid "  Idle after poll is disabled (idle off).\n"
-msgstr "  Tomgang efter prøvning er %s (idle %s).\n"
+msgstr "  Tomgang efter prÃ¸vning er deaktiveret (idle deaktiveret).\n"
 
 #: fetchmail.c:1736
-#, fuzzy
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
-msgstr "  Ikke-tomme statuslinjer vil blive %s (dropstatus %s)\n"
+msgstr "  Ikke-tomme statuslinjer vil blive fjernet (dropstatus aktiveret)\n"
 
 #: fetchmail.c:1737
-#, fuzzy
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
-msgstr "  Ikke-tomme statuslinjer vil blive %s (dropstatus %s)\n"
+msgstr "  Ikke-tomme statuslinjer vil blive bevaret (dropstatus deaktiveret)\n"
 
 #: fetchmail.c:1739
-#, fuzzy
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
-msgstr "  \"Delivered-To\"-linjer vil blive %s (dropdelivered %s)\n"
+msgstr ""
+"  \"Delivered-To\"-linjer vil blive fjernet (dropdelivered aktiveret)\n"
 
 #: fetchmail.c:1740
-#, fuzzy
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
-msgstr "  \"Delivered-To\"-linjer vil blive %s (dropdelivered %s)\n"
+msgstr ""
+"  \"Delivered-To\"-linjer vil blive bevaret (dropdelivered deaktiveret)\n"
 
 #: fetchmail.c:1744
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
-msgstr "  Maksimal størrelse på breve er %d oktetter (--limit %d).\n"
+msgstr "  Maksimal stÃ¸rrelse pÃ¥ breve er %d oktetter (--limit %d).\n"
 
 #: fetchmail.c:1747
 msgid "  No message size limit (--limit 0).\n"
-msgstr "  Ingen maksimal størrelse på breve (--limit 0).\n"
+msgstr "  Ingen maksimal stÃ¸rrelse pÃ¥ breve (--limit 0).\n"
 
 #: fetchmail.c:1749
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
-msgstr "  Interval for størrelsesadvarsler er %d sekunder (--warnings %d).\n"
+msgstr "  Interval for stÃ¸rrelsesadvarsler er %d sekunder (--warnings %d).\n"
 
 #: fetchmail.c:1752
 msgid "  Size warnings on every poll (--warnings 0).\n"
-msgstr "  Størrelsesadvarsler ved hver prøvning (--warnings 0).\n"
+msgstr "  StÃ¸rrelsesadvarsler ved hver prÃ¸vning (--warnings 0).\n"
 
 #: fetchmail.c:1755
 #, c-format
@@ -1404,41 +1388,43 @@ msgid "  No received-message limit (--fetchlimit 0).\n"
 msgstr "  Intet maksimalt antal hentede breve (--fetchlimit 0).\n"
 
 #: fetchmail.c:1760
-#, fuzzy, c-format
+#, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
-msgstr "  Maksimalt antal hentede breve er %d (--fetchlimit %d).\n"
+msgstr "  Maksimalt antal hentede breve er %d (--fetchsizelimit %d).\n"
 
 #: fetchmail.c:1763
-#, fuzzy
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
-msgstr "  Ingen maksimal størrelse på breve (--limit 0).\n"
+msgstr "  Ingen maksimal stÃ¸rrelse pÃ¥ hentede breve (--fetchsizelimit 0).\n"
 
 #: fetchmail.c:1767
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
-msgstr ""
+msgstr "  UdfÃ¸r binÃ¦r sÃ¸gning for UID'er under hver prÃ¸vning (--fastuidl 1).\n"
 
 #: fetchmail.c:1769
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr ""
+"  UdfÃ¸r binÃ¦r sÃ¸gning for UID'er under %d ud for %d prÃ¸vninger (--fastuidl "
+"%d).\n"
 
 #: fetchmail.c:1772
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr ""
+"   UdfÃ¸r lineÃ¦r sÃ¸gning for UID'er under hver prÃ¸vning (--fastuidl 0).\n"
 
 #: fetchmail.c:1774
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
-msgstr "  SMTP-brevantalsgrænse er %d.\n"
+msgstr "  SMTP-brevantalsgrÃ¦nse er %d.\n"
 
 #: fetchmail.c:1776
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
-msgstr "  Ingen SMTP-brevantalsgrænse (--batchlimit 0).\n"
+msgstr "  Ingen SMTP-brevantalsgrÃ¦nse (--batchlimit 0).\n"
 
 #: fetchmail.c:1780
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
-msgstr "  Sletninger udføres ved hver %d. brev (--expunge %d).\n"
+msgstr "  Sletninger udfÃ¸res ved hver %d. brev (--expunge %d).\n"
 
 #: fetchmail.c:1782
 msgid "  No forced expunges (--expunge 0).\n"
@@ -1446,7 +1432,7 @@ msgstr "  Ingen forcerede sletninger (--expunge 0).\n"
 
 #: fetchmail.c:1789
 msgid "  Domains for which mail will be fetched are:"
-msgstr "  Domæner som der vil blive hentet post til:"
+msgstr "  DomÃ¦ner som der vil blive hentet post til:"
 
 #: fetchmail.c:1794 fetchmail.c:1814
 msgid " (default)"
@@ -1455,7 +1441,7 @@ msgstr " (standard)"
 #: fetchmail.c:1799
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
-msgstr "  Breve vil blive tilføjet %s som BSMTP\n"
+msgstr "  Breve vil blive tilfÃ¸jet %s som BSMTP\n"
 
 #: fetchmail.c:1801
 #, c-format
@@ -1470,7 +1456,7 @@ msgstr "  Breve vil blive %cMTP-leveret til:"
 #: fetchmail.c:1819
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
-msgstr "  Værtsdelen af MAIL FROM-linjen vil blive %s\n"
+msgstr "  VÃ¦rtsdelen af MAIL FROM-linjen vil blive %s\n"
 
 #: fetchmail.c:1822
 #, c-format
@@ -1483,7 +1469,7 @@ msgstr "  Genkendte spamblokeringssvar fra modtager er:"
 
 #: fetchmail.c:1837
 msgid "  Spam-blocking disabled\n"
-msgstr "  Spamblokering er slået fra\n"
+msgstr "  Spamblokering er slÃ¥et fra\n"
 
 #: fetchmail.c:1840
 #, c-format
@@ -1505,7 +1491,7 @@ msgstr "  Ingen lukningskommando.\n"
 
 #: fetchmail.c:1851
 msgid "  No localnames declared for this host.\n"
-msgstr "  Ingen lokale navne er angivet for denne vært.\n"
+msgstr "  Ingen lokale navne er angivet for denne vÃ¦rt.\n"
 
 #: fetchmail.c:1861
 msgid "  Multi-drop mode: "
@@ -1516,107 +1502,107 @@ msgid "  Single-drop mode: "
 msgstr "  Enkeltmodtager-tilstand: "
 
 #: fetchmail.c:1865
-#, fuzzy, c-format
+#, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
-msgstr[0] "%d lokale navne genkendt\n"
+msgstr[0] "%d lokalt navn genkendt\n"
 msgstr[1] "%d lokale navne genkendt\n"
 
 #: fetchmail.c:1880
-#, fuzzy
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
-msgstr "  DNS-opslag for flermodtager-adresser er %s.\n"
+msgstr "  DNS-opslag for flermodtager-adresser er aktiveret.\n"
 
 #: fetchmail.c:1881
-#, fuzzy
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
-msgstr "  DNS-opslag for flermodtager-adresser er %s.\n"
+msgstr "  DNS-opslag for flermodtager-adresser er deaktiveret.\n"
 
 #: fetchmail.c:1885
-#, fuzzy
 msgid ""
 "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr "  Serveraliaser vil blive sammenholdt med flermodtager-adresser efter "
+msgstr ""
+"  Serveraliasser vil blive sammenholdt med flermodtager-adresser efter IP-"
+"adresse.\n"
 
 #: fetchmail.c:1887
-#, fuzzy
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
-msgstr "  Serveraliaser vil blive sammenholdt med flermodtager-adresser efter "
+msgstr ""
+"  Serveraliasser vil blive sammenholdt med flermodtager-adresser efter "
+"navn.\n"
 
 #: fetchmail.c:1890
 msgid "  Envelope-address routing is disabled\n"
-msgstr "Adressering efter konvolutadressen er slået fra\n"
+msgstr "  Adressering efter konvolutadressen er slÃ¥et fra\n"
 
 #: fetchmail.c:1893
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
-msgstr "  Konvolutadressen antages at være i %s-feltet i brevhovedet\n"
+msgstr "  Konvolutadressen antages at vÃ¦re i %s-feltet i brevhovedet\n"
 
 #: fetchmail.c:1896
-#, fuzzy, c-format
+#, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
-msgstr "  Nr. konvolutadresse som vil blive analyseret: %d\n"
+msgstr "  Antallet af konvolutadresse som vil blive sprunget over: %d\n"
 
 #: fetchmail.c:1899
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
-msgstr "  Præfiks %s vil blive slettet fra bruger-id\n"
+msgstr "  PrÃ¦fiks %s vil blive slettet fra bruger-id\n"
 
 #: fetchmail.c:1902
 msgid "  No prefix stripping\n"
-msgstr "  Ingen præfikssletning\n"
+msgstr "  Ingen prÃ¦fikssletning\n"
 
 #: fetchmail.c:1907
 msgid "  Predeclared mailserver aliases:"
-msgstr "  Foruderklærede postserveraliaser:"
+msgstr "  ForuderklÃ¦rede postserveraliaser:"
 
 #: fetchmail.c:1915
 msgid "  Local domains:"
-msgstr "  Lokale domæner:"
+msgstr "  Lokale domÃ¦ner:"
 
 #: fetchmail.c:1925
 #, c-format
 msgid "  Connection must be through interface %s.\n"
-msgstr "  Forbindelse skal ske gennem grænseflade %s.\n"
+msgstr "  Forbindelse skal ske gennem grÃ¦nseflade %s.\n"
 
 #: fetchmail.c:1927
 msgid "  No interface requirement specified.\n"
-msgstr "  Ingen grænsefladekrav specificeret.\n"
+msgstr "  Ingen grÃ¦nsefladekrav specificeret.\n"
 
 #: fetchmail.c:1929
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
-msgstr "  Prøveløkke vil overvåge %s.\n"
+msgstr "  PrÃ¸velÃ¸kke vil overvÃ¥ge %s.\n"
 
 #: fetchmail.c:1931
 msgid "  No monitor interface specified.\n"
-msgstr "  Ingen overvågning af grænseflade specificeret.\n"
+msgstr "  Ingen overvÃ¥gning af grÃ¦nseflade specificeret.\n"
 
 #: fetchmail.c:1935
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
 msgstr ""
-"  Serverforbindelser vil blive lavet vha. hjælpeprogrammet %s (--plugin %"
-"s).\n"
+"  Serverforbindelser vil blive lavet vha. hjÃ¦lpeprogrammet %s (--plugin "
+"%s).\n"
 
 #: fetchmail.c:1937
 msgid "  No plugin command specified.\n"
-msgstr "  Intet hjælpeprogram til kald af server specificeret.\n"
+msgstr "  Intet hjÃ¦lpeprogram til kald af server specificeret.\n"
 
 #: fetchmail.c:1939
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
 msgstr ""
-"  Modtagerforbindelser vil blive lavet vha. hjælpeprogrammet %s (--plugout %"
-"s).\n"
+"  Modtagerforbindelser vil blive lavet vha. hjÃ¦lpeprogrammet %s (--plugout "
+"%s).\n"
 
 #: fetchmail.c:1941
 msgid "  No plugout command specified.\n"
-msgstr "  Intet hjælpeprogram til kald af modtager specificeret.\n"
+msgstr "  Intet hjÃ¦lpeprogram til kald af modtager specificeret.\n"
 
 #: fetchmail.c:1946
 msgid "  No UIDs saved from this host.\n"
-msgstr "  Ingen IUD'er gemt fra denne vært.\n"
+msgstr "  Ingen IUD'er gemt fra denne vÃ¦rt.\n"
 
 #: fetchmail.c:1955
 #, c-format
@@ -1625,21 +1611,20 @@ msgstr "  %d UID'er gemt.\n"
 
 #: fetchmail.c:1963
 msgid "  Poll trace information will be added to the Received header.\n"
-msgstr "  Sporingsinformation vil blive tilføjet \"Received\"-brevhovedet.\n"
+msgstr "  Sporingsinformation vil blive tilfÃ¸jet \"Received\"-brevhovedet.\n"
 
 #: fetchmail.c:1965
-#, fuzzy
 msgid "  No poll trace information will be added to the Received header.\n"
 msgstr ""
-"  Sporingsinformation vil ikke blive tilføjet \"Received\"-brevhovedet.\n"
+"  Sporingsinformation vil ikke blive tilfÃ¸jet \"Received\"-brevhovedet.\n"
 
 #: fetchmail.c:1970
 msgid "  Messages with bad headers will be rejected.\n"
-msgstr ""
+msgstr "  Beskeder med ugyldige brevhoveder vil blive afvist.\n"
 
 #: fetchmail.c:1973
 msgid "  Messages with bad headers will be passed on.\n"
-msgstr ""
+msgstr "  Beskeder med ugyldige brevhoveder vil blive videresendt.\n"
 
 #: fetchmail.c:1978
 #, c-format
@@ -1648,7 +1633,7 @@ msgstr "  Egenskaber som ignoreres af fetchmail: \"%s\".\n"
 
 #: getpass.c:71
 msgid "ERROR: no support for getpassword() routine\n"
-msgstr "FEJL: ingen understøttelse til getpassword()-funktion\n"
+msgstr "FEJL: ingen understÃ¸ttelse til getpassword()-funktion\n"
 
 #: getpass.c:193
 msgid ""
@@ -1656,22 +1641,22 @@ msgid ""
 "Caught SIGINT... bailing out.\n"
 msgstr ""
 "\n"
-"Fangede SIGINT... Jeg trækker mig.\n"
+"Fangede SIGINT... Jeg trÃ¦kker mig.\n"
 
 #: gssapi.c:52
 #, c-format
 msgid "GSSAPI error in gss_display_status called from <%s>\n"
-msgstr ""
+msgstr "GSSAPI-fejl i gss_display_status kaldt fra <%s>\n"
 
 #: gssapi.c:55
-#, fuzzy, c-format
+#, c-format
 msgid "GSSAPI error %s: %.*s\n"
-msgstr "%cMTP-fejl: %s\n"
+msgstr "GSSAPI-fejl %s: %.*s\n"
 
 #: gssapi.c:90
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
-msgstr "Kunne ikke få servicenavn for [%s]\n"
+msgstr "Kunne ikke fÃ¥ servicenavn for [%s]\n"
 
 #: gssapi.c:95
 #, c-format
@@ -1681,16 +1666,19 @@ msgstr "Bruger servicenavn [%s]\n"
 #: gssapi.c:122
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
 msgstr ""
+"Ingen egnede GSSAPI-akkreditiver fundet. Springer GSSAPI-godkendelse over.\n"
 
 #: gssapi.c:123
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
 msgstr ""
+"Hvis du Ã¸nsker at bruge GSSAPI, skal du fÃ¸rst have akkreditiver, muligvis "
+"fra kinit.\n"
 
 #: gssapi.c:159
 #, c-format
 msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
-msgstr ""
+msgstr "Modtaget forkert udformet udfordring til \"%s GSSAPI\"!\n"
 
 #: gssapi.c:169
 msgid "Sending credentials\n"
@@ -1710,7 +1698,7 @@ msgstr "Akkreditiver udvekslet\n"
 
 #: gssapi.c:251
 msgid "Server requires integrity and/or privacy\n"
-msgstr "Server kræver integritet og/eller hemmeligholdelse\n"
+msgstr "Server krÃ¦ver integritet og/eller hemmeligholdelse\n"
 
 #: gssapi.c:260
 #, c-format
@@ -1720,7 +1708,7 @@ msgstr "Udpakkede sikkerhedsniveauflag: %s%s%s\n"
 #: gssapi.c:264
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
-msgstr "Maksimal GSS-symbolstørrelse er %ld\n"
+msgstr "Maksimal GSS-symbolstÃ¸rrelse er %ld\n"
 
 #: gssapi.c:277
 msgid "Error creating security level request\n"
@@ -1737,145 +1725,148 @@ msgstr "Fejl ved frigivelse af akkreditiver\n"
 #: idle.c:61
 #, c-format
 msgid "fetchmail: thread sleeping for %d sec.\n"
-msgstr "fetchmail: tråd sover i %d sekunder.\n"
+msgstr "fetchmail: trÃ¥d sover i %d sekunder.\n"
 
 #: imap.c:74
 #, c-format
 msgid "Received BYE response from IMAP server: %s"
-msgstr ""
+msgstr "Modtaget BYE-svar fra IMAP-server: %s"
 
 #: imap.c:92
-#, fuzzy, c-format
+#, c-format
 msgid "bogus message count in \"%s\"!"
-msgstr "falsk brev-tal!"
+msgstr "falsk brev-tal i \"%s\"!"
 
 #: imap.c:139
 #, c-format
 msgid "bogus EXPUNGE count in \"%s\"!"
-msgstr ""
+msgstr "falsk EXPUNGE-tal i \"%s\"!"
 
-#: imap.c:344
+#: imap.c:348
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Protokol identificeret som IMAP4 rev 1\n"
 
-#: imap.c:350
+#: imap.c:354
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Protokol identificeret som IMAP4 rev 0\n"
 
-#: imap.c:357
+#: imap.c:361
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Protokol identificeret som IMAP2 eller IMAP2BIS\n"
 
-#: imap.c:372
+#: imap.c:378
 msgid "will idle after poll\n"
-msgstr "går i tomgang efter prøvning\n"
+msgstr "gÃ¥r i tomgang efter prÃ¸vning\n"
 
-#: imap.c:461 pop3.c:475
+#: imap.c:471 pop3.c:476
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
-msgstr ""
+msgstr "%s: opgradering til TLS lykkedes.\n"
 
-#: imap.c:466 pop3.c:480
+#: imap.c:477 pop3.c:482
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
-msgstr ""
+msgstr "%s: opgradering til TLS fejlede.\n"
 
-#: imap.c:470
+#: imap.c:482
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
+"%s: opportunistisk opgradering til TLS fejlede, forsÃ¸ger at fortsÃ¦tte\n"
 
-#: imap.c:586
+#: imap.c:598
 msgid "Required OTP capability not compiled into fetchmail\n"
-msgstr "Fetchmail er ikke oversat med OTP-evne som påkrævet\n"
+msgstr "Fetchmail er ikke oversat med OTP-evne som pÃ¥krÃ¦vet\n"
 
-#: imap.c:606 pop3.c:555
+#: imap.c:618 pop3.c:558
 msgid "Required NTLM capability not compiled into fetchmail\n"
-msgstr "Fetchmail er ikke oversat med NTLM-evne som påkrævet\n"
+msgstr "Fetchmail er ikke oversat med NTLM-evne som pÃ¥krÃ¦vet\n"
 
-#: imap.c:615
+#: imap.c:627
 msgid "Required LOGIN capability not supported by server\n"
-msgstr "Server understøtter ikke den krævede indlogningsmåde\n"
+msgstr "Server understÃ¸tter ikke den krÃ¦vede indlogningsmÃ¥de\n"
 
-#: imap.c:679
-#, fuzzy, c-format
+#: imap.c:691
+#, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr "brev %s@%s:%d havde ikke den forventede længde (%d != %d forventet)\n"
+msgstr "postsletning fejlmatch (%d aktuel != %d forventer)\n"
 
 #: imap.c:818
-#, fuzzy, c-format
+#, c-format
 msgid "%lu is unseen\n"
-msgstr "%u er usete\n"
+msgstr "%lu er usete\n"
 
-#: imap.c:882 pop3.c:840 pop3.c:852 pop3.c:1090 pop3.c:1097
+#: imap.c:868 pop3.c:844 pop3.c:856 pop3.c:1095 pop3.c:1102
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u er usete\n"
 
-#: imap.c:917 imap.c:976
+#: imap.c:903 imap.c:962
 msgid "re-poll failed\n"
-msgstr "genprøvning mislykkedes\n"
+msgstr "genprÃ¸vning mislykkedes\n"
 
-#: imap.c:925 imap.c:981
-#, fuzzy, c-format
+#: imap.c:911 imap.c:967
+#, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
-msgstr[0] "%d breve venter efter genprøvning\n"
-msgstr[1] "%d breve venter efter genprøvning\n"
+msgstr[0] "%d brev venter efter genprÃ¸vning\n"
+msgstr[1] "%d breve venter efter genprÃ¸vning\n"
 
-#: imap.c:942
+#: imap.c:928
 msgid "mailbox selection failed\n"
 msgstr "valg af brevbakke mislykkedes\n"
 
-#: imap.c:946
-#, fuzzy, c-format
+#: imap.c:932
+#, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
-msgstr[0] "%d breve venter efter første prøvning\n"
-msgstr[1] "%d breve venter efter første prøvning\n"
+msgstr[0] "%d brev venter efter fÃ¸rste prÃ¸vning\n"
+msgstr[1] "%d breve venter efter fÃ¸rste prÃ¸vning\n"
 
-#: imap.c:960
+#: imap.c:946
 msgid "expunge failed\n"
 msgstr "sletning (EXPUNGE) mislykkedes\n"
 
-#: imap.c:964
-#, fuzzy, c-format
+#: imap.c:950
+#, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
-msgstr[0] "%d breve venter efter sletning\n"
+msgstr[0] "%d brev venter efter sletning\n"
 msgstr[1] "%d breve venter efter sletning\n"
 
-#: imap.c:1003
+#: imap.c:989
 msgid "search for unseen messages failed\n"
-msgstr "søgning efter usete breve mislykkedes\n"
+msgstr "sÃ¸gning efter usete breve mislykkedes\n"
 
-#: imap.c:1008 pop3.c:861
+#: imap.c:994 pop3.c:865
 #, c-format
 msgid "%u is first unseen\n"
-msgstr "%u er første usete\n"
+msgstr "%u er fÃ¸rste usete\n"
 
-#: imap.c:1092
+#: imap.c:1078
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
+"Advarsel: Ignorering af bogus-data for beskedstÃ¸rrelser returneret af "
+"serveren.\n"
 
-#: imap.c:1190 imap.c:1197
+#: imap.c:1177 imap.c:1184
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
-msgstr ""
+msgstr "Ukorrekt FETCH-svar: %s.\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
-msgstr "Kan ikke åbne kvm-grænseflade. Sørg for at fetchmail er SGID kmem."
+msgstr "Kan ikke Ã¥bne kvm-grÃ¦nseflade. SÃ¸rg for at fetchmail er SGID kmem."
 
 #: interface.c:396
 #, c-format
 msgid "Unable to parse interface name from %s"
-msgstr "Kan ikke udlede grænsefladenavn fra %s"
+msgstr "Kan ikke udlede grÃ¦nsefladenavn fra %s"
 
 #: interface.c:418
 msgid "get_ifinfo: sysctl (iflist estimate) failed"
-msgstr "get_ifinfo: sysctl (få iflist-størrelse) mislykkedes"
+msgstr "get_ifinfo: sysctl (fÃ¥ iflist-stÃ¸rrelse) mislykkedes"
 
 #: interface.c:424
 msgid "get_ifinfo: malloc failed"
@@ -1883,68 +1874,68 @@ msgstr "get_ifinfo: malloc mislykkedes"
 
 #: interface.c:430
 msgid "get_ifinfo: sysctl (iflist) failed"
-msgstr "get_ifinfo: sysctl (få iflist) mislykkedes"
+msgstr "get_ifinfo: sysctl (fÃ¥ iflist) mislykkedes"
 
 #: interface.c:448
 #, c-format
 msgid "Routing message version %d not understood."
-msgstr "Forstår ikke version %d af dirigeringsbeskeder."
+msgstr "ForstÃ¥r ikke version %d af dirigeringsbeskeder."
 
 #: interface.c:480
 #, c-format
 msgid "No interface found with name %s"
-msgstr "Ingen grænseflade med navnet %s fundet"
+msgstr "Ingen grÃ¦nseflade med navnet %s fundet"
 
 #: interface.c:538
 #, c-format
 msgid "No IP address found for %s"
-msgstr "ingen IP-adresse fundet for %s"
+msgstr "Ingen IP-adresse fundet for %s"
 
 #: interface.c:590
 msgid "missing IP interface address\n"
-msgstr "manglende IP-grænsefladeadresse\n"
+msgstr "manglende IP-grÃ¦nsefladeadresse\n"
 
 #: interface.c:606
 msgid "invalid IP interface address\n"
-msgstr "Ugyldig IP-grænsefladeadresse\n"
+msgstr "ugyldig IP-grÃ¦nsefladeadresse\n"
 
 #: interface.c:612
 msgid "invalid IP interface mask\n"
-msgstr "Ugyldig IP-grænseflademaske\n"
+msgstr "ugyldig IP-grÃ¦nseflademaske\n"
 
 #: interface.c:651
 #, c-format
 msgid "activity on %s -noted- as %d\n"
-msgstr "aktivitet på %s opfattet som %d\n"
+msgstr "aktivitet pÃ¥ %s opfattet som %d\n"
 
 #: interface.c:666
 #, c-format
 msgid "skipping poll of %s, %s down\n"
-msgstr "springer prøvning af %s over, %s er nede\n"
+msgstr "springer prÃ¸vning af %s over, %s er nede\n"
 
 #: interface.c:685
 #, c-format
 msgid "skipping poll of %s, %s IP address excluded\n"
-msgstr "springer prøvning af %s over, %s's IP-adresse er fravalgt\n"
+msgstr "springer prÃ¸vning af %s over, %s's IP-adresse er fravalgt\n"
 
 #: interface.c:697
 #, c-format
 msgid "activity on %s checked as %d\n"
-msgstr "aktivitet på %s tjekket som %d\n"
+msgstr "aktivitet pÃ¥ %s tjekket som %d\n"
 
 #: interface.c:723
 #, c-format
 msgid "skipping poll of %s, %s inactive\n"
-msgstr "springer prøvning af %s over, %s er inaktiv\n"
+msgstr "springer prÃ¸vning af %s over, %s er inaktiv\n"
 
 #: interface.c:730
 #, c-format
 msgid "activity on %s was %d, is %d\n"
-msgstr "aktivitet på %s var %d, er %d\n"
+msgstr "aktivitet pÃ¥ %s var %d, er %d\n"
 
 #: kerberos.c:74
 msgid "could not decode initial BASE64 challenge\n"
-msgstr "kunne ikke afkode det indledende BASE64-anråb\n"
+msgstr "kunne ikke afkode det indledende BASE64-anrÃ¥b\n"
 
 #: kerberos.c:139
 #, c-format
@@ -1954,7 +1945,7 @@ msgstr "fuldmagtsgiver %s i billet stemmer ikke overens med bruger %s\n"
 #: kerberos.c:147
 #, c-format
 msgid "non-null instance (%s) might cause strange behavior\n"
-msgstr "ikke-tom foranledning (%s) kan medføre underlig adfærd\n"
+msgstr "ikke-tom foranledning (%s) kan medfÃ¸re underlig adfÃ¦rd\n"
 
 #: kerberos.c:213
 msgid "could not decode BASE64 ready response\n"
@@ -1962,30 +1953,30 @@ msgstr "kunne ikke afkode BASE64 klar-svar\n"
 
 #: kerberos.c:220
 msgid "challenge mismatch\n"
-msgstr "uoverensstemmelse i anråb\n"
+msgstr "uoverensstemmelse i anrÃ¥b\n"
 
 #: lock.c:87
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
-msgstr "fetchmail: fjerner efterladt låsefil\n"
+msgstr "fetchmail: fejl under lÃ¦sning af lÃ¥sefil \"%s\": %s\n"
 
 #: lock.c:98
 msgid "fetchmail: removing stale lockfile\n"
-msgstr "fetchmail: fjerner efterladt låsefil\n"
+msgstr "fetchmail: fjerner efterladt lÃ¥sefil\n"
 
 #: lock.c:122
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
-msgstr "fetchmail: fjerner efterladt låsefil\n"
+msgstr "fetchmail: fejl under Ã¥bning af lÃ¥sefil \"%s\": %s\n"
 
 #: lock.c:169
 msgid "fetchmail: lock creation failed.\n"
-msgstr "fetchmail: oprettelse af låsefil mislykkedes\n"
+msgstr "fetchmail: oprettelse af lÃ¥sefil mislykkedes\n"
 
 #: netrc.c:220
 #, c-format
 msgid "%s:%d: warning: found \"%s\" before any host names\n"
-msgstr "%s:%d: advarsel: fandt \"%s\" før noget værtsnavn\n"
+msgstr "%s:%d: advarsel: fandt \"%s\" fÃ¸r noget vÃ¦rtsnavn\n"
 
 #: netrc.c:258
 #, c-format
@@ -1995,7 +1986,7 @@ msgstr "%s:%d: advarsel: ukendt symbol \"%s\"\n"
 #: odmr.c:67
 #, c-format
 msgid "%s's SMTP listener does not support ATRN\n"
-msgstr "%s's SMTP-modtager understøtter ikke ATRN\n"
+msgstr "%s's SMTP-modtager understÃ¸tter ikke ATRN\n"
 
 #: odmr.c:105
 msgid "Turnaround now...\n"
@@ -2019,56 +2010,54 @@ msgstr "Kommando ikke implementeret.\n"
 
 #: odmr.c:127
 msgid "Authentication required.\n"
-msgstr "Godkendelse påkrævet.\n"
+msgstr "Godkendelse pÃ¥krÃ¦vet.\n"
 
 #: odmr.c:132
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown ODMR error \"%s\"\n"
-msgstr "Ukendt ODMR-fejl %d.\n"
+msgstr "Ukendt ODMR-fejl \"%s\"\n"
 
 #: odmr.c:192
-#, fuzzy
 msgid "receiving message data\n"
-msgstr "skriver brevtekst\n"
+msgstr "modtager beskeddata\n"
 
 #: odmr.c:245
 msgid "Option --keep is not supported with ODMR\n"
-msgstr "Tilvalg --keep er ikke understøttet med ODMR\n"
+msgstr "Tilvalg --keep er ikke understÃ¸ttet med ODMR\n"
 
 #: odmr.c:249
 msgid "Option --flush is not supported with ODMR\n"
-msgstr "Tilvalg --flush er ikke understøttet med ODMR\n"
+msgstr "Tilvalg --flush er ikke understÃ¸ttet med ODMR\n"
 
 #: odmr.c:253
-#, fuzzy
 msgid "Option --folder is not supported with ODMR\n"
-msgstr "Tilvalg --flush er ikke understøttet med ODMR\n"
+msgstr "Tilvalg --folder er ikke understÃ¸ttet med ODMR\n"
 
 #: odmr.c:257
 msgid "Option --check is not supported with ODMR\n"
-msgstr "Tilvalg --check er ikke understøttet med ODMR\n"
+msgstr "Tilvalg --check er ikke understÃ¸ttet med ODMR\n"
 
 #: opie.c:42
 msgid "server recv fatal\n"
-msgstr "fatal fejl ved læsning fra server\n"
+msgstr "fatal fejl ved lÃ¦sning fra server\n"
 
 #: opie.c:56
 msgid "Could not decode OTP challenge\n"
-msgstr "Kunne ikke afkode OTP-anråb\n"
+msgstr "Kunne ikke afkode OTP-anrÃ¥b\n"
 
-#: opie.c:64 pop3.c:582
+#: opie.c:64 pop3.c:585
 msgid "Secret pass phrase: "
-msgstr "Hemmeligt løsen: "
+msgstr "Hemmeligt lÃ¸sen: "
 
 #: options.c:176 options.c:220
 #, c-format
 msgid "String '%s' is not a valid number string.\n"
-msgstr "strengen '%s' er ikke en gyldig talstreng.\n"
+msgstr "Strengen '%s' er ikke en gyldig talstreng.\n"
 
 #: options.c:185
 #, c-format
 msgid "Value of string '%s' is %s than %d.\n"
-msgstr "Værdien af strengen '%s' er %s end %d.\n"
+msgstr "VÃ¦rdien af strengen '%s' er %s end %d.\n"
 
 #: options.c:186
 msgid "smaller"
@@ -2076,12 +2065,12 @@ msgstr "mindre"
 
 #: options.c:186
 msgid "larger"
-msgstr "større"
+msgstr "stÃ¸rre"
 
 #: options.c:323
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid bad-header policy `%s' specified.\n"
-msgstr "Ugyldig protokol '%s' specificeret.\n"
+msgstr "Ugyldig politik for ugyldig-hoved '%s' specificeret.\n"
 
 #: options.c:364
 #, c-format
@@ -2103,7 +2092,7 @@ msgstr "  Mulige tilvalg er:\n"
 
 #: options.c:622
 msgid "  -?, --help        display this option help\n"
-msgstr "  -?, --help        vis denne hjælp\n"
+msgstr "  -?, --help        vis denne hjÃ¦lp\n"
 
 #: options.c:623
 msgid "  -V, --version     display version info\n"
@@ -2115,50 +2104,49 @@ msgstr "  -c, --check       tjek om der er breve uden at hente dem\n"
 
 #: options.c:626
 msgid "  -s, --silent      work silently\n"
-msgstr "  -s, --silent      vær stille\n"
+msgstr "  -s, --silent      vÃ¦r stille\n"
 
 #: options.c:627
 msgid "  -v, --verbose     work noisily (diagnostic output)\n"
-msgstr "  -v, --verbose     vær larmende (diagnostisk uddata)\n"
+msgstr "  -v, --verbose     vÃ¦r larmende (diagnostisk uddata)\n"
 
 #: options.c:628
 msgid "  -d, --daemon      run as a daemon once per n seconds\n"
-msgstr "  -d, --daemon      kør som dæmon en gang pr. n sekunder\n"
+msgstr "  -d, --daemon      kÃ¸r som dÃ¦mon en gang pr. n sekunder\n"
 
 #: options.c:629
 msgid "  -N, --nodetach    don't detach daemon process\n"
-msgstr "  -N, --nodetach    sæt ikke ikke dæmonprocessen i baggrunden\n"
+msgstr "  -N, --nodetach    sÃ¦t ikke dÃ¦monprocessen i baggrunden\n"
 
 #: options.c:630
 msgid "  -q, --quit        kill daemon process\n"
-msgstr "  -q, --quit        dræb dæmonproces\n"
+msgstr "  -q, --quit        drÃ¦b dÃ¦monproces\n"
 
 #: options.c:631
 msgid "  -L, --logfile     specify logfile name\n"
-msgstr "  -L, --logfile     angiv navn på logfil\n"
+msgstr "  -L, --logfile     angiv navn pÃ¥ logfil\n"
 
 #: options.c:632
 msgid ""
 "      --syslog      use syslog(3) for most messages when running as a "
 "daemon\n"
-msgstr "      --syslog      brug syslog(3) som dæmon til de fleste beskeder\n"
+msgstr "      --syslog      brug syslog(3) som dÃ¦mon til de fleste beskeder\n"
 
 #: options.c:633
 msgid "      --invisible   don't write Received & enable host spoofing\n"
-msgstr "      --invisible   skriv ikke Received-linjer & lav værtssløring\n"
+msgstr "      --invisible   skriv ikke Received-linjer & lav vÃ¦rtsslÃ¸ring\n"
 
 #: options.c:634
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
-msgstr "  -f, --fetchmailrc specificer en alternativ kørselskontrolfil\n"
+msgstr "  -f, --fetchmailrc specificer en alternativ kÃ¸rselskontrolfil\n"
 
 #: options.c:635
 msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      specificer en alternativ UID-fil\n"
 
 #: options.c:636
-#, fuzzy
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "  -i, --idfile      specificer en alternativ UID-fil\n"
+msgstr "      --pidfile     specificer en alternativ PID-fil (lÃ¥s)\n"
 
 #: options.c:637
 msgid "      --postmaster  specify recipient of last resort\n"
@@ -2173,20 +2161,24 @@ msgstr ""
 msgid ""
 "      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
 msgstr ""
+"      --nosoftbounce fetchmail sletter permanent beskeder der ikke kan "
+"leveres.\n"
 
 #: options.c:640
 msgid ""
 "      --softbounce  keep permanently undeliverable messages on server "
 "(default).\n"
 msgstr ""
+"      --softbounce  bevar permanent beskeder der ikke kan leveres pÃ¥ "
+"serveren (standard).\n"
 
 #: options.c:642
 msgid "  -I, --interface   interface required specification\n"
-msgstr "  -I, --interface   specifikation af krævet grænseflade\n"
+msgstr "  -I, --interface   specifikation af krÃ¦vet grÃ¦nseflade\n"
 
 #: options.c:643
 msgid "  -M, --monitor     monitor interface for activity\n"
-msgstr "  -M, --monitor     overvåg grænseflade for aktivitet\n"
+msgstr "  -M, --monitor     overvÃ¥g grÃ¦nseflade for aktivitet\n"
 
 #: options.c:646
 msgid "      --ssl         enable ssl encrypted session\n"
@@ -2194,57 +2186,59 @@ msgstr "      --ssl         brug ssl-kryptering\n"
 
 #: options.c:647
 msgid "      --sslkey      ssl private key file\n"
-msgstr "      --sslkey      privat ssl-nøglefil\n"
+msgstr "      --sslkey      privat ssl-nÃ¸glefil\n"
 
 #: options.c:648
 msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     ssl-klientcertifikat\n"
 
 #: options.c:649
-#, fuzzy
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
-msgstr "      --sslcert     ssl-klientcertifikat\n"
+msgstr ""
+"      --sslcertck   udfÃ¸r streng kontrol af servercertifikat (anbefales)\n"
 
 #: options.c:650
-#, fuzzy
 msgid "      --sslcertfile path to trusted-CA ssl certificate file\n"
-msgstr "      --sslcert     ssl-klientcertifikat\n"
+msgstr "      --sslcertfile sti til trovÃ¦rdigt-CA ssl-certifikatfil\n"
 
 #: options.c:651
-#, fuzzy
 msgid "      --sslcertpath path to trusted-CA ssl certificate directory\n"
-msgstr "      --sslcert     ssl-klientcertifikat\n"
+msgstr "      --sslcertpath sti til trovÃ¦rdig-CA ssl-certifikatmappe\n"
 
 #: options.c:652
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
 msgstr ""
+"      --sslcommonname  forvent dette CommonName fra server (frarÃ¥des)\n"
 
 #: options.c:653
 msgid ""
 "      --sslfingerprint fingerprint that must match that of the server's "
 "cert.\n"
 msgstr ""
+"      --sslfingerprint fingeraftryk som skal matche serverens certifikat.\n"
 
 #: options.c:654
-#, fuzzy
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr "      -ssl          brug bestemt af ssl-protokol (ssl2/ss3/tls1)\n"
+msgstr "      --sslproto    brug bestemt ssl-protokol (SSL2/SSL3/TLS1)\n"
 
 #: options.c:656
 msgid "      --plugin      specify external command to open connection\n"
-msgstr "      --plugin      specificer hjælpeprogram til at åbne forbindelse\n"
+msgstr "      --plugin      specificer hjÃ¦lpeprogram til at Ã¥bne forbindelse\n"
 
 #: options.c:657
 msgid "      --plugout     specify external command to open smtp connection\n"
 msgstr ""
-"      --plugout     specificer hjælpeprogram til at åbne smtp-forbindelse\n"
+"      --plugout     specificer hjÃ¦lpeprogram til at Ã¥bne smtp-forbindelse\n"
 
 #: options.c:658
 msgid ""
 "      --bad-header {reject|accept}\n"
 "                    specify policy for handling messages with bad headers\n"
 msgstr ""
+"      --bad-header {afvis|accepter}\n"
+"                    specificer politik for hÃ¥ndtering af beskeder med "
+"ugyldige hoveder\n"
 
 #: options.c:661
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
@@ -2255,15 +2249,16 @@ msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
 msgstr "  -U, --uidl        fremtving brug af UID'er (kun pop3)\n"
 
 #: options.c:663
-#, fuzzy
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "  -P, --port        TCP/IP-serviceport at bruge\n"
+msgstr ""
+"      --port        TCP-port at forbinde til (forÃ¦ldet, brug --service)\n"
 
 #: options.c:664
-#, fuzzy
 msgid ""
 "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
-msgstr "  -P, --port        TCP/IP-serviceport at bruge\n"
+msgstr ""
+"  -P, --service      TCP-tjeneste at forbinde til (kan vÃ¦re numerisk TCP-"
+"port)\n"
 
 #: options.c:665
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
@@ -2279,7 +2274,7 @@ msgstr "  -E, --envelope    adressering efter konvolutadresse\n"
 
 #: options.c:668
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
-msgstr "  -Q, --qvirtual    præfiks som skal slettes fra lokale bruger-id'er\n"
+msgstr "  -Q, --qvirtual    prÃ¦fiks som skal slettes fra lokale bruger-id'er\n"
 
 #: options.c:669
 msgid "      --principal   mail service principal\n"
@@ -2288,16 +2283,15 @@ msgstr "      --principal   Fuldmagtsgiver for postservice\n"
 #: options.c:670
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
 msgstr ""
-"      --tracepolls  tilføj sporingsinformation i \"Received\"-brevhovedet\n"
+"      --tracepolls  tilfÃ¸j sporingsinformation i \"Received\"-brevhovedet\n"
 
 #: options.c:672
 msgid "  -u, --username    specify users's login on server\n"
-msgstr "  -u, --username    specificer brugernavn på server\n"
+msgstr "  -u, --username    specificer brugernavn pÃ¥ server\n"
 
 #: options.c:673
-#, fuzzy
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr "  -a, --all         hent gamle og nye breve\n"
+msgstr "  -a, --[fetch]all  hent gamle og nye breve\n"
 
 #: options.c:674
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
@@ -2309,12 +2303,11 @@ msgstr "  -k, --keep        gem nye breve efter hentning\n"
 
 #: options.c:676
 msgid "  -F, --flush       delete old messages from server\n"
-msgstr "  -F, --flush       slet gamle breve på server\n"
+msgstr "  -F, --flush       slet gamle breve pÃ¥ server\n"
 
 #: options.c:677
-#, fuzzy
 msgid "      --limitflush  delete oversized messages\n"
-msgstr "  -F, --flush       slet gamle breve på server\n"
+msgstr "      --limitflush  slet for lange breve\n"
 
 #: options.c:678
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
@@ -2322,7 +2315,7 @@ msgstr "  -n, --norewrite   omskriv ikke adresser i brevhovedet\n"
 
 #: options.c:679
 msgid "  -l, --limit       don't fetch messages over given size\n"
-msgstr "  -l, --limit       hent ikke breve over den anførte størrelse\n"
+msgstr "  -l, --limit       hent ikke breve over den anfÃ¸rte stÃ¸rrelse\n"
 
 #: options.c:680
 msgid "  -w, --warnings    interval between warning mail notification\n"
@@ -2330,55 +2323,54 @@ msgstr "  -w, --warnings    periode mellem afsendelse af advarsler pr. post\n"
 
 #: options.c:682
 msgid "  -S, --smtphost    set SMTP forwarding host\n"
-msgstr "  -S, --smtphost    anfør vært til SMTP-levering\n"
+msgstr "  -S, --smtphost    anfÃ¸r vÃ¦rt til SMTP-levering\n"
 
 #: options.c:683
 msgid "      --fetchdomains fetch mail for specified domains\n"
-msgstr "      --fetchdomains hent post til anførte domæner\n"
+msgstr "      --fetchdomains hent post til anfÃ¸rte domÃ¦ner\n"
 
 #: options.c:684
 msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
-msgstr "  -D, --smtpaddress anfør SMTP-afleveringsdomæne at bruge\n"
+msgstr "  -D, --smtpaddress anfÃ¸r SMTP-afleveringsdomÃ¦ne at bruge\n"
 
 #: options.c:685
 msgid "      --smtpname    set SMTP full name username@domain\n"
-msgstr "      --smtpname    anfør fuldt SMTP-navn - brugernavn@domæne\n"
+msgstr "      --smtpname    anfÃ¸r fuldt SMTP-navn - brugernavn@domÃ¦ne\n"
 
 #: options.c:686
 msgid "  -Z, --antispam,   set antispam response values\n"
-msgstr "  -Z, --antispam,   anfør antispam-svarværdier\n"
+msgstr "  -Z, --antispam,   anfÃ¸r antispam-svarvÃ¦rdier\n"
 
 #: options.c:687
 msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
 msgstr ""
-"  -b, --batchlimit  anfør maks. antal afleveringer pr. SMTP-forbindelse\n"
+"  -b, --batchlimit  anfÃ¸r maks. antal afleveringer pr. SMTP-forbindelse\n"
 
 #: options.c:688
 msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
 msgstr ""
-"  -B, --fetchlimit  anfør maks. antal hentninger pr. serverforbindelse\n"
+"  -B, --fetchlimit  anfÃ¸r maks. antal hentninger pr. serverforbindelse\n"
 
 #: options.c:689
-#, fuzzy
 msgid "      --fetchsizelimit set fetch message size limit\n"
-msgstr "      --fetchdomains hent post til anførte domæner\n"
+msgstr "      --fetchsizelimit angiv begrÃ¦nsning for hentning af brev\n"
 
 #: options.c:690
 msgid "      --fastuidl    do a binary search for UIDLs\n"
-msgstr ""
+msgstr "      --fastuidl    udfÃ¸r en binÃ¦r sÃ¸gning for UIDL'er\n"
 
 #: options.c:691
 msgid "  -e, --expunge     set max deletions between expunges\n"
 msgstr ""
-"  -e, --expunge     anfør maks. antal sletninger mellem effektueringer\n"
+"  -e, --expunge     anfÃ¸r maks. antal sletninger mellem effektueringer\n"
 
 #: options.c:692
 msgid "  -m, --mda         set MDA to use for forwarding\n"
-msgstr "  -m, --mda         anfør MDA til brug for levering\n"
+msgstr "  -m, --mda         anfÃ¸r MDA til brug for levering\n"
 
 #: options.c:693
 msgid "      --bsmtp       set output BSMTP file\n"
-msgstr "      --bsmtp       anfør BSMTP-uddatafil\n"
+msgstr "      --bsmtp       anfÃ¸r BSMTP-uddatafil\n"
 
 #: options.c:694
 msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
@@ -2386,89 +2378,91 @@ msgstr "      --lmtp        brug LMTP (RFC 2033) til levering\n"
 
 #: options.c:695
 msgid "  -r, --folder      specify remote folder name\n"
-msgstr "  -r, --folder      specificer navn på brevbakke på server\n"
+msgstr "  -r, --folder      specificer navn pÃ¥ brevbakke pÃ¥ server\n"
 
 #: options.c:696
 msgid "      --showdots    show progress dots even in logfiles\n"
-msgstr "      --showdots    vis forløbsprikker selv i logfiler\n"
+msgstr "      --showdots    vis forlÃ¸bsprikker selv i logfiler\n"
 
 #: pop3.c:327
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
+"Advarsel: \"Maillennium POP3/PROXY-server\" fundet, bruger RETR-kommando i "
+"stedet for TOP.\n"
 
 #: pop3.c:411
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
-msgstr ""
+msgstr "TLS er krÃ¦vet for denne session, men server nÃ¦gtede CAPA-kommando.\n"
 
 #: pop3.c:412
 msgid "The CAPA command is however necessary for TLS.\n"
-msgstr ""
+msgstr "CAPA-kommandoen er dog nÃ¸dvendig for TLS.\n"
 
-#: pop3.c:491
+#: pop3.c:494
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
+"%s: Opportunistisk opgradering til TLS mislykkedes, forsÃ¸ger at fortsÃ¦tte.\n"
 
-#: pop3.c:618
+#: pop3.c:621
 msgid "We've run out of allowed authenticators and cannot continue.\n"
-msgstr ""
+msgstr "Vi er lÃ¸bet tÃ¸r for tilladte godkendelser og kan ikke fortsÃ¦tte.\n"
 
-#: pop3.c:632
+#: pop3.c:635
 msgid "Required APOP timestamp not found in greeting\n"
-msgstr "Påkrævet APOP-tidsstempel ikke fundet i hilsen\n"
+msgstr "PÃ¥krÃ¦vet APOP-tidsstempel ikke fundet i hilsen\n"
 
-#: pop3.c:641
+#: pop3.c:644
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Syntaksfejl i tidsstempel i hilsen\n"
 
-#: pop3.c:657
+#: pop3.c:660
 msgid "Invalid APOP timestamp.\n"
-msgstr ""
+msgstr "Ugyldigt APOP-tidsstempel.\n"
 
-#: pop3.c:681
+#: pop3.c:684
 msgid "Undefined protocol request in POP3_auth\n"
-msgstr "Udefineret protokolønske i POP3_auth\n"
+msgstr "Udefineret protokolÃ¸nske i POP3_auth\n"
 
-#: pop3.c:702
+#: pop3.c:705
 msgid "lock busy!  Is another session active?\n"
-msgstr "lås optaget! Er et andet opkald aktivt?\n"
+msgstr "lÃ¥s optaget! Er et andet opkald aktivt?\n"
 
-#: pop3.c:781
+#: pop3.c:784
 msgid "Cannot handle UIDL response from upstream server.\n"
-msgstr ""
+msgstr "Kan ikke hÃ¥ndtere UIDL-svar fra opstrÃ¸msserver.\n"
 
-#: pop3.c:804
+#: pop3.c:807
 msgid "Server responded with UID for wrong message.\n"
-msgstr ""
+msgstr "Server svarede med UID for forkert besked.\n"
 
-#: pop3.c:831
+#: pop3.c:835
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
-msgstr ""
+msgstr "id=%s (num=%u) blev slettet, men er stadig til stede!\n"
 
-#: pop3.c:937
+#: pop3.c:941
 msgid "Messages inserted into list on server. Cannot handle this.\n"
-msgstr "Breve indsat på serverens liste. Kan ikke håndtere dette.\n"
+msgstr "Breve indsat pÃ¥ serverens liste. Kan ikke hÃ¥ndtere dette.\n"
 
-#: pop3.c:1033
+#: pop3.c:1037
 msgid "protocol error\n"
 msgstr "protokolfejl\n"
 
-#: pop3.c:1049
+#: pop3.c:1053
 msgid "protocol error while fetching UIDLs\n"
 msgstr "protokolfejl ved hentning af UID'er\n"
 
-#: pop3.c:1081
+#: pop3.c:1086
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
-msgstr ""
+msgstr "id=%s (nem=%d) blev slettet, men er stadig til stede!\n"
 
-#: pop3.c:1419
-#, fuzzy
+#: pop3.c:1424
 msgid "Option --folder is not supported with POP3\n"
-msgstr "Tilvalg --remote er ikke understøttet med POP3\n"
+msgstr "Tilvalg --folder er ikke understÃ¸ttet med POP3\n"
 
 #: rcfile_y.y:131
 msgid "server option after user options"
@@ -2476,14 +2470,14 @@ msgstr "tilvalg vedr. server efter brugertilvalgene"
 
 #: rcfile_y.y:174
 msgid "SDPS not enabled."
-msgstr "SDPS er ikke slået til."
+msgstr "SDPS er ikke slÃ¥et til."
 
 #: rcfile_y.y:218
 msgid ""
 "fetchmail: interface option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
 msgstr ""
-"fetchmail: grænsefladetilvalg (interface) er kun understøttet under Linux "
+"fetchmail: grÃ¦nsefladetilvalg (interface) er kun understÃ¸ttet under Linux "
 "(uden IPv6) og FreeBSD\n"
 
 #: rcfile_y.y:226
@@ -2491,50 +2485,50 @@ msgid ""
 "fetchmail: monitor option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
 msgstr ""
-"fetchmail: overvågningstilvalg (monitor) er kun understøttet under Linux "
+"fetchmail: overvÃ¥gningstilvalg (monitor) er kun understÃ¸ttet under Linux "
 "(uden IPv6) og FreeBSD\n"
 
 #: rcfile_y.y:340
 msgid "SSL is not enabled"
-msgstr "SSL er ikke slået til"
+msgstr "SSL er ikke slÃ¥et til"
 
 #: rcfile_y.y:391
 msgid "end of input"
-msgstr "slut på inddata"
+msgstr "slut pÃ¥ inddata"
 
 #: rcfile_y.y:429
 #, c-format
 msgid "File %s must be a regular file.\n"
-msgstr "Filen %s skal være en regulær fil.\n"
+msgstr "Filen %s skal vÃ¦re en regulÃ¦r fil.\n"
 
 #: rcfile_y.y:439
-#, fuzzy, c-format
+#, c-format
 msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
-msgstr "Filen %s må ikke flere tilladelser end -rwx--x--- (0710).\n"
+msgstr "Filen %s mÃ¥ ikke have flere tilladelser end -rwx------ (0710).\n"
 
 #: rcfile_y.y:451
 #, c-format
 msgid "File %s must be owned by you.\n"
-msgstr "Filen %s skal være ejet af dig.\n"
+msgstr "Filen %s skal vÃ¦re ejet af dig.\n"
 
 #: report.c:67
 msgid "Unknown system error"
 msgstr "Ukendt systemfejl"
 
 #: report.c:92
-#, fuzzy, c-format
+#, c-format
 msgid "%s (log message incomplete)\n"
-msgstr "%s (logbesked ikke komplet)"
+msgstr "%s (logbesked ikke komplet)\n"
 
 #: rfc822.c:83
-#, fuzzy, c-format
+#, c-format
 msgid "About to rewrite %s...\n"
-msgstr "Skal til at omskrive %s"
+msgstr "Skal til at omskrive %s...\n"
 
 #: rfc822.c:221
-#, fuzzy, c-format
+#, c-format
 msgid "...rewritten version is %s.\n"
-msgstr "Omskreven version er %s\n"
+msgstr "...Omskreven version er %s.\n"
 
 #: rpa.c:118
 msgid "Success"
@@ -2542,11 +2536,11 @@ msgstr "Succes"
 
 #: rpa.c:119
 msgid "Restricted user (something wrong with account)"
-msgstr "Begrænset bruger (noget er galt med kontoen)"
+msgstr "BegrÃ¦nset bruger (noget er galt med kontoen)"
 
 #: rpa.c:120
 msgid "Invalid userid or passphrase"
-msgstr "Ugyldigt brugernavn eller løsen"
+msgstr "Ugyldigt brugernavn eller lÃ¸sen"
 
 # Hvad i alverden er deity error?
 #: rpa.c:121
@@ -2565,7 +2559,7 @@ msgstr "Service valgte RPA-version %d.%d\n"
 #: rpa.c:191
 #, c-format
 msgid "Service challenge (l=%d):\n"
-msgstr "Service anråb (l=%d):\n"
+msgstr "Service anrÃ¥b (l=%d):\n"
 
 #: rpa.c:200
 #, c-format
@@ -2574,16 +2568,16 @@ msgstr "Service tidsstempel %s\n"
 
 #: rpa.c:205
 msgid "RPA token 2 length error\n"
-msgstr "RPA symbol 2 længdefejl\n"
+msgstr "RPA symbol 2 lÃ¦ngdefejl\n"
 
 #: rpa.c:209
 #, c-format
 msgid "Realm list: %s\n"
-msgstr "Områdeliste: %s\n"
+msgstr "OmrÃ¥deliste: %s\n"
 
 #: rpa.c:213
 msgid "RPA error in service@realm string\n"
-msgstr "RPA-fejl i service@område-streng\n"
+msgstr "RPA-fejl i service@omrÃ¥de-streng\n"
 
 #: rpa.c:250
 msgid "RPA token 4: Base64 decode error\n"
@@ -2601,7 +2595,7 @@ msgstr "RPA-status: %02X\n"
 
 #: rpa.c:281
 msgid "RPA token 4 length error\n"
-msgstr "RPA symbol 4 længdefejl\n"
+msgstr "RPA symbol 4 lÃ¦ngdefejl\n"
 
 #: rpa.c:288
 #, c-format
@@ -2610,17 +2604,17 @@ msgstr "RPA afviser dig: %s\n"
 
 #: rpa.c:290
 msgid "RPA rejects you, reason unknown\n"
-msgstr "RPA afviser dig, årsag ukendt\n"
+msgstr "RPA afviser dig, Ã¥rsag ukendt\n"
 
 #: rpa.c:298
 #, c-format
 msgid "RPA User Authentication length error: %d\n"
-msgstr "RPA-brugergodkendelses-længdefejl: %d\n"
+msgstr "RPA-brugergodkendelses-lÃ¦ngdefejl: %d\n"
 
 #: rpa.c:303
 #, c-format
 msgid "RPA Session key length error: %d\n"
-msgstr "RPA-sessionsnøgle-længdefejl: %d\n"
+msgstr "RPA-sessionsnÃ¸gle-lÃ¦ngdefejl: %d\n"
 
 #: rpa.c:309
 msgid "RPA _service_ auth fail. Spoof server?\n"
@@ -2628,7 +2622,7 @@ msgstr "RPA _service_ auth-fejl. Narreserver?\n"
 
 #: rpa.c:314
 msgid "Session key established:\n"
-msgstr "Sessionsnøgle etableret:\n"
+msgstr "SessionsnÃ¸gle etableret:\n"
 
 #: rpa.c:345
 msgid "RPA authorisation complete\n"
@@ -2636,12 +2630,12 @@ msgstr "RPA-godkendelse komplet\n"
 
 #: rpa.c:372
 msgid "Get response\n"
-msgstr "Får svar\n"
+msgstr "FÃ¥r svar\n"
 
 #: rpa.c:402
 #, c-format
 msgid "Get response return %d [%s]\n"
-msgstr "Får svar %d [%s]\n"
+msgstr "FÃ¥r svar %d [%s]\n"
 
 #: rpa.c:463
 msgid "Hdr not 60\n"
@@ -2649,12 +2643,12 @@ msgstr "Hdr ikke 60\n"
 
 #: rpa.c:484
 msgid "Token length error\n"
-msgstr "Symbollængdefejl\n"
+msgstr "SymbollÃ¦ngdefejl\n"
 
 #: rpa.c:489
 #, c-format
 msgid "Token Length %d disagrees with rxlen %d\n"
-msgstr "Symbollængde %d stemmer ikke overens med rxlen %d\n"
+msgstr "SymbollÃ¦ngde %d stemmer ikke overens med rxlen %d\n"
 
 #: rpa.c:495
 msgid "Mechanism field incorrect\n"
@@ -2667,11 +2661,11 @@ msgstr "dec64-fejl ved tegn %d: %x\n"
 
 #: rpa.c:546
 msgid "Inbound binary data:\n"
-msgstr "Indgående binære data:\n"
+msgstr "IndgÃ¥ende binÃ¦re data:\n"
 
 #: rpa.c:582
 msgid "Outbound data:\n"
-msgstr "Udgående data:\n"
+msgstr "UdgÃ¥ende data:\n"
 
 #: rpa.c:645
 msgid "RPA String too long\n"
@@ -2683,7 +2677,7 @@ msgstr "Unicode:\n"
 
 #: rpa.c:709
 msgid "RPA Failed open of /dev/urandom. This shouldn't\n"
-msgstr "RPA Åbning af /dev/urandom mislykkedes. Det skulle ikke\n"
+msgstr "RPA Ã…bning af /dev/urandom mislykkedes. Det skulle ikke\n"
 
 #: rpa.c:710
 msgid "    prevent you logging in, but means you\n"
@@ -2691,7 +2685,7 @@ msgstr "    forhindre dig i at logge ind, men betyder at du\n"
 
 #: rpa.c:711
 msgid "    cannot be sure you are talking to the\n"
-msgstr "    ikke kan være sikker på at du taler med den\n"
+msgstr "    ikke kan vÃ¦re sikker pÃ¥ at du taler med den\n"
 
 #: rpa.c:712
 msgid "    service that you think you are (replay\n"
@@ -2699,34 +2693,33 @@ msgstr "    service som du tror (gentagelses-\n"
 
 #: rpa.c:713
 msgid "    attacks by a dishonest service are possible.)\n"
-msgstr "    angreb af en uærlig service er mulig).\n"
+msgstr "    angreb af en uÃ¦rlig service er mulig).\n"
 
 #: rpa.c:724
 msgid "User challenge:\n"
-msgstr "Brugeranråb:\n"
+msgstr "BrugeranrÃ¥b:\n"
 
 #: rpa.c:874
 msgid "MD5 being applied to data block:\n"
-msgstr "MD5 bliver anvendt på datablok:\n"
+msgstr "MD5 bliver anvendt pÃ¥ datablok:\n"
 
 #: rpa.c:887
-#, fuzzy
 msgid "MD5 result is:\n"
 msgstr "MD5-resultatet er:\n"
 
 #: servport.c:53
 #, c-format
 msgid "getaddrinfo(NULL, \"%s\") error: %s\n"
-msgstr ""
+msgstr "getaddrinfo(NULL, \"%s\") fejl: %s\n"
 
 #: servport.c:80
 #, c-format
 msgid "Cannot resolve service %s to port number.\n"
-msgstr ""
+msgstr "Kan ikke slÃ¥ tjeneste %s op pÃ¥ portnummer.\n"
 
 #: servport.c:81
 msgid "Please specify the service as decimal port number.\n"
-msgstr ""
+msgstr "Angiv venligst tjenesten som decimalportnummer.\n"
 
 #: sink.c:231
 #, c-format
@@ -2754,17 +2747,17 @@ msgstr "%cMTP-fejl: %s\n"
 
 #: sink.c:552
 msgid "SMTP server requires STARTTLS, keeping message.\n"
-msgstr ""
+msgstr "SMTP-server krÃ¦ver STARTTLS, bevarer besked.\n"
 
 #: sink.c:735
-#, fuzzy, c-format
+#, c-format
 msgid "BSMTP file open failed: %s\n"
-msgstr "BSMTP-fil åben eller skrivning af indledning mislykkedes\n"
+msgstr "Ã…bning af BSMTP-fil mislykkedes: %s\n"
 
 #: sink.c:781
-#, fuzzy, c-format
+#, c-format
 msgid "BSMTP preamble write failed: %s.\n"
-msgstr "BSMTP-fil åben eller skrivning af indledning mislykkedes\n"
+msgstr "Skrivning af BSMTP-indledning mislykkedes: %s.\n"
 
 #: sink.c:995
 #, c-format
@@ -2798,16 +2791,16 @@ msgstr "klar til at levere med: %s\n"
 #: sink.c:1233
 #, c-format
 msgid "Cannot switch effective user id to %ld: %s\n"
-msgstr ""
+msgstr "Kan ikke skifte effektiv bruger-id til %ld: %s\n"
 
 #: sink.c:1245
 #, c-format
 msgid "Cannot switch effective user id back to original %ld: %s\n"
-msgstr ""
+msgstr "Kan ikke skifte effektiv bruger-id tilbage til oprindelig %ld: %s\n"
 
 #: sink.c:1252
 msgid "MDA open failed\n"
-msgstr "MDA-åbning mislykkedes\n"
+msgstr "MDA-Ã¥bning mislykkedes\n"
 
 #: sink.c:1291
 #, c-format
@@ -2817,22 +2810,22 @@ msgstr "%cMTP-forbindelse til %s mislykkedes\n"
 #: sink.c:1315
 #, c-format
 msgid "can't raise the listener; falling back to %s"
-msgstr "kan ikke få kontakt til modtager, bruger i stedet %s"
+msgstr "kan ikke fÃ¥ kontakt til modtager, bruger i stedet %s"
 
 #: sink.c:1373
-#, fuzzy, c-format
+#, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
-msgstr "Afslutning af brev eller lukning af BSTMP-fil mislykkedes\n"
+msgstr "Afslutning af brev eller lukning af BSTMP-fil mislykkedes: %s\n"
 
 #: sink.c:1398
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "leverer til %s\n"
+msgstr "Fejl ved skrivning til MDA: %s\n"
 
 #: sink.c:1401
 #, c-format
 msgid "MDA died of signal %d\n"
-msgstr "MDA døde af signal %d\n"
+msgstr "MDA dÃ¸de af signal %d\n"
 
 #: sink.c:1404
 #, c-format
@@ -2840,10 +2833,12 @@ msgid "MDA returned nonzero status %d\n"
 msgstr "MDA returnerede en ikke-nul status %d\n"
 
 #: sink.c:1407
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "Underligt: MDA pclose returnede %d, kan ikke håndtere det i %s:%d\n"
+msgstr ""
+"Underligt: MDA pclose returnede %d og fejlnr. %d/%s, kan ikke hÃ¥ndtere det i "
+"%s:%d\n"
 
 #: sink.c:1432
 msgid "SMTP listener refused delivery\n"
@@ -2851,7 +2846,7 @@ msgstr "SMTP-modtager afviste levering\n"
 
 #: sink.c:1462
 msgid "LMTP delivery error on EOM\n"
-msgstr "LMTP-leveringsfejl på EOM\n"
+msgstr "LMTP-leveringsfejl pÃ¥ EOM\n"
 
 #: sink.c:1465
 #, c-format
@@ -2859,13 +2854,12 @@ msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Uventet ikke-503-svar til LMTP EOM: %s\n"
 
 #: sink.c:1620
-#, fuzzy
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
 msgstr ""
-"--\n"
-"\t\t\t\tFetchmail Daemonen\n"
+"-- \n"
+"Fetchmail-dÃ¦monen"
 
 #: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
@@ -2882,7 +2876,7 @@ msgstr "Fejl i base64-svar fra server.\n"
 #: smtp.c:99
 #, c-format
 msgid "Challenge decoded: %s\n"
-msgstr "Anråb afkodet: %s\n"
+msgstr "AnrÃ¥b afkodet: %s\n"
 
 #: smtp.c:116
 msgid "ESMTP PLAIN Authentication...\n"
@@ -2915,197 +2909,197 @@ msgstr "dup2 mislykkedes\n"
 #: socket.c:187
 #, c-format
 msgid "running %s (host %s service %s)\n"
-msgstr "udfører %s (server %s service %s)\n"
+msgstr "udfÃ¸rer %s (server %s service %s)\n"
 
 #: socket.c:190
 #, c-format
 msgid "execvp(%s) failed\n"
 msgstr "execvp(%s) mislykkedes\n"
 
-#: socket.c:283
+#: socket.c:265
 #, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
-msgstr ""
+msgstr "getaddrinfo(\"%s\",\"%s\") fejl: %s\n"
 
-#: socket.c:286
+#: socket.c:268
 msgid "Try adding the --service option (see also FAQ item R12).\n"
-msgstr ""
+msgstr "ForsÃ¸g med at tilfÃ¸je tilvalget --service (se ogsÃ¥ OSS-punkt R12).\n"
 
-#: socket.c:300 socket.c:303
+#: socket.c:282 socket.c:285
 #, c-format
 msgid "unknown (%s)"
-msgstr ""
+msgstr "ukendt (%s)"
 
-#: socket.c:306
+#: socket.c:288
 #, c-format
 msgid "Trying to connect to %s/%s..."
-msgstr ""
+msgstr "ForsÃ¸ger at forbinde til %s/%s..."
 
-#: socket.c:315
-#, fuzzy, c-format
+#: socket.c:297
+#, c-format
 msgid "cannot create socket: %s\n"
-msgstr "kan ikke engang sende til %s!\n"
+msgstr "kan ikke oprette sokkel: %s\n"
 
-#: socket.c:317
+#: socket.c:299
 #, c-format
 msgid "name %d: cannot create socket family %d type %d: %s\n"
-msgstr ""
+msgstr "navn %d: kan ikke oprette sokkelfamilie %d type %d: %s\n"
 
-#: socket.c:333
-#, fuzzy
+#: socket.c:317
 msgid "connection failed.\n"
-msgstr "SSL-forbindelse mislykkedes.\n"
+msgstr "forbindelse mislykkedes.\n"
 
-#: socket.c:335
-#, fuzzy, c-format
+#: socket.c:319
+#, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "%s-forbindelse til %s mislykkedes"
+msgstr "forbindelse til %s:%s [%s/%s] mislykkedes: %s.\n"
 
-#: socket.c:336
-#, fuzzy, c-format
+#: socket.c:320
+#, c-format
 msgid "name %d: connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "%s-forbindelse til %s mislykkedes"
+msgstr "navn %d: forbindelse til %s:%s [%s/%s] mislykkedes: %s.\n"
 
-#: socket.c:342
-#, fuzzy
+#: socket.c:326
 msgid "connected.\n"
-msgstr "SSL-forbindelse mislykkedes.\n"
+msgstr "forbundet.\n"
 
-#: socket.c:355
+#: socket.c:339
 #, c-format
 msgid ""
 "Connection errors for this poll:\n"
 "%s"
 msgstr ""
+"Forbindelsesfejl for denne prÃ¸vning:\n"
+"%s"
 
-#: socket.c:621
-#, fuzzy
+#: socket.c:605
 msgid "Server certificate:\n"
-msgstr "Servernavn ikke specificeret i certifikat!\n"
+msgstr "Servercertifikat:\n"
 
-#: socket.c:626
+#: socket.c:610
 #, c-format
 msgid "Certificate chain, from root to peer, starting at depth %d:\n"
-msgstr ""
+msgstr "CertifikatkÃ¦de, fra administrator til modpart, starter pÃ¥ dybde %d:\n"
 
-#: socket.c:629
+#: socket.c:613
 #, c-format
 msgid "Certificate at depth %d:\n"
-msgstr ""
+msgstr "Certifikat pÃ¥ dybde %d:\n"
 
-#: socket.c:635
+#: socket.c:619
 #, c-format
 msgid "Issuer Organization: %s\n"
 msgstr "Udsteders organisation: %s\n"
 
-#: socket.c:638
+#: socket.c:622
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
-msgstr "Advarsel: Udsteders organisationsnavn for langt (måske afskåret).\n"
+msgstr "Advarsel: Udsteders organisationsnavn for langt (mÃ¥ske afskÃ¥ret).\n"
 
-#: socket.c:640
+#: socket.c:624
 msgid "Unknown Organization\n"
 msgstr "Ukendt organisation\n"
 
-#: socket.c:642
+#: socket.c:626
 #, c-format
 msgid "Issuer CommonName: %s\n"
 msgstr "Udsteders almennavn: %s\n"
 
-#: socket.c:645
+#: socket.c:629
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
-msgstr "Advarsel: Udsteders almennavn for langt (måske afskåret).\n"
+msgstr "Advarsel: Udsteders almennavn for langt (mÃ¥ske afskÃ¥ret).\n"
 
-#: socket.c:647
+#: socket.c:631
 msgid "Unknown Issuer CommonName\n"
 msgstr "Udsteders almennavn ukendt\n"
 
-#: socket.c:653
-#, fuzzy, c-format
+#: socket.c:637
+#, c-format
 msgid "Subject CommonName: %s\n"
-msgstr "Udsteders almennavn: %s\n"
+msgstr "Emne almennavn: %s\n"
 
-#: socket.c:659
+#: socket.c:643
 msgid "Bad certificate: Subject CommonName too long!\n"
-msgstr "Dårligt certifikat: Almennavn for langt!\n"
+msgstr "DÃ¥rligt certifikat: almennavn for langt!\n"
 
-#: socket.c:665
-#, fuzzy
+#: socket.c:649
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
-msgstr "Dårligt certifikat: Almennavn for langt!\n"
+msgstr "DÃ¥rligt certifikat: Emne almennavn indeholder NUL, afbryder!\n"
 
-#: socket.c:693
+#: socket.c:677
 #, c-format
 msgid "Subject Alternative Name: %s\n"
-msgstr ""
+msgstr "Emne alternativt navn: %s\n"
 
-#: socket.c:699
-#, fuzzy
+#: socket.c:683
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
-msgstr "Dårligt certifikat: Almennavn for langt!\n"
+msgstr "DÃ¥rligt certifikat: Emne almennavn indeholder NUL, afbryder!\n"
 
-#: socket.c:716
+#: socket.c:700
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Uoverensstemmelse i servers almennavn: %s != %s\n"
 
-#: socket.c:723
+#: socket.c:707
 msgid "Server name not set, could not verify certificate!\n"
-msgstr "Servernavn ikke anført, kunne ikke verificere certifikat!\n"
+msgstr "Servernavn ikke anfÃ¸rt, kunne ikke verificere certifikat!\n"
 
-#: socket.c:728
+#: socket.c:712
 msgid "Unknown Server CommonName\n"
 msgstr "Servers almennavn ukendt\n"
 
-#: socket.c:730
+#: socket.c:714
 msgid "Server name not specified in certificate!\n"
 msgstr "Servernavn ikke specificeret i certifikat!\n"
 
-#: socket.c:742
+#: socket.c:726
 msgid "EVP_md5() failed!\n"
 msgstr "EVP_md5() mislykkedes!\n"
 
-#: socket.c:746
+#: socket.c:730
 msgid "Out of memory!\n"
 msgstr "Ingen hukommelse!\n"
 
-#: socket.c:754
+#: socket.c:738
 msgid "Digest text buffer too small!\n"
 msgstr "Oversigtstekstbuffer for lille!\n"
 
-#: socket.c:760
+#: socket.c:744
 #, c-format
 msgid "%s key fingerprint: %s\n"
-msgstr "%s nøgle-fingeraftryk: %s\n"
+msgstr "%s nÃ¸gle-fingeraftryk: %s\n"
 
-#: socket.c:764
+#: socket.c:748
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "%s fingeraftryk passer.\n"
 
-#: socket.c:766
+#: socket.c:750
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "%s fingeraftryk passer ikke!\n"
 
-#: socket.c:776
-#, fuzzy, c-format
+#: socket.c:760
+#, c-format
 msgid "Server certificate verification error: %s\n"
-msgstr "Advarsel: servercertifikat-verificering: %s\n"
+msgstr "Fejl vedrÃ¸rende verificering af servercertifikat: %s\n"
 
-#: socket.c:783
+#: socket.c:767
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
-msgstr "Ukendt udsteder (de første %d tegn): %s\n"
+msgstr "ukendt udsteder (de fÃ¸rste %d tegn): %s\n"
 
-#: socket.c:784
+#: socket.c:768
 msgid ""
 "This error usually happens when the server provides an incomplete "
 "certificate chain, which is nothing fetchmail could do anything about.  For "
 "details, please see the README.SSL-SERVER document that comes with "
 "fetchmail.\n"
 msgstr ""
+"Denne fejl opstÃ¥r normalt nÃ¥r serveren tilbyder en ufuldstÃ¦ndig "
+"certifikatkÃ¦de, hvilket fetchmail ikke kan gÃ¸re noget ved. For detaljer sÃ¥ "
+"se venligst dokumentet README.SSL-SERVER som kommer med fetchmail.\n"
 
-#: socket.c:793
+#: socket.c:777
 #, c-format
 msgid ""
 "This means that the root signing certificate (issued for %s) is not in the "
@@ -3113,52 +3107,62 @@ msgid ""
 "certificate directory. For details, please see the documentation of --"
 "sslcertpath and --sslcertfile in the manual page.\n"
 msgstr ""
+"Dette betyder at certifikatet for rodunderskrift (udstedt for %s) ikke er i "
+"placeringen for trovÃ¦rdige CA-certifikater, eller at c_rehash skal kÃ¸res pÃ¥ "
+"certifikatmappen. For detaljer sÃ¥ se venligst dokumentationen for --"
+"sslcertpath og --sslcertfile i manualsiden.\n"
 
-#: socket.c:885
+#: socket.c:869
 msgid "File descriptor out of range for SSL"
-msgstr "Fildeskriptor har forkert værdi til SSL"
+msgstr "Fildeskriptor har forkert vÃ¦rdi til SSL"
 
-#: socket.c:901
+#: socket.c:880
+msgid "Your operating system does not support SSLv2.\n"
+msgstr ""
+
+#: socket.c:890
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr "Ugyldig SSL-protokol '%s' specificeret, bruger SSLv23.\n"
 
-#: socket.c:994
+#: socket.c:989
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr ""
-"Certifikat/fingeraftryk-verifikation blev på en eller anden måde sprunget "
+"Certifikat/fingeraftryk-verifikation blev pÃ¥ en eller anden mÃ¥de sprunget "
 "over!\n"
 
-#: socket.c:1011
+#: socket.c:1006
 msgid ""
 "Warning: the connection is insecure, continuing anyways. (Better use --"
 "sslcertck!)\n"
 msgstr ""
+"Advarsel: Forbindelsen er usikker, fortsÃ¦tter alligevel. (Brug hellere --"
+"sslcertck!)\n"
 
-#: socket.c:1077
+#: socket.c:1048
 msgid "Cygwin socket read retry\n"
-msgstr "Forsøger igen at læse cygwin-sokkel\n"
+msgstr "ForsÃ¸ger igen at lÃ¦se cygwin-sokkel\n"
 
-#: socket.c:1080
+#: socket.c:1051
 msgid "Cygwin socket read retry failed!\n"
-msgstr "Forsøg på at læse cygwin-sokkel mislykkedes!\n"
+msgstr "ForsÃ¸g pÃ¥ at lÃ¦se cygwin-sokkel mislykkedes!\n"
 
-#: transact.c:71
-#, fuzzy, c-format
+#: transact.c:79
+#, c-format
 msgid "mapped address %s to local %s\n"
-msgstr "%s svarer til %s lokalt\n"
+msgstr "adressen %s svarer til %s lokalt\n"
 
-#: transact.c:93
+#: transact.c:101
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "%s svarer til %s lokalt\n"
 
-#: transact.c:160
+#: transact.c:168
 #, c-format
 msgid "passed through %s matching %s\n"
-msgstr "Undersøgt %s som passer med %s\n"
+msgstr "undersÃ¸gt %s som passer med %s\n"
 
-#: transact.c:230
+#: transact.c:240
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -3167,90 +3171,93 @@ msgstr ""
 "analyserer Received-linje:\n"
 "%s"
 
-#: transact.c:269
+#: transact.c:279
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "linjen accepteret, %s er et alias for postserveren\n"
 
-#: transact.c:275
+#: transact.c:285
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "linjen afvist, %s er ikke et alias for postserveren\n"
 
-#: transact.c:349
+#: transact.c:359
 msgid "no Received address found\n"
 msgstr "ingen \"Received\"-adresse fundet\n"
 
-#: transact.c:358
+#: transact.c:368
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "fandt \"Received\"-adresse `%s'\n"
 
-#: transact.c:601
-#, fuzzy
+#: transact.c:613
 msgid "incorrect header line found - see manpage for bad-header option\n"
-msgstr "ukorrekt brevhovedlinje fundet under læsningen af brevhovedet\n"
+msgstr ""
+"ukorrekt brevhovedlinje fundet - se manualside for bad-header-tilvalg\n"
 
-#: transact.c:603
+#: transact.c:615
 #, c-format
 msgid "line: %s"
-msgstr "Linje: %s"
+msgstr "linje: %s"
 
-#: transact.c:1095 transact.c:1105
+#: transact.c:1107 transact.c:1117
 #, c-format
 msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
-msgstr ""
-
-#: transact.c:1120
-#, fuzzy, c-format
-msgid "Parsing Received names \"%-.*s\"\n"
-msgstr ""
-"analyserer Received-linje:\n"
-"%s"
+msgstr "Fortolker kuvert \"%s\" navne \"%-.*s\"\n"
 
 #: transact.c:1132
-msgid "No envelope recipient found, resorting to header guessing.\n"
-msgstr ""
+#, c-format
+msgid "Parsing Received names \"%-.*s\"\n"
+msgstr "Fortolker modtagne navne \"%-.*s\"\n"
 
-#: transact.c:1150
+#: transact.c:1144
+msgid "No envelope recipient found, resorting to header guessing.\n"
+msgstr "Ingen kuvertmodtager fundet, falder tilbage til brevhovedgÃ¦t.\n"
+
+#: transact.c:1162
 #, c-format
 msgid "Guessing from header \"%-.*s\".\n"
-msgstr ""
+msgstr "GÃ¦tter fra hoved \"%-.*s\".\n"
 
-#: transact.c:1165
+#: transact.c:1177
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "ingen lokale overensstemmelser, leverer til %s\n"
 
-#: transact.c:1180
+#: transact.c:1192
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "levering og sletning undladt pga. DNS-fejl\n"
 
-#: transact.c:1291
+#: transact.c:1303
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "skriver RFC822 msgblk.headers\n"
 
-#: transact.c:1310
+#: transact.c:1322
 msgid "no recipient addresses matched declared local names"
-msgstr "ingen modtageradresser passer med erklærede lokale navne"
+msgstr "ingen modtageradresser passer med erklÃ¦rede lokale navne"
 
-#: transact.c:1317
+#: transact.c:1329
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "modtageradresse %s passede ikke med noget lokalt navn"
 
-#: transact.c:1326
+#: transact.c:1338
 msgid "message has embedded NULs"
 msgstr "brev indeholder NUL-tegn"
 
-#: transact.c:1334
+#: transact.c:1346
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP-modtager afviste lokal modtageradresse: "
 
-#: transact.c:1473
-#, fuzzy
+#: transact.c:1493
 msgid "error writing message text\n"
-msgstr "skriver brevtekst\n"
+msgstr "fejl ved skrivning af beskedtekst\n"
+
+#: transact.c:1641
+#, c-format
+msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
+msgstr ""
+"Mellemlager for lille. Dette er en fejl i kaldeprogrammet for %s:%lu.\n"
 
 #: uid.c:249
 #, c-format
@@ -3263,12 +3270,12 @@ msgstr " <tom>"
 
 #: uid.c:262
 msgid "Scratch list of UIDs:"
-msgstr "Liste af øvrige UID'er:"
+msgstr "Liste af Ã¸vrige UID'er:"
 
 #: uid.c:325 uid.c:374
-#, fuzzy, c-format
+#, c-format
 msgid "Merged UID list from %s:"
-msgstr "Gammel UID-liste fra %s:"
+msgstr "SammenfÃ¸j UID-liste fra %s:"
 
 #: uid.c:328
 #, c-format
@@ -3277,49 +3284,48 @@ msgstr "Ny UID-liste fra %s:"
 
 #: uid.c:355
 msgid "swapping UID lists\n"
-msgstr "Ombytter UID-lister\n"
+msgstr "ombytter UID-lister\n"
 
 #: uid.c:363
 msgid "not swapping UID lists, no UIDs seen this query\n"
-msgstr "Ombytter ikke UID-lister, ingen UID'er set ved denne forespørgsel\n"
+msgstr "ombytter ikke UID-lister, ingen UID'er set ved denne forespÃ¸rgsel\n"
 
 #: uid.c:383
-#, fuzzy
 msgid "discarding new UID list\n"
-msgstr "Ombytter UID-lister\n"
+msgstr "fjerner ny UID-liste\n"
 
 #: uid.c:419
 msgid "Deleting fetchids file.\n"
 msgstr "Sletter fetchids-fil\n"
 
 #: uid.c:422
-#, fuzzy, c-format
+#, c-format
 msgid "Error deleting %s: %s\n"
-msgstr "Fejl ved frigivelse af akkreditiver\n"
+msgstr "Fejl ved sletning af %s: %s\n"
 
 #: uid.c:428
 msgid "Writing fetchids file.\n"
 msgstr "Skriver fetchids-fil.\n"
 
 #: uid.c:439 uid.c:447
-#, fuzzy, c-format
+#, c-format
 msgid "Write error on fetchids file %s: %s\n"
-msgstr "Skriver fetchids-fil.\n"
+msgstr "Skriver fejl til fetchids-fil %s: %s\n"
 
 #: uid.c:459
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
-msgstr ""
+msgstr "Fejl ved skrivning til fetchids-fil %s, gammel fil bevaret.\n"
 
 #: uid.c:463
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
-msgstr ""
+msgstr "Kan ikke omdÃ¸be fechids-fil %s til %s: %s\n"
 
 #: uid.c:467
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
-msgstr ""
+msgstr "Kan ikke Ã¥bne fetchids-fil %s for skrivning: %s\n"
 
 #: xmalloc.c:33
 msgid "malloc failed\n"
@@ -3328,123 +3334,3 @@ msgstr "malloc mislykkedes\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc mislykkedes\n"
-
-#~ msgid ""
-#~ "Subject: Fetchmail oversized-messages warning.\n"
-#~ "\n"
-#~ "The following oversized messages remain on the mail server %s:"
-#~ msgstr ""
-#~ "Subject: Fetchmail-advarsel om for store breve\n"
-#~ "\n"
-#~ "Disse breve er for store og forbliver paa postserveren %s:"
-
-#~ msgid "header "
-#~ msgstr "brevhoved-"
-
-#~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
-#~ msgstr "SIGPIPE kastet fra en MDA, eller en strømsokkelfejl\n"
-
-#~ msgid "internal inconsistency\n"
-#~ msgstr "intern uoverensstemmelse\n"
-
-#~ msgid "name is valid but has no IP address."
-#~ msgstr "navnet er gyldigt, men har ingen IP-adresse."
-
-#~ msgid "unrecoverable name server error."
-#~ msgstr "uoprettelig navneserverfejl."
-
-#~ msgid "temporary name server error."
-#~ msgstr "midlertidig navneserverfejl."
-
-#~ msgid "unknown DNS error %d."
-#~ msgstr "ukendt DNS-fejl %d."
-
-#~ msgid "messages"
-#~ msgstr "breve"
-
-#~ msgid "message"
-#~ msgstr "brev"
-
-#~ msgid "Option --remote is not supported with ETRN\n"
-#~ msgstr "Tilvalg --remote er ikke understøttet med ETRN\n"
-
-#~ msgid "Cannot support ETRN without gethostbyname(2).\n"
-#~ msgstr "Kan ikke understøtte ETRN uden gethostbyname(2).\n"
-
-#~ msgid "Cannot support ODMR without gethostbyname(2).\n"
-#~ msgstr "Kan ikke understøtte ODMR uden gethostbyname(2).\n"
-
-#~ msgid "will not"
-#~ msgstr "vil ikke"
-
-#~ msgid "will"
-#~ msgstr "vil"
-
-#~ msgid " (using network security options %s)"
-#~ msgstr " (bruger netværkssikkerhedstilvalg %s)"
-
-#~ msgid " (using port %d)"
-#~ msgstr " (bruger port %d)"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "Only new"
-#~ msgstr "Kun nye"
-
-#~ msgid "enabled"
-#~ msgstr "slået til"
-
-#~ msgid "disabled"
-#~ msgstr "slået fra"
-
-#~ msgid "discarded"
-#~ msgstr "slettet"
-
-#~ msgid "kept"
-#~ msgstr "bevaret"
-
-#~ msgid "IP address.\n"
-#~ msgstr "IP-adresse.\n"
-
-#~ msgid "name.\n"
-#~ msgstr "navn.\n"
-
-#~ msgid "Received"
-#~ msgstr "Received"
-
-#~ msgid "alloca failed"
-#~ msgstr "alloca mislykkedes"
-
-#~ msgid "warning: found \"%s\" before any host names"
-#~ msgstr "advarsel: fandt \"%s\" før noget værtsnavn"
-
-#~ msgid "Option --remote is not supported with ODMR\n"
-#~ msgstr "Tilvalg --remote er ikke understøttet med ODMR\n"
-
-#~ msgid "fetchmail: network security support is disabled\n"
-#~ msgstr "fetchmail: understøttelse af netværkssikkerhed er slået fra\n"
-
-#~ msgid "  -T, --netsec      set IP security request\n"
-#~ msgstr "  -T, --netsec      anfør IP-sikkerhedsanmodning\n"
-
-#~ msgid "invalid security request"
-#~ msgstr "Ugyldig sikkerhedsanmodning"
-
-#~ msgid "network-security support disabled"
-#~ msgstr "understøttelse af netværkssikkerhed er slået fra"
-
-#~ msgid "partial error message buffer overflow"
-#~ msgstr "overløb i buffer til del af fejlbesked"
-
-#~ msgid "fetchmail: getaddrinfo(%s.%s)\n"
-#~ msgstr "fetchmail: getaddrinfo(%s.%s)\n"
-
-#~ msgid "fetchmail: illegal address length received for host %s\n"
-#~ msgstr "fetchmail: ulovlig adresselængde modtaget for vært %s\n"
-
-#~ msgid "message delimiter found while scanning headers\n"
-#~ msgstr "brev afsluttet under læsningen af brevhovedet\n"
-
-#~ msgid "lstat: %s: %s\n"
-#~ msgstr "lstat: %s: %s\n"

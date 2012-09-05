@@ -15,7 +15,7 @@
 <table width="100%" cellpadding="0" summary="Canned page header">
 <tr>
 <td>Fetchmail</td>
-<td align="right"><!-- update date -->2010-12-10</td>
+<td align="right"><!-- update date -->2012-08-29</td>
 </tr>
 </table>
 </div>
@@ -42,34 +42,17 @@
 <h1>Fetchmail</h1>
 
 <div style="background-color:#c0ffc0;color:#000000;">
-    <h1>NEWS: FETCHMAIL 6.3.19 RELEASE</h1>
-    <p>On 2010-10-16, <a
-	href="fetchmail-EN-2010-03.txt">an erratum notice was issued</a>
-    to document important fixes made in the 6.3.18 release.
-    Distributors are advised to upgrade their packages to
-    6.3.19 (which fixes a few more bugs than 6.3.18 did).</p>
-    <p>On 2010-12-10, <a
-	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.19
+    <h1>NEWS: FETCHMAIL 6.3.22 RELEASE</h1>
+    <p>On 2012-08-29, <a
+	href="http://developer.berlios.de/project/showfiles.php?group_id=1824&amp;release_id=19117">fetchmail-6.3.22
 	has been released (this is the download link),</a> fixing a
-    Yahoo incompatibility (that was fetchmail's fault), improves
-    configuration for multidrop settings, restores --antispam function
-    on the command line, allows forcing SSL/TLS/STARTTLS negotiation,
-    and reduces GSSAPI verbose/debug chatter in syslog.
-    <br>It is a recommended update for all users and
+    denial-of service in STARTTLS and makes --keep configurations log
+    less verbosely.
+    <br>It is a recommended <strong>security update</strong> for all users and
     distributors. <a
-	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=18137">Click
+	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=19117">Click
 	here to see the change details.</a>
     </p>
-
-    <h1>UTF7 in mailbox names (developer document)</h1>
-    <p>There is a <a href="Mailbox-Names-UTF7.html">new document about
-	mailbox name encoding in IMAP,</a>
-    an invited contribution by Mark Crispin. It applies to all IMAP
-    clients and servers and is not limited to fetchmail, and arose after
-    a discussion on the getmail mailing list. Note that as of
-    2010-05-25, neither fetchmail nor getmail currently supports this
-    directly; for the nonce, you need to manually encode the mailbox
-    name in UTF-7 for both applications.</p>
 
     <h1>SSL issues after upgrade to OpenSSL 1.0.0?</h1>
     <p>If your fetchmail upgrade entails an upgrade of the OpenSSL

@@ -23,6 +23,33 @@ index c8117a5..89847fe 100644
 --- a/socket.c
 +++ b/socket.c
 @@ -362,6 +362,49 @@ static	SSL *_ssl_context[FD_SETSIZE];
+=======
+Note 2: non-printable characters are hex-escaped, so it is safe to use
+FETCHMAIL_RAW_LOGFILE=/dev/stderr or similar.
+
+-- Matthias Andree, August 2011
+
+diff --git a/sink.c b/sink.c
+index 5d92556..ff6208d 100644
+--- a/sink.c
++++ b/sink.c
+@@ -649,6 +649,10 @@ int stuffline(struct query *ctl, char *buf)
+     while ((last += strlen(last)) && (last[-1] != '\n'))
+         last++;
+ 
++    if (outlevel >= O_DEBUG && (size_t)(last - buf) != strlen(buf))
++	report(stdout, GT_("DEBUG: stuffline shipping line with NULs, length=%lu, strlen=%lu\n"), last - buf, strlen(buf));
++
++
+     /* fix message lines that have only \n termination (for qmail) */
+     if (ctl->forcecr)
+     {
+diff --git a/socket.c b/socket.c
+index e338207..dcaf19d 100644
+--- a/socket.c
++++ b/socket.c
+@@ -381,6 +381,49 @@ static	SSL *_ssl_context[FD_SETSIZE];
+>>>>>>> legacy_63
  static SSL	*SSLGetContext( int );
  #endif /* SSL_ENABLE */
  
