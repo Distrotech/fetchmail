@@ -10,7 +10,7 @@
 .\" Load www macros to process .URL requests, this requires groff:
 .mso www.tmac
 .\"
-.TH fetchmail 1 "fetchmail 7.0.0-alpha2" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 7.0.0-alpha3" "fetchmail" "fetchmail reference manual"
 
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
@@ -449,9 +449,9 @@ Also see \-\-sslcert above.
 (Keyword: sslproto)
 .br
 Forces an SSL/TLS protocol. Possible values are \fB''\fP,
-\&'\fBSSL23\fP' (note however that fetchmail, since v6.3.20, prohibits
-negotiation of SSLv2 -- it has been deprecated for 15 years and is
-insecure), \&'\fBSSL3\fP', and
+\&'\fBSSL2\fP' (not supported on all systems),
+\&'\fBSSL23\fP', (use of these two values is discouraged
+and should only be used as a last resort) \&'\fBSSL3\fP', and
 \&'\fBTLS1\fP'.  The default behaviour if this option is unset is: for
 connections without \-\-ssl, use \&'\fBTLS1\fP' so that fetchmail will
 opportunistically try STARTTLS negotiation with TLS1. You can configure
@@ -2744,6 +2744,16 @@ then that name is used as the default local name.  Otherwise
 session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
+.IP \fBFETCHMAIL_DISABLE_CBC_IV_COUNTERMEASURE\fP
+(since v6.3.22):
+If this environment variable is set and not empty, fetchmail will disable
+a countermeasure against an SSL CBC IV attack (by setting 
+SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS).  This is a security risk, but may be
+necessary for connecting to certain non-standards-conforming servers.
+See fetchmail's NEWS file and fetchmail-SA-2012-01.txt for details.
+Earlier fetchmail versions (v6.3.21 and older) used to disable this 
+countermeasure, but v6.3.22 no longer does that as a safety precaution.
+
 .IP \fBFETCHMAIL_INCLUDE_DEFAULT_X509_CA_CERTS\fP
 (since v6.3.17):
 If this environment variable is set and not empty, fetchmail will always load
@@ -2776,7 +2786,7 @@ it).
 Running \fBfetchmail\fP in foreground while a background fetchmail is
 running will do whichever of these is appropriate to wake it up.
 
-.SH BUGS AND KNOWN PROBLEMS
+.SH BUGS, LIMITATIONS, AND KNOWN PROBLEMS
 .PP
 Please check the \fBNEWS\fP file that shipped with fetchmail for more
 known bugs than those listed here.
@@ -2785,6 +2795,10 @@ Fetchmail cannot handle user names that contain blanks after a "@"
 character, for instance "demonstr@ti on". These are rather uncommon and
 only hurt when using UID-based \-\-keep setups, so the 6.3.X versions of
 fetchmail won't be fixed.
+.PP
+Fetchmail cannot handle configurations where you have multiple accounts
+that use the same server name and the same login. Any user@server
+combination must be unique.
 .PP
 The assumptions that the DNS and in particular the checkalias options
 make are not often sustainable. For instance, it has become uncommon for

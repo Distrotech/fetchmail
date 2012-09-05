@@ -3,13 +3,13 @@ dnl Autoconfigure input file for fetchmail
 # Fetchmail automatic configuration support
 #
 # Eric S. Raymond <esr@thyrsus.com>
-# 2004 - 2011 Matthias Andree <matthias.andree@gmx.de>
+# 2004 - 2012 Matthias Andree <matthias.andree@gmx.de>
 #
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl XXX - if bumping version here, check fetchmail.man, too!
-AC_INIT([fetchmail],[7.0.0-alpha2+MAPI],[fetchmail-devel@lists.berlios.de])
+AC_INIT([fetchmail],[7.0.0-alpha3+MAPI],[fetchmail-devel@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -22,7 +22,7 @@ AC_USE_SYSTEM_EXTENSIONS
 dnl automake options are in Makefile.am
 AC_PREREQ(2.64)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(silent-rules)
 
 dnl python is optional
 #
@@ -602,8 +602,14 @@ then
   dnl XXX FIXME: use pkg-config if available!
   AC_DEFINE(SSL_ENABLE)
 else
-  AC_MSG_NOTICE(Disabling SSL support.)
+  AC_MSG_WARN(Disabling SSL support.)
+  AC_MSG_WARN(Consider re-running configure --with-ssl.)
 fi
+
+case "$LIBS" in *-lssl*)
+	AC_CHECK_DECLS([SSLv2_client_method],,,[#include <openssl/ssl.h>])
+	;;
+esac
 
 ###	use option --with-socks=DIR to point at SOCKS library
 AC_ARG_WITH(socks,
@@ -699,11 +705,20 @@ then
     CPPFLAGS="$CPPFLAGS -I$with_gssapi/include"
   fi
   AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
-  if test "$ac_cv_header_gssapi_h" = "yes"; then
-    AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE,1,Define if you have MIT kerberos))
-  else
-    AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi/gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
-  fi
+  AC_CHECK_DECLS(GSS_C_NT_HOSTBASED_SERVICE,,,[
+    AC_INCLUDES_DEFAULT
+    #if HAVE_GSS_H
+    #include <gss.h>
+    #endif
+    #if HAVE_GSSAPI_GSSAPI_H
+    #include <gssapi/gssapi.h>
+    #elif HAVE_GSSAPI_H
+    #include <gssapi.h>
+    #endif
+    #if HAVE_GSSAPI_GSSAPI_GENERIC_H
+    #include <gssapi/gssapi_generic.h>
+    #endif
+    ])
 fi])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in genlsm.sh])

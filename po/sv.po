@@ -1,166 +1,179 @@
-# Chinese translations for fetchmail package
-# fetchmail 软件包的简体中文翻译.
-# Copyright (C) 2008 Eric S. Raymond (msgids)
+# Swedish translations for fetchmail package
+# Svenska översättningar för paket fetchmail.
+# Copyright © 2011, 2012 Eric S. Raymond (msgids)
 # This file is distributed under the same license as the fetchmail package.
-# Ji ZhengYu <zhengyuji@gmail.com>, 2008, 2009, 2010, 2011
+# Göran Uddeborg <goeran@uddeborg.se>, 2011, 2012.
 #
+# $Revision: 1.5 $
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.20-rc3\n"
+"Project-Id-Version: fetchmail 6.3.21.1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2012-09-05 03:05+0200\n"
-"PO-Revision-Date: 2011-06-14 11:42+0800\n"
-"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
-"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2012-08-15 23:17+0200\n"
+"Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cram.c:93
 msgid "could not decode BASE64 challenge\n"
-msgstr "无法解析 BASE64 编码请求\n"
+msgstr "kunde inte avkoda BASE64-utmaning\n"
 
 #: cram.c:101
 #, c-format
 msgid "decoded as %s\n"
-msgstr "以 %s 解码\n"
+msgstr "avkodat som %s\n"
 
 #: driver.c:173 driver.c:179
 #, c-format
 msgid "krb5_sendauth: %s [server says '%s']\n"
-msgstr "krb5_sendauth: %s [ 服务器响应 \"%s\"]\n"
+msgstr "krb5_sendauth: %s [servern säger ”%s”]\n"
 
 #: driver.c:259
 msgid "Subject: Fetchmail oversized-messages warning"
-msgstr "主题: Fetchmail 超大邮件警告"
+msgstr "Subject: Fetchmail-varning om för stora meddelanden"
 
 #: driver.c:263
 #, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
-msgstr "以下超大邮件从服务器 %s 上删除，帐号为 %s:"
+msgstr "Följande för stora meddelanden raderades på server %s konto %s:"
 
 #: driver.c:267
 #, c-format
 msgid "The following oversized messages remain on server %s account %s:"
-msgstr "以下超大邮件留在了服务器 %s 上，帐号为 %s:"
+msgstr "Följande för stora meddelanden finns kvar på server %s konto %s:"
 
 #: driver.c:286
 #, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
-msgstr[0] "fetchmail 删除 %d 封邮件， %d 字节。"
+msgstr[0] "  %d meddelande %d oktetter långt raderat av fetchmail."
+msgstr[1] "  %d meddelanden %d oktetter långa raderade av fetchmail."
 
 #: driver.c:291
 #, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
-msgstr[0] "fetchmail 跳过 %d 封邮件，%d octets。"
+msgstr[0] "  %d meddelande %d oktetter långt hoppas över av fetchmail."
+msgstr[1] "  %d meddelanden %d oktetter långa hoppas över av fetchmail."
 
 #: driver.c:436
 #, c-format
 msgid "skipping message %s@%s:%d"
-msgstr "忽略 %s@%s:%d 封邮件"
+msgstr "hoppar över meddelandet %s@%s:%d"
 
 #: driver.c:490
 #, c-format
 msgid "skipping message %s@%s:%d (%d octets)"
-msgstr "跳过 %s@%s:%d 封邮件(%d 字节)"
+msgstr "hoppar över meddelandet %s@%s:%d (%d oktetter)"
 
 #: driver.c:506
 msgid " (length -1)"
-msgstr "( 长度 -1)"
+msgstr " (längd -1)"
 
 #: driver.c:509
 msgid " (oversized)"
-msgstr "(超大)"
+msgstr " (för stort)"
 
 #: driver.c:527
 #, c-format
 msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
-msgstr "无法获取邮件头，邮件 %s@%s:%d (%d 字节)\n"
+msgstr "kunde inte hämta huvuden, meddelandet %s@%s:%d (%d oktetter)\n"
 
 #: driver.c:545
 #, c-format
 msgid "reading message %s@%s:%d of %d"
-msgstr "读取 %1$s@%2$s:%4$d 封中的 %3$d 封邮件"
+msgstr "läser meddelandet %s@%s:%d av %d"
 
 #: driver.c:550
 #, c-format
 msgid " (%d octets)"
-msgstr " (%d 字节)"
+msgstr " (%d oktetter)"
 
 #: driver.c:551
 #, c-format
 msgid " (%d header octets)"
-msgstr "(邮件头 %d 字节)"
+msgstr " (%d huvudoktetter)"
 
 #: driver.c:657
 #, c-format
 msgid " (%d body octets)"
-msgstr "(邮件内容 %d 字节)"
+msgstr " (%d kroppoktetter)"
 
 #: driver.c:719
 #, c-format
 msgid ""
 "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
-msgstr "%s@%s:%d 邮件非所需大小 (实际 %d 字节!= 所要求的 %d 字节)\n"
+msgstr ""
+"meddelandet %s@%s:%d hade inte den förväntade längden (%d faktisk ≠ %d "
+"förväntad)\n"
 
 #: driver.c:751
 msgid " retained\n"
-msgstr "已保留\n"
+msgstr " behållet\n"
 
 #: driver.c:761
 msgid " flushed\n"
-msgstr "已删除\n"
+msgstr " tömt\n"
 
 #: driver.c:773
 msgid " not flushed\n"
-msgstr "未删除\n"
+msgstr " inte tömt\n"
 
 #: driver.c:791
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
 "fetchlimit %d reached; %d messages left on server %s account %s\n"
-msgstr[0] "到达收件上限 %d；%d 封邮件留在服务器 %s 帐号为 %s\n"
+msgstr[0] ""
+"hämtningsgränsen %d uppnådd, %d meddelande kvarlämnat på server %s konto %s\n"
+msgstr[1] ""
+"hämtningsgränsen %d uppnådd, %d meddelanden kvarlämnade på server %s konto "
+"%s\n"
 
 #: driver.c:848
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
-msgstr "等待连接服务器 %2$s %1$d 秒后超时。\n"
+msgstr ""
+"tiden gick ut efter %d sekunders väntan på att ansluta till servern %s.\n"
 
 #: driver.c:852
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
-msgstr "等待服务器 %2$s %1$d 秒后超时。\n"
+msgstr "tiden gick ut efter %d sekunders väntan på servern %s.\n"
 
 #: driver.c:856
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
-msgstr "等待 %2$s %1$d 秒后超时。\n"
+msgstr "tiden gick ut efter %d sekunders väntan på %s.\n"
 
 #: driver.c:861
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
-msgstr "等待接收端 %d 秒无响应超时。\n"
+msgstr ""
+"tiden gick ut efter %d sekunders väntan på att lyssnare skulle svara.\n"
 
 #: driver.c:864
 #, c-format
 msgid "timeout after %d seconds.\n"
-msgstr "等待 %d 秒后超时。\n"
+msgstr "tiden gick ut efter %d sekunder.\n"
 
 #: driver.c:876
 msgid "Subject: fetchmail sees repeated timeouts"
-msgstr "主题: fetchmail 发现反复超时"
+msgstr "Subject: fetchmail ser att tiden går ut upprepade gånger"
 
 #: driver.c:879
 #, c-format
 msgid ""
 "Fetchmail saw more than %d timeouts while attempting to get mail from %s@"
 "%s.\n"
-msgstr "Fetchmail 尝试从 %2$s@%3$s 收取邮件时发现多于 %1$d 次超时。\n"
+msgstr ""
+"Fetchmail såg att tiden gick ut mer än %d gånger under försök att hämta post "
+"från %s@%s.\n"
 
 #: driver.c:883
 msgid ""
@@ -171,77 +184,79 @@ msgid ""
 "\n"
 "Fetchmail won't poll this mailbox again until you restart it.\n"
 msgstr ""
-"这可能意味着您的邮件服务器正忙，或者您的 SMTP 服务器拥挤，\n"
-"或者您位于服务器上的邮箱已经被服务器中的错误破坏了。您可以\n"
-"运行 ‘fetchmail -v -v’ 来分析这个问题\n"
+"Detta kan betyda att din postserver har fastnat, eller att din SMTP-server\n"
+"har hängt sig, eller att din brevlådefil på servern har gått sönder av ett\n"
+"fel på servern.  Du kan köra ”fetchmail -v -v” för att diagnosticera\n"
+"problemet.\n"
 "\n"
-"Fetchmail 不会再查寻此邮箱中的邮件，除非您重启\n"
+"Fetchmail kommer inte kontrollera denna brevlåda igen förrän du startar om\n"
+"det.\n"
 
 #: driver.c:909
 #, c-format
 msgid "pre-connection command terminated with signal %d\n"
-msgstr "预连接命令终止，返回信号 %d\n"
+msgstr "föranslutningskommandot avslutades med signalen %d\n"
 
 #: driver.c:912
 #, c-format
 msgid "pre-connection command failed with status %d\n"
-msgstr "预连接命令失败，状态码 %d\n"
+msgstr "föranslutningskommandot misslyckades med status %d\n"
 
 #: driver.c:936
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
-msgstr "HESIOD pobox 中找不到 %s\n"
+msgstr "kunde inte hitta någon HESOID-pobox för %s\n"
 
 #: driver.c:957
 msgid "Lead server has no name.\n"
-msgstr "主服务器无名字。\n"
+msgstr "Ledande server har inget namn.\n"
 
 #: driver.c:984
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
-msgstr "无法找到规范的 %s (%s) 的 DNS 名称： %s\n"
+msgstr "kunde inte hitta ett kanoniskt DNS-namn på %s (%s): %s\n"
 
 #: driver.c:1031
 #, c-format
 msgid "%s connection to %s failed"
-msgstr "%s 连接至 %s 时失败"
+msgstr "%s-anslutning till %s misslyckades"
 
 #: driver.c:1059
 msgid "SSL connection failed.\n"
-msgstr "SSL 连接失败。\n"
+msgstr "SSL-anslutning misslyckades.\n"
 
 #: driver.c:1103
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
-msgstr "%s@%s 出现死锁错误\n"
+msgstr "Upptaget lås-fel på %s@%s\n"
 
 #: driver.c:1107
 #, c-format
 msgid "Server busy error on %s@%s\n"
-msgstr "%s@%s 出现服务器繁忙错误\n"
+msgstr "Server upptagen-fel på %s@%s\n"
 
 #: driver.c:1112
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
-msgstr "%s@%s%s 出现授权失败错误\n"
+msgstr "Auktoriseringsfel på %s@%s%s\n"
 
 #: driver.c:1115
 msgid " (previously authorized)"
-msgstr "(事先已授权)"
+msgstr " (tidigare auktoriserad)"
 
 #: driver.c:1118
 msgid "For help, see http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
-msgstr "寻求帮助请访问 http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
+msgstr "För hjälp, se http://www.fetchmail.info/fetchmail-FAQ.html#R15\n"
 
 #: driver.c:1139
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
-msgstr "主题: fetchmail 在 %s@%s 上验证失败"
+msgstr "Subject: fetchmail-autenticering misslyckades på %s@%s"
 
 #: driver.c:1143
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
-msgstr "Fetchmail 无法从 %s@%s 中获取邮件。\n"
+msgstr "Fetchmail kunde inte hämta post från %s@%s.\n"
 
 #: driver.c:1147
 msgid ""
@@ -251,10 +266,11 @@ msgid ""
 "that fetchmail cannot distinguish because the server didn't send a useful\n"
 "error message."
 msgstr ""
-"尝试获取授权时失败。\n"
-"由于我们已经成功获得本次连接的授权，但因为服务器无法给出有用的错误\n"
-"提示信息，因此这可能是另一种错误情况(比如服务器忙)，从而导致\n"
-" fetchmail 无法区分这些错误。"
+"Försöket att få auktorisation misslyckades.\n"
+"Eftersom vi redan tidigare har lyckats med att få auktorisation för denna\n"
+"anslutning är det förmodligen något annat felläge (såsom upptagen server)\n"
+"som fetchmail inte kan särskilja eftersom servern inte skickade något\n"
+"användbart felmeddelande."
 
 #: driver.c:1153
 msgid ""
@@ -268,11 +284,12 @@ msgid ""
 "is restored."
 msgstr ""
 "\n"
-"但是，如果您在开启 fetchmail 后台服务后确实改过帐户信息，那您必须\n"
-"先停止后台服务，然后修改您的 fetchmail 配置，最后再重启服务。\n"
+"Dock, om du HAR ändrat dina kontouppgifter sedan du startade fetchmail-\n"
+"demonen, behöver du stoppa demonen, ändra din konfiguration av fetchmail\n"
+"och sedan återstarta demonen.\n"
 "\n"
-"fetchmail 后台服务会继续运行并在每次被唤醒时尝试进行连接。除非\n"
-"服务重置，否则它不会再发送任何提示信息了。"
+"Fetchmail-demonen kommer fortsätta köra och försöka ansluta varje cykel.\n"
+"Inga fler meddelanden kommer att skickas förrän tjänsten är återställd."
 
 #: driver.c:1163
 msgid ""
@@ -285,181 +302,189 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"尝试获取授权时失败。\n"
-"这通常表明您的密码无效。但由于某些服务器在登录失败时不给出有用的\n"
-"错误信息，因此这就导致了 fetchmail 无法与其它的错误情况进行区分。\n"
+"Försöket att få auktorisation misslyckades.\n"
+"Detta betyder förmodligen att ditt lösenord är ogiltigt, men några servrar\n"
+"har andra fellägen som fetchmail inte kan särskilja från detta eftersom de\n"
+"inte skickar användbara felmeddelanden vid inloggningsfel.\n"
 "\n"
-"fetchmail 后台服务会继续运行并在每次被唤醒时尝试进行连接。除非服务\n"
-"重置，否则它不会再发送任何提示信息了。"
+"Fetchmail-demonen kommer fortsätta köra och försöka ansluta varje cykel.\n"
+"Inga fler meddelanden kommer att skickas förrän tjänsten är återställd."
 
 #: driver.c:1179
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
-msgstr "立即从 %s@%s 中重新收件\n"
+msgstr "Omkontrollera omedelbart på %s@%s\n"
 
 #: driver.c:1184
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
-msgstr "%s@%s 有未知的登录或验证错误\n"
+msgstr "Okänt inloggnings- eller autenticeringsfel på %s@%s\n"
 
 #: driver.c:1208
 #, c-format
 msgid "Authorization OK on %s@%s\n"
-msgstr "验证正确 %s@%s\n"
+msgstr "Auktorisationen OK på %s@%s\n"
 
 #: driver.c:1214
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
-msgstr "主题: fetchmail 验证正确 %s@%s"
+msgstr "Subject: fetchmail-auktorisation OK på %s@%s"
 
 #: driver.c:1218
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
-msgstr "Fetchmail 可登录 %s@%s。\n"
+msgstr "Fetchmail kunde logga in på %s@%s.\n"
 
 #: driver.c:1222
 msgid "Service has been restored.\n"
-msgstr "服务已经被重置。\n"
+msgstr "Tjänsten har återställts.\n"
 
 #: driver.c:1255
 #, c-format
 msgid "selecting or re-polling folder %s\n"
-msgstr "正在选择或重新检索邮箱 %s\n"
+msgstr "väljer eller kontrollerar om mappen %s\n"
 
 #: driver.c:1257
 msgid "selecting or re-polling default folder\n"
-msgstr "正在选择或重检默认邮箱\n"
+msgstr "väljer eller kontrollerar om standardmappen\n"
 
 #: driver.c:1269
 #, c-format
 msgid "%s at %s (folder %s)"
-msgstr "%s 在 %s (邮箱 %s)"
+msgstr "%s hos %s (mapp %s)"
 
 #: driver.c:1272 rcfile_y.y:411
 #, c-format
 msgid "%s at %s"
-msgstr "%s 在 %s"
+msgstr "%s hos %s"
 
 #: driver.c:1277
 #, c-format
 msgid "Polling %s\n"
-msgstr "正在检取 %s\n"
+msgstr "Kontrollerar %s\n"
 
 #: driver.c:1281
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
-msgstr[0] "%4$s 有 %1$d 封邮件 (%2$d %3$s)"
+msgstr[0] "%d meddelande (%d %s) till %s"
+msgstr[1] "%d meddelanden (%d %s) till %s"
 
 #: driver.c:1284
 msgid "seen"
 msgid_plural "seen"
-msgstr[0] "已读"
+msgstr[0] "sett"
+msgstr[1] "sedda"
 
 #: driver.c:1287
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
-msgstr[0] "%2$s 有 %1$d 封邮件"
+msgstr[0] "%d meddelande till %s"
+msgstr[1] "%d meddelanden till %s"
 
 #: driver.c:1294
 #, c-format
 msgid " (%d octets).\n"
-msgstr "(%d 字节)。\n"
+msgstr " (%d oktetter).\n"
 
 #: driver.c:1300
 #, c-format
 msgid "No mail for %s\n"
-msgstr "%s 无邮件\n"
+msgstr "Ingen post till %s\n"
 
 #: driver.c:1333
 msgid "bogus message count!"
-msgstr "发现无效邮件！"
+msgstr "felaktigt antal meddelanden!"
 
 #: driver.c:1385
 #, c-format
 msgid "Too many mails skipped (%d > %d) due to transient errors for %s\n"
 msgstr ""
+"Alltför många brev överhoppade (%d > %d) på grund av transienta fel med %s\n"
 
+# Detta och följande meddelanden fylls i %s i meddelandent
+# "%s error while fetching ..." nedan.  Jag tar med "fel" i första delen
+# för att få samman- och särskrivningar rätt.
 #: driver.c:1486
 msgid "socket"
-msgstr "套接口"
+msgstr "uttagsfel"
 
 #: driver.c:1489
 #, fuzzy
 msgid "missing or bad RFC822 header or command line option"
-msgstr "未找到或错误的 RFC822 协议头"
+msgstr "saknat eller felaktigt RFC822-huvud"
 
 #: driver.c:1492
 msgid "MDA"
-msgstr "MDA"
+msgstr "MDA-fel"
 
 #: driver.c:1495
 msgid "client/server synchronization"
-msgstr "客户端/服务器同步"
+msgstr "klient-/serversynkroniseringsfel"
 
 #: driver.c:1498
 msgid "client/server protocol"
-msgstr "客户端/服务器协议"
+msgstr "klient-/serverprotokollfel"
 
 #: driver.c:1501
 msgid "lock busy on server"
-msgstr "服务器死锁"
+msgstr "upptaget lås på servern"
 
 #: driver.c:1504
 msgid "SMTP transaction"
-msgstr "处理 SMTP"
+msgstr "SMTP-transaktionsfel"
 
 #: driver.c:1507
 msgid "DNS lookup"
-msgstr "查询 DNS"
+msgstr "DNS-uppslagningsfel"
 
 #: driver.c:1510
 msgid "undefined"
-msgstr "未定义"
+msgstr "odefinierat fel"
 
 #: driver.c:1516
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
-msgstr "从 %2$s@%3$s 收邮件并投递至 SMTP 主机 %4$s 时出现错误 %1$s\n"
+msgstr "%s under hämtande från %s@%s och leverans till SMTP-värden %s\n"
 
 #: driver.c:1518
 msgid "unknown"
-msgstr "未知"
+msgstr "okänd"
 
 #: driver.c:1520
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
-msgstr "从 %2$s@%3$s 收件时产生错误 %1$s\n"
+msgstr "%s under hämtande från %s@%s\n"
 
 #: driver.c:1532
 #, c-format
 msgid "post-connection command terminated with signal %d\n"
-msgstr "执行后续程序失败，返回信号 %d\n"
+msgstr "kommando efter anslutning avslutat med signal %d\n"
 
 #: driver.c:1534
 #, c-format
 msgid "post-connection command failed with status %d\n"
-msgstr "执行后续程序失败，状态码 %d\n"
+msgstr "kommando efter anslutning avslutades med status %d\n"
 
 #: driver.c:1553
 msgid "Kerberos V5 support not linked.\n"
-msgstr "未连接 Kerberos V5 支持\n"
+msgstr "Kerberos V5-stöd inte inlänkat.\n"
 
 #: driver.c:1564
 #, c-format
 msgid "Option --flush is not supported with %s\n"
-msgstr "%s 不支持 --flush 选项\n"
+msgstr "Flaggan --flush stödjs inte med %s\n"
 
 #: driver.c:1570
 #, c-format
 msgid "Option --all is not supported with %s\n"
-msgstr "%s 不支持 --all 选项\n"
+msgstr "Flaggan --all stödjs inte med %s\n"
 
 #: driver.c:1579
 #, c-format
 msgid "Option --limit is not supported with %s\n"
-msgstr "%s 不支持 --limit 选项\n"
+msgstr "Flaggan --limit stödjs inte med %s\n"
 
 #: env.c:50
 #, c-format
@@ -470,11 +495,12 @@ msgid ""
 "Try \"env QMAILINJECT= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
-"%s: 设置了 QMAILINJECT 环境变量。\n"
-"这很危险，由于它会引起 qmail-inject 或是 qmail 调用 sendmail，\n"
-"由此窜改您邮件头中的 From: 或是 Message-ID 字段。\n"
-"尝试用 “env QMAILINJECT= %s 您的参数”\n"
-"%s: 退出\n"
+"%s: Miljövariabeln QMAILINJECT är satt.\n"
+"Detta är farligt eftersom det kan få qmail-inject eller qmail:s sendmail-"
+"omslag\n"
+"att mixtra med dina From:- eller Message-ID:-huvuden.\n"
+"Prova \"env QMAILINJECT= %s DINA ARGUMENT HÄR\"\n"
+"%s: Avbryt.\n"
 
 #: env.c:62
 #, c-format
@@ -486,30 +512,31 @@ msgid ""
 "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
-"%s: 设置了 NULLMAILER_FLAGS 环境变量。\n"
-"这很危险，由于它会引起 nullmailer-inject 或是 nullmailer 调用\n"
-"sendmail，由此窜改您邮件头中的 From: ，Message-ID 或是\n"
-"Return-Path:字段。尝试用 “env NULLMAILER_FLAGS= %s  您的参数”\n"
-"%s: 退出\n"
+"%s: Miljövariabeln NULLMAILER_FLAGS är satt.\n"
+"Detta är farligt eftersom det kan få nullmailer-inject eller nullmailer:s\n"
+"sendmail-omslag att mixtra med dina From:-, Message-ID:- eller\n"
+"Return-Path:-huvuden.\n"
+"Prova \"env NULLMAILER_FLAGS= %s DINA ARGUMENT HÄR\"\n"
+"%s: Avbryt.\n"
 
 #: env.c:74
 #, c-format
 msgid "%s: You don't exist.  Go away.\n"
-msgstr "%s: 不存在您的用户名，退出\n"
+msgstr "%s: Du finns inte.  Försvinn.\n"
 
 #: env.c:138
 #, c-format
 msgid "%s: can't determine your host!"
-msgstr "%s: 无法确认您的主机!"
+msgstr "%s: kan inte avgöra din värd!"
 
 #: env.c:161
 #, c-format
 msgid "gethostbyname failed for %s\n"
-msgstr "%s 主机上 gethostbyname 函数出错\n"
+msgstr "gethostbyname misslyckades för %s\n"
 
 #: env.c:163
 msgid "Cannot find my own host in hosts database to qualify it!\n"
-msgstr "无法在主机数据库中找到自己的主机来验证它！\n"
+msgstr "Kan inte hitta men egen värd i värddatabasen för att precisera den!\n"
 
 #: env.c:167
 msgid ""
@@ -518,73 +545,73 @@ msgid ""
 "problems!\n"
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
-"正在尝试用未验证的主机名继续操作。\n"
-"不要报告类似于 Received:，HELO/EHLO 邮件头损坏等问题！\n"
-"确保您已修正了 /etc/hosts，DNS，NIS 或者 LDAP。\n"
+"Försöker fortsätta med opreciserat värdnamn.\n"
+"Rapportera INTE trasiga Received:-huvuden, HELO/EHLO-rader eller liknande\n"
+"problem!  REPARERA din /etc/hosts, DNS, NIS eller LDAP istället.\n"
 
 #: etrn.c:46 odmr.c:51
 #, c-format
 msgid "%s's SMTP listener does not support ESMTP\n"
-msgstr "%s 的 SMTP 端不支持 ESMTP\n"
+msgstr "%s:s SMTP-lyssnare stödjer inte ESMTP\n"
 
 #: etrn.c:52
 #, c-format
 msgid "%s's SMTP listener does not support ETRN\n"
-msgstr "%s 的 SMTP 端不支持 ETRN\n"
+msgstr "%s:s SMTP-lyssnare stödjer inte ETRN\n"
 
 #: etrn.c:76
 #, c-format
 msgid "Queuing for %s started\n"
-msgstr "开始对 %s 进行排队处理\n"
+msgstr "Kökörning för %s startad\n"
 
 #: etrn.c:81
 #, c-format
 msgid "No messages waiting for %s\n"
-msgstr "不存在等待 %s 的邮件\n"
+msgstr "Inga meddelanden väntar för %s\n"
 
 #: etrn.c:87
 #, c-format
 msgid "Pending messages for %s started\n"
-msgstr "对 %s 进行挂起邮件处理\n"
+msgstr "Väntande meddelanden för %s startade\n"
 
 #: etrn.c:91
 #, c-format
 msgid "Unable to queue messages for node %s\n"
-msgstr "无法对 %s 节点进行邮件排队\n"
+msgstr "Kan inte köa meddelanden för noden %s\n"
 
 #: etrn.c:95
 #, c-format
 msgid "Node %s not allowed: %s\n"
-msgstr "不允许节点 %s: %s\n"
+msgstr "Noden %s är inte tillåten: %s\n"
 
 #: etrn.c:99
 msgid "ETRN syntax error\n"
-msgstr "ETRN 语法错误\n"
+msgstr "ETRN-syntaxfel\n"
 
 #: etrn.c:103
 msgid "ETRN syntax error in parameters\n"
-msgstr "ETRN 的参数中有语法错误\n"
+msgstr "ETRN-syntaxfel i parametrar\n"
 
 #: etrn.c:107
 #, c-format
 msgid "Unknown ETRN error %d\n"
-msgstr "未知的 ETRN 错误 %d\n"
+msgstr "Okänt ETRN-fel %d\n"
 
 #: etrn.c:151
 msgid "Option --keep is not supported with ETRN\n"
-msgstr "ETRN 不支持 --keep 选项\n"
+msgstr "Flaggan --keep stödjs inte med ETRN\n"
 
 #: etrn.c:155
 msgid "Option --flush is not supported with ETRN\n"
-msgstr "ETRN 不支持 --flush 选项\n"
+msgstr "Flaggan --flush stödjs inte med ETRN\n"
 
 #: etrn.c:159
 msgid "Option --folder is not supported with ETRN\n"
-msgstr "ETRN 不支持 --folder 选项\n"
+msgstr "Flaggan --folder stödjs inte med ETRN\n"
 
 #: etrn.c:163
 msgid "Option --check is not supported with ETRN\n"
-msgstr "ETRN 不支持 --check 选项\n"
+msgstr "Flaggan --check stödjs inte med ETRN\n"
 
 #: fetchmail.c:133
 #, fuzzy
@@ -595,11 +622,11 @@ msgid ""
 "Copyright (C) 2005 - 2006, 2010 - 2012 Sunil Shetye\n"
 "Copyright (C) 2005 - 2012 Matthias Andree\n"
 msgstr ""
-"版权所有 (C) 2002, 2003 Eric S. Raymond\n"
-"版权所有 (C) 2004 Matthias Andree, Eric S. Raymond,\n"
-"                   Robert M. Funk, Graham Wilson\n"
-"版权所有 (C) 2005 - 2006, 2010 Sunil Shetye\n"
-"版权所有 (C) 2005 - 2010 Matthias Andree\n"
+"Copyright © 2002, 2003 Eric S. Raymond\n"
+"Copyright © 2004 Matthias Andree, Eric S. Raymond,\n"
+"                 Robert M. Funk, Graham Wilson\n"
+"Copyright © 2005 - 2006, 2010 - 2011 Sunil Shetye\n"
+"Copyright © 2005 - 2011 Matthias Andree\n"
 
 #: fetchmail.c:139
 msgid ""
@@ -607,14 +634,14 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
-"Fetchmail 绝对不含任何保证。这是自由软件，而您被鼓励在一定条件下\n"
-"重新分发它。\n"
-"详情请看源文件或是文档目录中的 COPYING 部分。\n"
+"Fetchmail kommer UTAN NÅGON GARANTI.  Detta är fri programvara, och du\n"
+"får gärna vidaredistribuera den under vissa villkor.  För detaljer, se\n"
+"filen COPYING i källkoden eller dokumentationskatalogen.\n"
 
 #: fetchmail.c:155
 #, fuzzy, c-format
 msgid "pwmd: error %i: %s\n"
-msgstr "GSSAPI 错误 %s: %.*s\n"
+msgstr "GSSAPI-fel %s: %.*s\n"
 
 #: fetchmail.c:251
 #, c-format
@@ -644,70 +671,72 @@ msgstr ""
 #: fetchmail.c:399
 #, fuzzy, c-format
 msgid "pwmd: %s->%s->sslfingerprint: %s\n"
-msgstr "%s 密钥指纹: %s\n"
+msgstr "%s nyckelfingeravtryck: %s\n"
 
 #: fetchmail.c:455
 msgid "WARNING: Running as root is discouraged.\n"
-msgstr "警告: 不提倡以 root 身份运行\n"
+msgstr "VARNING: Det avrådes från att köra som root.\n"
 
 #: fetchmail.c:467
 msgid "fetchmail: invoked with"
-msgstr "fetchmail: 调用参数"
+msgstr "fetchmail: startad med"
 
 #: fetchmail.c:491
 msgid "could not get current working directory\n"
-msgstr "无法得到当前工作目录\n"
+msgstr "kunde inte få tag i aktuell arbetskatalog\n"
 
 #: fetchmail.c:556
 #, c-format
 msgid "This is fetchmail release %s"
-msgstr "这是 fetchmail 发行版 %s"
+msgstr "Detta är fetchmail utgåva %s"
 
 #: fetchmail.c:667
 #, c-format
 msgid "Taking options from command line%s%s\n"
-msgstr "正从命令行获得选项 %s%s\n"
+msgstr "Hämtar flaggor från kommandoraden%s%s\n"
 
 #: fetchmail.c:668
 msgid " and "
-msgstr "和"
+msgstr " och "
 
 #: fetchmail.c:673
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
-msgstr "未设置邮件服务器 -- 可能未找到 %s？\n"
+msgstr "Inga postservrar uppsatta — kanske %s saknas?\n"
 
 #: fetchmail.c:694
 msgid "fetchmail: no mailservers have been specified.\n"
-msgstr "fetchmail: 未指定邮件服务器\n"
+msgstr "fetchmail: inga postservrar har angivits.\n"
 
 #: fetchmail.c:706
 msgid "fetchmail: no other fetchmail is running\n"
-msgstr "fetchmail: 无其它 fetchmail 正在运行\n"
+msgstr "fetchmail: ingen annan fetchmail kör\n"
 
 #: fetchmail.c:712
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %ld; bailing out.\n"
-msgstr "fetchmail: 终止 %s fetchmail 进程号 %ld 时出错；退出。\n"
+msgstr "fetchmail: fel när %s-fetchmail %ld dödades; ger upp.\n"
 
 #: fetchmail.c:713 fetchmail.c:722
 msgid "background"
-msgstr "后台"
+msgstr "bakgrunds"
 
 #: fetchmail.c:713 fetchmail.c:722
 msgid "foreground"
-msgstr "前台"
+msgstr "förgrunds"
 
 #: fetchmail.c:721
 #, c-format
 msgid "fetchmail: %s fetchmail at %ld killed.\n"
-msgstr "fetchmail: %s fetchmail 进程号 %ld 终止。\n"
+msgstr "fetchmail: %s-fetchmail %ld dödad.\n"
 
 #: fetchmail.c:744
 msgid ""
 "fetchmail: can't check mail while another fetchmail to same host is "
 "running.\n"
-msgstr "fetchmail: 有另一个 fetchmail 在同一主机上运行时无法检查邮件。\n"
+msgstr ""
+"fetchmail: kan inte kontrollera post medan en annan fetchmail på samma värd "
+"kör.\n"
 
 #: fetchmail.c:750
 #, c-format
@@ -715,199 +744,207 @@ msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at "
 "%ld.\n"
 msgstr ""
-"fetchmail: 有另一个 fetchmail 进程号 %ld 在指定主机上运行时无法收邮件。\n"
+"fetchmail: kan inte kontrollera angivna värdar med en annan fetchmail som "
+"kör som %ld.\n"
 
 #: fetchmail.c:757
 #, c-format
 msgid "fetchmail: another foreground fetchmail is running at %ld.\n"
-msgstr "fetchmail: 另一个前台 fetchmail 进程号 %ld 正在运行。\n"
+msgstr "fetchmail: en annan förgrunds-fetchmail kör som %ld.\n"
 
 #: fetchmail.c:767
 msgid ""
 "fetchmail: can't accept options while a background fetchmail is running.\n"
-msgstr "fetchmail: 有后台 fetchmail 正在运行时无法接受选项\n"
+msgstr "fetchmail: kan inte ta flaggor medan en bakgrunds-fetchmail kör.\n"
 
 #: fetchmail.c:779
 #, c-format
 msgid "fetchmail: background fetchmail at %ld awakened.\n"
-msgstr "fetchmail: 后台 fetchmail 进程号 %ld 被唤醒\n"
+msgstr "fetchmail: bakgrunds-fetchmail %ld uppväckt.\n"
 
 #: fetchmail.c:791
 #, c-format
 msgid "fetchmail: elder sibling at %ld died mysteriously.\n"
-msgstr "fetchmail: 上次 fetchmail 进程号 %ld 不明原因的终止\n"
+msgstr "fetchmail: äldre syskon %ld dog mystiskt.\n"
 
 #: fetchmail.c:806
 #, c-format
 msgid "fetchmail: can't find a password for %s@%s.\n"
-msgstr "fetchmail: 无法找到 %s@%s 的密码\n"
+msgstr "fetchmail: kan inte hitta ett lösenord för %s@%s.\n"
 
 #: fetchmail.c:810
 #, c-format
 msgid "Enter password for %s@%s: "
-msgstr "输入 %s@%s 的密码:"
+msgstr "Ange lösenord för %s@%s: "
 
 #: fetchmail.c:852
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: 无法转入后台。退出\n"
+msgstr "fetchmail: Kan inte koppla ifrån till bakgrunden.  Avbryter.\n"
 
 #: fetchmail.c:856
 #, c-format
 msgid "starting fetchmail %s daemon\n"
-msgstr "开启 fetchmail %s 后台服务\n"
+msgstr "startar fetchmail %s-demon\n"
 
 #: fetchmail.c:872 fetchmail.c:874
 #, c-format
 msgid "could not open %s to append logs to\n"
-msgstr "无法打开 %s 添加记录\n"
+msgstr "kunde inte öppna %s för att lägga till loggar till\n"
 
 #: fetchmail.c:876
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
-msgstr "fetchmail: 警告: 设置了 syslog 和 logfile。通过两者查看记录！\n"
+msgstr ""
+"fetchmail: Varning: syslog och logfile angivna.  Kontrollera båda efter "
+"loggar!\n"
 
 #: fetchmail.c:895
 msgid "--check mode enabled, not fetching mail\n"
-msgstr "开启 --check 模式, 而非真正取回邮件\n"
+msgstr "--check-läge aktiverat, hämtar inte post\n"
 
 #: fetchmail.c:922
-#, fuzzy, c-format
+#, c-format
 msgid "couldn't time-check %s (error %d)\n"
-msgstr "无法时限检测 %s (错误号 %d)\n"
+msgstr "kunde inte tidskontrollera %s (fel %d)\n"
 
 #: fetchmail.c:935
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
-msgstr "正在重启 fetchmail (%s 改变了)\n"
+msgstr "startar om fetchmail (%s ändrades)\n"
 
 #: fetchmail.c:940
 msgid "attempt to re-exec may fail as directory has not been restored\n"
-msgstr "由于目录尚未重置，因此重新执行的尝试可能失败\n"
+msgstr ""
+"försök att starta om kan misslyckas eftersom aktuell katalog inte har "
+"återställts\n"
 
 #: fetchmail.c:967
 msgid "attempt to re-exec fetchmail failed\n"
-msgstr "重新执行 fetchmail 的尝试失败了\n"
+msgstr "försök att göra om exec fetchmail misslyckades\n"
 
 #: fetchmail.c:997
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
-msgstr "忽略收取 %s 的邮件 (验证失败或多次超时)\n"
+msgstr ""
+"kontroll av %s hoppas över (autenticeringen misslyckades eller så gick tiden "
+"ut för många gånger)\n"
 
 #: fetchmail.c:1009
 #, c-format
 msgid "interval not reached, not querying %s\n"
-msgstr "时间间隔未到，不查寻 %s \n"
+msgstr "intervallet inte uppnått, frågar inte %s\n"
 
 #: fetchmail.c:1060
 msgid "Query status=0 (SUCCESS)\n"
-msgstr "查询状态=0 (成功)\n"
+msgstr "Frågestatus=0 (LYCKAT)\n"
 
 #: fetchmail.c:1062
 msgid "Query status=1 (NOMAIL)\n"
-msgstr "查询状态=1 (无邮件)\n"
+msgstr "Frågestatus=1 (INGEN_POST)\n"
 
 #: fetchmail.c:1064
 msgid "Query status=2 (SOCKET)\n"
-msgstr "查询状态=2 (套接字输入输出错误)\n"
+msgstr "Frågestatus=2 (UTTAG)\n"
 
 #: fetchmail.c:1066
 msgid "Query status=3 (AUTHFAIL)\n"
-msgstr "查询状态=3 (用户验证失败)\n"
+msgstr "Frågestatus=3 (AUT_MISSLYCKANDE)\n"
 
 #: fetchmail.c:1068
 msgid "Query status=4 (PROTOCOL)\n"
-msgstr "查询状态=4 (协议无效)\n"
+msgstr "Frågestatus=4 (PROTOKOLL)\n"
 
 #: fetchmail.c:1070
 msgid "Query status=5 (SYNTAX)\n"
-msgstr "查询状态=5 (命令行语法错误)\n"
+msgstr "Frågestatus=5 (SYNTAX)\n"
 
 #: fetchmail.c:1072
 msgid "Query status=6 (IOERR)\n"
-msgstr "查询状态=6 (配置文件权限错误)\n"
+msgstr "Frågestatus=6 (IO_FEL)\n"
 
 #: fetchmail.c:1074
 msgid "Query status=7 (ERROR)\n"
-msgstr "查询状态=7 (协议错误)\n"
+msgstr "Frågestatus=7 (FEL)\n"
 
 #: fetchmail.c:1076
 msgid "Query status=8 (EXCLUDE)\n"
-msgstr "查询状态=8 (客户端受到排斥)\n"
+msgstr "Frågestatus=8 (UTESLUT)\n"
 
 #: fetchmail.c:1078
 msgid "Query status=9 (LOCKBUSY)\n"
-msgstr "查询状态=9 (服务器死锁)\n"
+msgstr "Frågestatus=9 (LÅS_UPPTAGET)\n"
 
 #: fetchmail.c:1080
 msgid "Query status=10 (SMTP)\n"
-msgstr "查询状态=10 (SMTP 错误)\n"
+msgstr "Frågestatus=10 (SMTP)\n"
 
 #: fetchmail.c:1082
 msgid "Query status=11 (DNS)\n"
-msgstr "查询状态=11 (DNS 错误)\n"
+msgstr "Frågestatu=11 (DNS)\n"
 
 #: fetchmail.c:1084
 msgid "Query status=12 (BSMTP)\n"
-msgstr "查询状态=12 (无法打开批量输出)\n"
+msgstr "Frågestatus=12 (BSMTP)\n"
 
 #: fetchmail.c:1086
 msgid "Query status=13 (MAXFETCH)\n"
-msgstr "查询状态=13 (到达收件上限)\n"
+msgstr "Frågestatus=13 (MAX_HÄMTA)\n"
 
 #: fetchmail.c:1088
 #, c-format
 msgid "Query status=%d\n"
-msgstr "查询状态=%d\n"
+msgstr "Frågestatus=%d\n"
 
 #: fetchmail.c:1137
 msgid "All connections are wedged.  Exiting.\n"
-msgstr "所有连接堵塞。退出\n"
+msgstr "Alla anslutningar har fastnat.  Avslutar.\n"
 
 #: fetchmail.c:1145
 #, c-format
 msgid "sleeping at %s for %d seconds\n"
-msgstr "在 %s 休眠 %d 秒\n"
+msgstr "sover vid %s i %d sekunder\n"
 
 #: fetchmail.c:1169
 #, c-format
 msgid "awakened by %s\n"
-msgstr "通过信号 %s 唤醒\n"
+msgstr "väckt av %s\n"
 
 #: fetchmail.c:1172
 #, c-format
 msgid "awakened by signal %d\n"
-msgstr "通过信号 %d 唤醒\n"
+msgstr "väckt av signal %d\n"
 
 #: fetchmail.c:1180
 #, c-format
 msgid "awakened at %s\n"
-msgstr "在 %s 被唤醒\n"
+msgstr "väckt vid %s\n"
 
 #: fetchmail.c:1185
 #, c-format
 msgid "normal termination, status %d\n"
-msgstr "正常结束，返回值 %d\n"
+msgstr "normal avslutning, status %d\n"
 
 #: fetchmail.c:1344
-#, fuzzy
 msgid "couldn't time-check the run-control file\n"
-msgstr "无法对 run-control 文件进行时限检测\n"
+msgstr "kunde göra tidskontroll av körstyrningsfilen\n"
 
 #: fetchmail.c:1368
 #, fuzzy, c-format
 msgid ""
 "fetchmail: %s configuration invalid, pwmd_file requires a protocol "
 "specification\n"
-msgstr "fetchmail: %s 配置无效，RPOP 要求开放一个特许端口\n"
+msgstr ""
+"fetchmail: %s-konfigurationen är ogiltig, RPOP kräver en priviligierad port\n"
 
 #: fetchmail.c:1406
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
-msgstr "警告: 在配置文件中多次提及主机 %s\n"
+msgstr "Varning: värden %s nämns flera gånger i konfigurationsfilen\n"
 
 #: fetchmail.c:1416
 #, fuzzy, c-format
 msgid "%s configuration invalid, pwmd_file requires a protocol specification\n"
-msgstr "fetchmail: %s 配置无效，RPOP 要求开放一个特许端口\n"
+msgstr ""
+"fetchmail: %s-konfigurationen är ogiltig, RPOP kräver en priviligierad port\n"
 
 #: fetchmail.c:1447
 msgid "Option --pwmd-file needs a service (-p) parameter.\n"
@@ -915,663 +952,696 @@ msgstr ""
 
 #: fetchmail.c:1490
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
-msgstr "fetchmail: 错误: 在配置文件中有多个 “default” 记录。\n"
+msgstr "fetchmail: Fel: flera ”defaults”-poster i konfigurationsfilen.\n"
 
 #: fetchmail.c:1610
 msgid "SSL support is not compiled in.\n"
-msgstr "SSL 支持未编译在内\n"
+msgstr "SSL-stöd är inte inkompilerat.\n"
 
 #: fetchmail.c:1617
 msgid "KERBEROS v5 support is configured, but not compiled in.\n"
-msgstr "设置了 KERBEROS v5 支持，但未编译在内\n"
+msgstr "KERBEROS v5-stöd är konfigurerat, men inte inkompilerat.\n"
 
 #: fetchmail.c:1623
 msgid "GSSAPI support is configured, but not compiled in.\n"
-msgstr "设置了 GSSAPI 支持，但未编译在内\n"
+msgstr "GSSAPI-stöd är konfigurerat, men inte inkompilerat.\n"
 
 #: fetchmail.c:1655
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
-msgstr "警告: %s 设置了多投邮件，需设置 envelope 选项！\n"
+msgstr "varning: flera mål för %s kräver kuvertalternativ!\n"
 
 #: fetchmail.c:1656
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
-msgstr "警告: 如果所有邮件均被邮件管理员收取，不要寻求支持！\n"
+msgstr "varning: Fråga inte om hjälp om all post går till postmaster!\n"
 
 #: fetchmail.c:1673
 #, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
 "service or port\n"
-msgstr "fetchmail: %s 配置无效，为服务或端口指定大于零的端口\n"
+msgstr ""
+"fetchmail: %s-konfigurationen är ogiltig, ange ett positivt portnummer som "
+"tjänst eller port\n"
 
 #: fetchmail.c:1691
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
-msgstr "%s 配置无效，LMTP 不能用默认的 SMTP 端口\n"
+msgstr ""
+"%s-konfigurationen är ogiltig, LMTP kan inte använda standard-SMTP-porten\n"
 
 #: fetchmail.c:1705
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
-msgstr "收取所有邮件并保留服务器上的备份或使用 idle 模式是错误的！\n"
+msgstr ""
+"Både fetchall och keep på i demon- eller vilande läge är ett misstag!\n"
 
 #: fetchmail.c:1730
 #, c-format
 msgid "terminated with signal %d\n"
-msgstr "以信号 %d 终止\n"
+msgstr "avslutad med signal %d\n"
 
 #: fetchmail.c:1796
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
-msgstr "%1$s 在 %4$s 查寻 %2$s (协议 %3$s): 收件开始\n"
+msgstr "%s frågar %s (protokoll %s) %s: kontroll startad\n"
 
 #: fetchmail.c:1823
 msgid "POP3 support is not configured.\n"
-msgstr "未设置 POP3 支持\n"
+msgstr "POP3-stöd är inte konfigurerat.\n"
 
 #: fetchmail.c:1833
 msgid "IMAP support is not configured.\n"
-msgstr "未设置 IMAP 支持\n"
+msgstr "IMAP-stöd är inte konfigurerat.\n"
 
 #: fetchmail.c:1839
 msgid "ETRN support is not configured.\n"
-msgstr "未设置 ETRN 支持\n"
+msgstr "ETRN-stöd är inte konfigurerat.\n"
 
 #: fetchmail.c:1847
 msgid "ODMR support is not configured.\n"
-msgstr "未设置 ODMR 支持\n"
+msgstr "ODMR-stöd är inte konfigurerat.\n"
 
 #: fetchmail.c:1854
 msgid "unsupported protocol selected.\n"
-msgstr "选中了不支持的协议\n"
+msgstr "ej stött protokoll valt.\n"
 
 #: fetchmail.c:1864
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
-msgstr "%1$s 在 %4$s 查询 %2$s (协议 %3$s): 收件完成\n"
+msgstr "%s frågar %s (protokoll %s) %s: kontroll avslutad\n"
 
 #: fetchmail.c:1889
 #, c-format
 msgid "Poll interval is %d seconds\n"
-msgstr "收件间隔 %d 秒\n"
+msgstr "Kontrollintervall är %d sekunder\n"
 
 #: fetchmail.c:1891
 #, c-format
 msgid "Logfile is %s\n"
-msgstr "日志文件为 %s\n"
+msgstr "Loggfil är %s\n"
 
 #: fetchmail.c:1893
 #, c-format
 msgid "Idfile is %s\n"
-msgstr "Idfile 文件为 %s\n"
+msgstr "Id-fil är %s\n"
 
 #: fetchmail.c:1895
 msgid "Progress messages will be logged via syslog\n"
-msgstr "邮件情况将通过 syslog 来记录\n"
+msgstr "Förloppsmeddelanden kommer loggas via syslog\n"
 
 #: fetchmail.c:1897
 msgid "Fetchmail will masquerade and will not generate Received\n"
-msgstr "Fetchmail 将进行伪装且不会生成 Receiverd 部分\n"
+msgstr "Fetchmail kommer maskeras och kommer inte generera Received\n"
 
 #: fetchmail.c:1899
 msgid "Fetchmail will show progress dots even in logfiles.\n"
-msgstr "Fetchmail 将在日志文件中显示进度条(以点的形式)\n"
+msgstr "Fetchmail kommer visa förloppspunkter även i loggfiler.\n"
 
 #: fetchmail.c:1901
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
-msgstr "Fetchmail 将转发地址错误的多投邮件给 %s。\n"
+msgstr ""
+"Fetchmail kommer vidarebefodra feladresserade multiadresserade meddelanden "
+"till %s.\n"
 
 #: fetchmail.c:1905
 msgid "Fetchmail will direct error mail to the postmaster.\n"
-msgstr "Fetchmail 将把错误邮件转给邮件管理员\n"
+msgstr "Fetchmail kommer skicka felmeddelanden till postmaster.\n"
 
 #: fetchmail.c:1907
 msgid "Fetchmail will direct error mail to the sender.\n"
-msgstr "Fetchmail 将把错误邮件退给发送者\n"
+msgstr "Fetchmail kommer skicka felmeddelanden till avsändaren.\n"
 
 #: fetchmail.c:1910
 msgid "Fetchmail will treat permanent errors as permanent (drop messages).\n"
-msgstr "Fetchmail 将把长期错误当成不可恢复的错误(删除邮件)。\n"
+msgstr ""
+"Fetchmail kommer hantera permanenta fel som permanenta (kasta meddelanden).\n"
 
 #: fetchmail.c:1912
 msgid "Fetchmail will treat permanent errors as temporary (keep messages).\n"
-msgstr "Fetchmail 将把惯性错误当成临时问题(保留邮件)。\n"
+msgstr ""
+"Fetchmail kommer hantera permanenta fel som tillfälliga (behålla "
+"meddelanden).\n"
 
 #: fetchmail.c:1919
 #, c-format
 msgid "Options for retrieving from %s@%s:\n"
-msgstr "从 %s@%s 收件时的选项:\n"
+msgstr "Alternativ för att hämta från %s@%s:\n"
 
 #: fetchmail.c:1923
 #, c-format
 msgid "  Mail will be retrieved via %s\n"
-msgstr " 邮件将通过 %s 收取\n"
+msgstr "  Post kommer hämtas via %s\n"
 
 #: fetchmail.c:1926
 #, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
-msgstr[0] "每隔 %d 秒将收取此服务器中的邮件\n"
+msgstr[0] "  Kontroll av denna server kommer ske varje intervall.\n"
+msgstr[1] "  Kontroll av denna server kommer ske var %d:e intervall.\n"
 
 #: fetchmail.c:1930
 #, c-format
 msgid "  True name of server is %s.\n"
-msgstr " 服务器的实名为 %s。\n"
+msgstr "  Verkligt namn på servern är %s.\n"
 
 #: fetchmail.c:1933
 msgid "  This host will not be queried when no host is specified.\n"
-msgstr " 若不指明主机将不查询此主机\n"
+msgstr "  Denna värd kommer inte att frågas när ingen värd anges.\n"
 
 #: fetchmail.c:1934
 msgid "  This host will be queried when no host is specified.\n"
-msgstr " 若不指明主机将查询此主机\n"
+msgstr "  Denna värd kommer att frågas när ingen värd anges.\n"
 
 #: fetchmail.c:1938
 msgid "  Password will be prompted for.\n"
-msgstr "密码会被提示\n"
+msgstr "  Lösenord kommer att efterfrågas.\n"
 
 #: fetchmail.c:1941
 #, c-format
 msgid "  Password = \"%s\".\n"
-msgstr " 密码 = “%s”\n"
+msgstr "  Lösenord = ”%s”.\n"
 
 #: fetchmail.c:1949
 #, c-format
 msgid "  Protocol is KPOP with Kerberos %s authentication"
-msgstr " 协议是带有 Kerberos %s 认证协议的 KPOP"
+msgstr "  Protokoll är KPOP med Kerberos %s-autenticering"
 
 #: fetchmail.c:1952
 #, c-format
 msgid "  Protocol is %s"
-msgstr " 协议是 %s"
+msgstr "  Protokoll är %s"
 
 #: fetchmail.c:1954
 #, c-format
 msgid " (using service %s)"
-msgstr " (正在使用服务 %s)"
+msgstr " (använder tjänst %s)"
 
 #: fetchmail.c:1956
 msgid " (using default port)"
-msgstr " (正在使用默认端口)"
+msgstr " (använder standardport)"
 
 #: fetchmail.c:1962
 msgid "  All available authentication methods will be tried.\n"
-msgstr " 将尝试所有有效的验证方式\n"
+msgstr "  Alla tillgängliga autenticeringsmetoder kommer att provas.\n"
 
 #: fetchmail.c:1965
 msgid "  Password authentication will be forced.\n"
-msgstr " 强制密码验证\n"
+msgstr "  Lösenordsautenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1968
 msgid "  MSN authentication will be forced.\n"
-msgstr " 强制 MSN 验证\n"
+msgstr "  MSN-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1971
 msgid "  NTLM authentication will be forced.\n"
-msgstr " 强制 NTLM 验证\n"
+msgstr "  NTLM-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1974
 msgid "  OTP authentication will be forced.\n"
-msgstr " 强制 OTP 验证\n"
+msgstr "  OTP-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1977
 msgid "  CRAM-MD5 authentication will be forced.\n"
-msgstr " 强制 CRAM-MD5 验证\n"
+msgstr "  CRAM-MD5-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1980
 msgid "  GSSAPI authentication will be forced.\n"
-msgstr " 强制 GSSAPI 验证\n"
+msgstr "  GSSAPI-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1983
 msgid "  Kerberos V5 authentication will be forced.\n"
-msgstr " 强制 Kerberos V5 验证\n"
+msgstr "  Kerberos V5-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1986
 msgid "  End-to-end encryption assumed.\n"
-msgstr " 假设为终端到终端加密\n"
+msgstr "  Ände-till-ände-kryptering antas.\n"
 
 #: fetchmail.c:1989
 #, fuzzy
 msgid "  APOP authentication will be forced.\n"
-msgstr " 强制 OTP 验证\n"
+msgstr "  OTP-autenticering kommer framtvingas.\n"
 
 #: fetchmail.c:1995
 #, c-format
 msgid "  Mail service principal is: %s\n"
-msgstr " 邮件服务协议验证方为: %s\n"
+msgstr "  Posttjänsthuvudman är %s\n"
 
 #: fetchmail.c:1998
 msgid "  SSL encrypted sessions enabled.\n"
-msgstr "启用 SSL 加密会话\n"
+msgstr "  SSL-krypterade sessioner aktiverade.\n"
 
 #: fetchmail.c:2000
 #, c-format
 msgid "  SSL protocol: %s.\n"
-msgstr " SSL 协议: %s\n"
+msgstr "  SSL-protokoll: %s.\n"
 
 #: fetchmail.c:2002
 msgid "  SSL server certificate checking enabled.\n"
-msgstr " 启用 SSL 服务器证书检查\n"
+msgstr "  Kontroll av SSL-servercertifikat aktiverat.\n"
 
 #: fetchmail.c:2005
 #, c-format
 msgid "  SSL trusted certificate file: %s\n"
-msgstr " SSL 受信证书文件: %s\n"
+msgstr "  Fil med betrott SSL-certifikat: %s\n"
 
 #: fetchmail.c:2007
 #, c-format
 msgid "  SSL trusted certificate directory: %s\n"
-msgstr " SSL 受信证书目录: %s\n"
+msgstr "  Katalog för betrodda SSL-certifikat: %s\n"
 
 #: fetchmail.c:2009
 #, c-format
 msgid "  SSL server CommonName: %s\n"
-msgstr "  SSL 服务器名: %s\n"
+msgstr "  SSL-serverns CommonName: %s\n"
 
 #: fetchmail.c:2011
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
-msgstr " SSL 密钥指纹 (与服务器密钥对比过): %s\n"
+msgstr "  SSL-nyckelns fingeravtryck (kontrollerat mot servernyckeln): %s\n"
 
 #: fetchmail.c:2014
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
-msgstr " 服务器未响应，超时 %d 秒"
+msgstr "  Serverns tidsgräns för uteblivet svar är %d sekunder"
 
 #: fetchmail.c:2016
 msgid " (default).\n"
-msgstr " (默认)。\n"
+msgstr " (standard).\n"
 
 #: fetchmail.c:2023
 msgid "  Default mailbox selected.\n"
-msgstr " 已选中默认邮箱。\n"
+msgstr "  Standardpostlåda vald.\n"
 
 #: fetchmail.c:2028
 msgid "  Selected mailboxes are:"
-msgstr " 选中的邮箱是:"
+msgstr "  Valda postlådor är:"
 
 #: fetchmail.c:2034
 msgid "  All messages will be retrieved (--all on).\n"
-msgstr " 收取所有邮件( --all 选项开启).\n"
+msgstr "  Alla meddelanden kommer att hämtas (--all på).\n"
 
 #: fetchmail.c:2035
 msgid "  Only new messages will be retrieved (--all off).\n"
-msgstr " 只收取新邮件( --all 选项关闭).\n"
+msgstr "  Endast nya meddelanden kommer att hämtas (--all av).\n"
 
 #: fetchmail.c:2037
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
-msgstr " 收取的邮件会在服务器上保留副本( --keep 开启).\n"
+msgstr "  Hämtade meddelanden kommer att sparas på servern (--keep på).\n"
 
 #: fetchmail.c:2038
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
-msgstr " 收取的邮件不会保留在服务器上( --keep 关闭).\n"
+msgstr "  Hämtade meddelanden kommer inte att sparas på servern (--keep av).\n"
 
 #: fetchmail.c:2040
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
-msgstr " 在收取新邮件前删除旧邮件(--flush 开启).\n"
+msgstr ""
+"  Gamla meddelanden kommer kastas före meddelanden hämtas (--flush på).\n"
 
 #: fetchmail.c:2041
 msgid ""
 "  Old messages will not be flushed before message retrieval (--flush off).\n"
-msgstr " 在收取新邮件前不删除旧邮件(--flush 关闭).\n"
+msgstr ""
+"  Gamla meddelanden kommer inte slängas före meddelanden hämtas (--flush "
+"av).\n"
 
 #: fetchmail.c:2043
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
-msgstr " 收件前将删除超大的邮件(--limitflush 开启).\n"
+msgstr ""
+"  För stora meddelanden kommer slängas före meddelanden hämtas (--limitflush "
+"på).\n"
 
 #: fetchmail.c:2044
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
-msgstr " 收件前将不删除超大的邮件(--limitflush 关闭).\n"
+msgstr ""
+"  För stora meddelanden kommer inte slängas före meddelanden hämtas (--"
+"limitflush av).\n"
 
 #: fetchmail.c:2046
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
-msgstr " 本地收件人地址重写(--norewrite 关闭).\n"
+msgstr ""
+"  Omskrivning av serverlokala adresser är aktiverat (--norewrite av).\n"
 
 #: fetchmail.c:2047
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
-msgstr " 不重写本地收件人地址(--norewrite 开启).\n"
+msgstr ""
+"  Omskrivning av serverlokala adresser är avaktiverat (--norewrite på).\n"
 
 #: fetchmail.c:2049
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
-msgstr " 回车符清除(stripcr 开启).\n"
+msgstr "  Rensning av vagnretur är aktiverat (stripcr på).\n"
 
 #: fetchmail.c:2050
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
-msgstr " 不清除回车符(stripcr 关闭).\n"
+msgstr "  Rensning av vagnretur är avaktiverat (stripcr av).\n"
 
 #: fetchmail.c:2052
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
-msgstr " 强行在换行前插入回车符(forcecr 开启).\n"
+msgstr "  Framtvingade vagnreturer är aktiverat (forcecr på).\n"
 
 #: fetchmail.c:2053
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
-msgstr " 不在换行前强行插入回车符(forcecr 关闭).\n"
+msgstr "  Framtvingade vagnreturer är avaktiverat (forcecr av).\n"
 
 #: fetchmail.c:2055
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
-msgstr " 忽略 Content-Transfer-Encoding (pass8bits 开启).\n"
+msgstr ""
+"  Tolkning av Content-Transfer-Encoding är avaktiverat (pass8bits på).\n"
 
 #: fetchmail.c:2056
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
-msgstr " 不忽略 Content-Transfer-Encoding (pass8bits 关闭).\n"
+msgstr "  Tolkning av Content-Transfer-Encoding är aktiverat (pass8bits av).\n"
 
 #: fetchmail.c:2058
 msgid "  MIME decoding is enabled (mimedecode on).\n"
-msgstr " 解开 MIME 编码 (mimedecode 开启).\n"
+msgstr "  MIME-avkodning är aktiverat (mimedecode på).\n"
 
 #: fetchmail.c:2059
 msgid "  MIME decoding is disabled (mimedecode off).\n"
-msgstr " 不解开 MIME 编码 (mimedecode 关闭).\n"
+msgstr "  MIME-avkodning är avaktiverat (mimedecode av).\n"
 
 #: fetchmail.c:2061
 msgid "  Idle after poll is enabled (idle on).\n"
-msgstr " 收件后回到 idle 模式 (idle 开启).\n"
+msgstr "  Vila efter kontroll är aktiverat (idle på).\n"
 
 #: fetchmail.c:2062
 msgid "  Idle after poll is disabled (idle off).\n"
-msgstr " 收件后不回到 idle 模式 (idle 关闭).\n"
+msgstr "  Vila efter kontroll är avaktiverat (idle av).\n"
 
 #: fetchmail.c:2064
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
-msgstr " 删除带有 Status 字样的行 (dropstatus 开启)\n"
+msgstr "  Icke tomma Status-rader kommer att slängas (dropstatus på)\n"
 
 #: fetchmail.c:2065
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
-msgstr " 保留带有 Status 字样的 行 (dropstatus 关闭)\n"
+msgstr "  Icke tomma Status-rader kommer att behållas (dropstatus av)\n"
 
 #: fetchmail.c:2067
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
-msgstr " 删除带有 Delivered-to 的行 (dropdelivered 开启)\n"
+msgstr "  Delivered-To-rader kommer att slängas (dropdelivered on)\n"
 
 #: fetchmail.c:2068
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
-msgstr " 保留带有 Delivered-to 的行 (dropdelivered 关闭)\n"
+msgstr "  Delivered-To-rader kommer att behållas (dropdelivered av)\n"
 
 #: fetchmail.c:2072
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
-msgstr " 邮件大小被限制为 %d 字节 (--limit %d).\n"
+msgstr "  Storleksgräns på meddelanden är %d oktetter (--limit %d).\n"
 
 #: fetchmail.c:2075
 msgid "  No message size limit (--limit 0).\n"
-msgstr " 邮件大小无限制 (--limit 0).\n"
+msgstr "  Ingen storleksgräns på meddelanden (--limit 0).\n"
 
 #: fetchmail.c:2077
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
-msgstr " 每隔 %d 秒发出邮件大小警告 (--warnings %d).\n"
+msgstr ""
+"  Intervall för varning för meddelandestorlek är %d sekunder (--warnings "
+"%d).\n"
 
 #: fetchmail.c:2080
 msgid "  Size warnings on every poll (--warnings 0).\n"
-msgstr " 每次收件都给出邮件大小警告 (--warnings 0).\n"
+msgstr "  Storleksvarningar varje kontroll (--warnings 0).\n"
 
 #: fetchmail.c:2083
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
-msgstr " 单次收件限制为 %d 封(--fetchlimit %d).\n"
+msgstr "  Gräns för mottagna meddelanden är %d (--fetchlimit %d).\n"
 
 #: fetchmail.c:2086
 msgid "  No received-message limit (--fetchlimit 0).\n"
-msgstr " 无收件限制 (--fetchlimit 0).\n"
+msgstr "  Ingen gräns på mottagna meddelanden (--fetchlimit 0).\n"
 
 #: fetchmail.c:2088
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
-msgstr " 限制所收邮件大小为 %d 字节(--fetchsizelimit %d).\n"
+msgstr "  Gräns på hämtad meddelandestorlek är %d (--fetchsizelimit %d).\n"
 
 #: fetchmail.c:2091
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
-msgstr " 所收邮件大小无限制 (--fetchsizelimit 0).\n"
+msgstr "  Ingen gräns på hämtad meddelandestorlek (--fetchsizelimit 0).\n"
 
 #: fetchmail.c:2095
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
-msgstr " 每次收件期间对 UIDs 进行折半查找 (--fastuidl 1).\n"
+msgstr ""
+"  Gör en binär sökning av UID:er under varje kontroll (--fastuidl 1).\n"
 
 #: fetchmail.c:2097
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
-msgstr " 每 %2$d 次收件中有 %1$d 次对 UIDs 进行折半查找 (--fastuidl %3$d).\n"
+msgstr ""
+"  Gör en binär sökning av UID:er under %d av %d kontroller (--fastuidl %d).\n"
 
 #: fetchmail.c:2100
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
-msgstr " 每次收件期间对 UIDs 进行线性查找 (--fastuidl 0).\n"
+msgstr ""
+"  Gör en linjär sökning av UID:er under varje kontroll (--fastuidl 0).\n"
 
 #: fetchmail.c:2102
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
-msgstr " 单次 SMTP 会话中最多传送 %d 封邮件。\n"
+msgstr "  Satsgräns på SMTP-meddelanden är %d.\n"
 
 #: fetchmail.c:2104
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
-msgstr " 单次 SMTP 会话中无传送邮件限制 (--batchlimit 0)。\n"
+msgstr "  Ingen satsgräns på SMTP-meddelanden (--batchlimit 0).\n"
 
 #: fetchmail.c:2108
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
-msgstr " 两次删除操作之间最多传送 %d 封邮件(--expunge %d)。\n"
+msgstr "  Raderingsintervall mellan kastande tvingat till %d (--expunge %d).\n"
 
 #: fetchmail.c:2110
 msgid "  No forced expunges (--expunge 0).\n"
-msgstr " 两次删除操作之间无传送邮件限制(--expunge 0)。\n"
+msgstr "  Inget framtvingat kastande (--expunge 0).\n"
 
 #: fetchmail.c:2117
 msgid "  Domains for which mail will be fetched are:"
-msgstr " 要收取的邮件位于服务器:"
+msgstr "  Domäner för vilka post kommer hämtas är:"
 
 #: fetchmail.c:2122 fetchmail.c:2142
 msgid " (default)"
-msgstr " (默认)"
+msgstr " (standard)"
 
 #: fetchmail.c:2127
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
-msgstr " 邮件作为 BSMTP 附加至 %s\n"
+msgstr "  Meddelanden kommer läggas till till %s som BSMTP\n"
 
 #: fetchmail.c:2129
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
-msgstr " 邮件通过 “%s” 投递。\n"
+msgstr "  Meddelanden kommer leverareas med ”%s”.\n"
 
 #: fetchmail.c:2136
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
-msgstr " 邮件将被 %cMPT 转发到:"
+msgstr "  Meddelanden kommer %cMTP-vidarebefodras till:"
 
 #: fetchmail.c:2147
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
-msgstr " MAIL FROM 这一行的 Host 部分是 %s\n"
+msgstr "  Värddelen av MAIL FROM-raden kommer bli %s\n"
 
 #: fetchmail.c:2150
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
-msgstr " RCPT TO 这一行中将要被送往 SMTP 的地址是　%s\n"
+msgstr ""
+"  Adress som kommer att anges i RCPT TO-rader lämnade till SMTP kommer vara "
+"%s\n"
 
 #: fetchmail.c:2159
 msgid "  Recognized listener spam block responses are:"
-msgstr "  识别出的监听端垃圾邮件拒收响应为:"
+msgstr "  Igenkända lyssnares spam-blockeringssvar är:"
 
-# fetchmail.c:1809
 #: fetchmail.c:2165
 msgid "  Spam-blocking disabled\n"
-msgstr " 关闭垃圾邮件拒收\n"
+msgstr "  Spam-blockering avaktiverat\n"
 
 #: fetchmail.c:2168
 #, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
-msgstr " 服务器连接将被 “%s” 唤起\n"
+msgstr "  Serveranslutning kommer att öppnas med ”%s”.\n"
 
 #: fetchmail.c:2171
 msgid "  No pre-connection command.\n"
-msgstr " 无连接前要执行的程序。\n"
+msgstr "  Inget föranslutningskommando.\n"
 
 #: fetchmail.c:2173
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
-msgstr " 服务器连接将被 “%s” 关闭。\n"
+msgstr "  Serveranslutning kommer att tas ner med ”%s”.\n"
 
 #: fetchmail.c:2176
 msgid "  No post-connection command.\n"
-msgstr " 无连接后要执行的程序。\n"
+msgstr "  Inget efteranslutningskommando.\n"
 
 #: fetchmail.c:2179
 msgid "  No localnames declared for this host.\n"
-msgstr " 此服务器没有要关联的本地用户名。\n"
+msgstr "  Inga lokala namn angivna för denna värd.\n"
 
 #: fetchmail.c:2189
 msgid "  Multi-drop mode: "
-msgstr " 多投模式: "
+msgstr "  Flermålsläge: "
 
 #: fetchmail.c:2191
 msgid "  Single-drop mode: "
-msgstr " 单投模式: "
+msgstr "  Enmålsläge: "
 
 #: fetchmail.c:2193
 #, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
-msgstr[0] "识别出 %d 个本地用户名。\n"
+msgstr[0] "%d lokalt namn upptäckt.\n"
+msgstr[1] "%d lokala namn upptäckta.\n"
 
 #: fetchmail.c:2208
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
-msgstr " 启用 DNS 搜寻多投地址。\n"
+msgstr "  DNS-uppslagning för flermålsadresser är aktiverat.\n"
 
 #: fetchmail.c:2209
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
-msgstr " 关闭 DNS 搜寻多投地址。\n"
+msgstr "  DNS-uppslagning för flermålsadresser är avaktiverat.\n"
 
 #: fetchmail.c:2213
 msgid ""
 "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr " 服务器昵称将以 IP 地址与多投地址进行比较\n"
+msgstr ""
+"  Serveralias kommer att jämföras med flermålsadresser via IP_adress.\n"
 
 #: fetchmail.c:2215
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
-msgstr " 服务器昵称将以名字与多投地址进行比较\n"
+msgstr "  Serveralias kommer att jämföras med flermålsadresser via namn.\n"
 
 #: fetchmail.c:2218
 msgid "  Envelope-address routing is disabled\n"
-msgstr " 禁用 Envelope-address 路由\n"
+msgstr "  Ruttläggning av kuvertadresser är avaktiverat\n"
 
 #: fetchmail.c:2221
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
-msgstr " 邮件头假定为: %s\n"
+msgstr "  Kuverthuvud föromdas vara: %s\n"
 
 #: fetchmail.c:2224
 #, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
-msgstr " 跳过的邮件头数目为: %d\n"
+msgstr "  Antal kuverthuvuden att hoppa över: %d\n"
 
 #: fetchmail.c:2227
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
-msgstr " 将从用户 id 中移除前缀 %s\n"
+msgstr "  Prefixet %s kommer tas bort från användar-id\n"
 
 #: fetchmail.c:2230
 msgid "  No prefix stripping\n"
-msgstr " 没有要从用户 id 中清除的前缀\n"
+msgstr "  Ingen borttagning av prefix\n"
 
 #: fetchmail.c:2235
 msgid "  Predeclared mailserver aliases:"
-msgstr " 预先声明的邮件服务器昵称: "
+msgstr "  Fördeklarerade postserveralias:"
 
 #: fetchmail.c:2243
 msgid "  Local domains:"
-msgstr " 本地域:"
+msgstr "  Lokala domäner:"
 
 #: fetchmail.c:2253
 #, c-format
 msgid "  Connection must be through interface %s.\n"
-msgstr " 必须通过地址 %s 连接\n"
+msgstr "  Anslutningen måste gå via gränssnittet %s.\n"
 
 #: fetchmail.c:2255
 msgid "  No interface requirement specified.\n"
-msgstr " 未指定地址要求。\n"
+msgstr "  Inget gränssnittskrav angett.\n"
 
 #: fetchmail.c:2257
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
-msgstr " 收件轮循将监听 %s。\n"
+msgstr "  Kontrollslingan kommer övervaka %s.\n"
 
 #: fetchmail.c:2259
 msgid "  No monitor interface specified.\n"
-msgstr " 未指定监听地址。\n"
+msgstr "  Ingen kontrollslinga angiven.\n"
 
 #: fetchmail.c:2263
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
-msgstr " 通过外部程序 %s 进行服务器连接 (--plugin %s)。\n"
+msgstr ""
+"  Serveranslutningar kommer att göras via instickskommandot %s (--plugin "
+"%s).\n"
 
 #: fetchmail.c:2265
 msgid "  No plugin command specified.\n"
-msgstr " 未指定外部程序。\n"
+msgstr "  Inget instickskommando angivet.\n"
 
 #: fetchmail.c:2267
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
-msgstr " 通过外部程序 %s 进行 SMTP 连接(--plugout %s)。\n"
+msgstr ""
+"  Lyssnaranslutningar kommer att göras via utstickskommando %s (--plugout "
+"%s).\n"
 
 #: fetchmail.c:2269
 msgid "  No plugout command specified.\n"
-msgstr " 未指定外部程序。\n"
+msgstr "  Inget utstickskommando angivet.\n"
 
 #: fetchmail.c:2276
 msgid "  No UIDs saved from this host.\n"
-msgstr " 未从此主机上保存 UIDs。\n"
+msgstr "  Inga UID:er sparade från denna värd.\n"
 
 #: fetchmail.c:2279
 #, c-format
 msgid "  %d UIDs saved.\n"
-msgstr " 保存了 %d 个UIDs。\n"
+msgstr "  %d UID:er sparade.\n"
 
 #: fetchmail.c:2285
 msgid "  Poll trace information will be added to the Received header.\n"
-msgstr " 收件跟踪信息将被加入 Received 邮件头。\n"
+msgstr ""
+"  Kontrollspårningsinformation kommer läggas till till Received-huvudet.\n"
 
 #: fetchmail.c:2287
 msgid "  No poll trace information will be added to the Received header.\n"
 msgstr ""
-" 无收件跟踪信息要被加入 Received 邮件头。\n"
-"。\n"
+"  Ingen kontrollspårningsinformation kommer att läggas till till Received-"
+"huvudet.\n"
 
 #: fetchmail.c:2292
 msgid "  Messages with bad headers will be rejected.\n"
-msgstr " 邮件头错误的邮件将被拒收。\n"
+msgstr "  Meddelanden med felaktiga huvuden kommer att avvisas.\n"
 
 #: fetchmail.c:2295
 msgid "  Messages with bad headers will be passed on.\n"
-msgstr " 邮件头错误的邮件可以接收。\n"
+msgstr "  Meddelanden med felaktiga huvuden kommer skickas vidare.\n"
 
 #: fetchmail.c:2302
 #, fuzzy
 msgid "  Messages with fetch body errors will cause the session to abort.\n"
-msgstr " 邮件头错误的邮件可以接收。\n"
+msgstr "  Meddelanden med felaktiga huvuden kommer skickas vidare.\n"
 
 #: fetchmail.c:2305
 #, fuzzy
 msgid ""
 "  Messages with fetch body errors will be skipped, the session will "
 "continue.\n"
-msgstr " 邮件头错误的邮件可以接收。\n"
+msgstr "  Meddelanden med felaktiga huvuden kommer skickas vidare.\n"
 
 #: fetchmail.c:2308
 #, fuzzy
 msgid ""
 "  Messages with fetch body errors will be marked seen, the session will "
 "continue.\n"
-msgstr " 邮件头错误的邮件可以接收。\n"
+msgstr "  Meddelanden med felaktiga huvuden kommer skickas vidare.\n"
 
 #: fetchmail.c:2313
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
-msgstr " 传送的 properties 选项为 “%s” 。\n"
+msgstr "  Egenskaper för vidarebefodran ”%s”.\n"
 
 #: getpass.c:128
 msgid ""
@@ -1579,547 +1649,571 @@ msgid ""
 "Caught SIGINT... bailing out.\n"
 msgstr ""
 "\n"
-"遇到信号 SIGINT... 正在退出\n"
+"Fångade SIGINT… ger upp.\n"
 
 #: gssapi.c:50
 #, c-format
 msgid "GSSAPI error in gss_display_status called from <%s>\n"
-msgstr "来自 <%s> 的 gss_display_status 调用中有 GSSAPI 错误\n"
+msgstr "GSSAPI-fel i gss_display_status anropat från <%s>\n"
 
 #: gssapi.c:53
 #, c-format
 msgid "GSSAPI error %s: %.*s\n"
-msgstr "GSSAPI 错误 %s: %.*s\n"
+msgstr "GSSAPI-fel %s: %.*s\n"
 
 #: gssapi.c:88
 #, c-format
 msgid "Couldn't get service name for [%s]\n"
-msgstr "无法获得服务 [%s]\n"
+msgstr "Kunde inte få tjänstenamnet för [%s]\n"
 
 #: gssapi.c:93
 #, c-format
 msgid "Using service name [%s]\n"
-msgstr "正在使用服务 [%s]\n"
+msgstr "Använder tjänstenamn [%s]\n"
 
 #: gssapi.c:120
 msgid "No suitable GSSAPI credentials found. Skipping GSSAPI authentication.\n"
-msgstr "未找到合适的 GSSAPI 证书。忽略 GSSAPI 认证。\n"
+msgstr ""
+"Inga lämpliga GSSAPI-kreditiv hittade.  Hoppar över GSSAPI-autenticering.\n"
 
 #: gssapi.c:121
 msgid ""
 "If you want to use GSSAPI, you need credentials first, possibly from kinit.\n"
-msgstr "如您想使用 GSSAPI，您首先需要证书，也许来自 kinit。\n"
+msgstr ""
+"Om du vill använda GSSAPI behöver du kreditiv först, möjligen från kinit.\n"
 
 #: gssapi.c:157
 #, c-format
 msgid "Received malformed challenge to \"%s GSSAPI\"!\n"
-msgstr "接收到怪异的请求 \"%s GSSAPI\"！\n"
+msgstr "Mottog felaktigt utmaning till ”%s GSSAPI”!\n"
 
 #: gssapi.c:167
 msgid "Sending credentials\n"
-msgstr "正在发送证书\n"
+msgstr "Skickar kreditiv\n"
 
 #: gssapi.c:198
 msgid "Error exchanging credentials\n"
-msgstr "交换证书时出错\n"
+msgstr "Fel vid utbyde av kreditiv\n"
 
 #: gssapi.c:240
 msgid "Couldn't unwrap security level data\n"
-msgstr "无法解开加密数据\n"
+msgstr "Kunde inte packa upp säkerhetsnivådata\n"
 
 #: gssapi.c:245
 msgid "Credential exchange complete\n"
-msgstr "证书交换完成\n"
+msgstr "Kreditivutbyte klart\n"
 
 #: gssapi.c:249
 msgid "Server requires integrity and/or privacy\n"
-msgstr "服务器要求完整性和(或)隐私检查\n"
+msgstr "Servern kräver integritet\n"
 
 #: gssapi.c:258
 #, c-format
 msgid "Unwrapped security level flags: %s%s%s\n"
-msgstr "解开的加密标识: %s%s%s\n"
+msgstr "Uppackade säkerhetsnivåflaggor: %s%s%s\n"
 
 #: gssapi.c:262
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
-msgstr "最大 GSS 标识大小为 %ld\n"
+msgstr "Maximal GSS-token-storlek är %ld\n"
 
 #: gssapi.c:275
 msgid "Error creating security level request\n"
-msgstr "创建加密请求时出错\n"
+msgstr "Fel när säkerhetsnivåbegäran skapades\n"
 
 #: gssapi.c:286
 msgid "Releasing GSS credentials\n"
-msgstr "正在清空 GSS 证书\n"
+msgstr "Släpper GSS-kreditiv\n"
 
 #: gssapi.c:290
 msgid "Error releasing credentials\n"
-msgstr "清空证书时出错\n"
+msgstr "Fel när kreditiv släpptes\n"
 
 #: imap.c:71
 #, c-format
 msgid "Received BYE response from IMAP server: %s"
-msgstr "从IMAP 服务器收到 BYE 指令: %s"
+msgstr "Mottog BYE-svar från IMAP-server: %s"
 
 #: imap.c:89
 #, c-format
 msgid "bogus message count in \"%s\"!"
-msgstr "发现伪造邮件\"%s\"！"
+msgstr "felaktigt meddelandeantal i ”%s”!"
 
 #: imap.c:136
 #, c-format
 msgid "bogus EXPUNGE count in \"%s\"!"
-msgstr "发现伪造的EXPUNGE \"%s\"！"
+msgstr "felaktigt EXPUNGE-antal i ”%s”!"
 
 #: imap.c:345
 msgid "Protocol identified as IMAP4 rev 1\n"
-msgstr "协议被识别为 IMAP4 版本 1\n"
+msgstr "Protokoll identifierat som IMAP4 rev 1\n"
 
 #: imap.c:351
 msgid "Protocol identified as IMAP4 rev 0\n"
-msgstr "协议被识别为 IMAP4 版本 0\n"
+msgstr "Protokoll identifierat som IMAP4 rev 0\n"
 
 #: imap.c:369
 msgid "will idle after poll\n"
-msgstr "收件后恢复至 idle 模式\n"
+msgstr "kommer vila efter kontroll\n"
 
 #: imap.c:462 pop3.c:517
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
-msgstr "%s: 成功升级至 TLS 协议。\n"
+msgstr "%s: uppgradering till TLS lyckades.\n"
 
 #: imap.c:468 pop3.c:523
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
-msgstr "%s: 升级至 TLS 协议失败。\n"
+msgstr "%s: uppgradering till TLS misslyckades.\n"
 
 #: imap.c:473
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
-msgstr "%s: 即时升级至 TLS 协议失败，继续尝试\n"
+msgstr ""
+"%s: opportunistisk uppgradering till TLS misslyckades, försöker fortsätta\n"
 
 #: imap.c:571
 msgid "Required OTP capability not compiled into fetchmail\n"
-msgstr "需要的 OTP 功能未被编译进 fetchmail\n"
+msgstr "Nödvändig OTP-förmåga inte inkompilerad i fetchmail\n"
 
 #: imap.c:591 pop3.c:583
 msgid "Required NTLM capability not compiled into fetchmail\n"
-msgstr "需要的 NTLM 功能未被编译进 fetchmail\n"
+msgstr "Nödvändig NTLM-förmåga inte inkompilerad i fetchmail\n"
 
 #: imap.c:655
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr "邮件删除数不相等 (实际删除 %d 封!= 已删除 %d 封)\n"
+msgstr "kastande av post stämmer inte (%d faktiskt ≠ %d förväntat)\n"
 
 #: imap.c:782
 #, c-format
 msgid "%lu is unseen\n"
-msgstr "%lu 封未读\n"
+msgstr "%lu är osedda\n"
 
 #: imap.c:832 pop3.c:771 pop3.c:783 pop3.c:906 pop3.c:913
 #, c-format
 msgid "%u is unseen\n"
-msgstr "%u 未读\n"
+msgstr "%u är osedda\n"
 
 #: imap.c:867 imap.c:926
 msgid "re-poll failed\n"
-msgstr "重新收件失败\n"
+msgstr "omkontroll misslyckades\n"
 
 #: imap.c:875 imap.c:931
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
-msgstr[0] "重新收件后又有 %d 封邮件等待收取\n"
+msgstr[0] "%d meddelande väntar efter omkontroll\n"
+msgstr[1] "%d meddelanden väntar efter omkontroll\n"
 
 #: imap.c:892
 msgid "mailbox selection failed\n"
-msgstr "邮箱选择失败\n"
+msgstr "brevlådeval misslyckades\n"
 
 #: imap.c:896
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
-msgstr[0] "首次收件后又有 %d 封邮件等待收取\n"
+msgstr[0] "%d meddelande väntar efter första kontrollen\n"
+msgstr[1] "%d meddelanden väntar efter första kontrollen\n"
 
 #: imap.c:910
 msgid "expunge failed\n"
-msgstr "删除操作失败\n"
+msgstr "kastande misslyckades\n"
 
 #: imap.c:914
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
-msgstr[0] "删除操作后有 %d 封邮件等待收取\n"
+msgstr[0] "%d meddelande väntar efter tömning\n"
+msgstr[1] "%d meddelanden väntar efter tömning\n"
 
 #: imap.c:953
 msgid "search for unseen messages failed\n"
-msgstr "查找未读邮件失败\n"
+msgstr "sökning efter osedda meddelanden misslyckades\n"
 
 #: imap.c:958 pop3.c:792
 #, c-format
 msgid "%u is first unseen\n"
-msgstr "%u 是首个未读邮件\n"
+msgstr "%u är det första osedda\n"
 
 #: imap.c:1042
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
-msgstr "警告: 忽略服务器返回的邮件大小的无效数据。\n"
+msgstr ""
+"Varning: ignorerar felaktiga data för meddelandestorlek som returneras av "
+"servern.\n"
 
 #: imap.c:1141 imap.c:1148
 #, c-format
 msgid "Incorrect FETCH response: %s.\n"
-msgstr "FETCH 响应不正确: %s。\n"
+msgstr "Felaktigt FETCH-svar: %s.\n"
 
 #: interface.c:247
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
-msgstr "无法打开 kvm 接口。确保 fetchmail 是 SGID kmem"
+msgstr "Kan inte öppna kvm-gränssnittet.  Se till att fetchmail är SGID kmem."
 
 #: interface.c:371
 #, c-format
 msgid "Unable to parse interface name from %s"
-msgstr "无法从 %s 分析得出地址名"
+msgstr "Kan inte tolka gränssnittsnamn från %s"
 
 #: interface.c:393
 msgid "get_ifinfo: sysctl (iflist estimate) failed"
-msgstr "get_ifinfo: sysctl (iflist 测试) 失败"
+msgstr "get_ifinfo: sysctl (if-listuppskattning) misslyckades"
 
 #: interface.c:399
 msgid "get_ifinfo: malloc failed"
-msgstr "get_ifinfo: malloc 失败"
+msgstr "get_ifinfo: malloc misslyckades"
 
 #: interface.c:405
 msgid "get_ifinfo: sysctl (iflist) failed"
-msgstr "get_ifinfo: sysctl (iflist) 失败"
+msgstr "get_ifinfo: sysctl (if-lista) misslyckades"
 
 #: interface.c:423
 #, c-format
 msgid "Routing message version %d not understood."
-msgstr "未知的路径信息版本 %d。"
+msgstr "Ruttläggningsmeddelande version %d förstås inte."
 
 #: interface.c:455
 #, c-format
 msgid "No interface found with name %s"
-msgstr "未找到以 %s 命名的网卡"
+msgstr "Inget gränssnitt funnet med namnet %s"
 
 #: interface.c:513
 #, c-format
 msgid "No IP address found for %s"
-msgstr "未找到 %s 的 IP 地址"
+msgstr "Ingen IP-adress funnen för %s"
 
 #: interface.c:565
 msgid "missing IP interface address\n"
-msgstr "未找到 IP 地址\n"
+msgstr "saknad adress för IP-gränssnitt\n"
 
 #: interface.c:581
 msgid "invalid IP interface address\n"
-msgstr "无效的 IP 地址\n"
+msgstr "ogiltig adress för IP-gränssnitt\n"
 
 #: interface.c:587
 msgid "invalid IP interface mask\n"
-msgstr "无效的 IP 地址掩码\n"
+msgstr "ogiltig mask för IP-gränssnitt\n"
 
 #: interface.c:626
 #, c-format
 msgid "activity on %s -noted- as %d\n"
-msgstr "%s 的活跃度为 %d\n"
+msgstr "aktivitet på %s -noterad- som %d\n"
 
 #: interface.c:641
 #, c-format
 msgid "skipping poll of %s, %s down\n"
-msgstr "跳过 %s 收件，%s 关闭了\n"
+msgstr "hoppar över kontroll av %s, %s nere\n"
 
 #: interface.c:660
 #, c-format
 msgid "skipping poll of %s, %s IP address excluded\n"
-msgstr "跳过 %s 收件，拒绝接受 %s 的 IP 地址\n"
+msgstr "hoppar över kontroll av %s, %s:s IP-aress utesluten\n"
 
 #: interface.c:672
 #, c-format
 msgid "activity on %s checked as %d\n"
-msgstr "%s 的活跃度查为 %d\n"
+msgstr "aktivitet på %s kontrollerad som %d\n"
 
 #: interface.c:698
 #, c-format
 msgid "skipping poll of %s, %s inactive\n"
-msgstr "跳过 %s 收件，%s 未开启\n"
+msgstr "hoppar över kontroll av %s, %s inaktivt\n"
 
 #: interface.c:705
 #, c-format
 msgid "activity on %s was %d, is %d\n"
-msgstr "%s 的活跃度以前是 %d，现在是 %d\n"
+msgstr "aktivetet på %s var %d, är %d\n"
 
 #: lock.c:79
 #, c-format
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
-msgstr "fetchmail: 读取锁文件 “%s” 时发生错误: %s\n"
+msgstr "fetchmail: fel när låsfilen ”%s” lästes: %s\n"
 
 #: lock.c:90
 msgid "fetchmail: removing stale lockfile\n"
-msgstr "fetchmail: 正在删除过时的锁文件\n"
+msgstr "fetchmail: tar bort förlegad låsfil\n"
 
 #: lock.c:114
 #, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
-msgstr "fetchmail: 打开锁文件 “%s” 时发生错误: %s\n"
+msgstr "fetchmail: fel när låsfilen ”%s” öppnades: %s\n"
 
 #: lock.c:161
 msgid "fetchmail: lock creation failed.\n"
-msgstr "fetchmail: 锁文件创建失败。\n"
+msgstr "fetchmail: misslyckades att skapa lås.\n"
 
 #: netrc.c:222
 #, c-format
 msgid "%s:%d: warning: found \"%s\" before any host names\n"
-msgstr "%s:%d: 警告: 在任意主机名前发现 “%s”\n"
+msgstr "%s:%d: varning: hittade ”%s” före några värdnamn\n"
 
 #: netrc.c:260
 #, c-format
 msgid "%s:%d: warning: unknown token \"%s\"\n"
-msgstr "%s:%d: 警告: 未知标识“%s”\n"
+msgstr "%s:%d: varning: okänd symbol ”%s”\n"
 
 #: odmr.c:57
 #, c-format
 msgid "%s's SMTP listener does not support ATRN\n"
-msgstr "%s 的 SMTP 端不支持 ATRN\n"
+msgstr "%ss SMTP-lyssnare stödjer inte ATRN\n"
 
 #: odmr.c:95
 msgid "Turnaround now...\n"
-msgstr "正在转向 ...\n"
+msgstr "Vänder nu…\n"
 
 #: odmr.c:100
 msgid "ATRN request refused.\n"
-msgstr "拒绝 ATRN 请求\n"
+msgstr "ATRN-begäran nekad.\n"
 
 #: odmr.c:104
 msgid "Unable to process ATRN request now\n"
-msgstr "现在无法处理 ATRN 请求\n"
+msgstr "Kan inte bearbeta ATRN-begäran nu\n"
 
 #: odmr.c:109
 msgid "You have no mail.\n"
-msgstr "您没有邮件\n"
+msgstr "Du har ingen post.\n"
 
 #: odmr.c:113
 msgid "Command not implemented\n"
-msgstr "指令未执行\n"
+msgstr "Kommandot är inte implementerat\n"
 
 #: odmr.c:117
 msgid "Authentication required.\n"
-msgstr "要求验证\n"
+msgstr "Autenticering krävs.\n"
 
 #: odmr.c:122
 #, c-format
 msgid "Unknown ODMR error \"%s\"\n"
-msgstr "未知的 ODMR 错误 \"%s\"\n"
+msgstr "Okänt ODMR-fel ”%s”\n"
 
 #: odmr.c:182
 msgid "receiving message data\n"
-msgstr "正在接收邮件数据\n"
+msgstr "tar emot meddelandedata\n"
 
 #: odmr.c:235
 msgid "Option --keep is not supported with ODMR\n"
-msgstr "ODMR 不支持 --keep 选项\n"
+msgstr "Flaggan --keep stödjs inte med ODMR\n"
 
 #: odmr.c:239
 msgid "Option --flush is not supported with ODMR\n"
-msgstr "ODMR 不支持 --flush 选项\n"
+msgstr "Flaggan --flush stödjs inte med ODMR\n"
 
 #: odmr.c:243
 msgid "Option --folder is not supported with ODMR\n"
-msgstr "ODMR 不支持 --folder 选项\n"
+msgstr "Flaggan --folder stödjs inte med ODMR\n"
 
 #: odmr.c:247
 msgid "Option --check is not supported with ODMR\n"
-msgstr "ODMR 不支持 --check 选项\n"
+msgstr "Flaggan --check stödjs inte med ODMR\n"
 
 #: opie.c:40
 msgid "server recv fatal\n"
-msgstr "服务器 recv 错\n"
+msgstr "server mottog ödesdigert\n"
 
 #: opie.c:54
 msgid "Could not decode OTP challenge\n"
-msgstr "无法解码 OTP 请求\n"
+msgstr "Kunde inte avkoda OTP-utmaning\n"
 
 #: opie.c:62 pop3.c:618
 msgid "Secret pass phrase: "
-msgstr "密码短语:"
+msgstr "Hemlig lösenfras: "
 
 #: options.c:181
 #, c-format
 msgid "String '%s' is not a valid number string.\n"
-msgstr "字符串 ‘%s’不是一个有效的数字串。\n"
+msgstr "Strängen ”%s” är inte en giltig nummersträng.\n"
 
 #: options.c:190
 #, c-format
 msgid "Value of string '%s' is %s than %d.\n"
-msgstr "字符串 ‘%1$s’ 的值比 %3$d %2$s\n"
+msgstr "Värdet på strängen ”%s” är %s än %d.\n"
 
 #: options.c:191
 msgid "smaller"
-msgstr "小"
+msgstr "mindre"
 
 #: options.c:191
 msgid "larger"
-msgstr "大"
+msgstr "större"
 
 #: options.c:315
 #, c-format
 msgid "Invalid bad-header policy `%s' specified.\n"
-msgstr "设定的错误邮件头处理方式‘%s’无效。\n"
+msgstr "Ogiltig policy ”%s” för felaktiga huvuden angiven.\n"
 
 #: options.c:348
 #, c-format
 msgid "Invalid protocol `%s' specified.\n"
-msgstr "指定了无效的协议 ‘%s’\n"
+msgstr "Ogiltigt protokoll ”%s” angivet.\n"
 
 #: options.c:393
 #, c-format
 msgid "Invalid authentication `%s' specified.\n"
-msgstr "指定了无效的认证方式 ‘%s’\n"
+msgstr "Ogiltig autenticering ”%s” angiven.\n"
 
 #: options.c:602
 #, fuzzy, c-format
 msgid "Invalid retrieve-error policy `%s' specified.\n"
-msgstr "设定的错误邮件头处理方式‘%s’无效。\n"
+msgstr "Ogiltig policy ”%s” för felaktiga huvuden angiven.\n"
 
 #: options.c:618
 msgid "usage:  fetchmail [options] [server ...]\n"
-msgstr "用法: fetchmail [选项] [服务器...]\n"
+msgstr "användning:  fetchmail [flaggor] [server …]\n"
 
 #: options.c:619
 msgid "  Options are as follows:\n"
-msgstr "选项如下:\n"
+msgstr "  Flaggorna är enligt följande:\n"
 
 #: options.c:620
 msgid "  -?, --help        display this option help\n"
-msgstr " -?, --help\t显示此选项帮助\n"
+msgstr "  -?, --help        visa denna flagghjälp\n"
 
 #: options.c:621
 msgid "  -V, --version     display version info\n"
-msgstr " -V, --version\t显示版本信息\n"
+msgstr "  -V, --version     visa versionsinformation\n"
 
 #: options.c:623
 msgid "  -c, --check       check for messages without fetching\n"
-msgstr " -c, --check\t只检查邮件而不收取\n"
+msgstr ""
+"  -c, --check       kontrollera om det finns meddelanden utan att hämta\n"
 
 #: options.c:624
 msgid "  -s, --silent      work silently\n"
-msgstr " -s, --silent\t运行时不要显示多余信息\n"
+msgstr "  -s, --silent      arbeta tyst\n"
 
 #: options.c:625
 msgid "  -v, --verbose     work noisily (diagnostic output)\n"
-msgstr " -v, --verbose\t运行时给出信息 (诊断型的输出)\n"
+msgstr "  -v, --verbose     arbeta högljutt (diagnostiska utskrifter)\n"
 
 #: options.c:626
 msgid "  -d, --daemon      run as a daemon once per n seconds\n"
-msgstr " -d, --daemon\t每 n 秒运行后台服务一次\n"
+msgstr "  -d, --daemon      kör som en demon en gång per n sekunder\n"
 
 #: options.c:627
 msgid "  -N, --nodetach    don't detach daemon process\n"
-msgstr " -N, --nodetach\t不分离后台进程\n"
+msgstr "  -N, --nodetach    koppla inte loss demonprocessen\n"
 
 #: options.c:628
 msgid "  -q, --quit        kill daemon process\n"
-msgstr " -q, --quit\t终止后台进程\n"
+msgstr "  -q, --quit        döda demonprocessen\n"
 
 #: options.c:629
 msgid "  -L, --logfile     specify logfile name\n"
-msgstr " -L, --logfile\t指定日志文件名\n"
+msgstr "  -L, --logfile     ange logfilsnamn\n"
 
 #: options.c:630
 msgid ""
 "      --syslog      use syslog(3) for most messages when running as a "
 "daemon\n"
-msgstr " --syslog\t以后台服务运行时用 syslog(3) 得到更多的信息\n"
+msgstr ""
+"      --syslog      använd syslog(3) för de flesta meddelanden vid körning "
+"som en demon\n"
 
 #: options.c:631
 msgid "      --invisible   don't write Received & enable host spoofing\n"
-msgstr " --invisible\t不写 Received 邮件头并允许伪装主机\n"
+msgstr "      --invisible   skriv inte Received och aktivera värdimitation\n"
 
 #: options.c:632
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
-msgstr " -f, --fetchmailrc\t指定可选的配置文件\n"
+msgstr "  -f, --fetchmailrc ange en alternativ körstyrningsfil\n"
 
 #: options.c:633
 msgid "  -i, --idfile      specify alternate UIDs file\n"
-msgstr " -i, --idfile\t指定可选的 UIDs 文件\n"
+msgstr "  -i, --idfile      ange en alternativ UID-fil\n"
 
 #: options.c:634
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr " --pidfile\t指定可选的进程(锁)文件\n"
+msgstr "      --pidfile     ange en alternativ PID-fil (för lås)\n"
 
 #: options.c:635
 msgid "      --postmaster  specify recipient of last resort\n"
-msgstr " --postmaster\t指定邮件管理员\n"
+msgstr "      --postmaster  ange en mottagare som sista utväg\n"
 
 #: options.c:636
 msgid "      --nobounce    redirect bounces from user to postmaster.\n"
-msgstr " --nobounce\t将回送邮件从用户重定向至邮件管理员\n"
+msgstr ""
+"      --nobounce    omdirigera studsar från användaren till to postmaster.\n"
 
 #: options.c:637
 msgid ""
 "      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
-msgstr "      --nosoftbounce\t让 fetchmail 永久删除无法投递的邮件。\n"
+msgstr ""
+"      --nosoftbounce fetchmail raderar permanent olevererbara meddelanden.\n"
 
 #: options.c:638
 msgid ""
 "      --softbounce  keep permanently undeliverable messages on server "
 "(default).\n"
-msgstr "      --softbounce\t将无法投递的邮件长期保留在服务器上(默认)。\n"
+msgstr ""
+"      --softbounce  behåll permanent olevererbara meddelanden på servern "
+"(standard).\n"
 
 #: options.c:640
 msgid "  -I, --interface   interface required specification\n"
-msgstr " -I, --interface\t指定网络地址\n"
+msgstr "  -I, --interface   specifikation av nödvändigt gränssnitt\n"
 
 #: options.c:641
 msgid "  -M, --monitor     monitor interface for activity\n"
-msgstr " -M, --moniter\t监控指定网络地址的活跃度\n"
+msgstr "  -M, --monitor     bevaka gränssnitt för att se aktivitet\n"
 
 #: options.c:644
 msgid "      --ssl         enable ssl encrypted session\n"
-msgstr " --ssl\t启用 ssl 加密会话\n"
+msgstr "      --ssl         aktivera en ssl-krypteras session\n"
 
 #: options.c:645
 msgid "      --sslkey      ssl private key file\n"
-msgstr " --sslkey\tssl 私钥文件\n"
+msgstr "      --sslkey      fil med privat ssl nyckel\n"
 
 #: options.c:646
 msgid "      --sslcert     ssl client certificate\n"
-msgstr " --sslcert\tssl 客户端证书\n"
+msgstr "      --sslcert     ssl-klientcertifikat\n"
 
 #: options.c:647
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
-msgstr " --sslcertck\t进行严格的服务器证书检查(推荐)\n"
+msgstr ""
+"      --sslcertck   gör en strikt kontroll av servercertifikat "
+"(rekommenderas)\n"
 
 #: options.c:648
 msgid "      --sslcertfile path to trusted-CA ssl certificate file\n"
-msgstr "      --sslcertfile     受信 CA ssl 证书文件名\n"
+msgstr ""
+"      --sslcertfile sökväg till fil med ssl-certifikat för betrodda CA\n"
 
 #: options.c:649
 msgid "      --sslcertpath path to trusted-CA ssl certificate directory\n"
-msgstr "      --sslcertpath     受信 CA ssl 证书文件的目录\n"
+msgstr ""
+"      --sslcertpath sökväg till katalog med ssl-certifikat för betrodda CA\n"
 
 #: options.c:650
 msgid ""
 "      --sslcommonname  expect this CommonName from server (discouraged)\n"
-msgstr " --sslcommonname\t期望返回服务器名 (不鼓励)\n"
+msgstr ""
+"      --sslcommonname  förvänta detta CommonName från servern (avrådes)\n"
 
 #: options.c:651
 msgid ""
 "      --sslfingerprint fingerprint that must match that of the server's "
 "cert.\n"
-msgstr " --sslfingerprint\t指定一个指纹，它必须与服务器证书的指纹匹配\n"
+msgstr ""
+"      --sslfingerprint fingeravtryck som måste matcha det för serverns "
+"certifikat.\n"
 
 #: options.c:652
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr " --sslproto\t指定强制使用的 ssl 协议(SSL2/SSL3/TLS1)\n"
+msgstr "      --sslproto    framtvinga ssl-protokoll (SSL2/SSL3/TLS1)\n"
 
 #: options.c:654
 msgid "      --plugin      specify external command to open connection\n"
-msgstr " --plugin\t指定外部程序打开连接\n"
+msgstr ""
+"      --plugin      ange externt kommando för att öppna en anslutning\n"
 
 #: options.c:655
 msgid "      --plugout     specify external command to open smtp connection\n"
-msgstr " --plugout\t指定外部程序打开 smtp 连接\n"
+msgstr ""
+"      --plugout     ange externt kommando för att öppna en smtp-anslutning\n"
 
 #: options.c:656
 msgid ""
@@ -2127,7 +2221,8 @@ msgid ""
 "                    specify policy for handling messages with bad headers\n"
 msgstr ""
 "      --bad-header {reject|accept}\n"
-"                    设定对邮件头错误的邮件的处理方式\n"
+"                    ange policy för att hantera meddelanden med felaktiga "
+"huvuden\n"
 
 #: options.c:658
 #, fuzzy
@@ -2137,11 +2232,12 @@ msgid ""
 "errors\n"
 msgstr ""
 "      --bad-header {reject|accept}\n"
-"                    设定对邮件头错误的邮件的处理方式\n"
+"                    ange policy för att hantera meddelanden med felaktiga "
+"huvuden\n"
 
 #: options.c:661
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
-msgstr " -p, --protocol\t指定收件协议 (看 man 手册页)\n"
+msgstr "  -p, --protocol    ange protokoll för att hämta (se manualsidan)\n"
 
 #: options.c:663
 msgid "  -C, --pwmd-socket pwmd socket path (~/.pwmd/socket)\n"
@@ -2157,409 +2253,422 @@ msgstr ""
 
 #: options.c:668
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr " --port\t要连接的 TCP 端口(过时了，用 --service)\n"
+msgstr ""
+"      --port        TCP-port att ansluta till (föråldrat, använd --service)\n"
 
 #: options.c:669
 msgid ""
 "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
-msgstr " -P, --service\t要连接的 TCP 服务(允许用 TCP 端口的数值来表示)\n"
+msgstr ""
+"  -P, --service     TCP-tjänst att ansluta till (kan vara numerisk TCP-"
+"port)\n"
 
 #: options.c:670
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
-msgstr " --auth\t指定验证方式(password/kerberos/ssh/otp)\n"
+msgstr "      --auth        autenticeringstyp (password/kerberos/ssh/otp)\n"
 
 #: options.c:671
 msgid "  -t, --timeout     server nonresponse timeout\n"
-msgstr " -t, --timeout\t指定服务器超时无响应的时间\n"
+msgstr "  -t, --timeout     tidsgräns för uteblivet svar från servern\n"
 
 #: options.c:672
 msgid "  -E, --envelope    envelope address header\n"
-msgstr " -E, --envelope\t指定邮件地址头\n"
+msgstr "  -E, --envelope    kuvertadresshuvud\n"
 
 #: options.c:673
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
-msgstr " -Q, --qvirtual\t从当前用户移除前缀\n"
+msgstr "  -Q, --qvirtual    prefix att ta bort från lokala användar-id\n"
 
 #: options.c:674
 msgid "      --principal   mail service principal\n"
-msgstr " --principal\t邮件服务验证方\n"
+msgstr "      --principal   posttjänsthuvudnamn\n"
 
 #: options.c:675
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
-msgstr " --tracepolls\tReceived 邮件头中添加收件跟踪信息\n"
+msgstr ""
+"      --tracepolls  lägg till kontrollspårningsinformation till Received-"
+"huvuden\n"
 
 #: options.c:677
 msgid "  -u, --username    specify users's login on server\n"
-msgstr " -u, --username\t指定登录服务器的用户名\n"
+msgstr "  -u, --username    ange användarens inloggning på servern\n"
 
 #: options.c:678
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr " -a, --[fetch]all\t收取所有新旧邮件\n"
+msgstr "  -a, --[fetch]all  hämta gamla och nya meddelanden\n"
 
 #: options.c:679
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
-msgstr " -K, --nokeep\t收件后删除服务器上新邮件\n"
+msgstr "  -K, --nokeep      radera nya meddelanden efter de hämtats\n"
 
 #: options.c:680
 msgid "  -k, --keep        save new messages after retrieval\n"
-msgstr " -k, --keep\t收件后保留服务器上新邮件\n"
+msgstr "  -k, --keep        spara nya meddelanden efter de hämtats\n"
 
 #: options.c:681
 msgid "  -F, --flush       delete old messages from server\n"
-msgstr " -F, --flush\t从服务器上删除旧邮件\n"
+msgstr "  -F, --flush       radera gamla meddelanden från servern\n"
 
 #: options.c:682
 msgid "      --limitflush  delete oversized messages\n"
-msgstr " --limitflush\t删除过大的邮件\n"
+msgstr "      --limitflush  radera för stora meddelanden\n"
 
 #: options.c:683
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
-msgstr " -n, --norewrite\t不要重写地址头\n"
+msgstr "  -n, --norewrite   skriv inte om huvudadresser\n"
 
 #: options.c:684
 msgid "  -l, --limit       don't fetch messages over given size\n"
-msgstr " -l, --limit\t不收超过指定大小的邮件\n"
+msgstr "  -l, --limit       hämta inte meddelanden över en viss storlek\n"
 
 #: options.c:685
 msgid "  -w, --warnings    interval between warning mail notification\n"
-msgstr " -w, --warnings\t邮件通知警告的间隔\n"
+msgstr "  -w, --warnings    intervall mellan varningspostnotifieringar\n"
 
 #: options.c:687
 msgid "  -S, --smtphost    set SMTP forwarding host\n"
-msgstr " -S, --smtphost\t设置 SMTP 转发主机\n"
+msgstr "  -S, --smtphost    sätt värd för SMTP-vidarebefodran\n"
 
 #: options.c:688
 msgid "      --fetchdomains fetch mail for specified domains\n"
-msgstr " --fetchdomains\t收取指定域的邮件\n"
+msgstr "      --fetchdomains hämta post för angivna domäner\n"
 
 #: options.c:689
 msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
-msgstr " -D, --smtpaddress\t设置 SMTP 投递域\n"
+msgstr "  -D, --smtpaddress sätt SMTP-leveransdomän att använda\n"
 
 #: options.c:690
 msgid "      --smtpname    set SMTP full name username@domain\n"
-msgstr " --smtpname\t设置 SMTP 全名，用户名@域\n"
+msgstr "      --smtpname    sätt fullständigt SMTP-namn användarnamn@domän\n"
 
 #: options.c:691
 msgid "  -Z, --antispam,   set antispam response values\n"
-msgstr " -Z, --antispam,\t设置 antispam 响应值\n"
+msgstr "  -Z, --antispam,   sätt anti-spam-svarsvärden\n"
 
 #: options.c:692
 msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
-msgstr " -b, --bathlimit\t为 SMTP 连接设置批量处理限制\n"
+msgstr "  -b, --batchlimit  sätt satsgräns för SMTP-anslutningar\n"
 
 #: options.c:693
 msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
-msgstr " -B, --fetchlimit\t为服务器连接设置收取限制\n"
+msgstr "  -B, --fetchlimit  sätt gräns på hämtande för serveranslutningar\n"
 
 #: options.c:694
 msgid "      --fetchsizelimit set fetch message size limit\n"
-msgstr " --fetchsizelimit\t设置收件大小限制\n"
+msgstr "      --fetchsizelimit sät gräns på meddelandestorlek att hämta\n"
 
 #: options.c:695
 msgid "      --fastuidl    do a binary search for UIDLs\n"
-msgstr " --fastuidl\t对 UIDLs 进行折半查找\n"
+msgstr "      --fastuidl    gör en binärsökning efter UIDL:er\n"
 
 #: options.c:696
 msgid "  -e, --expunge     set max deletions between expunges\n"
-msgstr " -e, --expunge\t设置删除操作发生在多少封邮件之后\n"
+msgstr "  -e, --expunge     sätt max raderingar mellan tömningar\n"
 
 #: options.c:697
 msgid "  -m, --mda         set MDA to use for forwarding\n"
-msgstr " -m, --mda\t设置用于转发的 MDA\n"
+msgstr "  -m, --mda         sätt MDA att använda för vidarebefodran\n"
 
 #: options.c:698
 msgid "      --bsmtp       set output BSMTP file\n"
-msgstr " --bsmtp\t设置 BSMTP 文件输出\n"
+msgstr "      --bsmtp       sätt utmatnings-BSMTP-fil\n"
 
 #: options.c:699
 msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
-msgstr " --lmtp\t用 LMTP 协议(RFC2033) 投递邮件\n"
+msgstr "      --lmtp        använd LMTP (RFC2033) för leverans\n"
 
 #: options.c:700
 msgid "  -r, --folder      specify remote folder name\n"
-msgstr " -r, --folder\t指定远程邮箱名\n"
+msgstr "  -r, --folder      ange fjärrmappsnamn\n"
 
 #: options.c:701
 msgid "      --showdots    show progress dots even in logfiles\n"
-msgstr " --showdots\t即使在日志文件中也要显示进度条(以点的形式)\n"
+msgstr "      --showdots    visa förloppspunkter även i loggfiler\n"
 
 #: pop3.c:274
 msgid "Required APOP timestamp not found in greeting\n"
-msgstr "在 greeting 中未发现所需的 APOP 时间戳\n"
+msgstr "Obligatorisk APOP-tidstämpel finns inte i hälsningen\n"
 
 #: pop3.c:283
 msgid "Timestamp syntax error in greeting\n"
-msgstr "greeting 中时间戳语法错误\n"
+msgstr "Syntaxfel i tidsstämpeln i hälsningen\n"
 
 #: pop3.c:299
 msgid "Invalid APOP timestamp.\n"
-msgstr "无效的 APOP 时间戳\n"
+msgstr "Ogitlig APOP-tidsstämpel.\n"
 
 #: pop3.c:365
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
-msgstr "警告: 发现“ POP3 代理服务器”，用 RETR 命令代替 TOP。\n"
+msgstr ""
+"Varning: \"Maillennium POP3/PROXY-server\" funnen, använder RETR-kommando "
+"istället för TOP.\n"
 
 #: pop3.c:452
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
-msgstr "强制使用 TLS 会话，但服务器拒绝 CAPA 命令。\n"
+msgstr ""
+"TLS är obligatoriskt för denna session, men servern vägrade CAPA-kommandot.\n"
 
 #: pop3.c:453
 msgid "The CAPA command is however necessary for TLS.\n"
-msgstr "而 CPAC 命令对于 TLS 协议来说是必须要有的。\n"
+msgstr "Men CAPA-kommandot är dock nödvändigt för TLS.\n"
 
 #: pop3.c:535
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
-msgstr "%s: 升级到 TLS 协议失败了，继续尝试。\n"
+msgstr ""
+"%s: opportunistiks uppgradering till TLS misslyckades, försöker fortsätta.\n"
 
 #: pop3.c:653
 msgid "We've run out of allowed authenticators and cannot continue.\n"
-msgstr "我们已经用完了可用的验证方式，无法继续\n"
+msgstr "Vi har fått slut på tillåtna autenticerare och kan inte fortsätta.\n"
 
 #: pop3.c:661
 msgid "Undefined protocol request in POP3_auth\n"
-msgstr "POP3_auth 中有未定义的协议请求\n"
+msgstr "Odefinierad protokollbegäran i POP3_auth\n"
 
 #: pop3.c:682
 msgid "lock busy!  Is another session active?\n"
-msgstr "死锁！是否有另一个会话在运行？\n"
+msgstr "lås upptaget!  Är en annan session aktiv?\n"
 
 #: pop3.c:712
 msgid "Cannot handle UIDL response from upstream server.\n"
-msgstr "无法操作来自上游服务器的 UIDL 响应。\n"
+msgstr "Kan inte hantera UIDL-svar från uppströmsserver.\n"
 
 #: pop3.c:735
 msgid "Server responded with UID for wrong message.\n"
-msgstr "响应的服务器带有错误消息的 UID。\n"
+msgstr "Servern svarade med UID för fel meddelande.\n"
 
 #: pop3.c:762
 #, c-format
 msgid "id=%s (num=%u) was deleted, but is still present!\n"
-msgstr "id=%s (数量=%u 封)已被删除，但仍然存在！\n"
+msgstr "id=%s (nr=%u) raderades, men är fortfarande kvar!\n"
 
 #: pop3.c:866
 msgid "protocol error while fetching UIDLs\n"
-msgstr "正在读取 UIDLs 时协议出错\n"
+msgstr "protokollfel när UIDL:er hämtades\n"
 
 #: pop3.c:897
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
-msgstr "id = %s (数量 = %d 封) 已被删除，但仍然存在！\n"
+msgstr "id=%s (nr=%d) raderades, men är fortfarande kvar!\n"
 
 #: pop3.c:1205
 msgid "Option --folder is not supported with POP3\n"
-msgstr "POP3 不支持 --folder 选项\n"
+msgstr "Flaggan --folder stödjs inte med POP3\n"
 
 #: rcfile_y.y:119 rcfile_y.y:386 rcfile_y.y:394
 #, fuzzy
 msgid "pwmd not enabled"
-msgstr "SDPS 不可用"
+msgstr "SDPS är inte aktiverat."
 
 #: rcfile_y.y:134
 msgid "server option after user options"
-msgstr "服务器选项在用户选项后"
+msgstr "serverflagga efter användarflaggor"
 
 #: rcfile_y.y:165
 #, fuzzy
 msgid "Kerberos not enabled."
-msgstr "SDPS 不可用"
+msgstr "SDPS är inte aktiverat."
 
 #: rcfile_y.y:176
 msgid "SDPS not enabled."
-msgstr "SDPS 不可用"
+msgstr "SDPS är inte aktiverat."
 
 #: rcfile_y.y:220
 msgid ""
 "fetchmail: interface option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
-msgstr "fetchmail: interface 选项只有 Linux(无 IPv6)和 FreeBSD 支持\n"
+msgstr ""
+"fetchmail: gränssnittsflaggan stödjs endast under Linux (utan IPv6) och "
+"FreeBSD\n"
 
 #: rcfile_y.y:228
 msgid ""
 "fetchmail: monitor option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
-msgstr "fetchmail: monitor 选项只有 Linux(无 IPv6)和 FreeBSD 支持\n"
+msgstr ""
+"fetchmail: flaggan monitor stödjs endast under Linux (utan IPv6) och "
+"FreeBSD\n"
 
 #: rcfile_y.y:345
 msgid "SSL is not enabled"
-msgstr "SSL 不可用"
+msgstr "SSL är inte aktiverat"
 
 #: rcfile_y.y:412
 msgid "end of input"
-msgstr "输入结束"
+msgstr "slut på indata"
 
 #: rcfile_y.y:449
 #, c-format
 msgid "File %s must be a regular file.\n"
-msgstr "文件 %s 必须是个普通文件。\n"
+msgstr "Filen %s måste vara en normal fil.\n"
 
 #: rcfile_y.y:458
 #, c-format
 msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
-msgstr "文件 %s 不允许拥有高于 -rwx------ (0700) 的权限。\n"
+msgstr "Filen %s får inte ha mer rättigheter än -rwx------ (0700).\n"
 
 #: rcfile_y.y:465
 #, c-format
 msgid "File %s must be owned by you.\n"
-msgstr "文件 %s 必须归您所有。\n"
+msgstr "Filen %s måste ägas av dig.\n"
 
 #: report.c:48
 #, c-format
 msgid "%s (log message incomplete)\n"
-msgstr "%s (日志信息不完整)\n"
+msgstr "%s (loggmeddelandet ofullständigt)\n"
 
 #: rfc822.c:86
 #, c-format
 msgid "About to rewrite %s...\n"
-msgstr "正要重写 %s...\n"
+msgstr "I begrepp att skriva om %s …\n"
 
 #: rfc822.c:224
 #, c-format
 msgid "...rewritten version is %s.\n"
-msgstr "...重写版本为 %s。\n"
+msgstr "… omskriven version är %s.\n"
 
 #: rpa.c:116
 msgid "Success"
-msgstr "成功"
+msgstr "Gick bra"
 
 #: rpa.c:117
 msgid "Restricted user (something wrong with account)"
-msgstr "受限用户 (帐号有点问题)"
+msgstr "Begränsad användare (något är fel med kontot)"
 
 #: rpa.c:118
 msgid "Invalid userid or passphrase"
-msgstr "无效的用户 id 或是密码短语"
+msgstr "Ogiltig användar-id eller lösenfras"
 
 #: rpa.c:119
 msgid "Deity error"
-msgstr "Deity error"
+msgstr "Gudafel"
 
 #: rpa.c:172
 msgid "RPA token 2: Base64 decode error\n"
-msgstr "RPA 标识 2: BASE64 解码错误\n"
+msgstr "RPA symbol 2: Base64-avkodningsfel\n"
 
 #: rpa.c:183
 #, c-format
 msgid "Service chose RPA version %d.%d\n"
-msgstr "服务选择了 RPA 版本 %d.%d\n"
+msgstr "Tjänsten valde RPA version %d.%d\n"
 
 #: rpa.c:189
 #, c-format
 msgid "Service challenge (l=%d):\n"
-msgstr "服务请求 (l=%d):\n"
+msgstr "Tjänstutmaning (l=%d):\n"
 
 #: rpa.c:198
 #, c-format
 msgid "Service timestamp %s\n"
-msgstr "服务时间戳 %s\n"
+msgstr "Tjänstetidsstämpel %s\n"
 
 #: rpa.c:203
 msgid "RPA token 2 length error\n"
-msgstr "RPA 标识 2 长度错误\n"
+msgstr "RPA symbol 2 längdfel\n"
 
 #: rpa.c:207
 #, c-format
 msgid "Realm list: %s\n"
-msgstr "域列表: %s\n"
+msgstr "Lista över riken: %s\n"
 
 #: rpa.c:211
 msgid "RPA error in service@realm string\n"
-msgstr "在“服务@域”字符串中有 RPA 错误\n"
+msgstr "RPA-fel i tjänst@rike-sträng\n"
 
 #: rpa.c:248
 msgid "RPA token 4: Base64 decode error\n"
-msgstr "RPA 标识 4: Base64 解码错误\n"
+msgstr "RPA symbol 4: Base64-avkodningsfel\n"
 
 #: rpa.c:259
 #, c-format
 msgid "User authentication (l=%d):\n"
-msgstr "用户验证 (l=%d):\n"
+msgstr "Användarautenticering (l=%d):\n"
 
 #: rpa.c:273
 #, c-format
 msgid "RPA status: %02X\n"
-msgstr "RPA 状态: %02X\n"
+msgstr "RPA-status: %02X\n"
 
 #: rpa.c:279
 msgid "RPA token 4 length error\n"
-msgstr "RPA 标识 4 长度错误\n"
+msgstr "RPA symbol 4 längdfel\n"
 
 #: rpa.c:286
 #, c-format
 msgid "RPA rejects you: %s\n"
-msgstr "RPA 拒绝您: %s\n"
+msgstr "RPA avvisar dig: %s\n"
 
 #: rpa.c:288
 msgid "RPA rejects you, reason unknown\n"
-msgstr "RPA 拒绝您: 原因不明\n"
+msgstr "RPA avvisar dig, okänd anledning\n"
 
 #: rpa.c:296
 #, c-format
 msgid "RPA User Authentication length error: %d\n"
-msgstr "RPA 用户验证长度错误: %d\n"
+msgstr "RPA-användarautenticering gav längdfel: %d\n"
 
 #: rpa.c:301
 #, c-format
 msgid "RPA Session key length error: %d\n"
-msgstr "RPA 会话密钥长度错误: %d\n"
+msgstr "RPA-sessionsnyckel gav längdfel: %d\n"
 
 #: rpa.c:307
 msgid "RPA _service_ auth fail. Spoof server?\n"
-msgstr "RPA _service_auth 错误。要伪装服务器吗 ？\n"
+msgstr "RPA _tjänste_autenticering misslyckades.  Imiterad server?\n"
 
 #: rpa.c:312
 msgid "Session key established:\n"
-msgstr "创建会话密钥:\n"
+msgstr "Sessionsnyckel etablerad:\n"
 
 #: rpa.c:343
 msgid "RPA authorisation complete\n"
-msgstr "RPA 授权完成\n"
+msgstr "RPA-autenticeringen avslutad\n"
 
 #: rpa.c:370
 msgid "Get response\n"
-msgstr "得到响应\n"
+msgstr "Få svar\n"
 
 #: rpa.c:400
 #, c-format
 msgid "Get response return %d [%s]\n"
-msgstr "得到响应返回 %d [%s]\n"
+msgstr "Få svar returnerade %d [%s]\n"
 
 #: rpa.c:461
 msgid "Hdr not 60\n"
-msgstr "Hdr 非 60\n"
+msgstr "Huvud inte 60\n"
 
 #: rpa.c:482
 msgid "Token length error\n"
-msgstr "标识长度错误\n"
+msgstr "Symbollängdsfel\n"
 
 #: rpa.c:487
 #, c-format
 msgid "Token Length %d disagrees with rxlen %d\n"
-msgstr "标识长度 %d 不同于 rxlen %d\n"
+msgstr "Symbollängd %d stämmer inte med rxlen %d\n"
 
 #: rpa.c:493
 msgid "Mechanism field incorrect\n"
-msgstr "机制域错误\n"
+msgstr "Mekanismfältet felaktigt\n"
 
 #: rpa.c:529
 #, c-format
 msgid "dec64 error at char %d: %x\n"
-msgstr "字符 %d 处有 deb64 错误: %x\n"
+msgstr "dec64-fel vid tecken %d: %x\n"
 
 #: rpa.c:544
 msgid "Inbound binary data:\n"
-msgstr "收到的二进制数据:\n"
+msgstr "Inkommande binära data:\n"
 
 #: rpa.c:580
 msgid "Outbound data:\n"
-msgstr "送出数据:\n"
+msgstr "Utgående data:\n"
 
 #: rpa.c:643
 msgid "RPA String too long\n"
-msgstr "RPA 字串太长\n"
+msgstr "För lång RPA-sträng\n"
 
 #: rpa.c:648
 msgid "Unicode:\n"
@@ -2567,106 +2676,106 @@ msgstr "Unicode:\n"
 
 #: rpa.c:707
 msgid "RPA Failed open of /dev/urandom. This shouldn't\n"
-msgstr "打开 /dev/urandom 时 RPA 失败。这应该不\n"
+msgstr "RPA misslyckades öppna /dev/urandom.  Detta borde inte\n"
 
 #: rpa.c:708
 msgid "    prevent you logging in, but means you\n"
-msgstr "影响您登入，但意味着您\n"
+msgstr "    hindra dig från att logga in, men betyder att du\n"
 
 #: rpa.c:709
 msgid "    cannot be sure you are talking to the\n"
-msgstr "无法确认您正在与\n"
+msgstr "    inte kan vara säker på att du talar med\n"
 
 #: rpa.c:710
 msgid "    service that you think you are (replay\n"
-msgstr "您想要的服务对话。可能您正被一个虚假的服务\n"
+msgstr "    den tjänst du tror du talar med (attacker med\n"
 
 #: rpa.c:711
 msgid "    attacks by a dishonest service are possible.)\n"
-msgstr "进行回放操作，即受到攻击\n"
+msgstr "    återuppspelning av någon oärlig tjänst är möjliga).\n"
 
 #: rpa.c:722
 msgid "User challenge:\n"
-msgstr "用户请求:\n"
+msgstr "Användarutmaning:\n"
 
 #: rpa.c:872
 msgid "MD5 being applied to data block:\n"
-msgstr "数据块使用了 MD5:\n"
+msgstr "MD5 tillämpas på datablocket:\n"
 
 #: rpa.c:885
 msgid "MD5 result is:\n"
-msgstr "MD5 值:\n"
+msgstr "MD5-resultatet är:\n"
 
 #: servport.c:49
 #, c-format
 msgid "getaddrinfo(NULL, \"%s\") error: %s\n"
-msgstr "getaddrinfo(NULL, “%s”) 错误: %s\n"
+msgstr "getaddrinfo(NULL, \"%s\") fel: %s\n"
 
 #: servport.c:76
 #, c-format
 msgid "Cannot resolve service %s to port number.\n"
-msgstr "无法将服务 %s 解析为端口号\n"
+msgstr "Kan inte slå upp tjänsten %s till portnummer.\n"
 
 #: servport.c:77
 msgid "Please specify the service as decimal port number.\n"
-msgstr "请把服务指定为十进制的端口号\n"
+msgstr "Ange tjänsten som ett decimalt portnummer.\n"
 
 #: sink.c:220
 #, c-format
 msgid "forwarding to %s\n"
-msgstr "正在转发至 %s\n"
+msgstr "vidarebefodrar till %s\n"
 
 #: sink.c:307
 msgid "SMTP: (bounce-message body)\n"
-msgstr "SMTP: (回送邮件内容)\n"
+msgstr "SMTP: (returmeddelandes kropp)\n"
 
 #: sink.c:310
 #, c-format
 msgid "mail from %s bounced to %s\n"
-msgstr "邮件从 %s 回送至 %s\n"
+msgstr "post från %s studsade till %s\n"
 
 #: sink.c:485 sink.c:578
 #, c-format
 msgid "%cMTP error: %s\n"
-msgstr "%cMTP 出错: %s\n"
+msgstr "%cMTP-fel: %s\n"
 
 #: sink.c:523
 msgid "SMTP server requires STARTTLS, keeping message.\n"
-msgstr "SMTP 服务器需要 STARTTLS 认证，正在保存邮件。\n"
+msgstr "SMTP-servern kräver STARTTLS, behåller meddelandet.\n"
 
 #: sink.c:703
 #, c-format
 msgid "BSMTP file open failed: %s\n"
-msgstr "打开 BSMTP 文件失败: %s\n"
+msgstr "BSMTP-öppning av fil misslyckades: %s\n"
 
 #: sink.c:749
 #, c-format
 msgid "BSMTP preamble write failed: %s.\n"
-msgstr "写入 BSMTP 报头失败: %s。\n"
+msgstr "BSMTP-skrivning av ingressen misslyckades: %s.\n"
 
 #: sink.c:963
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
-msgstr "%cMTP 端不认可收件人地址 “%s”\n"
+msgstr "%cMTP-lyssnaren tycker inte om mottagaradressen ”%s”\n"
 
 #: sink.c:970
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
-msgstr "%cMTP 端不是真的认可收件人地址 “%s”\n"
+msgstr "%cMTP-lyssnaren tycker inte riktigt om mottagaradressen ”%s”\n"
 
 #: sink.c:1016
 msgid "no address matches; no postmaster set.\n"
-msgstr "无匹配的地址；也无 postmaster 设置\n"
+msgstr "inga adressmatchningar, ingen postmästare satt.\n"
 
 #: sink.c:1028
 #, c-format
 msgid "can't even send to %s!\n"
-msgstr "无法稳定发送至 %s！\n"
+msgstr "kan inte ens skicka till %s!\n"
 
 #: sink.c:1034
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
-msgstr "无匹配的地址；转发至 %s。\n"
+msgstr "inga adressmatchingar, vidarebefodrar till %s.\n"
 
 #: sink.c:1154
 #, c-format
@@ -2680,70 +2789,72 @@ msgstr ""
 #: sink.c:1198
 #, c-format
 msgid "about to deliver with: %s\n"
-msgstr "即将用 %s 投递\n"
+msgstr "färdig att leverera med: %s\n"
 
 #: sink.c:1208
 #, c-format
 msgid "Cannot switch effective user id to %ld: %s\n"
-msgstr "无法将当前用户名切换为 %ld: %s\n"
+msgstr "Kan inte byta effektiv användar-id till %ld: %s\n"
 
 #: sink.c:1218
 #, c-format
 msgid "Cannot switch effective user id back to original %ld: %s\n"
-msgstr "无法将当前用户名切换回之前的用户名 %ld: %s\n"
+msgstr "Kan inte byta tillbaka effektiv användar-id till orginalet %ld: %s\n"
 
 #: sink.c:1224
 msgid "MDA open failed\n"
-msgstr "打开 MDA 失败\n"
+msgstr "misslyckades öppna MDA:n\n"
 
 #: sink.c:1263
 #, c-format
 msgid "%cMTP connect to %s failed\n"
-msgstr "%cMTP 连接至 %s 失败\n"
+msgstr "%cMTP-anslutning till %s misslyckades\n"
 
 #: sink.c:1287
 #, c-format
 msgid "can't raise the listener; falling back to %s"
-msgstr "无法启动 MDA 代理；正在转到 MDA 代理 %s"
+msgstr "kan inte höja lyssnaren, faller tillbaka på %s"
 
 #: sink.c:1345
 #, c-format
 msgid "Message termination or close of BSMTP file failed: %s\n"
-msgstr "邮件终止或 BSMTP 文件关闭失败: %s\n"
+msgstr "Meddelandeavslutning eller stängning av BSMTP-fil misslyckades: %s\n"
 
 #: sink.c:1370
 #, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "写入 MDA 时出错: %s\n"
+msgstr "Fel vid skrivning till MDA:n: %s\n"
 
 #: sink.c:1373
 #, c-format
 msgid "MDA died of signal %d\n"
-msgstr "MDA 被信号 %d 终止\n"
+msgstr "MDA:n dog av signal %d\n"
 
 #: sink.c:1376
 #, c-format
 msgid "MDA returned nonzero status %d\n"
-msgstr "MDA 返回非零值 %d\n"
+msgstr "MDA:n returnerade status skild från noll %d\n"
 
 #: sink.c:1379
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "奇怪: MDA pclose 返回 %d 且 errno 为 %d/%s，在 %s:%d 无法处理\n"
+msgstr ""
+"Konstigt: pclose av MDA:n returnerade %d och errno %d/%s, kan inte hanteras "
+"vid %s:%d\n"
 
 #: sink.c:1404
 msgid "SMTP listener refused delivery\n"
-msgstr "SMTP 端拒绝投递\n"
+msgstr "SMTP-lyssnaren vägrade leverera\n"
 
 #: sink.c:1434
 msgid "LMTP delivery error on EOM\n"
-msgstr "邮件结尾时用 LTMP 协议投递错误\n"
+msgstr "LMTP-leveransfel vid EOM\n"
 
 #: sink.c:1437
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
-msgstr "邮件结尾时 LMTP 协议的未知的非 503 响应: %s\n"
+msgstr "Oväntat icke-503-svar på LMTP EOM: %s\n"
 
 #: sink.c:1580
 msgid ""
@@ -2751,109 +2862,109 @@ msgid ""
 "The Fetchmail Daemon"
 msgstr ""
 "-- \n"
-"Fetchmail 后台服务"
+"Fetchmail-demonen"
 
 #: smtp.c:81
 msgid "ESMTP CRAM-MD5 Authentication...\n"
-msgstr "ESMTP CRAM-MD5 验证...\n"
+msgstr "ESMTP CRAM-MD5-autenticering …\n"
 
 #: smtp.c:87 smtp.c:137
 msgid "Server rejected the AUTH command.\n"
-msgstr "服务器拒绝 AUTH 命令。\n"
+msgstr "Servern avvisade AUTH-kommandot.\n"
 
 #: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
 msgid "Bad base64 reply from server.\n"
-msgstr "来自服务器的错误的 base64 响应。\n"
+msgstr "Felaktigt base64-svar från servern.\n"
 
 #: smtp.c:99
 #, c-format
 msgid "Challenge decoded: %s\n"
-msgstr "请求解码: %s\n"
+msgstr "Utmaningen avkodad: %s\n"
 
 #: smtp.c:116
 msgid "ESMTP PLAIN Authentication...\n"
-msgstr "ESMTP PLAIN 验证...\n"
+msgstr "ESMTP PLAIN-autenticering …\n"
 
 #: smtp.c:131
 msgid "ESMTP LOGIN Authentication...\n"
-msgstr "ESMTP LOGIN 验证...\n"
+msgstr "ESMTP LOGIN-autenticering …\n"
 
 #: smtp.c:349 smtp.c:377
 msgid "smtp listener protocol error\n"
-msgstr "smtp 端协议错误\n"
+msgstr "protokollfel hos smtp-lyssnaren\n"
 
 #: socket.c:77 socket.c:103
 msgid "fetchmail: malloc failed\n"
-msgstr "fetchmail: malloc 失败\n"
+msgstr "fetchmail: malloc misslyckades\n"
 
 #: socket.c:136
 msgid "fetchmail: socketpair failed\n"
-msgstr "fetchmail: socketpair 失败\n"
+msgstr "fetchmail: socketpair misslyckades\n"
 
 #: socket.c:142
 msgid "fetchmail: fork failed\n"
-msgstr "fetchmail: fork 失败\n"
+msgstr "fetchmail: fork misslyckades\n"
 
 #: socket.c:149
 msgid "dup2 failed\n"
-msgstr "dup2 失败\n"
+msgstr "dup2 misslyckades\n"
 
 #: socket.c:155
 #, c-format
 msgid "running %s (host %s service %s)\n"
-msgstr "正在运行 %s (主机 %s 服务 %s)\n"
+msgstr "kör %s (värd %s tjänst %s)\n"
 
 #: socket.c:158
 #, c-format
 msgid "execvp(%s) failed\n"
-msgstr "execvp(%s) 失败\n"
+msgstr "execvp(%s) misslyckades\n"
 
 #: socket.c:230
 #, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
-msgstr "getaddrinfo(“%s”，“%s”) 错误: %s\n"
+msgstr "getaddrinfo(\"%s\",\"%s\") fel: %s\n"
 
 #: socket.c:233
 msgid "Try adding the --service option (see also FAQ item R12).\n"
-msgstr "试着加入 --service 选项(参见 FAQ 条目 R12)。\n"
+msgstr "Försök att lägga till flaggan --service (se även FAQ-post R12).\n"
 
 #: socket.c:247 socket.c:250
 #, c-format
 msgid "unknown (%s)"
-msgstr "未知 (%s)"
+msgstr "okänt (%s)"
 
 #: socket.c:253
 #, c-format
 msgid "Trying to connect to %s/%s..."
-msgstr "正在尝试连接至 %s/%s..."
+msgstr "Försöker ansluta till %s/%s …"
 
 #: socket.c:262
 #, c-format
 msgid "cannot create socket: %s\n"
-msgstr "无法创建套接字: %s\n"
+msgstr "kan inte skapa uttag: %s\n"
 
 #: socket.c:264
 #, c-format
 msgid "name %d: cannot create socket family %d type %d: %s\n"
-msgstr "名称 %d: 无法创建套接字 %d 类型 %d: %s\n"
+msgstr "namn %d: kan inte skapa uttag med familj %d typ %d: %s\n"
 
 #: socket.c:282
 msgid "connection failed.\n"
-msgstr "连接失败。\n"
+msgstr "anslutningen misslyckades.\n"
 
 #: socket.c:284
 #, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "连接至 %s:%s [%s/%s] 失败: %s。\n"
+msgstr "anslutningen till %s:%s [%s/%s] misslyckades: %s.\n"
 
 #: socket.c:285
 #, c-format
 msgid "name %d: connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "名称 %d: 连接至 %s:%s [%s/%s] 失败: %s。\n"
+msgstr "namn %d: anslutning till %s:%s [%s/%s] misslyckades: %s.\n"
 
 #: socket.c:291
 msgid "connected.\n"
-msgstr "已连接。\n"
+msgstr "ansluten.\n"
 
 #: socket.c:304
 #, c-format
@@ -2861,124 +2972,129 @@ msgid ""
 "Connection errors for this poll:\n"
 "%s"
 msgstr ""
-"此服务器连接错误:\n"
+"Anslutningsfel för denna kontroll:\n"
 "%s"
 
 #: socket.c:540
 msgid "Server certificate:\n"
-msgstr "服务器认证:\n"
+msgstr "Servercertifikat:\n"
 
 #: socket.c:545
 #, c-format
 msgid "Certificate chain, from root to peer, starting at depth %d:\n"
-msgstr "验证链从根到节点，在 %d 开始:\n"
+msgstr "Certifikatskedja, från rot till motpart, med start på djup %d:\n"
 
 #: socket.c:548
 #, c-format
 msgid "Certificate at depth %d:\n"
-msgstr "验证处于 %d 层:\n"
+msgstr "Certifikat på djup %d:\n"
 
 #: socket.c:554
 #, c-format
 msgid "Issuer Organization: %s\n"
-msgstr "发行组织: %s\n"
+msgstr "Utvivarorganisation: %s\n"
 
 #: socket.c:557
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
-msgstr "警告: 发行组织名字太长 (可能截短)。\n"
+msgstr ""
+"Varning: Utgivarorganisationens namn är för långt (möjligen avhugget).\n"
 
 #: socket.c:559
 msgid "Unknown Organization\n"
-msgstr "未知的组织\n"
+msgstr "Okänd organisation\n"
 
 #: socket.c:561
 #, c-format
 msgid "Issuer CommonName: %s\n"
-msgstr "发行者: %s\n"
+msgstr "Utgivarens vanliga namn: %s\n"
 
 #: socket.c:564
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
-msgstr "警告: 发行者名称太长 (可能截短)。\n"
+msgstr "Varning: Utgivarens vanliga namn är för långt (möjligen avhugget).\n"
 
 #: socket.c:566
 msgid "Unknown Issuer CommonName\n"
-msgstr "未知的发行者名称\n"
+msgstr "Okänt vanligt namn på utgivaren\n"
 
 #: socket.c:572
 #, c-format
 msgid "Subject CommonName: %s\n"
-msgstr "邮件标题: %s\n"
+msgstr "Subjektets vanliga namn: %s\n"
 
 #: socket.c:578
 msgid "Bad certificate: Subject CommonName too long!\n"
-msgstr "证书错误: 邮件标题太长!\n"
+msgstr "Felaktigt certifikat: Subjetkets vanliga namn är för långt!\n"
 
 #: socket.c:584
 msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
-msgstr "证书错误: 邮件标题名中带有 NUL 字符，退出！\n"
+msgstr ""
+"Felaktigt certifikat: Subjektets vanliga namn innehåller nolltecken, "
+"avbryter!\n"
 
 #: socket.c:612
 #, c-format
 msgid "Subject Alternative Name: %s\n"
-msgstr "邮件标题别名: %s\n"
+msgstr "Subjektets alternativa namn: %s\n"
 
 #: socket.c:618
 msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
-msgstr "证书错误: 邮件标题别名带有 NUL 字符，退出！\n"
+msgstr ""
+"Felaktigt certifikat: Subjektets alternativa namn innehåller nolltecken, "
+"avbryter!\n"
 
 #: socket.c:635
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
-msgstr "服务器名不匹配: %s != %s\n"
+msgstr "Serverns vanliga namn stämmer inte: %s ≠ %s\n"
 
 #: socket.c:642
 msgid "Server name not set, could not verify certificate!\n"
-msgstr "未设置服务器名称，无法验证证书！\n"
+msgstr "Serverns namn inte satt, kunde inte verifiera certifikatet!\n"
 
 #: socket.c:647
 msgid "Unknown Server CommonName\n"
-msgstr "未知的服务器名\n"
+msgstr "Serverns vanliga namn okänt\n"
 
 #: socket.c:649
 msgid "Server name not specified in certificate!\n"
-msgstr "服务器名称未在证书中指定！\n"
+msgstr "Serverns namn är inte angivet i certifikatet!\n"
 
 #: socket.c:661
 msgid "EVP_md5() failed!\n"
-msgstr "EVP_md5() 失败！\n"
+msgstr "EVP_md5() misslyckades!\n"
 
 #: socket.c:665
 msgid "Out of memory!\n"
-msgstr "超出内存！\n"
+msgstr "Slut på minne!\n"
 
 #: socket.c:673
 msgid "Digest text buffer too small!\n"
-msgstr "Digest 文本缓冲区太小！\n"
+msgstr "Textbufferten för kontrollsumman är för liten!\n"
 
 #: socket.c:679
 #, c-format
 msgid "%s key fingerprint: %s\n"
-msgstr "%s 密钥指纹: %s\n"
+msgstr "%s nyckelfingeravtryck: %s\n"
 
 #: socket.c:683
 #, c-format
 msgid "%s fingerprints match.\n"
-msgstr "%s 指纹匹配。\n"
+msgstr "%s fingeravtryck stämmer.\n"
 
 #: socket.c:685
 #, c-format
 msgid "%s fingerprints do not match!\n"
-msgstr "%s 指纹不匹配！\n"
+msgstr "%s fingeravtryck stämmer inte!\n"
 
 #: socket.c:695
 #, c-format
 msgid "Server certificate verification error: %s\n"
-msgstr "服务器证书验证错误: %s\n"
+msgstr "Fel vid verifiering av servercertifikatet: %s\n"
 
 #: socket.c:702
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
-msgstr "未知的发行者　(前 %d 个字符): %s\n"
+msgstr "okänd utgivare (första %d tecknen): %s\n"
 
 #: socket.c:703
 msgid ""
@@ -2987,8 +3103,9 @@ msgid ""
 "details, please see the README.SSL-SERVER document that comes with "
 "fetchmail.\n"
 msgstr ""
-"此错误通常出现在服务器提供了一个不完整的验证链，fetchmain 对此无能为力。详细"
-"信息请查看随同 fetchmail 发行的 README.SSL-SERVER 文档。\n"
+"Detta fel uppstår vanligen när servern tillhandahåller en ofullständig "
+"certifikatkedja, vilket inte är något fetchmail kan göra något åt.  För "
+"detaljer, se dokumentet README.SSL-SERVER som kommer med fetchmail.\n"
 
 #: socket.c:712
 #, c-format
@@ -2998,54 +3115,58 @@ msgid ""
 "certificate directory. For details, please see the documentation of --"
 "sslcertpath and --sslcertfile in the manual page.\n"
 msgstr ""
-"这意味着根证书(为 %s 而颁发)不在 CA 证书受信路径处，或是 c_rehash 需要在证书"
-"目录下运行。详细信息请查看手册页中的 --sslcertpath 和 --sslcertfile 部分。\n"
+"Detta betyder att rotsigneringscertifikatat (utgivet för %s) inte finns på "
+"platserna för betrodda CA-certifikat, eller att c_rehash behöver köras på "
+"certifikatkatalogen.  För detaljer, se dokumentationen av --sslcertpath och "
+"--sslcertfile i manualsidan.\n"
 
 #: socket.c:805
 msgid "File descriptor out of range for SSL"
-msgstr "文件描述符超出 SSL 的范围"
+msgstr "Filbeskrivare utanför intervallet för SSL"
 
 #: socket.c:816
 msgid "Your operating system does not support SSLv2.\n"
-msgstr ""
+msgstr "Ditt operativsystem stödjer inte SSLv2.\n"
 
 #: socket.c:826
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
-msgstr "指定了无效的 SSL 协议 ‘%s’，将用默认的协议(SSLv23)代替。\n"
+msgstr "Ogiltigt SSL-protokoll ”%s” angivet, använder standard (SSLv23).\n"
 
 #: socket.c:919
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
-msgstr "证书(指纹)验证被不明原因地跳过！\n"
+msgstr "Certifikat-/fingeravtrycksverifikation hoppades på något sätt över!\n"
 
 #: socket.c:936
 msgid ""
 "Warning: the connection is insecure, continuing anyways. (Better use --"
 "sslcertck!)\n"
-msgstr "警告:此连接不安全，但会继续运行。(最好使用 --sslcertck！)\n"
+msgstr ""
+"Varning: anslutningen är osäker, fortsätter ändå.  (Bättre att använda --"
+"sslcertck!)\n"
 
 #: socket.c:978
 msgid "Cygwin socket read retry\n"
-msgstr "重试读取 Cygwin 接口\n"
+msgstr "Gör om försök att läsa Cygwin-uttag\n"
 
 #: socket.c:981
 msgid "Cygwin socket read retry failed!\n"
-msgstr "重试读取 Cygwin 接口失败！\n"
+msgstr "Försök att göra om läsning av Cygwin-uttag misslyckades!\n"
 
 #: transact.c:65
 #, c-format
 msgid "mapped address %s to local %s\n"
-msgstr "地址 %s 被映射至本地 %s\n"
+msgstr "översatte adressen %s till den lokala %s\n"
 
 #: transact.c:87
 #, c-format
 msgid "mapped %s to local %s\n"
-msgstr "映射 %s 至本地 %s\n"
+msgstr "översatte %s till den lokala %s\n"
 
 #: transact.c:154
 #, c-format
 msgid "passed through %s matching %s\n"
-msgstr "传送过来的 %s 正与 %s 进行比较\n"
+msgstr "skickade vidare %s som matchar %s\n"
 
 #: transact.c:226
 #, c-format
@@ -3053,268 +3174,258 @@ msgid ""
 "analyzing Received line:\n"
 "%s"
 msgstr ""
-"正在分析 Received 行:\n"
+"analycerar Received-rad:\n"
 "%s"
 
 #: transact.c:265
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
-msgstr "收到的行中 %s 是邮件服务器的一个昵称\n"
+msgstr "raden accepterad, %s är ett alias för postservern\n"
 
 #: transact.c:271
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
-msgstr "拒收的行中 %s 非邮件服务器的昵称\n"
+msgstr "raden avvisad, %s är inte ett alias för postservern\n"
 
 #: transact.c:345
 msgid "no Received address found\n"
-msgstr "找不到 Received 地址\n"
+msgstr "ingen Received-adress hittad\n"
 
 #: transact.c:354
 #, c-format
 msgid "found Received address `%s'\n"
-msgstr "找到 Received 地址 ‘%s’\n"
+msgstr "hittade Received-adressen ”%s”\n"
 
 #: transact.c:599
 msgid "incorrect header line found - see manpage for bad-header option\n"
-msgstr "发现不正确的 header 行，查看手册页中的 bad-header 选项\n"
+msgstr "felaktig huvudrad hittad - se flaggan bad-header i manualsidan\n"
 
 #: transact.c:601
 #, c-format
 msgid "line: %s"
-msgstr "行: %s"
+msgstr "rad: %s"
 
 #: transact.c:1066 transact.c:1076
 #, c-format
 msgid "Parsing envelope \"%s\" names \"%-.*s\"\n"
-msgstr "正在解析邮件\"%s\"，名称\"%-.*s\"\n"
+msgstr "Tolkar kuvertet ”%s” namn ”%-.*s”\n"
 
 #: transact.c:1091
 #, c-format
 msgid "Parsing Received names \"%-.*s\"\n"
-msgstr "正在解析 Received 信息\"%-.*s\"\n"
+msgstr "Tolkar Received-namn ”%-.*s”\n"
 
 #: transact.c:1103
 msgid "No envelope recipient found, resorting to header guessing.\n"
-msgstr "未发现邮件接收人，采用猜测邮件头的方式。\n"
+msgstr "Ingen kuvertmottagare hittad, tar till gissning från huvuden.\n"
 
 #: transact.c:1121
 #, c-format
 msgid "Guessing from header \"%-.*s\".\n"
-msgstr "正在从邮件头\"%-.*s\"猜测。\n"
+msgstr "Gissar utgående från huvudet ”%-.*s”.\n"
 
 #: transact.c:1136
 #, c-format
 msgid "no local matches, forwarding to %s\n"
-msgstr "无本地匹配的收件人，正在转发至 %s\n"
+msgstr "inga lokala matchningar, vidarebefodrar till %s\n"
 
 #: transact.c:1151
 msgid "forwarding and deletion suppressed due to DNS errors\n"
-msgstr "正在转发且由于 DNS 错误，删除被取消了\n"
+msgstr "vidarebefodran och radering avstängd på grund av DNS-fel\n"
 
 #: transact.c:1262
 msgid "writing RFC822 msgblk.headers\n"
-msgstr "正在重写 RFC822 协议中定义的邮件信息块的头部\n"
+msgstr "skriver RFC822 msgblk.headers\n"
 
 #: transact.c:1281
 msgid "no recipient addresses matched declared local names"
-msgstr "收件人地址与本地已知的用户名不匹配"
+msgstr "inga mottagaradresser matchade deklarerade lokala namn"
 
 #: transact.c:1288
 #, c-format
 msgid "recipient address %s didn't match any local name"
-msgstr "收到人地址 %s 与本地任何一个用户名均不匹配"
+msgstr "mottagaradressen %s matchade inte något lokalt namn"
 
 #: transact.c:1297
 msgid "message has embedded NULs"
-msgstr "邮件嵌入了 NULs"
+msgstr "meddelandet har inbäddade nolltecken"
 
 #: transact.c:1305
 msgid "SMTP listener rejected local recipient addresses: "
-msgstr "SMTP 端拒绝本地收件人地址:"
+msgstr "SMTP-lyssnaren avvisade lokala mottagaradresser: "
 
 #: transact.c:1355
 msgid "error writing message text\n"
-msgstr "在写邮件文本时出错\n"
+msgstr "fel när meddelandetexten skrevs\n"
 
 #: transact.c:1622
 #, c-format
 msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
-msgstr ""
-"缓冲区太小。这是 %s:%lu 调用的一个错误。\n"
-"\n"
+msgstr "bufferten är för liten.  Detta är ett fel i anroparen av %s:%lu.\n"
 
 #: uid.c:256
 #, c-format
 msgid "Old UID list from %s:"
-msgstr "来自 %s 的旧 UID 列表:"
+msgstr "Gammal UID-lista från %s:"
 
 #: uid.c:260 uid.c:269 uid.c:337
 msgid " <empty>"
-msgstr " <空>"
+msgstr " <tom>"
 
 #: uid.c:267
 msgid "Scratch list of UIDs:"
-msgstr "抓取 UIDs 列表:"
+msgstr "Utkastlista av UID:er:"
 
 #: uid.c:351 uid.c:395
 #, c-format
 msgid "Merged UID list from %s:"
-msgstr "从 %s 合并 UID 列表:"
+msgstr "Sammanslagen UID-lista från %s:"
 
 #: uid.c:354
 #, c-format
 msgid "New UID list from %s:"
-msgstr "来自 %s 的新 UID 列表:"
+msgstr "Ny UID-lista från %s:"
 
 #: uid.c:384
 msgid "not swapping UID lists, no UIDs seen this query\n"
-msgstr "不转储 UID 列表，本次查寻无 UIDs 读取\n"
+msgstr "växlar inte UID-listor, inga UID:er har setts i denna fråga\n"
 
 #: uid.c:404
 msgid "discarding new UID list\n"
-msgstr "正在撤消新的 UID 列表\n"
+msgstr "kastar ny UID-lista\n"
 
 #: uid.c:461
 msgid "Deleting fetchids file.\n"
-msgstr "正在删除 fetchids 文件\n"
+msgstr "Raderar fetchid-filen.\n"
 
 #: uid.c:464
 #, c-format
 msgid "Error deleting %s: %s\n"
-msgstr "删除 %s 时出错: %s\n"
+msgstr "Fel när %s raderades: %s\n"
 
 #: uid.c:470
 msgid "Writing fetchids file.\n"
-msgstr "正在写入 fetchids 文件。\n"
+msgstr "Skriver fetchids-fil.\n"
 
 #: uid.c:483 uid.c:492
 #, c-format
 msgid "Write error on fetchids file %s: %s\n"
-msgstr "将错误写入 fetchids 文件 %s: %s\n"
+msgstr "Fel när fetchids-filen %s skrevs: %s\n"
 
 #: uid.c:504
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
-msgstr "写入 fetchids 文件 %s 时出错，存在旧文件。\n"
+msgstr "Fel när fetchids-filen %s skrevs, den gamla filen lämnas kvar.\n"
 
 #: uid.c:508
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
-msgstr "无法将 fetchids 文件 %s 重命名为 %s: %s\n"
+msgstr "Kan inte byta namn på fetchids-filen %s till %s: %s\n"
 
 #: uid.c:512
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
-msgstr "无法打开 fetchids 文件 %s 写入: %s\n"
+msgstr "Kan inte öppna fetchids-filen %s för skrivning: %s\n"
 
 #: xmalloc.c:24
 msgid "malloc failed\n"
-msgstr "malloc 失败\n"
+msgstr "malloc misslyckades\n"
 
 #: xmalloc.c:37
 msgid "realloc failed\n"
-msgstr "realloc 失败\n"
+msgstr "realloc misslyckades\n"
 
 #~ msgid "Checking if %s is really the same node as %s\n"
-#~ msgstr "正在检查 %s 是否与节点 %s 一致\n"
+#~ msgstr "Kontrollerar om %s verkligen är samma nod som %s\n"
 
 #~ msgid "Yes, their IP addresses match\n"
-#~ msgstr "正确，它们的 IP 地址相同\n"
+#~ msgstr "Ja, deras IP-adresser stämmer\n"
 
 #~ msgid "No, their IP addresses don't match\n"
-#~ msgstr "错误，它们的 IP 地址不同\n"
+#~ msgstr "Nej, deras IP-adresser stämmer inte\n"
 
 #~ msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
-#~ msgstr "收取 %2$s 中邮件并查找 ‘%1$s’ 时 nameserver 出错: %3$s\n"
+#~ msgstr ""
+#~ "namnservern misslyckades när den letade efter ”%s” under pollning av %s: "
+#~ "%s\n"
 
 #~ msgid "nameserver failure while looking for `%s' during poll of %s.\n"
-#~ msgstr "收取 %2$s 中邮件并查找 ‘%1$s’ 时 nameserver 出错。\n"
+#~ msgstr ""
+#~ "namnservern misslyckades när den letade efter ”%s” under pollning av %s.\n"
 
 #~ msgid "kerberos error %s\n"
-#~ msgstr "kerberos 认证系统出错 %s\n"
+#~ msgstr "kerberos-fel %s\n"
 
 #~ msgid "Kerberos V4 support not linked.\n"
-#~ msgstr "未连接 Kerberos V4 支持\n"
+#~ msgstr "Kerberos V4-stöd inte inlänkat.\n"
 
 #~ msgid "KERBEROS v4 support is configured, but not compiled in.\n"
-#~ msgstr "设置了 KERBEROS v4 支持，但未编译在内\n"
+#~ msgstr "KERBEROS v4-stöd är konfigurerat, men inte inkompilerat.\n"
 
 #~ msgid ""
 #~ "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
-#~ msgstr "fetchmail: 警告: 无可用的 DNS 来检查取自 %s 的多投邮件\n"
+#~ msgstr ""
+#~ "fetchmail: varning: ingen DNS tillgänglig för att kontrollera "
+#~ "flermålshämtingar från %s\n"
 
 #~ msgid "POP2 support is not configured.\n"
-#~ msgstr "未设置 POP2 支持\n"
+#~ msgstr "POP2-stöd är inte konfigurerat.\n"
 
 #~ msgid "  APOP secret = \"%s\".\n"
-#~ msgstr " APOP 密码 = “%s”\n"
+#~ msgstr "  APOP-hemlighet = ”%s”.\n"
 
 #~ msgid "  RPOP id = \"%s\".\n"
-#~ msgstr " RPOP 密码 = “%s”\n"
+#~ msgstr "  RPOP-id = ”%s”.\n"
 
 #~ msgid " (forcing UIDL use)"
-#~ msgstr " (正在强制使用 UIDL)"
+#~ msgstr " (framtvingar användning av UIDL)"
 
 #~ msgid "  Kerberos V4 authentication will be forced.\n"
-#~ msgstr " 强制 Kerberos V4 验证\n"
+#~ msgstr "  Kerberos V4-autenticering kommer framtvingas.\n"
 
 #~ msgid "ERROR: no support for getpassword() routine\n"
-#~ msgstr "错误: 不支持 getpassword() 例程\n"
+#~ msgstr "FEL: inget stöd för getpassword()-rutinen\n"
 
 #~ msgid "fetchmail: thread sleeping for %d sec.\n"
-#~ msgstr "fetchmail: 线程休眠 %d 秒。\n"
+#~ msgstr "fetchmail: tråd sover i %d s.\n"
 
 #~ msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
-#~ msgstr "协议被识别为 IMAP2 或 IMAP2BIS\n"
+#~ msgstr "Protokoll identifierat som IMAP2 eller IMAP2BIS\n"
 
 #~ msgid "Required LOGIN capability not supported by server\n"
-#~ msgstr "需要的 LOGIN 功能未被编译进 fetchmail\n"
+#~ msgstr "Nödvändig LOGIN-förmåga inte inkompilerad i fetchmail\n"
 
 #~ msgid "could not decode initial BASE64 challenge\n"
-#~ msgstr "无法解码起始部分的 BASE64 编码请求\n"
+#~ msgstr "kunde inte avkoda inledande BASE64-utmaning\n"
 
 #~ msgid "principal %s in ticket does not match -u %s\n"
-#~ msgstr "证书中的验证方 %s 与 -u 选项中的 %s 不匹配\n"
+#~ msgstr "huvudnamn %s i biljetten stämmer inte med -u %s\n"
 
 #~ msgid "non-null instance (%s) might cause strange behavior\n"
-#~ msgstr "非空情况 (%s) 可能导致奇怪的行为\n"
+#~ msgstr "ej tom instans (%s) kan orsaka konstigt beteende\n"
 
 #~ msgid "could not decode BASE64 ready response\n"
-#~ msgstr "无法解码 BASE64 ready 响应\n"
+#~ msgstr "kunde inte avkoda BASE64-färdigt svar\n"
 
 #~ msgid "challenge mismatch\n"
-#~ msgstr "请求不匹配\n"
+#~ msgstr "utmaningen stämmer inte\n"
 
 #~ msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
-#~ msgstr " -U, --uidl\t强制使用 UIDLs(仅适用于 pop3)\n"
+#~ msgstr ""
+#~ "  -U, --uidl        framtvinga användning av UIDL:er (endast pop3)\n"
 
 #~ msgid "Messages inserted into list on server. Cannot handle this.\n"
-#~ msgstr "邮件被插入服务器列表。无法处理。\n"
+#~ msgstr ""
+#~ "Meddelanden infogade i listan på servern.  Kan inte hantera detta.\n"
 
 #~ msgid "protocol error\n"
-#~ msgstr "协议错\n"
+#~ msgstr "protokollfel\n"
 
 #~ msgid "Unknown system error"
-#~ msgstr "未知的系统错误"
+#~ msgstr "Okänt systemfel"
 
 #~ msgid "Saved error is still %d\n"
-#~ msgstr "保留的错误仍然为 %d\n"
+#~ msgstr "Sparat fel är fortfarande %d\n"
 
 #~ msgid "swapping UID lists\n"
-#~ msgstr "正在转储 UID 列表\n"
-
-#~ msgid "Subject: Fetchmail unreachable-server warning."
-#~ msgstr "主题: Fetchmail 警告，找不到服务器。"
-
-#~ msgid "Fetchmail could not reach the mail server %s:"
-#~ msgstr "Fetchmail 不能找到邮件服务器 %s:"
-
-#~ msgid "(null)"
-#~ msgstr "(null)"
-
-#~ msgid "krb5_sendauth: %s [server says '%*s']\n"
-#~ msgstr "krb5_sendauth: %s [ 服务器响应 \"%*s\"]\n"
-
-#~ msgid "Server CommonName: %s\n"
-#~ msgstr "服务器名: %s\n"
+#~ msgstr "växlar UID-listor\n"

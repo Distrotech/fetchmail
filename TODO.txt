@@ -1,6 +1,10 @@
 Note that there is a separate todo.html with different content than this.
 
 soon - MUST:
+- blacklist DigiNotar/Comodo hacks/certs, possibly with Chrome's serial#
+  list?
+- check if wildcards from X.509 are handled as strictly as required by
+  the RFCs.
 - audit if there are further untrusted data report_*() calls.
 - Debian Bug #475239, MIME decoder may break up words (need to quote results)
 - put bare IP addresses in brackets for SMTP (check if there are RFC

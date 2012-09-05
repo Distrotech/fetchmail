@@ -1,3 +1,12 @@
+Return PS_ERROR, not PS_SYNTAX, on failures for preconnect/postconnect.
+Credit to Gene Heskett, 2012-07-31, fetchmail-users@ list.
+
+support SHA1 (and possibly other algorithm) finger prints
+(grarpamp, fetchmail-users 2012-06-23)
+
+add a "send test mail" mode, see message by Stanley Dziegiel
+<stanley@stronglg.demon.co.uk> in fetchmail-users, 2012-05-30
+
 fix NUL generation (see 6.3.21 release) and possibly string length
 handling
 

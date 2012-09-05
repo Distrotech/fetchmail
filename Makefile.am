@@ -1,7 +1,7 @@
 # Makefile for fetchmail
 
 SUBDIRS=		. po
-AUTOMAKE_OPTIONS=	1.11 foreign no-dist-gzip dist-xz
+AUTOMAKE_OPTIONS=	1.11 foreign no-dist-gzip dist-xz color-tests
 
 AM_CPPFLAGS=		-I$(srcdir)/libesmtp
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
@@ -21,15 +21,9 @@ CFLAGS += @libpwmd_CFLAGS@
 LDFLAGS += @libpwmd_LIBS@
 endif
 
-if HAVE_PYTHON
 nodist_bin_SCRIPTS=	fetchmailconf
 python_PYTHON=		$(pys)
 dist_man1_MANS+=	$(pym)
-EXTRA_DIST=
-else
-noinst_PYTHON=		$(pys)
-EXTRA_DIST=		$(pym)
-endif
 
 CLEANFILES=		$(nodist_bin_SCRIPTS)
 
@@ -55,7 +49,7 @@ DEPENDENCIES=		libfm.a $(LIBOBJS)
 
 check_PROGRAMS=
 
-TESTS=			t.smoke t.validate-xhtml t.x509_name_match
+TESTS=			t.smoke t.validate-xhtml10 t.validate-xhtml t.x509_name_match
 TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
@@ -124,6 +118,8 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		README.packaging README.SSL-SERVER \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
 		Mailbox-Names-UTF7.txt Mailbox-Names-UTF7.html \
+		fetchmail-SA-2012-02.txt \
+		fetchmail-SA-2012-01.txt \
 		fetchmail-SA-2011-01.txt \
 		fetchmail-EN-2010-03.txt \
 		fetchmail-SA-2010-02.txt \
@@ -142,7 +138,7 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 # extra directories to ship
 distdirs = rh-config contrib beos
 
-EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
+EXTRA_DIST=	$(DISTDOCS) $(distdirs) \
 		fetchmail.spec fetchmail.xpm \
 		strlcpy.3 bighand.png \
 		m4/codeset.m4 \
