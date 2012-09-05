@@ -22,7 +22,7 @@ AC_USE_SYSTEM_EXTENSIONS
 dnl automake options are in Makefile.am
 AC_PREREQ(2.64)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(silent-rules)
 
 dnl python is optional
 #
