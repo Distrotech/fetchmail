@@ -19,10 +19,10 @@ view the raw log message.
 -- Matthias Andree, June 2011
 
 diff --git a/socket.c b/socket.c
-index c8117a5..89847fe 100644
+index daa291d..dab91ba 100644
 --- a/socket.c
 +++ b/socket.c
-@@ -362,6 +362,49 @@ static	SSL *_ssl_context[FD_SETSIZE];
+@@ -333,6 +333,49 @@ static	SSL *_ssl_context[FD_SETSIZE];
  static SSL	*SSLGetContext( int );
  #endif /* SSL_ENABLE */
  
@@ -72,7 +72,7 @@ index c8117a5..89847fe 100644
  int SockWrite(int sock, const char *buf, int len)
  {
      int n, wrlen = 0;
-@@ -369,6 +412,8 @@ int SockWrite(int sock, const char *buf, int len)
+@@ -340,6 +383,8 @@ int SockWrite(int sock, const char *buf, int len)
      SSL *ssl;
  #endif
  
@@ -81,7 +81,7 @@ index c8117a5..89847fe 100644
      while (len)
      {
  #ifdef SSL_ENABLE
-@@ -471,6 +516,8 @@ int SockRead(int sock, char *buf, int len)
+@@ -442,6 +487,8 @@ int SockRead(int sock, char *buf, int len)
  	    (!newline && len);
      *bp = '\0';
  
