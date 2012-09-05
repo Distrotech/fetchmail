@@ -45,5 +45,3 @@ BG daemon (watch out for idfile though!)
 
 - validate addresses to avoid invalid address issues
     + consider if a bad-header interaction is desired
-
-- merge up 6.3.20-6.3.22 fixes and NEWS
