@@ -1,3 +1,5 @@
+Review Fabio Rossi's contribution, fetchmail-mda-fork.*, polish and merge.
+
 Return PS_ERROR, not PS_SYNTAX, on failures for preconnect/postconnect.
 Credit to Gene Heskett, 2012-07-31, fetchmail-users@ list.
 
