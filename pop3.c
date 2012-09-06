@@ -270,8 +270,10 @@ static int do_apop(int sock, struct query *ctl, char *greeting)
     /* find start of timestamp */
     start = strchr(greeting, '<');
     if (!start) {
-	report(stderr,
-		GT_("Required APOP timestamp not found in greeting\n"));
+	if (ctl->server.authenticate == A_APOP || outlevel >= O_DEBUG) {
+	    report(ctl->server.authenticate == A_APOP ? stderr : stdout,
+		    GT_("Required APOP timestamp not found in greeting\n"));
+	}
 	return PS_AUTHFAIL;
     }
 
