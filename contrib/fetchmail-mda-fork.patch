@@ -1,0 +1,172 @@
+diff -rup /tmp/fetchmail-6.3.21//daemon.c ./daemon.c
+--- /tmp/fetchmail-6.3.21//daemon.c	2011-08-21 15:34:58.000000000 +0200
++++ ./daemon.c	2012-02-19 21:10:16.200367846 +0100
+@@ -53,9 +53,7 @@
+ #include "fetchmail.h"
+ #include "tunable.h"
+ 
+-static RETSIGTYPE
+-sigchld_handler (int sig)
+-/* process SIGCHLD to obtain the exit code of the terminating process */
++int wait_for_child(pid_t who)
+ {
+ #if 	defined(HAVE_WAITPID)				/* the POSIX way */
+     int status;
+@@ -70,13 +68,23 @@ sigchld_handler (int sig)
+     int status;
+ #endif
+ 
+-    while ((pid = wait3(&status, WNOHANG, 0)) > 0)
++    while ((pid = wait4(who, &status, WNOHANG, 0)) > 0)
+ 	continue; /* swallow 'em up. */
+ #else	/* Zooks! Nothing to do but wait(), and hope we don't block... */
+     int status;
+ 
+     wait(&status);
+ #endif
++
++    return (int)status;
++}
++
++static RETSIGTYPE
++sigchld_handler (int sig)
++/* process SIGCHLD to obtain the exit code of the terminating process */
++{
++    wait_for_child(-1);
++
+     lastsig = SIGCHLD;
+     (void)sig;
+ }
+diff -rup /tmp/fetchmail-6.3.21//fetchmail.c ./fetchmail.c
+--- /tmp/fetchmail-6.3.21//fetchmail.c	2011-08-21 15:34:58.000000000 +0200
++++ ./fetchmail.c	2012-02-19 21:13:05.279377301 +0100
+@@ -1393,11 +1393,24 @@ static RETSIGTYPE terminate_poll(int sig
+ #endif /* POP3_ENABLE */
+ }
+ 
++extern pid_t mda_pid;
++
+ static RETSIGTYPE terminate_run(int sig)
+ /* to be executed on normal or signal-induced termination */
+ {
+     struct query	*ctl;
+ 
++    /* 
++     * kill explicitly the MDA process so that it dies *before* fetchmail
++	 * otherwise an uncomplete message might be delivered generating garbage
++	 * in the maildir/mailbox
++     */
++    if( (sig == SIGINT || sig == SIGTERM ) && mda_pid != 0)
++    {
++      report(stdout, GT_("killing MDA with PID %d\n"), mda_pid);
++      kill(mda_pid, sig);
++    }
++
+     terminate_poll(sig);
+ 
+     /* 
+diff -rup /tmp/fetchmail-6.3.21//sink.c ./sink.c
+--- /tmp/fetchmail-6.3.21//sink.c	2012-02-19 17:57:37.000000000 +0100
++++ ./sink.c	2012-02-19 21:11:07.518370716 +0100
+@@ -632,6 +632,7 @@ static int handle_smtp_report_without_bo
+ 
+ /* these are shared by open_sink and stuffline */
+ static FILE *sinkfp;
++pid_t mda_pid = 0;
+ 
+ int stuffline(struct query *ctl, char *buf)
+ /* ship a line to the given control block's output sink (SMTP server or MDA) */
+@@ -1102,6 +1103,7 @@ static int open_mda_sink(struct query *c
+     struct	idlist *idp;
+     int	length = 0, fromlen = 0, nameslen = 0;
+     char	*names = NULL, *before, *after, *from = NULL;
++    int mda_pipe[2];
+ 
+     (void)bad_addresses;
+     xfree(ctl->destaddr);
+@@ -1219,7 +1221,7 @@ static int open_mda_sink(struct query *c
+ 
+ 
+     if (outlevel >= O_DEBUG)
+-	report(stdout, GT_("about to deliver with: %s\n"), before);
++	report(stdout, GT_("about to deliver with: '%s'\n"), before);
+ 
+ #ifdef HAVE_SETEUID
+     /*
+@@ -1235,7 +1237,29 @@ static int open_mda_sink(struct query *c
+     }
+ #endif /* HAVE_SETEUID */
+ 
+-    sinkfp = popen(before, "w");
++    if(pipe(mda_pipe) != 0) {
++	report(stderr, GT_("Cannot create a pipe for the MDA: %s\n"), strerror(errno));
++	return PS_IOERR;
++    }
++
++	/* save client's (MDA) PID in a global var for a clean shutdown in the fetchmail signal handler */
++    mda_pid = fork();
++    if(mda_pid < 0) {
++	report(stderr, GT_("Unable to fork for the MDA dispatching: %s\n"), strerror(errno));
++	return PS_IOERR;
++    }
++	else if(mda_pid == 0) { /* child */
++	/* close the write-end of the pipe connecting the stdin of the mda process to the read-end */
++	close(mda_pipe[1]);
++	dup2(mda_pipe[0], STDIN_FILENO);
++
++	execl("/bin/sh", "sh", "-c", before, NULL);
++	report(stderr, GT_("Unable to exec the MDA: %s\n"), strerror(errno));
++	return PS_IOERR;
++    }
++
++    close(mda_pipe[0]);
++    sinkfp = fdopen(mda_pipe[1], "w");
+     free(before);
+     before = NULL;
+ 
+@@ -1249,6 +1273,7 @@ static int open_mda_sink(struct query *c
+ 
+     if (!sinkfp)
+     {
++	mda_pid = 0;
+ 	report(stderr, GT_("MDA open failed\n"));
+ 	return(PS_IOERR);
+     }
+@@ -1338,8 +1363,10 @@ void release_sink(struct query *ctl)
+     {
+ 	if (sinkfp)
+ 	{
+-	    pclose(sinkfp);
++	    fclose(sinkfp); // send EOF to the pipe
+ 	    sinkfp = (FILE *)NULL;
++		wait_for_child(mda_pid);
++		mda_pid = 0;
+ 	}
+ 	deal_with_sigchld(); /* Restore SIGCHLD handling to reap zombies */
+     }
+@@ -1381,11 +1408,12 @@ int close_sink(struct query *ctl, struct
+ 	{
+ 	    if (ferror(sinkfp))
+ 		err = 1, e2 = errno;
+-	    if ((fflush(sinkfp)))
++	    if (fclose(sinkfp)) // send EOF to the pipe
+ 		err = 1, e2 = errno;
+ 
+ 	    errno = 0;
+-	    rc = pclose(sinkfp);
++		rc = wait_for_child(mda_pid);
++		mda_pid = 0;
+ 	    e = errno;
+ 	    sinkfp = (FILE *)NULL;
+ 	}
+@@ -1404,8 +1432,8 @@ int close_sink(struct query *ctl, struct
+ 			GT_("MDA returned nonzero status %d\n"), WEXITSTATUS(rc));
+ 	    } else {
+ 		report(stderr,
+-			GT_("Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"),
+-			rc, e, strerror(e), __FILE__, __LINE__);
++			GT_("Unexpected error %d/%s waiting for MDA process, cannot handle at %s:%d\n"),
++			e, strerror(e), __FILE__, __LINE__);
+ 	    }
+ 
+ 	    return(FALSE);

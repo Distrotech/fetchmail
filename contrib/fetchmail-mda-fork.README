@@ -1,0 +1,36 @@
+From rossi.f at inwind.it  Sun Feb 19 21:46:38 2012
+From: rossi.f at inwind.it (rossi.f at inwind.it)
+Date: Sun, 19 Feb 2012 21:46:38 +0100 (CET)
+Subject: [fetchmail-devel] [patch][RFC] proper kill management of the MDA
+	process
+Message-ID: <19562957.2848481329684398522.JavaMail.root@wmail5.libero.it>
+
+In the past there was a discussion with subject "the message fetch should be 
+completed before quitting" on the fetchmail-user mailing list. It was clear the 
+possibility of delivering incomplete mail messages when fetchmail is 
+interrupted during a mail dispatching process. The issue doesn't lead to a loss 
+of mail but produces some garbage in the maildir/mailbox (corrupted duplicated 
+messages).
+
+The problem is related to the use of the popen() function which doesn't 
+provide the PID number of the MDA process. In this way is not possible to track 
+properly the MDA process, i.e. to kill it in response to a quit command issued 
+to fetchmail. Using the killpg() in response to the SIGINT (or SIGTERM) signal 
+doesn't help because it kills the parent process before killing the child 
+process.
+
+Here is attached a first proposal to solve the issue, it seems to work on my 
+system. As I don't know the fetchmail code I'm pretty sure there are some 
+mistakes. First of all I don't understand the reason in the original 
+release_sink() function there is no check of the return from popen(). For this 
+reason I kept the same behavior with the new implementation. I also modified 
+the SIGCHLD handler to reuse the waiting procedure for the forked MDA process.
+
+Fabio
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: fetchmail-mda-fork.patch
+Type: text/x-patch
+Size: 5122 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/fetchmail-devel/attachments/20120219/c1d38b3f/attachment.bin>
