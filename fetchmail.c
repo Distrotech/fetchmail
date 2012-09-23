@@ -307,9 +307,31 @@ int main(int argc, char **argv)
     if (!quitonly)
 	implicitmode = load_params(argc, argv, optind);
 
-    /* precedence: logfile (if effective) overrides syslog. */
-    if (run.logfile && run.poll_interval && !nodetach) {
-	run.use_syslog = 0;
+    if (run.logfile) {
+	/* nodetach -> turn off logfile option */
+	if (nodetach) {
+	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("The nodetach option is in effect, ignoring logfile option.\n")); }
+	    xfree(run.logfile);
+	}
+
+	/* not in daemon mode -> turn off logfile option */
+	if (0 == run.poll_interval) {
+	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Not running in daemon mode, ignoring logfile option.\n")); }
+	    xfree(run.logfile);
+	}
+
+	/* log file not writable -> turn off logfile option */
+	if (run.logfile && 0 != access(run.logfile, F_OK)) {
+	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Logfile \"%s\" does not exist, ignoring logfile option.\n"), run.logfile); }
+	    xfree(run.logfile);
+	}
+
+	/* log file not writable -> turn off logfile option */
+	if (run.logfile && 0 != access(run.logfile, W_OK)) {
+	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Logfile \"%s\" is not writable, aborting.\n"), run.logfile); }
+	    xfree(run.logfile);
+	    exit(PS_UNDEFINED);
+	}
     }
 
 #if defined(HAVE_SYSLOG)
@@ -322,11 +344,18 @@ int main(int argc, char **argv)
 	/* Assume BSD4.2 openlog with two arguments */
 	openlog(program_name, LOG_PID);
 #endif
-	report_init(-1);
+	/* precedence: logfile (if effective) overrides syslog. */
+	if (run.logfile) {
+	    syslog(LOG_ERR, GT_("syslog and logfile options are both set, ignoring syslog, and logging to %s"), run.logfile);
+	    run.use_syslog = 0;
+	    report_init((run.poll_interval == 0 || nodetach) && !run.logfile); /* when changing this, change copy below, too */
+	} else {
+	    report_init(-1);
+	}
     }
     else
 #endif
-	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
+	report_init((run.poll_interval == 0 || nodetach) && !run.logfile); /* when changing this, change copy above, too */
 
 #ifdef POP3_ENABLE
     /* initialize UID handling */
@@ -601,14 +630,12 @@ int main(int argc, char **argv)
     else
     {
 	/* not in daemon mode */
-	if (run.logfile && !nodetach && access(run.logfile, F_OK) == 0)
-    	{
+	if (run.logfile)
+	{
 	    if (!freopen(run.logfile, "a", stdout))
 		    report(stderr, GT_("could not open %s to append logs to\n"), run.logfile);
 	    if (!freopen(run.logfile, "a", stderr))
 		    report(stdout, GT_("could not open %s to append logs to\n"), run.logfile);
-	    if (run.use_syslog)
-		report(stdout, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
     	}
     }
 
