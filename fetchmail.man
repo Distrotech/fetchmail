@@ -1336,6 +1336,8 @@ The
 option turns off use of
 .BR syslog (3),
 assuming it's turned on in the \fI~/.fetchmailrc\fP file.
+This option is overridden, in certain situations, by \fB\-\-logfile\fP (which
+see).
 .PP
 The
 .B \-N
@@ -1347,8 +1349,7 @@ fetchmail runs as the child of a supervisor process such as
 .BR init (8)
 or Gerrit Pape's
 .BR runit (8).
-Note that this also causes the logfile option to be ignored (though
-perhaps it shouldn't).
+Note that this also causes the logfile option to be ignored.
 .PP
 Note that while running in daemon mode polling a IMAP2bis server,
 transient errors (such as DNS failures or sendmail delivery refusals)
@@ -1667,13 +1668,16 @@ Keep permanently undeliverable mail as though a temporary error had
 occurred (default).
 T}
 set logfile  	\-L	\&	T{
-Name of a file to append error and status messages to.
+Name of a file to append error and status messages to.  Only effective
+in daemon mode and if fetchmail detaches.  If effective, overrides \fBset
+syslog\fP.
 T}
 set idfile  	\-i	\&	T{
 Name of the file to store UID lists in.
 T}
 set    syslog	\&	\&	T{
-Do error logging through syslog(3).
+Do error logging through syslog(3). May be overriden by \fBset
+logfile\fP.
 T}
 set no syslog  	\&	\&	T{
 Turn off error logging through syslog(3). (default)
@@ -2188,7 +2192,8 @@ authentication.  These defaults may be overridden by later options.
 There are some global option statements: 'set logfile'
 followed by a string sets the same global specified by \-\-logfile.  A
 command-line \-\-logfile option will override this. Note that \-\-logfile is
-only effective if fetchmail detaches itself from the terminal and the
+only effective if fetchmail detaches itself from the terminal, is in
+daemon mode, and if the
 logfile already exists before fetchmail is run, and it overrides
 \-\-syslog in this case.  Also,
 \&'set daemon' sets the poll interval as \-\-daemon does.  This can be
