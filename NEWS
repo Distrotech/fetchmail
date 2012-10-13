@@ -75,6 +75,11 @@ after 6.3.22 not available on their own in a newer 6.3.X release.
 * Clean up logfile vs. syslog handling, and in case logfile overrides
   syslog, send a message to the latter stating where logging goes.
 
+# WORKAROUNDS
+* Make Maillennium POP3 workarounds less specific, to encompass
+  Maillennium POP3/UNIBOX (Maillennium V05.00c++). Reported by Eddie
+  via fetchmail-users mailing list, 2012-10-13.
+
 
 fetchmail-6.3.22 (released 2012-08-29, 26077 LoC):
 
