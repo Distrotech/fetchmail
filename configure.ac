@@ -9,7 +9,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl XXX - if bumping version here, check fetchmail.man, too!
-AC_INIT([fetchmail],[6.3.22.1],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.22.2],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -19,7 +19,8 @@ AC_CANONICAL_HOST
 dnl automake options are in Makefile.am
 AC_PREREQ(2.60)
 dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([silent-rules -Wall])
+AM_SILENT_RULES
 
 dnl python is optional
 #
