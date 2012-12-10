@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.20\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2012-12-05 22:39+0100\n"
+"POT-Creation-Date: 2012-12-05 22:55+0100\n"
 "PO-Revision-Date: 2012-12-05 22:54+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -708,7 +708,8 @@ msgstr "Dies ist fetchmail Version %s"
 
 #: fetchmail.c:313
 msgid "The nodetach option is in effect, ignoring logfile option.\n"
-msgstr "Die nodetach-Option ist in Gebrauch, die logfile-Option wird ignoriert.\n"
+msgstr ""
+"Die nodetach-Option ist in Gebrauch, die logfile-Option wird ignoriert.\n"
 
 #: fetchmail.c:319
 msgid "Not running in daemon mode, ignoring logfile option.\n"
@@ -728,7 +729,8 @@ msgstr "Die Logdatei \"%s\" ist nicht beschreibbar, breche ab.\n"
 #, c-format
 msgid ""
 "syslog and logfile options are both set, ignoring syslog, and logging to %s"
-msgstr "syslog und logfile sind beide gesetzt, ignoriere syslog und logge nach %s"
+msgstr ""
+"syslog und logfile sind beide gesetzt, ignoriere syslog und logge nach %s"
 
 #: fetchmail.c:437
 #, c-format
