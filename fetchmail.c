@@ -310,25 +310,27 @@ int main(int argc, char **argv)
     if (run.logfile) {
 	/* nodetach -> turn off logfile option */
 	if (nodetach) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("The nodetach option is in effect, ignoring logfile option.\n")); }
+	    if (outlevel >= O_NORMAL) { fprintf(stderr, GT_("The nodetach option is in effect, ignoring logfile option.\n")); }
 	    xfree(run.logfile);
 	}
 
+#if 0
 	/* not in daemon mode -> turn off logfile option */
 	if (0 == run.poll_interval) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Not running in daemon mode, ignoring logfile option.\n")); }
+	    if (outlevel >= O_NORMAL) { fprintf(stderr, GT_("Not running in daemon mode, ignoring logfile option.\n")); }
 	    xfree(run.logfile);
 	}
+#endif
 
 	/* log file not writable -> turn off logfile option */
 	if (run.logfile && 0 != access(run.logfile, F_OK)) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Logfile \"%s\" does not exist, ignoring logfile option.\n"), run.logfile); }
+	    if (outlevel >= O_NORMAL) { fprintf(stderr, GT_("Logfile \"%s\" does not exist, ignoring logfile option.\n"), run.logfile); }
 	    xfree(run.logfile);
 	}
 
 	/* log file not writable -> turn off logfile option */
 	if (run.logfile && 0 != access(run.logfile, W_OK)) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Logfile \"%s\" is not writable, aborting.\n"), run.logfile); }
+	    fprintf(stderr, GT_("Logfile \"%s\" is not writable, aborting.\n"), run.logfile);
 	    xfree(run.logfile);
 	    exit(PS_UNDEFINED);
 	}

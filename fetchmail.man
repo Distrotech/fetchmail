@@ -10,7 +10,7 @@
 .\" Load www macros to process .URL requests, this requires groff:
 .mso www.tmac
 .\"
-.TH fetchmail 1 "fetchmail 6.3.23" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 6.3.24" "fetchmail" "fetchmail reference manual"
 
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
@@ -2230,8 +2230,7 @@ authentication.  These defaults may be overridden by later options.
 There are some global option statements: 'set logfile'
 followed by a string sets the same global specified by \-\-logfile.  A
 command-line \-\-logfile option will override this. Note that \-\-logfile is
-only effective if fetchmail detaches itself from the terminal, is in
-daemon mode, and if the
+only effective if fetchmail detaches itself from the terminal and the
 logfile already exists before fetchmail is run, and it overrides
 \-\-syslog in this case.  Also,
 \&'set daemon' sets the poll interval as \-\-daemon does.  This can be
