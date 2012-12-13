@@ -63,7 +63,15 @@ Should a 7.0 release be made earlier, chances are that the 6.3.X branch
 is abandoned and its changes be folded into the 7.0 release, with changes
 after 6.3.24 not available on their own in a newer 6.3.X release.
 
-# REGRESSION FIX
+# CRITICAL AND REGRESSION FIXES
+* Plug a memory leak in OpenSSL's certificate verification callback.
+  This would affect fetchmail configurations running with SSL in daemon mode
+  more than one-shot runs.
+  Reported by Erik Thiele, and pinned by Dominik, Debian Bug #688015.
+  This bug was introduced into fetchmail 6.2.9 (committed 2005-10-29)
+  when support for subjectAltName was added through a patch by Roland
+  Stigge, submitted as Debian Bug#201113.
+
 * The --logfile option now works again outside daemon mode, reported by Heinz
   Diehl. The documentation that I had been reading was inconsistent with the
   code, and only parts of the manual page claimed that --logfile was only
