@@ -69,7 +69,7 @@ after 6.3.24 not available on their own in a newer 6.3.X release.
   more than one-shot runs.
   Reported by Erik Thiele, and pinned by Dominik Heeg,
   fixes Debian Bug #688015.
-  This bug was introduced into fetchmail 6.2.9 (committed 2005-10-29)
+  This bug was introduced into fetchmail 6.3.0 (committed 2005-10-29)
   when support for subjectAltName was added through a patch by Roland
   Stigge, submitted as Debian Bug#201113.
 
