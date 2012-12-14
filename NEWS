@@ -67,7 +67,8 @@ after 6.3.24 not available on their own in a newer 6.3.X release.
 * Plug a memory leak in OpenSSL's certificate verification callback.
   This would affect fetchmail configurations running with SSL in daemon mode
   more than one-shot runs.
-  Reported by Erik Thiele, and pinned by Dominik, Debian Bug #688015.
+  Reported by Erik Thiele, and pinned by Dominik Heeg,
+  fixes Debian Bug #688015.
   This bug was introduced into fetchmail 6.2.9 (committed 2005-10-29)
   when support for subjectAltName was added through a patch by Roland
   Stigge, submitted as Debian Bug#201113.
