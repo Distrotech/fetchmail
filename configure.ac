@@ -968,7 +968,7 @@ if test "$needtrio" = 1 ; then
 fi
 dnl ----------------------------------------------------------------'
 
-AC_CONFIG_FILES([Makefile po/Makefile.in genlsm.sh])
+AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT
 
 dnl Local Variables:

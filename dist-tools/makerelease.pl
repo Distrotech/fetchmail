@@ -100,7 +100,7 @@ if (system("mkdir -p autobuild && cd autobuild "
 
 print "### Test-building the software...\n";
 if (system("cd autobuild && make -s clean"
-	. " && make " . ($verbose ? '' : '-s') . " check distcheck lsm")) {
+	. " && make " . ($verbose ? '' : '-s') . " check distcheck")) {
 	die("Compilation failure\n");
 }
 
@@ -176,10 +176,6 @@ print "### Uploading\n";
 print "=== local\n";
 
 system("cp", "autobuild/$project-$version$distsufx", "autobuild/$project-$version$distsufx.asc", "$ENV{HOME}/public_html/fetchmail/") and die "Cannot upload to \$HOME/public_html/fetchmail/: $!";
-
-print "=== ibiblio\n";
-
-system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc $project-$version.lsm ; quit\" ibiblio.org:/incoming/linux/") and warn "Upload to ibiblio failed: $!";
 
 print "=== berlios\n";
 

@@ -14,7 +14,6 @@ To do a release:
 - These would be done automatically by makerelease.pl:
   - Upload sig and tarball to ~/public_html/fetchmail/
   - Upload sig and tarball to ftp.berlios.de:/incoming/ and release
-  - Upload lsm, sig and tarball to ibiblio.org:/incoming/linux/
 
 - Update the fetchmail website for version, link to release nodes
   (update release_id) and last update, commit, and upload.

@@ -222,10 +222,6 @@ dist-hook:
 	cd $(distdir) && find $(distdirs) po -name .git -type d -prune -exec rm -rf '{}' ';'
 	cd $(distdir) && find $(distdirs) po -name '*~' -exec rm -f '{}' ';'
 
-.PHONY: lsm
-lsm: genlsm.sh dist
-	$(SHELL) genlsm.sh >$(PACKAGE)-$(VERSION).lsm
-
 # this target expects a .rsyncs file with lines of this format:
 # host:directory/
 # it will call rsync from its source directory to the destination for

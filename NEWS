@@ -56,12 +56,15 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail-6.3.24 (not yet released):
+fetchmail-6.3.24 (released 2012-12-23, 26108 LoC):
 
 # NOTE THAT THE RELEASE OF FUTURE FETCHMAIL 6.3.X VERSIONS IS UNCLEAR.
 Should a 7.0 release be made earlier, chances are that the 6.3.X branch
 is abandoned and its changes be folded into the 7.0 release, with changes
 after 6.3.24 not available on their own in a newer 6.3.X release.
+
+# NOTE THAT FETCHMAIL IS NO LONGER PUBLISHED THROUGH IBIBLIO.
+  They have stopped accepting submissions and consider themselves an archive.
 
 # CRITICAL AND REGRESSION FIXES
 * Plug a memory leak in OpenSSL's certificate verification callback.
