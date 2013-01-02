@@ -421,7 +421,6 @@ static int get_pwmd_details(const char *pwmd_account, int protocol,
     return 0;
 }
 #endif
-
 int main(int argc, char **argv)
 {
     int bkgd = FALSE;
@@ -471,7 +470,6 @@ int main(int argc, char **argv)
 
 #define IDFILE_NAME	".fetchids"
     run.idfile = prependdir (IDFILE_NAME, fmhome);
-
     outlevel = O_NORMAL;
 
     /*
@@ -577,25 +575,27 @@ int main(int argc, char **argv)
     if (run.logfile) {
 	/* nodetach -> turn off logfile option */
 	if (nodetach) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("The nodetach option is in effect, ignoring logfile option.\n")); }
+	    if (outlevel >= O_NORMAL) { fprintf(stderr, GT_("The nodetach option is in effect, ignoring logfile option.\n")); }
 	    xfree(run.logfile);
 	}
 
+#if 0
 	/* not in daemon mode -> turn off logfile option */
 	if (0 == run.poll_interval) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Not running in daemon mode, ignoring logfile option.\n")); }
+	    if (outlevel >= O_NORMAL) { fprintf(stderr, GT_("Not running in daemon mode, ignoring logfile option.\n")); }
 	    xfree(run.logfile);
 	}
+#endif
 
 	/* log file not writable -> turn off logfile option */
 	if (run.logfile && 0 != access(run.logfile, F_OK)) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Logfile \"%s\" does not exist, ignoring logfile option.\n"), run.logfile); }
+	    if (outlevel >= O_NORMAL) { fprintf(stderr, GT_("Logfile \"%s\" does not exist, ignoring logfile option.\n"), run.logfile); }
 	    xfree(run.logfile);
 	}
 
 	/* log file not writable -> turn off logfile option */
 	if (run.logfile && 0 != access(run.logfile, W_OK)) {
-	    if (outlevel >= O_DEBUG) { fprintf(stderr, GT_("Logfile \"%s\" is not writable, aborting.\n"), run.logfile); }
+	    fprintf(stderr, GT_("Logfile \"%s\" is not writable, aborting.\n"), run.logfile);
 	    xfree(run.logfile);
 	    exit(PS_UNDEFINED);
 	}
@@ -1136,7 +1136,6 @@ int main(int argc, char **argv)
 	    pwm = NULL;
 	}
 #endif
-
 	/* close connections cleanly */
 	terminate_poll(0);
 
@@ -1432,7 +1431,6 @@ static int load_params(int argc, char **argv, int optind)
 			fprintf(stderr,GT_("Warning: multiple mentions of host %s in config file\n"),argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;
-
 #ifdef HAVE_LIBPWMD
 		    if (ctl->pwmd_file) {
 			/*
@@ -1463,7 +1461,6 @@ static int load_params(int argc, char **argv, int optind)
 		 * call later on.
 		 */
 		ctl = hostalloc((struct query *)NULL);
-
 #ifdef HAVE_LIBPWMD
 		if (cmd_opts.pwmd_file) {
 		    /*
@@ -1671,6 +1668,7 @@ static int load_params(int argc, char **argv, int optind)
 	    if (!ctl->localnames)	/* for local delivery via SMTP */
 		save_str_pair(&ctl->localnames, user, NULL);
 
+
 	    /*
 	     * can't handle multidrop mailboxes without "envelope"
 	     * option, this causes truckloads full of support complaints
@@ -1788,6 +1786,7 @@ static void terminate_run(int sig)
 	if (ctl->password)
 	  memset(ctl->password, '\0', strlen(ctl->password));
 
+
     if (activecount == 0)
 	exit(PS_NOMAIL);
     else
@@ -1904,7 +1903,6 @@ static int print_id_of(struct uid_db_record *rec, void *unused)
     printf("\t%s\n", rec->id);
     return 0;
 }
-
 static void dump_params (struct runctl *runp,
 			 struct query *querylist, flag implicit)
 /* display query parameters in English */
@@ -2302,6 +2300,7 @@ static void dump_params (struct runctl *runp,
 		printf(GT_("  No UIDs saved from this host.\n"));
 	    else
 	    {
+
 		printf(GT_("  %d UIDs saved.\n"), count);
 		traverse_uid_db(&ctl->oldsaved, print_id_of, NULL);
 	    }

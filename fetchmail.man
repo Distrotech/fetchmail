@@ -2167,11 +2167,9 @@ Legal protocol identifiers for use with the 'protocol' keyword are:
 .sp
 .nf
     auto (or AUTO) (legacy, to be removed from future release)
-
     pop3 (or POP3)
       sdps (or SDPS) (a POP3 variant specific to Demon)
       kpop (or KPOP) (a Kerberos-based variant)
-
     imap (or IMAP)
 .fi
 .sp

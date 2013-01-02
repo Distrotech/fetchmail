@@ -8,7 +8,8 @@
 my $project = "fetchmail";
 my $website = "http://developer.berlios.de/projects/$project";
 my $mailfrom = "<$project-devel\@lists.berlios.de> (Fetchmail Development Team)";
-my $distsufx = '.tar.bz2';
+my $distsufx =	'.tar.bz2';
+my $xzsufx =	'.tar.xz';
 
 # ---------------------------------------------------------------------
 
@@ -33,6 +34,19 @@ sub usage($$) {
 
     print STDERR "Usage: $_[0] [--verbose,-v] [--help,-h,-?]\n";
     exit($_[1]);
+}
+
+sub makerelnotes($$) {
+    my ($infile, $outfile) = @_;
+    open(F, "<$infile") or die "cannot read $infile: $!";
+    open(G, ">$outfile") or die "cannot write to $outfile: $!";
+    my $ctr = 0;
+    while(<F>) {
+	$ctr++ if /^fetchmail-/;
+	print G if $ctr == 1;
+    }
+    close F or die "cannot read $infile: $!";
+    close G or die "cannot write to $outfile: $!";
 }
 
 GetOptions("diffs|d" => \$diffs, "verbose|v" => \$verbose, "help|h|?" => \$help)
@@ -100,7 +114,7 @@ if (system("mkdir -p autobuild && cd autobuild "
 
 print "### Test-building the software...\n";
 if (system("cd autobuild && make -s clean"
-	. " && make " . ($verbose ? '' : '-s') . " check distcheck lsm")) {
+	. " && make " . ($verbose ? '' : '-s') . " check distcheck")) {
 	die("Compilation failure\n");
 }
 
@@ -171,21 +185,25 @@ unlink("$tmp/$project.DIFFS.$$");
 
 print "### Signing tarballs...\n";
 system("cd autobuild && gpg -ba --sign $project-$version$distsufx");
+system("cd autobuild && gpg -ba --sign $project-$version$xzsufx");
+
+print "### Extracting release notes...\n";
+makerelnotes('NEWS', 'autobuild/README');
 
 print "### Uploading\n";
 print "=== local\n";
 
-system("cp", "autobuild/$project-$version$distsufx", "autobuild/$project-$version$distsufx.asc", "$ENV{HOME}/public_html/fetchmail/") and die "Cannot upload to \$HOME/public_html/fetchmail/: $!";
-
-print "=== ibiblio\n";
-
-system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc $project-$version.lsm ; quit\" ibiblio.org:/incoming/linux/") and warn "Upload to ibiblio failed: $!";
+system("cp", "autobuild/$project-$version$xzsufx", "autobuild/$project-$version$xzsufx.asc", "$ENV{HOME}/public_html/fetchmail/") and die "Cannot upload to \$HOME/public_html/fetchmail/: $!";
 
 print "=== berlios\n";
 
 system("lftp -e \"lcd autobuild ; mput $project-$version$distsufx $project-$version$distsufx.asc ; quit\" ftp.berlios.de:/incoming/") and warn "Upload to berlios failed: $!";
 
-print "Done - please review final tasks\n";
+print "=== sourceforge \n";
+system("rsync -acvHP autobuild/$project-$version$xzsufx autobuild/$project-$version$xzsufx.asc autobuild/README m-a\@frs.sourceforge.net:/home/frs/project/fetchmail/branch_6.3/");
+unlink 'autobuild/README' or die "cannot unlink autobuild/README: $!";
+
+print "=== Done - please review final tasks\n";
 
 system("cat RELEASE-INSTRUCTIONS");
 

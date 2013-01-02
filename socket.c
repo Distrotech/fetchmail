@@ -624,7 +624,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 							}
 						}
 					}
-					sk_GENERAL_NAME_free(gens);
+					GENERAL_NAMES_free(gens);
 				}
 				if (name_match(p1, p2)) {
 					matched = 1;
