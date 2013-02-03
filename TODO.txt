@@ -1,7 +1,7 @@
 Note that there is a separate todo.html with different content than this.
 
 soon - MUST:
-- blacklist DigiNotar/Comodo hacks/certs, possibly with Chrome's serial#
+- blacklist DigiNotar/Comodo/Türktrust hacks/certs, possibly with Chrome's serial#
   list?
 - check if wildcards from X.509 are handled as strictly as required by
   the RFCs.
