@@ -56,6 +56,20 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail-6.3.25 (not yet released):
+
+# WORKAROUNDS
+* Older systems that provide the older RFC-2553 implementation of getaddrinfo,
+  rather than the current RFC-3493, and systems that do not provide this
+  getaddrinfo() interface at all and thus use the replacement functions from
+  libesmtp/getaddrinfo.?, might return EAI_NODATA when a host is registered in
+  DNS as MX or similar, but without A or AAAA records.  Handle this situation
+  when checking for multidrop aliases and treat EAI_NODATA the same as
+  EAI_NONAME, i. e. name cannot be resolved.
+
+  The proper fix, however, is to upgrade the operating system.
+
+
 fetchmail-6.3.24 (released 2012-12-23, 26108 LoC):
 
 # NOTE THAT THE RELEASE OF FUTURE FETCHMAIL 6.3.X VERSIONS IS UNCLEAR.
