@@ -202,3 +202,8 @@ It probably needs to be adjusted for use on other systems.
 A MySQL/Tcl/Expect-based client-side script to remove messages at a
 certain age.  See delete-later.README for details.
 (By Carsten Ralle, Yoo GmbH, Germany.)
+
+### gai (added 2013-02-03, --ma)
+
+A trivial getaddrinfo() program to check the getaddrinfo() call from the
+system, as a research tool for the fetchmail developers.
