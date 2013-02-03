@@ -5,6 +5,7 @@
 .deps/
 .project
 .rsyncs
+/nbproject/
 ABOUT-NLS
 aclocal.m4
 autobuild/
