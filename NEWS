@@ -58,6 +58,14 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.25 (not yet released):
 
+# CHANGES
+* Improved reporting when SSL/TLS X.509 certificate validation has failed,
+  working around a not-so-recent swapping of two OpenSSL error codes, and
+  a practical impossibility to distinguish broken certification chains from
+  missing trust anchors (root certificates).
+* OpenSSL decoded errors are now reported through report(), rather than dumped
+  to stderr, so that they should show up in logfiles and/or syslog.
+
 # WORKAROUNDS
 * Older systems that provide the older RFC-2553 implementation of getaddrinfo,
   rather than the current RFC-3493, and systems that do not provide this
