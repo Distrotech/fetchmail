@@ -133,6 +133,7 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	argvec = (char **)malloc(s);
 	if (!argvec)
 	{
+		free(plugin_copy);
 		report(stderr, GT_("fetchmail: malloc failed\n"));
 		return NULL;
 	}
@@ -186,6 +187,8 @@ static int handle_plugin(const char *host,
 		if (outlevel >= O_VERBOSE)
 		    report(stderr, GT_("running %s (host %s service %s)\n"), plugin, host, service);
 		argvec = parse_plugin(plugin,host,service);
+		if (argvec == NULL)
+			_exit(EXIT_FAILURE);
 		execvp(*argvec, argvec);
 		report(stderr, GT_("execvp(%s) failed\n"), *argvec);
 		_exit(EXIT_FAILURE);
