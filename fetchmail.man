@@ -562,11 +562,11 @@ the upstream server can't be made to use proper certificates.
 .br
 Specify the fingerprint of the server key (an MD5 hash of the key) in
 hexadecimal notation with colons separating groups of two digits. The letter
-hex digits must be in upper case. This is the default format OpenSSL uses,
-and the one fetchmail uses to report the fingerprint when an SSL connection
+hex digits must be in upper case. This is the format
+that fetchmail uses to report the fingerprint when an SSL connection
 is established. When this is specified, fetchmail will compare the server key
 fingerprint with the given one, and the connection will fail if they do not
-match regardless of the \fBsslcertck\fP setting. The connection will
+match, regardless of the \fBsslcertck\fP setting. The connection will
 also fail if fetchmail cannot obtain an SSL certificate from the server.
 This can be used to prevent man-in-the-middle attacks, but the finger
 print from the server needs to be obtained or verified over a secure
@@ -1208,7 +1208,7 @@ severely underdocumented, so failures may occur just because the
 programmers are not aware of OpenSSL's requirement of the day.
 For instance, since v6.3.16, fetchmail calls
 OpenSSL_add_all_algorithms(), which is necessary to support certificates
-with SHA256 on OpenSSL 0.9.8 -- this information is deeply hidden in the
+using SHA256 on OpenSSL 0.9.8 -- this information is deeply hidden in the
 documentation and not at all obvious.  Please do not hesitate to report
 subtle SSL failures.
 .PP

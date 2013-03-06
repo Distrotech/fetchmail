@@ -72,6 +72,9 @@ fetchmail-6.3.25 (not yet released):
   missing trust anchors (root certificates).
 * OpenSSL decoded errors are now reported through report(), rather than dumped
   to stderr, so that they should show up in logfiles and/or syslog.
+* The fetchmail manual page no longer claims that MD5 were the default OpenSSL
+  hash format (for use with --sslfingerprint). Reported by Jakob Wilk,
+  PARTIAL fix for Debian Bug#700266.
 
 # WORKAROUNDS
 * Older systems that provide the older RFC-2553 implementation of getaddrinfo,
