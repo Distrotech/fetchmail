@@ -203,9 +203,9 @@ deleted from the upstream server, see "no softbounce" below.
 (since v6.3.10, Keyword: set softbounce, since v6.3.10)
 .br
 Soft bounce mode. All permanent delivery errors cause messages to be
-left on the upstream server if the protocol supports that. Default to
-match historic fetchmail documentation, to be changed to hard bounce
-mode in the next fetchmail release.
+left on the upstream server if the protocol supports that.
+.B This option is on by default to match historic fetchmail documentation,
+and will be changed to hard bounce mode in the next fetchmail release.
 .SS Disposal Options
 .TP
 .B \-a | \-\-all | (since v6.3.3) \-\-fetchall
@@ -1568,7 +1568,8 @@ we do not accept mail from it. See also BUGS.
 
 .SH SMTP/ESMTP ERROR HANDLING
 Besides the spam-blocking described above, fetchmail takes special
-actions on the following SMTP/ESMTP error responses
+actions \(em that may be modified by the \-\-softbounce option \(em on
+the following SMTP/ESMTP error response codes
 .TP 5
 452 (insufficient system storage)
 Leave the message in the server mailbox for later retrieval.
@@ -1581,7 +1582,8 @@ originator.
 Delete the message from the server.  Don't even try to send
 bounce-mail to the originator.
 .PP
-Other errors trigger bounce mail back to the originator. See also BUGS.
+Other errors greater or equal to 500 trigger bounce mail back to the
+originator, unless suppressed by \-\-softbounce. See also BUGS.
 
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail is to write a

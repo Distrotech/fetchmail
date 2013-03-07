@@ -75,6 +75,8 @@ fetchmail-6.3.25 (not yet released):
 * The fetchmail manual page no longer claims that MD5 were the default OpenSSL
   hash format (for use with --sslfingerprint). Reported by Jakob Wilk,
   PARTIAL fix for Debian Bug#700266.
+* The fetchmail manual page now refers the user to --softbounce from the
+  SMTP/ESMTP ERROR HANDLING section.  Reported by Anton Shterenlikht.
 
 # WORKAROUNDS
 * Older systems that provide the older RFC-2553 implementation of getaddrinfo,
