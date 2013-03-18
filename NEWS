@@ -58,6 +58,9 @@ removed from a 6.4.0 or newer release.)
 
 fetchmail-6.3.25 (not yet released):
 
+# NOTE THAT FETCHMAIL IS NO LONGER PUBLISHED THROUGH IBIBLIO.
+* They have stopped accepting submissions and consider themselves an archive.
+
 # BUG FIXES
 * Fix a memory leak in out-of-memory error condition while handling plugins.
   Report and patch by John Beck (found with Parfait static code analyzer).
@@ -90,33 +93,15 @@ fetchmail-6.3.25 (not yet released):
   The proper fix, however, is to upgrade the operating system.
 
 # TRANSLATION UPDATES
-[eo]    Esperanto, by Sian Mountbatten and Felipe Castro
-
-
-fetchmail-6.3.24 (released 2012-12-23, 26108 LoC):
-
-# NOTE THAT THE RELEASE OF FUTURE FETCHMAIL 6.3.X VERSIONS IS UNCLEAR.
-Should a 7.0 release be made earlier, chances are that the 6.3.X branch
-is abandoned and its changes be folded into the 7.0 release, with changes
-after 6.3.24 not available on their own in a newer 6.3.X release.
-
-# NOTE THAT FETCHMAIL IS NO LONGER PUBLISHED THROUGH IBIBLIO.
-  They have stopped accepting submissions and consider themselves an archive.
-
-# CRITICAL AND REGRESSION FIXES
-* Plug a memory leak in OpenSSL's certificate verification callback.
-  This would affect fetchmail configurations running with SSL in daemon mode
-  more than one-shot runs.
-  Reported by Erik Thiele, and pinned by Dominik Heeg,
-  fixes Debian Bug #688015.
-  This bug was introduced into fetchmail 6.3.0 (committed 2005-10-29)
-  when support for subjectAltName was added through a patch by Roland
-  Stigge, submitted as Debian Bug#201113.
-
-* The --logfile option now works again outside daemon mode, reported by Heinz
-  Diehl. The documentation that I had been reading was inconsistent with the
-  code, and only parts of the manual page claimed that --logfile was only
-  effective in daemon mode.
+[cs] Czech, by Petr Pisar
+[da] Danish, by Joe Hansen
+[de] German
+[eo] Esperanto, by Sian Mountbatten and Felipe Castro
+[fr] French, by Frédéric Marchal
+[ja] Japanese, by Takeshi Hamasaki
+[pl] Polish, by Jakub Bogusz
+[sv] Swedish, by Göran Uddeborg
+[vi] Vietnamese, by Trần Ngọc Quân
 
 # KNOWN BUGS AND WORKAROUNDS
   (This section floats upwards through the NEWS file so it stays with the
@@ -137,6 +122,24 @@ after 6.3.24 not available on their own in a newer 6.3.X release.
 * Kerberos 5 may be broken, particularly on Heimdal, and provide bogus error
   messages. This will not be fixed, because the maintainer has no Kerberos 5
   server to test against. Use GSSAPI.
+
+
+fetchmail-6.3.24 (released 2012-12-23, 26108 LoC):
+
+# CRITICAL AND REGRESSION FIXES
+* Plug a memory leak in OpenSSL's certificate verification callback.
+  This would affect fetchmail configurations running with SSL in daemon mode
+  more than one-shot runs.
+  Reported by Erik Thiele, and pinned by Dominik Heeg,
+  fixes Debian Bug #688015.
+  This bug was introduced into fetchmail 6.3.0 (committed 2005-10-29)
+  when support for subjectAltName was added through a patch by Roland
+  Stigge, submitted as Debian Bug#201113.
+
+* The --logfile option now works again outside daemon mode, reported by Heinz
+  Diehl. The documentation that I had been reading was inconsistent with the
+  code, and only parts of the manual page claimed that --logfile was only
+  effective in daemon mode.
 
 
 fetchmail-6.3.23 (released 2012-12-10, 26106 LoC):

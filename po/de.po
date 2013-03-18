@@ -2,13 +2,13 @@
 # German Messages for fetchmail.
 # Copyright (C) 2001, 2005, 2006 Free Software Foundation, Inc.
 # Michael Piefel <piefel@informatik.hu-berlin.de>, 2001, 2002, 2003.
-# Matthias Andree <matthias.andree@gmx.de>, 2004 - 2012
+# Matthias Andree <matthias.andree@gmx.de>, 2004 - 2013
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.20\n"
+"Project-Id-Version: fetchmail 6.3.24.1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2013-02-19 01:10+0100\n"
+"POT-Creation-Date: 2013-03-10 13:45+0100\n"
 "PO-Revision-Date: 2013-02-19 01:14+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -3170,7 +3170,11 @@ msgid ""
 "certificate(s), which is nothing fetchmail could do anything about.  For "
 "details, please see the README.SSL-SERVER document that ships with "
 "fetchmail.\n"
-msgstr "Dies kann bedeuten, dass der Server das/die Zertifikat(e) der Zwischenzertifizierungsstellen nicht mitlieferte. Daran kann fetchmail nichts ändern.  Für weitere Information, siehe das mit Fetchmail ausgelieferte Dokument README.SSL-SERVER.\n"
+msgstr ""
+"Dies kann bedeuten, dass der Server das/die Zertifikat(e) der "
+"Zwischenzertifizierungsstellen nicht mitlieferte. Daran kann fetchmail "
+"nichts ändern.  Für weitere Information, siehe das mit Fetchmail "
+"ausgelieferte Dokument README.SSL-SERVER.\n"
 
 #: socket.c:806
 #, c-format
@@ -3183,7 +3187,11 @@ msgid ""
 "CA certificate location, or that c_rehash needs to be run on the certificate "
 "directory. For details, please see the documentation of --sslcertpath and --"
 "sslcertfile in the manual page.\n"
-msgstr "Das kann bedeuten, dass das Wurzelzertifikat nicht unter den vertrauenswürdigen CA-Zertifikaten ist, oder dass c_rehash auf dem Verzeichnis ausgeführt werden muss. Details sind in der fetchmail-Handbuchseite im bei --sslcertpath beschrieben.\n"
+msgstr ""
+"Das kann bedeuten, dass das Wurzelzertifikat nicht unter den "
+"vertrauenswürdigen CA-Zertifikaten ist, oder dass c_rehash auf dem "
+"Verzeichnis ausgeführt werden muss. Details sind in der fetchmail-"
+"Handbuchseite im bei --sslcertpath beschrieben.\n"
 
 #: socket.c:902
 msgid "File descriptor out of range for SSL"
