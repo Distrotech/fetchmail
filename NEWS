@@ -56,7 +56,7 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail-6.3.25 (not yet released):
+fetchmail-6.3.25 (released 2013-03-18, 26149 LoC):
 
 # NOTE THAT FETCHMAIL IS NO LONGER PUBLISHED THROUGH IBIBLIO.
 * They have stopped accepting submissions and consider themselves an archive.
