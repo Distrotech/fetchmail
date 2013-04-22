@@ -101,3 +101,8 @@ It probably needs to be adjusted for use on other systems.
 A patch against fetchmail 6.3.20 to allow creating a raw socket log if
 configured through an environment variable, to assist debugging and
 troubleshooting.  Documentation at the beginning of the file.
+
+### gai (added 2013-02-03, --ma)
+
+A trivial getaddrinfo() program to check the getaddrinfo() call from the
+system, as a research tool for the fetchmail developers.
