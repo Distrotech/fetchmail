@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.24.1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2013-03-10 13:45+0100\n"
+"POT-Creation-Date: 2013-04-23 23:24+0200\n"
 "PO-Revision-Date: 2013-03-09 16:18+0100\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -3290,11 +3290,11 @@ msgstr "meddelandet har inbäddade nolltecken"
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP-lyssnaren avvisade lokala mottagaradresser: "
 
-#: transact.c:1493
+#: transact.c:1396
 msgid "error writing message text\n"
 msgstr "fel när meddelandetexten skrevs\n"
 
-#: transact.c:1641
+#: transact.c:1672
 #, c-format
 msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
 msgstr "bufferten är för liten.  Detta är ett fel i anroparen av %s:%lu.\n"

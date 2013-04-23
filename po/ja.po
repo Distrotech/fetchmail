@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.24.1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2013-03-10 13:45+0100\n"
+"POT-Creation-Date: 2013-04-23 23:24+0200\n"
 "PO-Revision-Date: 2013-03-09 20:08+0900\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -3310,11 +3310,11 @@ msgstr "メッセージに NUL が含まれています"
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP 受信プログラムが次のアドレスの受信を拒否しました : "
 
-#: transact.c:1493
+#: transact.c:1396
 msgid "error writing message text\n"
 msgstr "メッセージを書き込む際にエラーが発生しました\n"
 
-#: transact.c:1641
+#: transact.c:1672
 #, c-format
 msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
 msgstr "バッファが小さすぎます。これは呼出側 %s:%lu のバグです。\n"

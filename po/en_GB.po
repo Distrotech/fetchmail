@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2013-03-10 13:45+0100\n"
+"POT-Creation-Date: 2013-04-23 23:24+0200\n"
 "PO-Revision-Date: 2006-11-02 06:58-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -3224,11 +3224,11 @@ msgstr "message has embedded NULs"
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP listener rejected local recipient addresses: "
 
-#: transact.c:1493
+#: transact.c:1396
 msgid "error writing message text\n"
 msgstr "error writing message text\n"
 
-#: transact.c:1641
+#: transact.c:1672
 #, c-format
 msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
 msgstr ""

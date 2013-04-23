@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.17-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2013-03-10 13:45+0100\n"
+"POT-Creation-Date: 2013-04-23 23:24+0200\n"
 "PO-Revision-Date: 2010-05-03 05:29+0700\n"
 "Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -3260,11 +3260,11 @@ msgstr "pesan memiliki NUL tertanam"
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Pendengar SMTP menolak alamat penerima lokal: "
 
-#: transact.c:1493
+#: transact.c:1396
 msgid "error writing message text\n"
 msgstr "galat menulis teks pesan\n"
 
-#: transact.c:1641
+#: transact.c:1672
 #, c-format
 msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
 msgstr ""

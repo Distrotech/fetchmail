@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.3.24.1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2013-03-10 13:45+0100\n"
+"POT-Creation-Date: 2013-04-23 23:24+0200\n"
 "PO-Revision-Date: 2013-03-12 07:23+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
@@ -3308,11 +3308,11 @@ msgstr "thư có NUL nhúng"
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Bộ lắng nghe SMTP đã từ chối các địa chỉ người nhận cục bộ: "
 
-#: transact.c:1493
+#: transact.c:1396
 msgid "error writing message text\n"
 msgstr "gặp lỗi khi ghi thân thư\n"
 
-#: transact.c:1641
+#: transact.c:1672
 #, c-format
 msgid "Buffer too small. This is a bug in the caller of %s:%lu.\n"
 msgstr "Bộ đệm quá nhỏ. Đây là một lỗi trong bộ gọi của %s:%lu.\n"
