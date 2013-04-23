@@ -56,10 +56,23 @@ removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail-6.3.25 (released 2013-03-18, 26149 LoC):
+fetchmail-6.3.26 (not yet released):
 
 # NOTE THAT FETCHMAIL IS NO LONGER PUBLISHED THROUGH IBIBLIO.
 * They have stopped accepting submissions and consider themselves an archive.
+
+# CRITICAL BUG FIX for setups using "mimedecode":
+* The mimedecode feature failed to ship the last line of the body if it was
+  encoded as quoted-printable and had a MIME soft line break in the very last
+  line.  Reported by Lars Hecking in June 2011.
+  Bug introduced on 1998-03-20 when the mimedecode support was added by ESR
+  before release 4.4.1 through code contributed by Henrik Storner.
+  Workaround for older releases: do not use mimedecode feature.
+
+  Earlier versions of this NEWS file claimed this bug fixed in fetchmail-6.3.23,
+  but it was not.
+
+fetchmail-6.3.25 (released 2013-03-18, 26149 LoC):
 
 # BUG FIXES
 * Fix a memory leak in out-of-memory error condition while handling plugins.
@@ -155,14 +168,6 @@ fetchmail-6.3.23 (released 2012-12-10, 26106 LoC):
   to fix Debian Bug#671294.
 * Clean up logfile vs. syslog handling, and in case logfile overrides
   syslog, send a message to the latter stating where logging goes.
-
-# BUG FIXES
-* The mimedecode feature failed to ship the last line of the body if it was
-  encoded as quoted-printable and had a MIME soft line break in the very last
-  line.  Reported by Lars Hecking in June 2011.
-  Bug introduced on 1998-03-20 when the mimedecode support was added by ESR
-  before release 4.4.1 through code contributed by Henrik Storner.
-  Workaround for older releases: do not use mimedecode feature.
 
 # CHANGES
 * The build process can now be made a bit more silent and concise through
