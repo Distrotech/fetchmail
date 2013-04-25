@@ -11,6 +11,11 @@
 #define _NETBSD_SOURCE 1
 #endif
 
+#include "gettext.h"
+#define GT_(String) gettext (String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+
 struct addrinfo;
 
 /* We need this for size_t */
