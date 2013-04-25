@@ -1,7 +1,9 @@
 /*
  * socket.c -- socket library functions
  *
- * Copyright 1998 by Eric S. Raymond.
+ * Copyright 1998, 2004 by Eric S. Raymond.
+ * Copyright 2004, 2013 by Matthias Andree.
+ *
  * For license terms, see the file COPYING in this directory.
  */
 
@@ -47,6 +49,10 @@ static ssize_t cygwin_read(int sock, void *buf, size_t count);
 extern int h_errno;
 # endif
 #endif /* ndef h_errno */
+
+/* used by SSL_get_ex_new_index, SSL_set_ex_data, SSL_get_ex_data, to communicate
+   options and state with the verify callback */
+static int global_mydata_index = -2;
 
 static char *const *parse_plugin(const char *plugin, const char *host, const char *service)
 {
@@ -510,14 +516,19 @@ int SockPeek(int sock)
 
 #ifdef SSL_ENABLE
 
-static	char *_ssl_server_cname = NULL;
-static	int _check_fp;
-static	char *_check_digest;
-static 	char *_server_label;
-static	int _depth0ck;
-static	int _firstrun;
-static	int _prev_err;
-static	int _verify_ok;
+struct ssl_callback_data {
+    char *ssl_server_cname;
+    char *check_digest;
+    char *server_label;
+    int check_fp;
+    int depth0ck;
+    int firstrun;
+    int prev_err;
+    int verify_ok;
+    int strict_mode;
+};
+
+typedef struct ssl_callback_data t_ssl_callback_data;
 
 SSL *SSLGetContext( int sock )
 {
@@ -531,7 +542,7 @@ SSL *SSLGetContext( int sock )
 /* ok_return (preverify_ok) is 1 if this stage of certificate verification
    passed, or 0 if it failed. This callback lets us display informative
    errors, and perform additional validation (e.g. CN matches) */
-static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
+static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx)
 {
 #define SSLverbose (((outlevel) >= O_DEBUG) || ((outlevel) >= O_VERBOSE && (depth) == 0)) 
 	char buf[257];
@@ -543,7 +554,11 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	unsigned int dsz, esz;
 	X509_NAME *subj, *issuer;
 	char *tt;
+	t_ssl_callback_data *mydata;
+	SSL *ssl;
 
+	ssl = X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
+	mydata = SSL_get_ex_data(ssl, global_mydata_index);
 	x509_cert = X509_STORE_CTX_get_current_cert(ctx);
 	err = X509_STORE_CTX_get_error(ctx);
 	depth = X509_STORE_CTX_get_error_depth(ctx);
@@ -555,8 +570,8 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		if (depth == 0 && SSLverbose)
 			report(stdout, GT_("Server certificate:\n"));
 		else {
-			if (_firstrun) {
-				_firstrun = 0;
+			if (mydata->firstrun) {
+				mydata->firstrun = 0;
 				if (SSLverbose)
 					report(stdout, GT_("Certificate chain, from root to peer, starting at depth %d:\n"), depth);
 			} else {
@@ -603,14 +618,14 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	}
 
 	if (depth == 0) { /* peer certificate */
-		if (!_depth0ck) {
-			_depth0ck = 1;
+		if (!mydata->depth0ck) {
+			mydata->depth0ck = 1;
 		}
 
 		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
-			if (_ssl_server_cname != NULL) {
+			if (mydata->ssl_server_cname != NULL) {
 				char *p1 = buf;
-				char *p2 = _ssl_server_cname;
+				char *p2 = mydata->ssl_server_cname;
 				int matched = 0;
 				STACK_OF(GENERAL_NAME) *gens;
 
@@ -623,7 +638,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, j);
 						if (gn->type == GEN_DNS) {
 							char *pp1 = (char *)gn->d.ia5->data;
-							char *pp2 = _ssl_server_cname;
+							char *pp2 = mydata->ssl_server_cname;
 							if (outlevel >= O_VERBOSE) {
 								report(stdout, GT_("Subject Alternative Name: %s\n"), (tt = sdump(pp1, (size_t)gn->d.ia5->length)));
 								xfree(tt);
@@ -646,32 +661,32 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					matched = 1;
 				}
 				if (!matched) {
-					if (strict || SSLverbose) {
+					if (mydata->strict_mode || SSLverbose) {
 						report(stderr,
 								GT_("Server CommonName mismatch: %s != %s\n"),
-								(tt = sdump(buf, i)), _ssl_server_cname );
+								(tt = sdump(buf, i)), mydata->ssl_server_cname);
 						xfree(tt);
 					}
 					ok_return = 0;
 				}
 			} else if (ok_return) {
 				report(stderr, GT_("Server name not set, could not verify certificate!\n"));
-				if (strict) return (0);
+				if (mydata->strict_mode) return (0);
 			}
 		} else {
 			if (outlevel >= O_VERBOSE)
 				report(stdout, GT_("Unknown Server CommonName\n"));
-			if (ok_return && strict) {
+			if (ok_return && mydata->strict_mode) {
 				report(stderr, GT_("Server name not specified in certificate!\n"));
 				return (0);
 			}
 		}
 		/* Print the finger print. Note that on errors, we might print it more than once
 		 * normally; we kluge around that by using a global variable. */
-		if (_check_fp == 1) {
+		if (1 == mydata->check_fp) {
 			unsigned dp;
 
-			_check_fp = -1;
+			mydata->check_fp = -1;
 			digest_tp = EVP_md5();
 			if (digest_tp == NULL) {
 				report(stderr, GT_("EVP_md5() failed!\n"));
@@ -692,23 +707,23 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				tp += esz;
 			}
 			if (outlevel > O_NORMAL)
-			    report(stdout, GT_("%s key fingerprint: %s\n"), _server_label, text);
-			if (_check_digest != NULL) {
-				if (strcasecmp(text, _check_digest) == 0) {
+			    report(stdout, GT_("%s certificate MD5 fingerprint: %s\n"), mydata->server_label, text);
+			if (mydata->check_digest != NULL) {
+				if (strcasecmp(text, mydata->check_digest) == 0) {
 				    if (outlevel > O_NORMAL)
-					report(stdout, GT_("%s fingerprints match.\n"), _server_label);
+					report(stdout, GT_("%s fingerprints match.\n"), mydata->server_label);
 				} else {
-				    report(stderr, GT_("%s fingerprints do not match!\n"), _server_label);
+				    report(stderr, GT_("%s fingerprints do not match!\n"), mydata->server_label);
 				    return (0);
 				}
 			} /* if (_check_digest != NULL) */
 		} /* if (_check_fp) */
 	} /* if (depth == 0 && !_depth0ck) */
 
-	if (err != X509_V_OK && err != _prev_err && !(_check_fp != 0 && _check_digest && !strict)) {
+	if (err != X509_V_OK && err != mydata->prev_err && !(mydata->check_fp != 0 && mydata->check_digest && !mydata->strict_mode)) {
 		char *tmp;
 		int did_rep_err = 0;
-		_prev_err = err;
+		mydata->prev_err = err;
 
                 report(stderr, GT_("Server certificate verification error: %s\n"), X509_verify_cert_error_string(err));
                 /* We gave the error code, but maybe we can add some more details for debugging */
@@ -753,22 +768,11 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	 * If not in strict checking mode (--sslcertck), override this
 	 * and pretend that verification had succeeded.
 	 */
-	_verify_ok &= ok_return;
-	if (!strict)
+	mydata->verify_ok &= ok_return;
+	if (!mydata->strict_mode)
 		ok_return = 1;
-	return (ok_return);
+	return ok_return;
 }
-
-static int SSL_nock_verify_callback( int ok_return, X509_STORE_CTX *ctx )
-{
-	return SSL_verify_callback(ok_return, ctx, 0);
-}
-
-static int SSL_ck_verify_callback( int ok_return, X509_STORE_CTX *ctx )
-{
-	return SSL_verify_callback(ok_return, ctx, 1);
-}
-
 
 /* get commonName from certificate set in file.
  * commonName is stored in buffer namebuffer, limited with namebufferlen
@@ -811,9 +815,19 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
         struct stat randstat;
         int i;
 
-	SSL_load_error_strings();
-	SSL_library_init();
-	OpenSSL_add_all_algorithms(); /* see Debian Bug#576430 and manpage */
+	static int ssl_lib_init = 0;
+
+	if (!ssl_lib_init) {
+	    SSL_load_error_strings();
+	    SSL_library_init();
+	    OpenSSL_add_all_algorithms(); /* see Debian Bug#576430 and manpage */
+	    ssl_lib_init = 1;
+	}
+
+	if (-2 == global_mydata_index) {
+	    global_mydata_index = SSL_get_ex_new_index(0, "fetchmail SSL callback data", NULL, NULL, NULL);
+	    if (-1 == global_mydata_index) return PS_UNDEFINED;
+	}
 
         if (stat("/dev/random", &randstat)  &&
             stat("/dev/urandom", &randstat)) {
@@ -859,15 +873,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	}
 
 	SSL_CTX_set_options(_ctx[sock], (SSL_OP_ALL | SSL_OP_NO_SSLv2) & ~SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
-
-	if (certck) {
-		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
-	} else {
-		/* In this case, we do not fail if verification fails. However,
-		 * we provide the callback for output and possible fingerprint
-		 * checks. */
-		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_nock_verify_callback);
-	}
+	SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_verify_callback);
 
 	/* Check which trusted X.509 CA certificate store(s) to load */
 	{
@@ -896,15 +902,19 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 		return(-1);
 	}
 	
-	/* This static is for the verify callback */
-	_ssl_server_cname = servercname;
-	_server_label = label;
-	_check_fp = 1;
-	_check_digest = fingerprint;
-	_depth0ck = 0;
-	_firstrun = 1;
-	_verify_ok = 1;
-	_prev_err = -1;
+	t_ssl_callback_data mydata;
+	memset(&mydata, 0, sizeof(mydata));
+
+	/* This data is for the verify callback */
+	mydata.ssl_server_cname = servercname;
+	mydata.server_label = label;
+	mydata.check_fp = 1;
+	mydata.check_digest = fingerprint;
+	mydata.depth0ck = 0;
+	mydata.firstrun = 1;
+	mydata.verify_ok = 1;
+	mydata.prev_err = -1;
+	mydata.strict_mode = certck;
 
 	if( mycert || mykey ) {
 
@@ -927,6 +937,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
         	SSL_use_RSAPrivateKey_file(_ssl_context[sock], mykey, SSL_FILETYPE_PEM);
 	}
 
+	SSL_set_ex_data(_ssl_context[sock], global_mydata_index, &mydata);
+
 	if (SSL_set_fd(_ssl_context[sock], sock) == 0 
 	    || SSL_connect(_ssl_context[sock]) < 1) {
 		ERR_print_errors_fp(stderr);
@@ -938,7 +950,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	}
 
 	/* Paranoia: was the callback not called as we expected? */
-	if (!_depth0ck) {
+	if (!mydata.depth0ck) {
 		report(stderr, GT_("Certificate/fingerprint verification was somehow skipped!\n"));
 
 		if (fingerprint != NULL || certck) {
@@ -955,7 +967,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	}
 
 	if (!certck && !fingerprint &&
-		(SSL_get_verify_result(_ssl_context[sock]) != X509_V_OK || !_verify_ok)) {
+		(SSL_get_verify_result(_ssl_context[sock]) != X509_V_OK || !mydata.verify_ok)) {
 		report(stderr, GT_("Warning: the connection is insecure, continuing anyways. (Better use --sslcertck!)\n"));
 	}
 
