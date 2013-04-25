@@ -73,7 +73,7 @@ extern char * yytext;
 %token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
-%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTFILE SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
+%token SSL_ SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTFILE SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 
@@ -338,7 +338,7 @@ user_option	: TO mapping_list HERE
 		| MIMEDECODE		{current.mimedecode  = FLAG_TRUE;}
 		| IDLE			{current.idle        = FLAG_TRUE;}
 
-		| SSL 	                {
+		| SSL_ 	                {
 #ifdef SSL_ENABLE
 		    current.use_ssl = FLAG_TRUE;
 #else
@@ -367,7 +367,7 @@ user_option	: TO mapping_list HERE
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 		| NO IDLE		{current.idle        = FLAG_FALSE;}
 
-		| NO SSL 	        {current.use_ssl     = FLAG_FALSE;}
+		| NO SSL_ 	        {current.use_ssl     = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit       = NUM_VALUE_IN($2);}
 		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE_IN($2);}

@@ -175,7 +175,7 @@ mimedec(ode)?   { return MIMEDECODE; }
 idle		{ return IDLE; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }
-ssl		{ return SSL; }
+ssl		{ return SSL_; }
 sslkey		{ return SSLKEY; }
 sslcert		{ return SSLCERT; }
 sslproto	{ return SSLPROTO; }
