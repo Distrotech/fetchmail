@@ -182,6 +182,12 @@ questionable:
 
 - more selection options, Debian Bug#705291.
 
+- add a way to specify multiple fingerprints per host
+
+- add a way to specify non-MD5 fingerprints per host. SHA1 can be told
+  from its mere length; other digest algorithms would require some sort
+  of prefix. We may require the prefix for SHA1, too, for clarity.
+
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
 - consolidate multidrop documentation
