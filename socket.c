@@ -557,8 +557,8 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx)
 	t_ssl_callback_data *mydata;
 	SSL *ssl;
 
-	ssl = X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
-	mydata = SSL_get_ex_data(ssl, global_mydata_index);
+	ssl = (SSL *)X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
+	mydata = (t_ssl_callback_data *)SSL_get_ex_data(ssl, global_mydata_index);
 	x509_cert = X509_STORE_CTX_get_current_cert(ctx);
 	err = X509_STORE_CTX_get_error(ctx);
 	depth = X509_STORE_CTX_get_error_depth(ctx);
@@ -825,7 +825,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	}
 
 	if (-2 == global_mydata_index) {
-	    global_mydata_index = SSL_get_ex_new_index(0, "fetchmail SSL callback data", NULL, NULL, NULL);
+	    char tmp[] = "fetchmail SSL callback data";
+	    global_mydata_index = SSL_get_ex_new_index(0, tmp, NULL, NULL, NULL);
 	    if (-1 == global_mydata_index) return PS_UNDEFINED;
 	}
 
