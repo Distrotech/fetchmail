@@ -506,7 +506,6 @@ AC_ARG_WITH(ssl,
 	[  --with-ssl=[DIR]        enable SSL support using libraries in DIR],
 	[with_ssl=$withval],
 	[with_ssl=yes])
-	[with_ssl=yes])
 
 if test "$with_ssl" = "yes"
 then
