@@ -209,7 +209,7 @@ enum {
     UID_DELETED=	2,	/**< this message has been marked deleted */
     UID_EXPUNGED=	3	/**< this message has been expunged */
 };
-/*@}*/
+/**/
 
 
 struct query;
