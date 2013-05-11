@@ -143,6 +143,12 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 
 --------------------------------------------------------------------------------
 
+fetchmail-6.3.27 (not yet released, if ever):
+
+# FIXES
+* Fix a typo in the FAQ. Submitted by David Lawyer, Debian Bug#706776.
+
+
 fetchmail-6.3.26 (released 2013-04-23, 26180 LoC):
 
 # NOTE THAT FETCHMAIL IS NO LONGER PUBLISHED THROUGH IBIBLIO.
