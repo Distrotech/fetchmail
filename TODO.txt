@@ -188,6 +188,10 @@ questionable:
   from its mere length; other digest algorithms would require some sort
   of prefix. We may require the prefix for SHA1, too, for clarity.
 
+- more useful logging, suggested by Jerry, fetchmail-users, 17 May 2013
+  should include date, time, message-id, and 250 Ok message from
+  listener that got forwarded to.
+
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
 - consolidate multidrop documentation
