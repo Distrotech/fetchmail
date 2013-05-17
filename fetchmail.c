@@ -936,7 +936,7 @@ int main(int argc, char **argv)
 	 * in-core control structures -- and the potential memory
 	 * leaks...
 	 */
-	struct stat	rcstat;
+	struct stat rcstat;
 #ifdef HAVE_LIBPWMD
 	time_t now;
 

@@ -370,7 +370,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	switch (ctl->server.protocol)
 	{
 	    case P_POP3:
-	    fetchsizelimit = 1;
+	    	fetchsizelimit = 1;
+	    	break;
 	}
 
 	/* Time to allocate memory to store the sizes */
