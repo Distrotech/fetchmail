@@ -2087,7 +2087,7 @@ connection is taken down.
 .PP
 The 'forcecr' option controls whether lines terminated by LF only are
 given CRLF termination before forwarding.  Strictly speaking RFC821
-requires this, but few MTAs enforce the requirement it so this option
+requires this, but few MTAs enforce the requirement so this option
 is normally off (only one such MTA, qmail, is in significant use at
 time of writing).
 .PP
