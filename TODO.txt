@@ -192,6 +192,11 @@ questionable:
   should include date, time, message-id, and 250 Ok message from
   listener that got forwarded to.
 
+- support to present/limit the ciphers and protocols used
+  ciphers: Martin Koeppe (mkoeppe at gmx dot de) 20130717 on
+  fetchmail-users list.
+  protocols: see recent Postfix versions
+
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
 - consolidate multidrop documentation
