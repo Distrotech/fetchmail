@@ -86,9 +86,10 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
 * Fetchmailconf offers cram-md5 and apop authentication.
 * The SSL/TLS/STARTTLS operation mode is now selected through a new --sslmode
   option, which cleans up the incomprehensible --ssl and --sslproto mess of
-  fetchmail versions before v7.0.0. Valid 
+  fetchmail versions before v7.0.0.
 * The SSL/TLS/STARTTLS protocol version can now be selected through a new
   --sslprotocolversion switch.
+* The SSL/TLS cipher in used is now reported in verbose mode.
 
 # REMOVED FEATURES
 * IMAP2 protocol support was removed.
