@@ -880,6 +880,27 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 	SSL_CTX_set_options(_ctx[sock], (SSL_OP_ALL | SSL_OP_NO_SSLv2) & ~SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
 	SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_verify_callback);
 
+	// Set/dump supported ciphers
+	// FIXME: turn this into properly supported options
+	{
+	    const char *envn_ciphers = "FETCHMAIL_SSL_CIPHERS";
+	    const char *ciphers = getenv(envn_ciphers);
+	    if (ciphers) {
+		int r = SSL_CTX_set_cipher_list(_ctx[sock], ciphers);
+		if (r != 0) {
+		    if (outlevel >= O_DEBUG) {
+			report(stdout, GT_("SSL/TLS: ciphers set from %s to \"%s\"\n"), envn_ciphers, ciphers);
+		    }
+		} else {
+		    report(stderr, GT_("SSL/TLS: failed to set ciphers from %s to \"%s\"\n"), envn_ciphers, ciphers);
+		}
+	    } else {
+		if (outlevel >= O_DEBUG) {
+		    report(stdout, GT_("SSL/TLS: environment variable %s unset, using OpenSSL default ciphers"), envn_ciphers);
+		}
+	    }
+	}
+
 	/* Check which trusted X.509 CA certificate store(s) to load */
 	{
 		char *tmp;
@@ -906,7 +927,15 @@ int SSLOpen(int sock, char *mycert, char *mykey, const char *myproto, int certck
 		_ctx[sock] = NULL;
 		return(-1);
 	}
-	
+
+	// DEBUG: dump ordered SSL cipher list, client side
+	if (outlevel >= O_DEBUG) {
+	    const char *tmp;
+	    for (int i = 0; (tmp = SSL_get_cipher_list(_ssl_context[sock], i)) != NULL; i++) {
+		report(stdout, GT_("SSL/TLS: prio %3d cipher is %s\n"), i, tmp);
+	    }
+	}
+
 	t_ssl_callback_data mydata;
 	memset(&mydata, 0, sizeof(mydata));
 
