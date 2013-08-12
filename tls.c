@@ -16,7 +16,7 @@ static const char *const tlsm_names[] = {
  [TLSM_STLS_MAY] = "starttls=may",
  [TLSM_STLS_MUST] = "starttls=must"
 };
-enum { TLSM_NAMESCOUNT = sizeof(tlsm_names) / sizeof(tlsm_names[0]) };
+const int TLSM_NAMESCOUNT = sizeof(tlsm_names) / sizeof(tlsm_names[0]);
 
 /** return true if user allowed STARTTLS */
 bool maybe_starttls(const struct query *ctl) {
