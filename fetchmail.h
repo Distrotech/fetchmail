@@ -761,5 +761,8 @@ int ntlm_helper(int sock, struct query *ctl, const char *protocol);
 	&& !run.use_syslog \
 	&& (run.showdots || !is_a_file(1)))
 
+/* macro to derive, as compile-time constant, the number of elements in a static vector */
+#define countof(ary) (sizeof(ary)/sizeof(ary[0]))
+
 #endif
 /* fetchmail.h ends here */
