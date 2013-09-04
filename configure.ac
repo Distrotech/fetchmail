@@ -97,7 +97,7 @@ dnl end i18n
 # Under sysV68, socket and friends are provided by the C library.
 # -linet does not provide socket, but causes multiple definition
 # errors at link-time.  It is thus better to only use the C library.
-# So don't add -linet to the link list unless it's necessary
+# So do not add -linet to the link list unless it's necessary
 AC_CHECK_FUNC(socket,
     AC_MSG_RESULT(using libc's socket),
     AC_CHECK_LIB(socket,socket)
@@ -137,7 +137,7 @@ fi
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
-# library.  So don't add -lresolv to the link list unless it's necessary
+# library.  So do not add -lresolv to the link list unless it's necessary
 # (It will be necessary when using GNU libc6).
 old_LIBS="$LIBS"
 for lib in '' -lresolv; do
@@ -177,7 +177,8 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>
 AC_DEFINE_UNQUOTED(PID_DIR, "/var/run", directory for PID lock files)
 
 AC_ARG_ENABLE(pwmd,
-	[  --enable-pwmd           enable Password Manager Daemon support],
+	[AS_HELP_STRING([--enable-pwmd],[enable Password Manager Daemon
+	 support])],
 	, [enable_pwmd=no])
 
 if test "$enable_pwmd" = "yes"; then
@@ -239,10 +240,11 @@ AC_PATH_PROG(maildrop, maildrop, "", $PATH:/usr/local/bin)
 ###	use option --enable-fallback=procmail or 
 ###		   --enable-fallback=sendmail to select
 AC_ARG_ENABLE(fallback,
-	[  --enable-fallback=procmail    enable procmail as fallback
-  --enable-fallback=sendmail    enable /usr/sbin/sendmail as fallback
-  --enable-fallback=maildrop    enable maildrop as fallback
-  --enable-fallback=no          disable fallback],,[enable_fallback=no])
+	[AS_HELP_STRING([--enable-fallback=procmail],[enable procmail as fallback])
+AS_HELP_STRING([--enable-fallback=sendmail],[enable /usr/sbin/sendmail as fallback])
+AS_HELP_STRING([--enable-fallback=maildrop],[enable maildrop as fallback])
+AS_HELP_STRING([--disable-fallback],[disable fallback (default, and
+		recommended)])],,[enable_fallback=no])
 
 case "$enable_fallback" in
 	sendmail)	if test -z "$sendmail" ; then 
@@ -283,7 +285,8 @@ esac
 
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
-	[  --disable-POP3          don't compile in POP3 protocol support],
+	[AS_HELP_STRING([--disable-POP3],
+			[do not compile in POP3 protocol support])],
 	[with_POP3=$enableval],
 	[with_POP3=yes])
 test "$with_POP3" = "yes" && AC_DEFINE(POP3_ENABLE,1,Define if you want POP3 support compiled in)
@@ -291,7 +294,8 @@ AM_CONDITIONAL(POP3_ENABLE, test "$with_POP3" = yes)
 
 ###	use option --disable-IMAP to omit the IMAP support
 AC_ARG_ENABLE(IMAP,
-	[  --disable-IMAP          don't compile in IMAP protocol support],
+	[AS_HELP_STRING([--disable-IMAP],
+			[do not compile in IMAP protocol support])],
 	[with_IMAP=$enableval],
 	[with_IMAP=yes])
 test "$with_IMAP" = "yes" && AC_DEFINE(IMAP_ENABLE,1,Define if you want IMAP support compiled in)
@@ -299,7 +303,8 @@ AM_CONDITIONAL(IMAP_ENABLE, test "$with_IMAP" = yes)
 
 ###	use option --disable-ETRN to omit the ETRN support
 AC_ARG_ENABLE(ETRN,
-	[  --disable-ETRN          don't compile in ETRN protocol support],
+	[AS_HELP_STRING([--disable-ETRN],[do not compile in ETRN protocol
+	 support])],
 	[with_ETRN=$enableval],
 	[with_ETRN=yes])
 test "$with_ETRN" = "yes" && AC_DEFINE(ETRN_ENABLE,1,Define if you want ETRN support compiled in.)
@@ -307,7 +312,8 @@ AM_CONDITIONAL(ETRN_ENABLE, test "$with_ETRN" = yes)
 
 ###	use option --disable-ODMR to omit the ODMR support
 AC_ARG_ENABLE(ODMR,
-	[  --disable-ODMR          don't compile in ODMR protocol support],
+	[AS_HELP_STRING([--disable-ODMR],[do not compile in ODMR protocol
+	 support])],
 	[with_ODMR=$enableval],
 	[with_ODMR=yes])
 test "$with_ODMR" = "yes" && AC_DEFINE(ODMR_ENABLE,1,Define if you want ODMR support compiled in)
@@ -315,7 +321,8 @@ AM_CONDITIONAL(ODMR_ENABLE, test "$with_ODMR" = yes)
 
 ###	use option --enable-RPA to compile in the RPA support
 AC_ARG_ENABLE(RPA,
-	[  --enable-RPA            compile in RPA protocol support],
+	[AS_HELP_STRING([--enable-RPA],[compile in RPA protocol
+	 support])],
 	[with_RPA=$enableval],
 	[with_RPA=no])
 test "$with_RPA" = "yes" && AC_DEFINE(RPA_ENABLE,1,Define if you want RPA support compiled in)
@@ -323,7 +330,8 @@ AM_CONDITIONAL(RPA_ENABLE, test "$with_RPA" = yes)
 
 ###	use option --enable-NTLM to compile in the NTLM support
 AC_ARG_ENABLE(NTLM,
-	[  --enable-NTLM           compile in NTLM authentication support],
+	[AS_HELP_STRING([--enable-NTLM],[compile in NTLM authentication
+	 support])],
 	[with_NTLM=$enableval],
 	[with_NTLM=no])
 test "$with_NTLM" = "yes" && AC_DEFINE(NTLM_ENABLE,1,Define if you want NTLM authentication)
@@ -331,7 +339,8 @@ AM_CONDITIONAL(NTLM_ENABLE, test "$with_NTLM" = yes)
 
 ###	use option --enable-SDPS to compile in the SDPS support
 AC_ARG_ENABLE(SDPS,
-	[  --enable-SDPS           compile in SDPS protocol support],
+	[AS_HELP_STRING([--enable-SDPS],[compile in SDPS protocol
+	 support])],
 	[with_SDPS=$enableval],
 	[with_SDPS=no])
 if test "$with_SDPS" = yes ; then
@@ -350,7 +359,8 @@ AC_CACHE_SAVE
 
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,
-	[  --enable-opie           support OTP through the OPIE library],
+	[AS_HELP_STRING([--enable-opie],[support one-time passwords
+	 (OTP) through the OPIE library])],
 	[ AC_CHECK_HEADER(opie.h,, [AC_MSG_ERROR([cannot find <opie.h>, which is required for OPIE support.])])
           AC_CHECK_LIB(opie,opiegenerator,, [AC_MSG_ERROR([cannot find libopie, which is required for OPIE support.])])
           with_opie=$enableval],
@@ -416,7 +426,8 @@ fi
 ###    use option --with-kerberos5=DIR to point at a Kerberos 5 directory
 ### make sure --with-ssl is run before --with-kerberos* !
 AC_ARG_WITH(kerberos5,
-       [  --with-kerberos5=DIR    point fetchmail compilation at a Kerberos 5 directory],
+       [AS_HELP_STRING([--with-kerberos5[[=DIR]]],[point fetchmail
+	compilation at a Kerberos 5 directory])],
 [
 if test "$with_kerberos5" != "no"
 then
@@ -503,7 +514,9 @@ fi
 
 ###	use option --with-ssl to compile in the SSL support
 AC_ARG_WITH(ssl,
-	[  --with-ssl=[DIR]        enable SSL support using libraries in DIR],
+	[AS_HELP_STRING([--with-ssl[[={yes|no|DIR}]]],[Use OpenSSL from
+	 DIR/include/openssl and
+	 DIR/lib (default: yes). Yes means try to find it.])],
 	[with_ssl=$withval],
 	[with_ssl=yes])
 
@@ -550,7 +563,7 @@ then
     AC_MSG_NOTICE(Enabling OpenSSL support in $with_ssl.)
     test "$with_ssl" != "/usr" && CFLAGS="$CFLAGS -I$with_ssl/include"
     ### In Red Hat 9, this file includes a reference to <krb5.h>, so we
-    ### force the Kerberos direcory onto the include path so it will build.
+    ### force the Kerberos directory onto the include path so it will build.
     CFLAGS="$CFLAGS -I/usr/kerberos/include"
     ###	OpenBSD comes with ssl headers
   else
@@ -587,7 +600,8 @@ esac
 
 ###	use option --with-socks=DIR to point at SOCKS library
 AC_ARG_WITH(socks,
-	[  --with-socks[=DIR]      add built-in SOCKS firewall access],
+	[AS_HELP_STRING([--with-socks[[=DIR]]],[add built-in SOCKS (4)
+	firewall access])],
 [
 if test "$with_socks" != no
 then
@@ -605,7 +619,8 @@ fi])
 
 ###     use option --with-socks5=DIR to point at SOCKS library
 AC_ARG_WITH(socks5,
-        [  --with-socks5[=DIR]     add built-in SOCKS5 firewall access],
+        [AS_HELP_STRING([--with-socks5[[=DIR]]],[add built-in SOCKS5
+	 firewall access])],
 [
 if test "$with_socks5" != no
 then
@@ -631,7 +646,8 @@ AC_ma_SEARCH_PACKAGE(hesiod, hesiod_getmailhost, /usr/athena /usr /usr/local,hes
 
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
 AC_ARG_WITH(gssapi,
-	[  --with-gssapi[=DIR]     compile in GSSAPI support using libraries in DIR],
+	[AS_HELP_STRING([--with-gssapi[[=DIR]]],[compile in GSSAPI
+	 support using libraries in DIR])],
 [
 if test "$with_gssapi" != "no"
 then
