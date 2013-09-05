@@ -1,5 +1,5 @@
-/*
- * socket.c -- socket library functions
+/**
+ * \file socket.c -- socket library functions
  *
  * Copyright 1998, 2004 by Eric S. Raymond.
  * Copyright 2004, 2013 by Matthias Andree.
@@ -539,6 +539,64 @@ SSL *SSLGetContext( int sock )
 	return _ssl_context[sock];
 }
 
+typedef struct s_digest {
+	const EVP_MD *(*digest_algo)(void);
+	const char  *digest_name;
+} t_digest;
+
+static t_digest digests[] = {
+		{ EVP_md5, "MD5" },
+		{ EVP_sha1, "SHA1"}
+};
+
+/** This function calculates a message digest for the certificate in \a x509_cert with the
+ * digest algorithm \a algo_name, and puts the output in a text buffer \a text that has a capacity of \a sz_text bytes.
+ * \return
+ * - 0 for error (which will already have been reported) - FIXME: invert this?
+ * - 1 for success
+ */
+static int getdigest(const X509 *x509_cert, const char *algo_name, char *text, size_t sz_text)
+{
+	char *tp, *te;
+	unsigned char digest[EVP_MAX_MD_SIZE];
+	const EVP_MD *algo = NULL;
+	unsigned int dsz;
+	int esz;
+
+	/* find algorithm */
+	for (unsigned int i = 0; i < countof(digests); i++) {
+		if (0 == strcasecmp(digests[i].digest_name, algo_name)) {
+			algo = digests[i].digest_algo();
+			break;
+		}
+	}
+
+	if (!algo) {
+		report(stderr, GT_("Unknown digest algorithm %s requested.\n"), algo_name);
+		return 0;
+	}
+
+	/* calculate, binary output to digest, and size in dsz */
+	if (!X509_digest(x509_cert, algo, digest, &dsz)) {
+		report(stderr, GT_("Out of memory in %s:%lu!\n"), __FILE__, (unsigned long)__LINE__);
+		return 0;
+	}
+
+	/* format to colon-separated list of hex strings */
+	tp = text;
+	te = text + sz_text;
+
+	for (size_t dp = 0; dp < dsz; dp++) {
+		esz = snprintf(tp, te - tp, dp > 0 ? ":%02X" : "%02X", digest[dp]);
+		if (esz >= (te - tp)) {
+			report(stderr, GT_("Digest text buffer too small for %s!\n"), algo_name);
+			return 0;
+		}
+		tp += esz;
+	}
+	return 1;
+}
+
 /* ok_return (preverify_ok) is 1 if this stage of certificate verification
    passed, or 0 if it failed. This callback lets us display informative
    errors, and perform additional validation (e.g. CN matches) */
@@ -548,10 +606,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx)
 	char buf[257];
 	X509 *x509_cert;
 	int err, depth, i;
-	unsigned char digest[EVP_MAX_MD_SIZE];
-	char text[EVP_MAX_MD_SIZE * 3 + 1], *tp, *te;
-	const EVP_MD *digest_tp;
-	unsigned int dsz, esz;
+	char text[EVP_MAX_MD_SIZE * 3 + 1];
 	X509_NAME *subj, *issuer;
 	char *tt;
 	t_ssl_callback_data *mydata;
@@ -684,30 +739,19 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx)
 		/* Print the finger print. Note that on errors, we might print it more than once
 		 * normally; we kluge around that by using a global variable. */
 		if (1 == mydata->check_fp) {
-			unsigned dp;
-
+			const char *algo = "MD5";
 			mydata->check_fp = -1;
-			digest_tp = EVP_md5();
-			if (digest_tp == NULL) {
-				report(stderr, GT_("EVP_md5() failed!\n"));
-				return (0);
+			if (!getdigest(x509_cert, algo, text, sizeof(text))) {
+				return 0;
 			}
-			if (!X509_digest(x509_cert, digest_tp, digest, &dsz)) {
-				report(stderr, GT_("Out of memory!\n"));
-				return (0);
+			if (outlevel > O_NORMAL) {
+				const char *algo_sha1 = "SHA1"; /* fixme: support {SHA1} syntax; fixme: support list of fingerprints */
+			    report(stdout, GT_("%s certificate %s fingerprint: %s\n"), mydata->server_label, algo, text);
+			    char text_sha1[EVP_MAX_MD_SIZE * 3 + 1];
+			    if (getdigest(x509_cert, algo_sha1, text_sha1, sizeof(text_sha1))) {
+				report(stdout, GT_("%s certificate %s fingerprint: %s\n"), mydata->server_label, algo_sha1, text_sha1);
+			    }
 			}
-			tp = text;
-			te = text + sizeof(text);
-			for (dp = 0; dp < dsz; dp++) {
-				esz = snprintf(tp, te - tp, dp > 0 ? ":%02X" : "%02X", digest[dp]);
-				if (esz >= (size_t)(te - tp)) {
-					report(stderr, GT_("Digest text buffer too small!\n"));
-					return (0);
-				}
-				tp += esz;
-			}
-			if (outlevel > O_NORMAL)
-			    report(stdout, GT_("%s certificate MD5 fingerprint: %s\n"), mydata->server_label, text);
 			if (mydata->check_digest != NULL) {
 				if (strcasecmp(text, mydata->check_digest) == 0) {
 				    if (outlevel > O_NORMAL)

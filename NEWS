@@ -94,6 +94,9 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   through the global FETCHMAIL_SSL_CIPHERS environment variable, which is set
   to a string that is understood by OpenSSL's cipher(1) command. In debug mode
   (-vv), the ordered list of client-side ciphers is printed.
+* FIXME: The SHA1 fingerprint is now printed along with the MD5 digest of the
+  server's certificate; however, this can not yet be matched - matches are
+  still against MD5 only.
 
 # REMOVED FEATURES
 * IMAP2 protocol support was removed.
