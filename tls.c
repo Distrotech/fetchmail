@@ -10,6 +10,7 @@
 
 #include "gettext.h"
 
+// FIXME: this needs to be a struct of name and enum value
 static const char *const tlsm_names[] = {
  [TLSM_NONE] = "none",
  [TLSM_WRAPPED] = "wrapped",
