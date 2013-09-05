@@ -1,3 +1,7 @@
+More detailed configuration of when to accept a TLS socket.
+(For instance: fingerprint specified and SSL cert has expired, should
+still permit access.  grarpamp on fetchmail-devel 2013-09-05.)
+
 Review Fabio Rossi's contribution, fetchmail-mda-fork.*, polish and merge.
 
 Return PS_ERROR, not PS_SYNTAX, on failures for preconnect/postconnect.
