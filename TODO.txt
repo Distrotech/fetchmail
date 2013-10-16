@@ -197,6 +197,9 @@ questionable:
   fetchmail-users list.
   protocols: see recent Postfix versions
 
+- add timestamps to local logfiles, proposed by Aaron Sloman
+  <A.Sloman at cs.bham.ac.uk> 2013-10-16
+
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
 - consolidate multidrop documentation
