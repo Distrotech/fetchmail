@@ -595,6 +595,9 @@ fi
 
 case "$LIBS" in *-lssl*)
 	AC_CHECK_DECLS([SSLv2_client_method],,,[#include <openssl/ssl.h>])
+	AC_CHECK_DECLS([TLS1_2_VERSION],,
+		       AC_MSG_ERROR([Your OpenSSL version is too old and does not support TLS v1.2. Upgrade.]),
+		       [#include <openssl/ssl.h>])
 	;;
 esac
 

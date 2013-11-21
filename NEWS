@@ -55,6 +55,8 @@ NOTE THIS IS AN ALPHA RELEASE THAT HAS NOT BEEN THOROUGHLY TESTED!
   previous sslcertck default.
   If you need an unencrypted connection, use --sslmode none.
 * See the REMOVED FEATURES section below for further incompatibilities.
+* fetchmail now requires an OpenSSL version that supports TLS v1.2, i. e.
+  OpenSSL 1.0.1 or newer.
 
 # MAJOR CHANGES
 * The UIDL handler code is now much faster, especially noticable with lots of
